@@ -1,0 +1,12 @@
+# data_sources.yml
+# Update OFSTED_URL on the 11th of each month when Ofsted publishes new management information.
+# Find the new URL at: https://www.gov.uk/government/statistical-data-sets/monthly-management-information-ofsteds-school-inspections-outcomes
+# Copy the link for "Management information - state-funded schools - latest inspections as at [date].csv"
+
+OFSTED_URL: "https://assets.publishing.service.gov.uk/media/698b20be95285e721cd7127d/Management_information_-_state-funded_schools_-_latest_inspections_as_at_31_Jan_2026.csv"
+
+# Admissions - stable UUID, updated automatically each April by DfE
+ADMISSIONS_URL: "https://explore-education-statistics.service.gov.uk/data-catalogue/data-set/65b074b6-b6df-419b-af04-dd0f19865b59/csv"
+
+# Crime - fetched live from Police API, no URL needed here
+CRIME_RADIUS_KM: 0.5

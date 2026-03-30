@@ -169,16 +169,7 @@ function fsmLabel(s) {
   return { text: s.fsm_label, color: s.fsm_color, bg: s.fsm_bg };
 }
 
-// IMD decile: 1 = most deprived 10% of areas, 10 = least deprived 10%
-function imdLabel(decile) {
-  if (!decile) return null;
-  const d = Math.round(decile);
-  if (d <= 2) return { text: 'Most deprived area',         color: '#B71C1C', bg: '#FFEBEE' };
-  if (d <= 4) return { text: 'More deprived than average', color: '#E65100', bg: '#FFF3E0' };
-  if (d <= 6) return { text: 'Average deprivation',        color: '#F57F17', bg: '#FFFDE7' };
-  if (d <= 8) return { text: 'Less deprived than average', color: '#2E7D32', bg: '#E8F5E9' };
-  return       { text: 'Least deprived area',              color: '#1565C0', bg: '#E3F2FD' };
-}
+
 
 // Generate Snobe URL from school name
 // e.g. "St Mary's Primary School" → "st-marys-primary-school"
@@ -264,18 +255,7 @@ function SchoolDetail({ school, onClose }) {
               <div className="detail-field"><span className="detail-field-label">Safeguarding</span><span className="detail-field-val" style={{color:school.safeguarding==='Yes'?'#27AE60':'#E74C3C'}}>{school.safeguarding==='Yes'?'✓ Effective':school.safeguarding||'—'}</span></div>
               <div className="detail-field"><span className="detail-field-label">Last Inspection</span><span className="detail-field-val">{school.inspection_date||'—'}</span></div>
               {school.pct_fsm != null && <div className="detail-field"><span className="detail-field-label">Free School Meals</span><span className="detail-field-val">{school.pct_fsm}%</span></div>}
-              {school.imd_decile != null && (() => {
-                const imd = imdLabel(school.imd_decile);
-                return imd ? (
-                  <div className="detail-field" style={{gridColumn:'span 2'}}>
-                    <span className="detail-field-label">Neighbourhood Deprivation (IMD)</span>
-                    <span style={{display:'inline-flex',alignItems:'center',gap:8,marginTop:2}}>
-                      <span style={{background:imd.bg,color:imd.color,padding:'3px 10px',borderRadius:4,fontWeight:600,fontSize:'0.85rem'}}>{imd.text}</span>
-                      <span style={{fontSize:'0.75rem',color:'#aaa'}}>Decile {school.imd_decile} of 10 · based on school location</span>
-                    </span>
-                  </div>
-                ) : null;
-              })()}
+
               {school.crime_score != null && (() => {
                 const color = school.crime_score >= 80 ? '#27AE60' : school.crime_score >= 60 ? '#2980B9' : school.crime_score >= 40 ? '#F57F17' : school.crime_score >= 20 ? '#E67E22' : '#C0392B';
                 const bg    = school.crime_score >= 80 ? '#E8F5E9' : school.crime_score >= 60 ? '#E3F2FD' : school.crime_score >= 40 ? '#FFFDE7' : school.crime_score >= 20 ? '#FFF3E0' : '#FFEBEE';

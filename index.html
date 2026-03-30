@@ -162,6 +162,29 @@ const RATING_MAP = { 1:'Outstanding', 2:'Good', 3:'Requires improvement', 4:'Ina
 const RATING_SCORES = { 1:100, 2:80, 3:40, 4:0 };
 const PILL_CLASS = { 'Outstanding':'pill pill-o', 'Good':'pill pill-g', 'Requires improvement':'pill pill-r', 'Inadequate':'pill pill-i' };
 
+// IDACI quintile: 1 = most deprived 20% of children, 5 = least deprived 20%
+function idaciLabel(q) {
+  const labels = {
+    1: { text: 'Very high child poverty', color: '#B71C1C', bg: '#FFEBEE' },
+    2: { text: 'High child poverty',      color: '#E65100', bg: '#FFF3E0' },
+    3: { text: 'Average child poverty',   color: '#F57F17', bg: '#FFFDE7' },
+    4: { text: 'Low child poverty',       color: '#2E7D32', bg: '#E8F5E9' },
+    5: { text: 'Very low child poverty',  color: '#1565C0', bg: '#E3F2FD' },
+  };
+  return labels[Math.round(q)] || null;
+}
+
+// IMD decile: 1 = most deprived 10% of areas, 10 = least deprived 10%
+function imdLabel(decile) {
+  if (!decile) return null;
+  const d = Math.round(decile);
+  if (d <= 2) return { text: 'Most deprived area',         color: '#B71C1C', bg: '#FFEBEE' };
+  if (d <= 4) return { text: 'More deprived than average', color: '#E65100', bg: '#FFF3E0' };
+  if (d <= 6) return { text: 'Average deprivation',        color: '#F57F17', bg: '#FFFDE7' };
+  if (d <= 8) return { text: 'Less deprived than average', color: '#2E7D32', bg: '#E8F5E9' };
+  return       { text: 'Least deprived area',              color: '#1565C0', bg: '#E3F2FD' };
+}
+
 function BandChip({ band }) {
   return <span className="band-chip" style={{ background: BAND_COLORS[band]||'#95A5A6' }}>{band||'Unknown'}</span>;
 }
@@ -213,7 +236,30 @@ function SchoolDetail({ school, onClose }) {
               <div className="detail-field"><span className="detail-field-label">Safeguarding</span><span className="detail-field-val" style={{color:school.safeguarding==='Yes'?'#27AE60':'#E74C3C'}}>{school.safeguarding==='Yes'?'✓ Effective':school.safeguarding||'—'}</span></div>
               <div className="detail-field"><span className="detail-field-label">Last Inspection</span><span className="detail-field-val">{school.inspection_date||'—'}</span></div>
               {school.pct_fsm != null && <div className="detail-field"><span className="detail-field-label">Free School Meals</span><span className="detail-field-val">{school.pct_fsm}%</span></div>}
-              {school.idaci_quintile != null && <div className="detail-field"><span className="detail-field-label">IDACI Quintile</span><span className="detail-field-val">Quintile {school.idaci_quintile}</span></div>}
+              {school.imd_decile != null && (() => {
+                const imd = imdLabel(school.imd_decile);
+                return imd ? (
+                  <div className="detail-field" style={{gridColumn:'span 2'}}>
+                    <span className="detail-field-label">Area Deprivation (IMD)</span>
+                    <span style={{display:'inline-flex',alignItems:'center',gap:8,marginTop:2}}>
+                      <span style={{background:imd.bg,color:imd.color,padding:'3px 10px',borderRadius:4,fontWeight:600,fontSize:'0.85rem'}}>{imd.text}</span>
+                      <span style={{fontSize:'0.75rem',color:'#aaa'}}>Decile {school.imd_decile} of 10</span>
+                    </span>
+                  </div>
+                ) : null;
+              })()}
+              {school.idaci_quintile != null && (() => {
+                const idaci = idaciLabel(school.idaci_quintile);
+                return idaci ? (
+                  <div className="detail-field" style={{gridColumn:'span 2'}}>
+                    <span className="detail-field-label">Child Poverty (IDACI)</span>
+                    <span style={{display:'inline-flex',alignItems:'center',gap:8,marginTop:2}}>
+                      <span style={{background:idaci.bg,color:idaci.color,padding:'3px 10px',borderRadius:4,fontWeight:600,fontSize:'0.85rem'}}>{idaci.text}</span>
+                      <span style={{fontSize:'0.75rem',color:'#aaa'}}>Quintile {school.idaci_quintile} of 5</span>
+                    </span>
+                  </div>
+                ) : null;
+              })()}
               {school.head_name && <div className="detail-field" style={{gridColumn:'span 2'}}><span className="detail-field-label">Headteacher</span><span className="detail-field-val">{school.head_name}</span></div>}
               {school.telephone && <div className="detail-field"><span className="detail-field-label">Telephone</span><span className="detail-field-val">{school.telephone}</span></div>}
               {school.mat_name && <div className="detail-field" style={{gridColumn:'span 2'}}><span className="detail-field-label">Academy Trust</span><span className="detail-field-val">{school.mat_name}</span></div>}
@@ -346,7 +392,10 @@ function ScoreCard({ school, onClick }) {
       <div className="card-meta">
         <span>👥 {school.pupils??'—'} pupils</span>
         {school.inspection_date && <span>📅 {school.inspection_date}</span>}
-        {school.imd_score != null && <span title="Deprivation score — higher means less deprived">📊 IMD {school.imd_score}</span>}
+        {school.imd_decile != null && (() => {
+          const imd = imdLabel(school.imd_decile);
+          return imd ? <span style={{color:imd.color,fontWeight:500}} title="Area deprivation (IMD decile)">🏘 {imd.text}</span> : null;
+        })()}
       </div>
     </div>
   );

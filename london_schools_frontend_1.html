@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>London Schools Explorer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    :root {
+      --cream: #F5F0E8; --ink: #1A1A2E; --ink-soft: #2D2D44;
+      --red: #C0392B; --gold: #D4A843; --green: #27AE60;
+      --border: #D8D0C0; --card-bg: #FDFAF4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; }
+
+    .header { background: var(--ink); color: var(--cream); padding: 0 40px; position: sticky; top: 0; z-index: 1000; border-bottom: 3px solid var(--gold); display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .header-logo { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+    .header-logo span { color: var(--gold); }
+    .header-badge { background: var(--gold); color: var(--ink); font-size: 0.7rem; font-weight: 600; padding: 3px 8px; border-radius: 2px; letter-spacing: 0.08em; text-transform: uppercase; }
+    .header-nav { display: flex; gap: 6px; }
+    .nav-btn { background: transparent; border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.7); padding: 7px 16px; border-radius: 4px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; }
+    .nav-btn.active, .nav-btn:hover { background: var(--gold); color: var(--ink); border-color: var(--gold); font-weight: 600; }
+
+    .hero { background: var(--ink); color: var(--cream); padding: 56px 40px 44px; position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; top: -80px; right: -80px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(212,168,67,0.15) 0%, transparent 70%); pointer-events: none; }
+    .hero-eyebrow { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
+    .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 900; line-height: 1.05; margin-bottom: 14px; max-width: 680px; }
+    .hero h1 em { font-style: italic; color: var(--gold); }
+    .hero-sub { font-size: 1rem; color: rgba(245,240,232,0.7); max-width: 500px; line-height: 1.6; margin-bottom: 36px; }
+    .hero-stats { display: flex; gap: 40px; flex-wrap: wrap; }
+    .hero-stat { display: flex; flex-direction: column; }
+    .hero-stat-num { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; color: var(--gold); line-height: 1; }
+    .hero-stat-label { font-size: 0.78rem; color: rgba(245,240,232,0.6); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px; }
+
+    .main { max-width: 1400px; margin: 0 auto; padding: 28px 40px; }
+
+    .controls { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; align-items: flex-end; }
+    .search-wrap { flex: 1; min-width: 220px; position: relative; }
+    .search-wrap input { width: 100%; padding: 10px 14px 10px 40px; border: 2px solid var(--border); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; background: white; color: var(--ink); outline: none; transition: border-color 0.2s; }
+    .search-wrap input:focus { border-color: var(--gold); }
+    .search-icon { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: #aaa; }
+    .filter-group { display: flex; flex-direction: column; gap: 3px; }
+    .filter-label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #999; }
+    select { padding: 9px 28px 9px 11px; border: 2px solid var(--border); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; background: white; color: var(--ink); cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='2' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 9px center; outline: none; transition: border-color 0.2s; min-width: 150px; }
+    select:focus { border-color: var(--gold); }
+    .clear-btn { padding: 9px 16px; background: transparent; border: 2px solid var(--border); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.83rem; color: #999; cursor: pointer; transition: all 0.2s; align-self: flex-end; }
+    .clear-btn:hover { border-color: var(--red); color: var(--red); }
+
+    .results-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+    .results-count { font-size: 0.88rem; color: #777; }
+    .results-count strong { color: var(--ink); font-size: 0.95rem; }
+    .view-toggle { display: flex; border: 2px solid var(--border); border-radius: 6px; overflow: hidden; }
+    .view-btn { padding: 6px 12px; background: white; border: none; cursor: pointer; font-size: 1rem; color: #bbb; transition: all 0.15s; }
+    .view-btn.active { background: var(--ink); color: var(--cream); }
+
+    .school-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; }
+    .school-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 22px; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; }
+    .school-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--band-color, var(--border)); }
+    .school-card:hover { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(26,26,46,0.14); border-color: var(--gold); }
+    .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+    .card-phase { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #999; background: rgba(0,0,0,0.05); padding: 3px 7px; border-radius: 3px; }
+    .score-badge { display: flex; flex-direction: column; align-items: center; background: var(--ink); color: var(--cream); border-radius: 5px; padding: 5px 10px; min-width: 50px; }
+    .score-num { font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 700; line-height: 1; color: var(--gold); }
+    .score-lbl { font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(245,240,232,0.55); }
+    .card-name { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; line-height: 1.3; margin-bottom: 5px; }
+    .card-la { font-size: 0.8rem; color: #999; margin-bottom: 12px; }
+    .card-pills { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px; }
+    .pill { font-size: 0.72rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+    .pill-o { background: #E8F5E9; color: #1B5E20; } .pill-g { background: #E3F2FD; color: #0D47A1; }
+    .pill-r { background: #FFF3E0; color: #E65100; } .pill-i { background: #FFEBEE; color: #B71C1C; }
+    .pill-u { background: #F5F5F5; color: #757575; }
+    .card-meta { display: flex; gap: 14px; font-size: 0.78rem; color: #aaa; border-top: 1px solid var(--border); padding-top: 10px; }
+
+    .school-table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); font-size: 0.865rem; }
+    .school-table th { background: var(--ink); color: var(--cream); padding: 11px 14px; text-align: left; font-weight: 600; font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap; }
+    .school-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    .school-table tr:last-child td { border-bottom: none; }
+    .school-table tr:hover td { background: #FFFBF0; cursor: pointer; }
+    .rank-num { font-family: 'Playfair Display', serif; font-weight: 700; color: var(--gold); font-size: 0.95rem; }
+    .band-chip { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 0.72rem; font-weight: 600; color: white; }
+
+    .map-wrap { border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+    #school-map { height: 560px; width: 100%; }
+    .map-legend { display: flex; gap: 18px; flex-wrap: wrap; font-size: 0.78rem; color: #888; margin-top: 12px; align-items: center; }
+    .map-legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 5px; }
+
+    .detail-overlay { position: fixed; inset: 0; background: rgba(26,26,46,0.5); z-index: 2000; display: flex; justify-content: flex-end; animation: fadeIn 0.2s; }
+    @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+    @keyframes slideIn { from { transform: translateX(100%) } to { transform: translateX(0) } }
+    .detail-panel { width: 100%; max-width: 540px; background: var(--card-bg); height: 100%; overflow-y: auto; animation: slideIn 0.25s cubic-bezier(0.25,0.46,0.45,0.94); }
+    .detail-header { background: var(--ink); color: var(--cream); padding: 28px; position: relative; }
+    .detail-close { position: absolute; top: 18px; right: 18px; background: rgba(255,255,255,0.1); border: none; color: var(--cream); width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
+    .detail-close:hover { background: rgba(255,255,255,0.2); }
+    .detail-phase-tag { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--gold); margin-bottom: 8px; }
+    .detail-name { font-family: 'Playfair Display', serif; font-size: 1.65rem; font-weight: 900; line-height: 1.15; margin-bottom: 6px; }
+    .detail-la { font-size: 0.87rem; color: rgba(245,240,232,0.6); }
+    .detail-score-row { display: flex; gap: 12px; margin-top: 20px; }
+    .detail-score-box { background: rgba(255,255,255,0.08); border-radius: 8px; padding: 12px 14px; text-align: center; flex: 1; }
+    .detail-score-val { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--gold); line-height: 1; }
+    .detail-score-desc { font-size: 0.67rem; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(245,240,232,0.5); margin-top: 4px; }
+    .detail-body { padding: 24px 28px; }
+    .detail-section { margin-bottom: 22px; }
+    .detail-section-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: #aaa; margin-bottom: 12px; padding-bottom: 7px; border-bottom: 1px solid var(--border); }
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .detail-field { display: flex; flex-direction: column; gap: 2px; }
+    .detail-field-label { font-size: 0.7rem; color: #bbb; text-transform: uppercase; letter-spacing: 0.06em; }
+    .detail-field-val { font-size: 0.9rem; font-weight: 500; color: var(--ink); }
+    .rating-row { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
+    .rating-label { font-size: 0.8rem; color: var(--ink-soft); width: 170px; flex-shrink: 0; }
+    .rating-bar-wrap { flex: 1; background: var(--border); border-radius: 4px; height: 7px; overflow: hidden; }
+    .rating-bar-fill { height: 100%; border-radius: 4px; }
+    .rating-chip { font-size: 0.7rem; font-weight: 600; width: 100px; text-align: right; }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; margin-bottom: 24px; }
+    .stat-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 18px; }
+    .stat-card-num { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: var(--ink); line-height: 1; margin-bottom: 4px; }
+    .stat-card-label { font-size: 0.76rem; color: #aaa; text-transform: uppercase; letter-spacing: 0.06em; }
+    .chart-section { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 22px; margin-bottom: 18px; }
+    .chart-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; margin-bottom: 18px; }
+    .bar-chart-row { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
+    .bar-chart-label { font-size: 0.8rem; width: 170px; flex-shrink: 0; color: var(--ink-soft); }
+    .bar-chart-wrap { flex: 1; background: #EDE8DF; border-radius: 3px; height: 20px; overflow: hidden; }
+    .bar-chart-fill { height: 100%; border-radius: 3px; display: flex; align-items: center; padding-left: 7px; font-size: 0.72rem; font-weight: 600; color: white; min-width: 20px; }
+    .bar-chart-count { font-size: 0.78rem; color: #aaa; width: 34px; text-align: right; }
+
+    .pagination { display: flex; justify-content: center; align-items: center; gap: 6px; margin-top: 28px; }
+    .page-btn { width: 34px; height: 34px; border: 2px solid var(--border); border-radius: 6px; background: white; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.83rem; color: var(--ink); transition: all 0.15s; display: flex; align-items: center; justify-content: center; }
+    .page-btn.active { background: var(--ink); color: var(--cream); border-color: var(--ink); font-weight: 700; }
+    .page-btn:hover:not(.active) { border-color: var(--gold); color: var(--gold); }
+    .page-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    .loading { display: flex; align-items: center; justify-content: center; padding: 60px; font-size: 0.9rem; color: #aaa; gap: 10px; }
+    .spinner { width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.6s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg) } }
+    .empty-state { text-align: center; padding: 60px; color: #aaa; }
+    .empty-state h3 { font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 8px; color: #888; }
+
+    @media (max-width: 768px) {
+      .header { padding: 0 16px; } .hero { padding: 36px 16px; } .main { padding: 16px; }
+      .controls { flex-direction: column; } .school-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useMemo, useRef, useCallback } = React;
+
+const API_BASE = 'http://localhost:8000';
+const JSON_FALLBACK = './schools.json';
+
+const BAND_COLORS = { 'Outstanding':'#27AE60', 'Good':'#2980B9', 'Requires improvement':'#E67E22', 'Inadequate':'#C0392B', 'Unknown':'#95A5A6' };
+const RATING_MAP = { 1:'Outstanding', 2:'Good', 3:'Requires improvement', 4:'Inadequate' };
+const RATING_SCORES = { 1:100, 2:80, 3:40, 4:0 };
+const PILL_CLASS = { 'Outstanding':'pill pill-o', 'Good':'pill pill-g', 'Requires improvement':'pill pill-r', 'Inadequate':'pill pill-i' };
+
+function BandChip({ band }) {
+  return <span className="band-chip" style={{ background: BAND_COLORS[band]||'#95A5A6' }}>{band||'Unknown'}</span>;
+}
+
+function RatingBar({ label, raw }) {
+  const text = RATING_MAP[raw]; const score = RATING_SCORES[raw]; if (!text) return null;
+  return (
+    <div className="rating-row">
+      <div className="rating-label">{label}</div>
+      <div className="rating-bar-wrap"><div className="rating-bar-fill" style={{ width:`${score}%`, background:BAND_COLORS[text] }} /></div>
+      <div className="rating-chip" style={{ color:BAND_COLORS[text] }}>{text}</div>
+    </div>
+  );
+}
+
+function SchoolDetail({ school, onClose }) {
+  if (!school) return null;
+  const band = school.score_band || school.quality_label || 'Unknown';
+  const website = school.website ? (school.website.startsWith('http') ? school.website : `https://${school.website}`) : null;
+  return (
+    <div className="detail-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
+      <div className="detail-panel">
+        <div className="detail-header">
+          <button className="detail-close" onClick={onClose}>✕</button>
+          <div className="detail-phase-tag">{school.phase} · {school.school_type}</div>
+          <div className="detail-name">{school.name}</div>
+          <div className="detail-la">📍 {school.local_authority} · {school.postcode}</div>
+          <div className="detail-score-row">
+            <div className="detail-score-box"><div className="detail-score-val">{school.ofsted_score??'—'}</div><div className="detail-score-desc">Score</div></div>
+            <div className="detail-score-box" style={{flex:1.6}}><div style={{paddingTop:6}}><BandChip band={band} /></div><div className="detail-score-desc" style={{marginTop:6}}>Rating</div></div>
+            <div className="detail-score-box"><div className="detail-score-val">{school.pupils??'—'}</div><div className="detail-score-desc">Pupils</div></div>
+          </div>
+        </div>
+        <div className="detail-body">
+          <div className="detail-section">
+            <div className="detail-section-title">Ofsted Ratings</div>
+            <RatingBar label="Quality of education" raw={school.quality_raw} />
+            <RatingBar label="Behaviour & attitudes" raw={school.behaviour_raw} />
+            <RatingBar label="Personal development" raw={school.personal_dev_raw} />
+            <RatingBar label="Leadership & management" raw={school.leadership_raw} />
+          </div>
+          <div className="detail-section">
+            <div className="detail-section-title">School Information</div>
+            <div className="detail-grid">
+              <div className="detail-field"><span className="detail-field-label">Age Range</span><span className="detail-field-val">{school.age_from}–{school.age_to}</span></div>
+              <div className="detail-field"><span className="detail-field-label">Gender</span><span className="detail-field-val">{school.gender||'—'}</span></div>
+              <div className="detail-field"><span className="detail-field-label">Sixth Form</span><span className="detail-field-val">{school.sixth_form==='Has a sixth form'?'✓ Yes':'No'}</span></div>
+              <div className="detail-field"><span className="detail-field-label">Admissions</span><span className="detail-field-val">{school.admissions||'—'}</span></div>
+              <div className="detail-field"><span className="detail-field-label">Safeguarding</span><span className="detail-field-val" style={{color:school.safeguarding==='Yes'?'#27AE60':'#E74C3C'}}>{school.safeguarding==='Yes'?'✓ Effective':school.safeguarding||'—'}</span></div>
+              <div className="detail-field"><span className="detail-field-label">Last Inspection</span><span className="detail-field-val">{school.inspection_date||'—'}</span></div>
+              {school.pct_fsm != null && <div className="detail-field"><span className="detail-field-label">Free School Meals</span><span className="detail-field-val">{school.pct_fsm}%</span></div>}
+              {school.idaci_quintile != null && <div className="detail-field"><span className="detail-field-label">IDACI Quintile</span><span className="detail-field-val">Quintile {school.idaci_quintile}</span></div>}
+              {school.head_name && <div className="detail-field" style={{gridColumn:'span 2'}}><span className="detail-field-label">Headteacher</span><span className="detail-field-val">{school.head_name}</span></div>}
+              {school.telephone && <div className="detail-field"><span className="detail-field-label">Telephone</span><span className="detail-field-val">{school.telephone}</span></div>}
+              {school.mat_name && <div className="detail-field" style={{gridColumn:'span 2'}}><span className="detail-field-label">Academy Trust</span><span className="detail-field-val">{school.mat_name}</span></div>}
+              {school.religious_character && school.religious_character !== 'Does not apply' && <div className="detail-field" style={{gridColumn:'span 2'}}><span className="detail-field-label">Religious Character</span><span className="detail-field-val">{school.religious_character}</span></div>}
+            </div>
+          </div>
+          <div style={{display:'flex',gap:10}}>
+            {website && <a href={website} target="_blank" rel="noopener noreferrer" style={{flex:1,display:'block',textAlign:'center',padding:'11px',background:'#F5F0E8',color:'#1A1A2E',borderRadius:6,fontWeight:600,fontSize:'0.85rem',textDecoration:'none',border:'2px solid #D8D0C0'}}>School Website →</a>}
+            {school.ofsted_url && <a href={school.ofsted_url} target="_blank" rel="noopener noreferrer" style={{flex:1,display:'block',textAlign:'center',padding:'11px',background:'#1A1A2E',color:'#D4A843',borderRadius:6,fontWeight:600,fontSize:'0.85rem',textDecoration:'none'}}>Ofsted Report →</a>}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MapView({ schools, onSelect }) {
+  const mapInstance = useRef(null);
+  const markersRef = useRef([]);
+
+  useEffect(() => {
+    if (mapInstance.current) return;
+    mapInstance.current = L.map('school-map').setView([51.505, -0.1], 10);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap contributors', maxZoom: 18 }).addTo(mapInstance.current);
+  }, []);
+
+  useEffect(() => {
+    if (!mapInstance.current) return;
+    markersRef.current.forEach(m => m.remove());
+    markersRef.current = [];
+    const withCoords = schools.filter(s => s.lat && s.lng);
+    withCoords.forEach(school => {
+      const band = school.score_band || school.quality_label || 'Unknown';
+      const color = BAND_COLORS[band] || '#95A5A6';
+      const icon = L.divIcon({ className: '', html: `<div style="width:12px;height:12px;border-radius:50%;background:${color};border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.35)"></div>`, iconSize:[12,12], iconAnchor:[6,6] });
+      const marker = L.marker([school.lat, school.lng], { icon }).addTo(mapInstance.current);
+      marker.bindPopup(`<div style="font-family:'DM Sans',sans-serif;min-width:190px"><div style="font-family:'Playfair Display',serif;font-weight:700;font-size:0.95rem;margin-bottom:3px">${school.name}</div><div style="font-size:0.78rem;color:#888;margin-bottom:7px">${school.local_authority} · ${school.postcode}</div><span class="band-chip" style="background:${color};color:white;display:inline-block;padding:2px 7px;border-radius:3px;font-size:0.7rem;font-weight:600">${band}</span><br/><button onclick="window.__sel(${school.urn})" style="display:block;width:100%;text-align:center;padding:7px;background:#1A1A2E;color:#D4A843;border-radius:4px;font-size:0.78rem;font-weight:600;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;margin-top:8px">View Details →</button></div>`);
+      markersRef.current.push(marker);
+    });
+    window.__sel = (urn) => { const s = schools.find(x => x.urn === urn); if (s) onSelect(s); };
+  }, [schools]);
+
+  const withCoords = schools.filter(s => s.lat && s.lng).length;
+  return (
+    <div>
+      <div className="map-wrap"><div id="school-map" /></div>
+      <div className="map-legend">
+        {Object.entries(BAND_COLORS).filter(([b]) => b !== 'Unknown').map(([band, color]) => (
+          <span key={band}><span className="map-legend-dot" style={{background:color}} />{band}</span>
+        ))}
+        <span style={{marginLeft:'auto'}}>{withCoords} of {schools.length} schools mapped</span>
+      </div>
+    </div>
+  );
+}
+
+function StatsPage({ schools }) {
+  const byBand = useMemo(() => { const c={}; schools.forEach(s=>{const b=s.score_band||s.quality_label||'Unknown';c[b]=(c[b]||0)+1;}); return c; }, [schools]);
+  const byPhase = useMemo(() => { const c={}; schools.forEach(s=>{c[s.phase||'Unknown']=(c[s.phase||'Unknown']||0)+1;}); return Object.entries(c).sort((a,b)=>b[1]-a[1]); }, [schools]);
+  const byLA = useMemo(() => { const c={}; schools.forEach(s=>{c[s.local_authority||'Unknown']=(c[s.local_authority||'Unknown']||0)+1;}); return Object.entries(c).sort((a,b)=>b[1]-a[1]).slice(0,16); }, [schools]);
+  const rated = schools.filter(s=>s.ofsted_score!=null);
+  const avg = rated.length ? Math.round(rated.reduce((a,s)=>a+s.ofsted_score,0)/rated.length) : 0;
+  return (
+    <div>
+      <div className="stats-grid">
+        {[{num:schools.length,label:'Total Schools'},{num:byBand['Outstanding']||0,label:'Outstanding'},{num:byBand['Good']||0,label:'Good'},{num:avg,label:'Avg Score'}].map(({num,label})=>(
+          <div key={label} className="stat-card"><div className="stat-card-num">{num}</div><div className="stat-card-label">{label}</div></div>
+        ))}
+      </div>
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:18,marginBottom:18}}>
+        <div className="chart-section">
+          <div className="chart-title">Schools by Ofsted Rating</div>
+          {['Outstanding','Good','Requires improvement','Inadequate','Unknown'].map(band => { const count=byBand[band]||0; if(!count) return null; const pct=Math.round((count/schools.length)*100); return (<div key={band} className="bar-chart-row"><div className="bar-chart-label">{band}</div><div className="bar-chart-wrap"><div className="bar-chart-fill" style={{width:`${pct}%`,background:BAND_COLORS[band]}}>{pct>6?`${pct}%`:''}</div></div><div className="bar-chart-count">{count}</div></div>); })}
+        </div>
+        <div className="chart-section">
+          <div className="chart-title">Schools by Phase</div>
+          {byPhase.map(([phase,count])=>{const pct=Math.round((count/byPhase[0][1])*100);return(<div key={phase} className="bar-chart-row"><div className="bar-chart-label">{phase}</div><div className="bar-chart-wrap"><div className="bar-chart-fill" style={{width:`${pct}%`,background:'#1A1A2E'}}>{count}</div></div><div className="bar-chart-count">{count}</div></div>);})}
+        </div>
+      </div>
+      <div className="chart-section">
+        <div className="chart-title">Schools by London Borough</div>
+        {byLA.map(([la,count])=>{const pct=Math.round((count/byLA[0][1])*100);return(<div key={la} className="bar-chart-row"><div className="bar-chart-label">{la}</div><div className="bar-chart-wrap"><div className="bar-chart-fill" style={{width:`${pct}%`,background:'#D4A843'}}>{count}</div></div><div className="bar-chart-count">{count}</div></div>);})}
+      </div>
+    </div>
+  );
+}
+
+function ScoreCard({ school, onClick }) {
+  const band = school.score_band || school.quality_label || 'Unknown';
+  return (
+    <div className="school-card" style={{'--band-color': BAND_COLORS[band]||'#ccc'}} onClick={() => onClick(school)}>
+      <div className="card-top">
+        <span className="card-phase">{school.phase}</span>
+        {school.ofsted_score != null && <div className="score-badge"><span className="score-num">{school.ofsted_score}</span><span className="score-lbl">Score</span></div>}
+      </div>
+      <div className="card-name">{school.name}</div>
+      <div className="card-la">📍 {school.local_authority} · {school.postcode}</div>
+      <div className="card-pills">
+        <span className={PILL_CLASS[band]||'pill pill-u'}>{band}</span>
+        {school.sixth_form === 'Has a sixth form' && <span className="pill" style={{background:'#EDE7F6',color:'#4527A0'}}>Sixth Form</span>}
+        {school.gender && school.gender !== 'Mixed' && <span className="pill" style={{background:'#FCE4EC',color:'#880E4F'}}>{school.gender}</span>}
+      </div>
+      <div className="card-meta">
+        <span>👥 {school.pupils??'—'} pupils</span>
+        <span>📅 {school.inspection_date||'—'}</span>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  const [view, setView] = useState('schools');
+  const [displayMode, setDisplayMode] = useState('grid');
+  const [schools, setSchools] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selected, setSelected] = useState(null);
+  const [page, setPage] = useState(1);
+  const PAGE_SIZE = 24;
+  const [filters, setFilters] = useState({ q:'', phase:'', local_authority:'', score_band:'' });
+
+  useEffect(() => {
+    async function load() {
+      try { const r = await fetch(`${API_BASE}/schools?limit=500`); if (!r.ok) throw new Error(); const d = await r.json(); setSchools(d.schools); setLoading(false); return; } catch {}
+      try { const r = await fetch(JSON_FALLBACK); if (!r.ok) throw new Error(); const d = await r.json(); setSchools(d); } catch { console.warn('Could not load school data. Place schools.json in the same folder as this HTML file.'); }
+      setLoading(false);
+    }
+    load();
+  }, []);
+
+  const phases = useMemo(() => [...new Set(schools.map(s=>s.phase).filter(Boolean))].sort(), [schools]);
+  const localAuthorities = useMemo(() => [...new Set(schools.map(s=>s.local_authority).filter(Boolean))].sort(), [schools]);
+  const filtered = useMemo(() => {
+    let r = schools;
+    if (filters.q) r = r.filter(s => s.name.toLowerCase().includes(filters.q.toLowerCase()) || (s.postcode||'').toLowerCase().includes(filters.q.toLowerCase()));
+    if (filters.phase) r = r.filter(s => s.phase === filters.phase);
+    if (filters.local_authority) r = r.filter(s => s.local_authority === filters.local_authority);
+    if (filters.score_band) r = r.filter(s => (s.score_band||s.quality_label) === filters.score_band);
+    return r.sort((a,b) => (b.ofsted_score??-1)-(a.ofsted_score??-1));
+  }, [schools, filters]);
+
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  const paged = filtered.slice((page-1)*PAGE_SIZE, page*PAGE_SIZE);
+  const setFilter = useCallback((k,v) => { setFilters(f=>({...f,[k]:v})); setPage(1); }, []);
+  const clearFilters = () => { setFilters({q:'',phase:'',local_authority:'',score_band:''}); setPage(1); };
+  const hasFilters = filters.q || filters.phase || filters.local_authority || filters.score_band;
+  const stats = useMemo(() => {
+    const rated = schools.filter(s=>s.ofsted_score!=null);
+    return { total:schools.length, outstanding:schools.filter(s=>(s.score_band||s.quality_label)==='Outstanding').length, avg:rated.length?Math.round(rated.reduce((a,s)=>a+s.ofsted_score,0)/rated.length):0 };
+  }, [schools]);
+
+  return (
+    <>
+      <header className="header">
+        <div className="header-logo">🏛 London <span>Schools</span><div className="header-badge">Explorer</div></div>
+        <nav className="header-nav">
+          {[['schools','📋 Schools'],['map','🗺 Map'],['stats','📊 Statistics']].map(([v,label]) => (
+            <button key={v} className={`nav-btn ${view===v?'active':''}`} onClick={() => setView(v)}>{label}</button>
+          ))}
+        </nav>
+      </header>
+
+      <section className="hero">
+        <div className="hero-eyebrow">Ofsted Data · 32 London Boroughs</div>
+        <h1>Find the right school<br />in <em>London</em></h1>
+        <p className="hero-sub">Explore and compare London schools using official Ofsted inspection data, deprivation indices, and composite scoring.</p>
+        <div className="hero-stats">
+          {[{n:stats.total,l:'London Schools'},{n:stats.outstanding,l:'Outstanding'},{n:stats.avg,l:'Avg Score'},{n:32,l:'Boroughs'}].map(({n,l}) => (
+            <div key={l} className="hero-stat"><span className="hero-stat-num">{n}</span><span className="hero-stat-label">{l}</span></div>
+          ))}
+        </div>
+      </section>
+
+      <main className="main">
+        {loading ? (
+          <div className="loading"><div className="spinner" /> Loading schools...</div>
+        ) : view === 'stats' ? (
+          <StatsPage schools={schools} />
+        ) : view === 'map' ? (
+          <>
+            <div className="controls" style={{marginBottom:16}}>
+              <div className="search-wrap"><span className="search-icon">🔍</span><input type="text" placeholder="Filter map by name or postcode..." value={filters.q} onChange={e => setFilter('q', e.target.value)} /></div>
+              <div className="filter-group"><span className="filter-label">Phase</span><select value={filters.phase} onChange={e => setFilter('phase', e.target.value)}><option value="">All phases</option>{phases.map(p=><option key={p} value={p}>{p}</option>)}</select></div>
+              <div className="filter-group"><span className="filter-label">Borough</span><select value={filters.local_authority} onChange={e => setFilter('local_authority', e.target.value)}><option value="">All boroughs</option>{localAuthorities.map(la=><option key={la} value={la}>{la}</option>)}</select></div>
+              <div className="filter-group"><span className="filter-label">Rating</span><select value={filters.score_band} onChange={e => setFilter('score_band', e.target.value)}><option value="">All ratings</option>{['Outstanding','Good','Requires improvement','Inadequate'].map(b=><option key={b} value={b}>{b}</option>)}</select></div>
+              {hasFilters && <button className="clear-btn" onClick={clearFilters}>✕ Clear</button>}
+            </div>
+            <MapView schools={filtered} onSelect={setSelected} />
+          </>
+        ) : (
+          <>
+            <div className="controls">
+              <div className="search-wrap"><span className="search-icon">🔍</span><input type="text" placeholder="Search by name or postcode..." value={filters.q} onChange={e => setFilter('q', e.target.value)} /></div>
+              <div className="filter-group"><span className="filter-label">Phase</span><select value={filters.phase} onChange={e => setFilter('phase', e.target.value)}><option value="">All phases</option>{phases.map(p=><option key={p} value={p}>{p}</option>)}</select></div>
+              <div className="filter-group"><span className="filter-label">Borough</span><select value={filters.local_authority} onChange={e => setFilter('local_authority', e.target.value)}><option value="">All boroughs</option>{localAuthorities.map(la=><option key={la} value={la}>{la}</option>)}</select></div>
+              <div className="filter-group"><span className="filter-label">Rating</span><select value={filters.score_band} onChange={e => setFilter('score_band', e.target.value)}><option value="">All ratings</option>{['Outstanding','Good','Requires improvement','Inadequate'].map(b=><option key={b} value={b}>{b}</option>)}</select></div>
+              {hasFilters && <button className="clear-btn" onClick={clearFilters}>✕ Clear</button>}
+            </div>
+            <div className="results-header">
+              <div className="results-count">Showing <strong>{filtered.length}</strong> school{filtered.length!==1?'s':''}{schools.length!==filtered.length?` of ${schools.length}`:''}</div>
+              <div className="view-toggle">
+                <button className={`view-btn ${displayMode==='grid'?'active':''}`} onClick={() => setDisplayMode('grid')}>⊞</button>
+                <button className={`view-btn ${displayMode==='table'?'active':''}`} onClick={() => setDisplayMode('table')}>☰</button>
+              </div>
+            </div>
+            {filtered.length === 0 ? (
+              <div className="empty-state"><h3>No schools found</h3><p>Try adjusting your filters.</p></div>
+            ) : displayMode === 'grid' ? (
+              <div className="school-grid">{paged.map(s => <ScoreCard key={s.urn} school={s} onClick={setSelected} />)}</div>
+            ) : (
+              <table className="school-table">
+                <thead><tr><th>#</th><th>School</th><th>Borough</th><th>Phase</th><th>Rating</th><th>Score</th><th>Pupils</th><th>Inspected</th></tr></thead>
+                <tbody>
+                  {paged.map((s,i) => { const band=s.score_band||s.quality_label||'Unknown'; return (
+                    <tr key={s.urn} onClick={() => setSelected(s)}>
+                      <td><span className="rank-num">{(page-1)*PAGE_SIZE+i+1}</span></td>
+                      <td style={{fontWeight:600,maxWidth:260}}>{s.name}</td>
+                      <td style={{color:'#777'}}>{s.local_authority}</td>
+                      <td style={{color:'#999',fontSize:'0.8rem'}}>{s.phase}</td>
+                      <td><BandChip band={band} /></td>
+                      <td style={{fontFamily:"'Playfair Display',serif",fontWeight:700,color:BAND_COLORS[band]}}>{s.ofsted_score??'—'}</td>
+                      <td style={{color:'#777'}}>{s.pupils??'—'}</td>
+                      <td style={{color:'#aaa',fontSize:'0.8rem'}}>{s.inspection_date||'—'}</td>
+                    </tr>
+                  ); })}
+                </tbody>
+              </table>
+            )}
+            {totalPages > 1 && (
+              <div className="pagination">
+                <button className="page-btn" onClick={() => setPage(p=>p-1)} disabled={page===1}>‹</button>
+                {Array.from({length:Math.min(7,totalPages)},(_,i) => { let p; if(totalPages<=7) p=i+1; else if(page<=4) p=i+1; else if(page>=totalPages-3) p=totalPages-6+i; else p=page-3+i; return <button key={p} className={`page-btn ${page===p?'active':''}`} onClick={() => setPage(p)}>{p}</button>; })}
+                <button className="page-btn" onClick={() => setPage(p=>p+1)} disabled={page===totalPages}>›</button>
+              </div>
+            )}
+          </>
+        )}
+      </main>
+      {selected && <SchoolDetail school={selected} onClose={() => setSelected(null)} />}
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

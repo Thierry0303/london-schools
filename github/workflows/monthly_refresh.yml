@@ -1,35 +1,276 @@
-name: Monthly Data Refresh
+"""
+scripts/refresh_data.py
 
-on:
-  schedule:
-    # Runs on the 15th of every month at 08:00 UTC
-    # Police API usually publishes the previous month's data around the 12th-14th
-    - cron: '0 8 15 * *'
-  workflow_dispatch: # Also allows manual trigger from GitHub Actions tab
+Full monthly data refresh:
+  1. Ofsted ratings     — downloads latest management info CSV (URL from data_sources.yml)
+  2. Admissions data    — downloads from DfE stable URL (April/May only)
+  3. Crime data         — fetches from Police API for all schools
 
-jobs:
-  refresh:
-    runs-on: ubuntu-latest
+Run manually:
+    python3 scripts/refresh_data.py
 
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+To update Ofsted: edit OFSTED_URL in data_sources.yml when Ofsted
+publishes a new file around the 11th of each month.
+"""
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
+import requests, json, time, os, io, yaml
+import numpy as np
+import pandas as pd
+from datetime import datetime, timedelta
+from math import radians, sin, cos, sqrt, atan2
 
-      - name: Install dependencies
-        run: pip install requests pandas numpy pyyaml
+ROOT         = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SCHOOLS_JSON = os.path.join(ROOT, "schools.json")
+CONFIG_FILE  = os.path.join(ROOT, "data_sources.yml")
+PAUSE_SEC    = 0.12
 
-      - name: Fetch crime data and rebuild schools.json
-        run: python3 scripts/refresh_data.py
+QUALITY_MAP   = {1:'Outstanding', 2:'Good', 3:'Requires improvement', 4:'Inadequate'}
+OFSTED_SCORES = {1:100, 2:80, 3:40, 4:0}
 
-      - name: Commit updated schools.json
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add schools.json
-          git diff --staged --quiet || git commit -m "chore: monthly data refresh $(date +'%Y-%m')"
-          git push
+
+def load_config():
+    with open(CONFIG_FILE) as f:
+        return yaml.safe_load(f)
+
+def load_schools():
+    with open(SCHOOLS_JSON) as f:
+        return json.load(f)
+
+def save_schools(schools):
+    with open(SCHOOLS_JSON, 'w') as f:
+        json.dump(schools, f, indent=2)
+
+def safe_int(v):
+    try:
+        f = float(v)
+        return int(f) if not np.isnan(f) else None
+    except:
+        return None
+
+def clean(val):
+    if val is None: return None
+    if isinstance(val, float) and np.isnan(val): return None
+    if isinstance(val, (np.integer,)): return int(val)
+    if isinstance(val, (np.floating,)):
+        if np.isnan(val): return None
+        iv = int(val)
+        return iv if val == iv else round(float(val), 6)
+    if isinstance(val, str): return val.strip() or None
+    return val
+
+def haversine_km(lat1, lng1, lat2, lng2):
+    R = 6371
+    dlat = radians(lat2 - lat1)
+    dlng = radians(lng2 - lng1)
+    a = sin(dlat/2)**2 + cos(radians(lat1)) * cos(radians(lat2)) * sin(dlng/2)**2
+    return R * 2 * atan2(sqrt(a), sqrt(1-a))
+
+
+# ── 1. OFSTED ─────────────────────────────────────────────────────────────────
+
+def parse_ungraded_outcome(text):
+    if not text or not isinstance(text, str): return None, None
+    t = text.lower()
+    if 'outstanding' in t: return 'Outstanding', 100
+    if 'good' in t:        return 'Good', 80
+    if 'requires improvement' in t: return 'Requires improvement', 40
+    if 'inadequate' in t:  return 'Inadequate', 0
+    return None, None
+
+def refresh_ofsted(schools, url):
+    print("\n── Ofsted ──────────────────────────────────────────")
+    print(f"Downloading Ofsted data...")
+    r = requests.get(url, timeout=60)
+    r.raise_for_status()
+    df = pd.read_csv(io.StringIO(r.content.decode('latin1')), low_memory=False)
+    london = df[df['Ofsted region'] == 'London'].copy()
+    print(f"London schools in file: {len(london)}")
+
+    lookup = {}
+    for _, row in london.iterrows():
+        urn = safe_int(row['URN'])
+        if not urn: continue
+        overall_raw = safe_int(row.get('Latest OEIF overall effectiveness'))
+        ungraded    = clean(row.get('Ungraded inspection overall outcome'))
+        if overall_raw in QUALITY_MAP:
+            ql, os_, sb = QUALITY_MAP[overall_raw], OFSTED_SCORES[overall_raw], QUALITY_MAP[overall_raw]
+        elif str(row.get('Latest OEIF overall effectiveness', '')).strip() == 'Not judged':
+            ql, os_ = parse_ungraded_outcome(ungraded)
+            sb = ql if ql else 'Ungraded (monitoring)'
+        elif clean(row.get('Curriculum and teaching')):
+            ql, os_, sb = None, None, 'Report card (2025+)'
+        else:
+            ql, os_, sb = None, None, 'Not yet rated'
+
+        lookup[urn] = {
+            'quality_raw': overall_raw, 'quality_label': ql,
+            'ofsted_score': os_, 'score_band': sb,
+            'behaviour_raw': safe_int(row.get('Latest OEIF behaviour and attitudes')),
+            'personal_dev_raw': safe_int(row.get('Latest OEIF personal development')),
+            'leadership_raw': safe_int(row.get('Latest OEIF effectiveness of leadership and management')),
+            'safeguarding': clean(row.get('Latest OEIF  safeguarding is effective?')),
+            'inspection_date': clean(row.get('Inspection start date of latest OEIF graded inspection')),
+            'ofsted_url': clean(row.get('Web Link (opens in new window)')),
+            'mat_name': clean(row.get('Multi-academy trust name')),
+            'idaci_quintile': safe_int(row.get('The income deprivation affecting children index (IDACI) quintile')),
+            'ungraded_outcome': ungraded,
+            'rc_curriculum': clean(row.get('Curriculum and teaching')),
+            'rc_achievement': clean(row.get('Achievement')),
+            'rc_attendance': clean(row.get('Attendance and behaviour')),
+            'rc_leadership': clean(row.get('Leadership and governance')),
+            'rc_safeguarding': clean(row.get('Safeguarding standards')),
+        }
+
+    ofsted_fields = list(list(lookup.values())[0].keys())
+    enriched = 0
+    for s in schools:
+        for f in ofsted_fields:
+            s.pop(f, None)
+        urn = s.get('urn')
+        if urn in lookup:
+            s.update(lookup[urn])
+            enriched += 1
+        else:
+            s['score_band'] = 'Not yet rated'
+            s['quality_label'] = None
+            s['ofsted_score'] = None
+
+    from collections import Counter
+    bands = Counter(s['score_band'] for s in schools)
+    print(f"Enriched {enriched} schools | Bands: {dict(bands)}")
+    return schools
+
+
+# ── 2. ADMISSIONS ─────────────────────────────────────────────────────────────
+
+def refresh_admissions(schools, url):
+    month = datetime.now().month
+    if month not in [4, 5]:
+        print("\n── Admissions ── skipped (refreshes in April/May only)")
+        return schools
+
+    print("\n── Admissions ──────────────────────────────────────")
+    print("Downloading admissions data...")
+    r = requests.get(url, timeout=120)
+    r.raise_for_status()
+    df = pd.read_csv(io.StringIO(r.content.decode('utf-8')), low_memory=False)
+    london = df[
+        df['region_name'].isin(['Inner London', 'Outer London']) &
+        (df['geographic_level'] == 'School')
+    ].copy()
+    if 'time_period' in london.columns:
+        london = london[london['time_period'] == london['time_period'].max()]
+
+    lookup = {}
+    for _, row in london.iterrows():
+        urn = safe_int(row.get('school_urn'))
+        if not urn: continue
+        places      = safe_int(row.get('total_number_places_offered'))
+        first_prefs = safe_int(row.get('times_put_as_1st_preference'))
+        any_prefs   = safe_int(row.get('times_put_as_any_preferred_school'))
+        offers_1st  = safe_int(row.get('number_1st_preference_offers'))
+        lookup[urn] = {
+            'places': places,
+            'first_pref_applications': first_prefs,
+            'total_applications': any_prefs,
+            'first_pref_offers': offers_1st,
+            'apps_per_place': round(first_prefs / places, 2) if places and first_prefs and places > 0 else None,
+            'first_pref_success_pct': round((offers_1st / first_prefs) * 100, 1) if first_prefs and offers_1st and first_prefs > 0 else None,
+        }
+
+    enriched = sum(1 for s in schools if s.get('urn') in lookup and not s.update(lookup[s['urn']]))
+    print(f"Updated admissions for {len(lookup)} schools")
+    return schools
+
+
+# ── 3. CRIME ──────────────────────────────────────────────────────────────────
+
+def get_best_available_month():
+    for months_back in [2, 3, 4]:
+        d = datetime.now() - timedelta(days=30 * months_back)
+        candidate = d.strftime("%Y-%m")
+        r = requests.get(
+            "https://data.police.uk/api/crimes-street/all-crime",
+            params={"lat": 51.5074, "lng": -0.1278, "date": candidate},
+            timeout=15
+        )
+        if r.status_code == 200:
+            print(f"Using crime month: {candidate}")
+            return candidate
+        print(f"  {candidate} not available, trying earlier...")
+    raise RuntimeError("No available crime data month found")
+
+def refresh_crime(schools, radius_km):
+    print("\n── Crime ───────────────────────────────────────────")
+    with_coords = [s for s in schools if s.get('lat') and s.get('lng')]
+    print(f"Schools to fetch: {len(with_coords)}")
+    date = get_best_available_month()
+    crime_counts = {}
+
+    for i, school in enumerate(with_coords):
+        urn, lat, lng = school['urn'], school['lat'], school['lng']
+        try:
+            r = requests.get(
+                "https://data.police.uk/api/crimes-street/all-crime",
+                params={"lat": lat, "lng": lng, "date": date},
+                timeout=20
+            )
+            if r.status_code == 200:
+                crimes = r.json()
+                count = sum(
+                    1 for c in crimes
+                    if c.get('location', {}).get('latitude') and c.get('location', {}).get('longitude')
+                    and haversine_km(lat, lng,
+                        float(c['location']['latitude']),
+                        float(c['location']['longitude'])) <= radius_km
+                )
+                crime_counts[urn] = count
+            else:
+                crime_counts[urn] = 0
+        except Exception as e:
+            print(f"  Error [{urn}]: {e}")
+
+        time.sleep(PAUSE_SEC)
+        if (i + 1) % 500 == 0:
+            print(f"  {i+1}/{len(with_coords)} ({(i+1)/len(with_coords)*100:.0f}%)")
+
+    counts = list(crime_counts.values())
+    p95 = float(np.percentile(counts, 95))
+    print(f"Done. Range: {min(counts)}–{max(counts)}, p95={p95:.0f}")
+
+    def cscore(c): return round((1 - min(c, p95) / p95) * 100, 1)
+    def clabel(s):
+        if s >= 80: return 'Low crime area'
+        if s >= 60: return 'Below average crime'
+        if s >= 40: return 'Average crime'
+        if s >= 20: return 'Above average crime'
+        return 'High crime area'
+
+    for s in schools:
+        if s.get('urn') in crime_counts:
+            c = crime_counts[s['urn']]
+            s['crime_count'] = c
+            s['crime_score'] = cscore(c)
+            s['crime_label'] = clabel(cscore(c))
+            s['crime_date']  = date
+
+    return schools
+
+
+# ── MAIN ──────────────────────────────────────────────────────────────────────
+
+def main():
+    print("=" * 52)
+    print(f"  London Schools Refresh — {datetime.now().strftime('%Y-%m-%d %H:%M')}")
+    print("=" * 52)
+    config  = load_config()
+    schools = load_schools()
+    print(f"Loaded {len(schools)} schools")
+    schools = refresh_ofsted(schools, config['OFSTED_URL'])
+    schools = refresh_admissions(schools, config['ADMISSIONS_URL'])
+    schools = refresh_crime(schools, config.get('CRIME_RADIUS_KM', 0.5))
+    save_schools(schools)
+    print(f"\n✅ Complete — {datetime.now().strftime('%Y-%m-%d %H:%M')}")
+
+if __name__ == "__main__":
+    main()

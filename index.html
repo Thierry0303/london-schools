@@ -185,6 +185,19 @@ function imdLabel(decile) {
   return       { text: 'Least deprived area',              color: '#1565C0', bg: '#E3F2FD' };
 }
 
+// Generate Snobe URL from school name
+// e.g. "St Mary's Primary School" → "st-marys-primary-school"
+function snobeUrl(name) {
+  if (!name) return null;
+  const slug = name
+    .toLowerCase()
+    .replace(/['']/g, '')           // remove apostrophes
+    .replace(/[^a-z0-9\s-]/g, '')  // remove other special chars
+    .trim()
+    .replace(/\s+/g, '-');          // spaces to hyphens
+  return `https://snobe.co.uk/schools/${slug}`;
+}
+
 function BandChip({ band }) {
   return <span className="band-chip" style={{ background: BAND_COLORS[band]||'#95A5A6' }}>{band||'Unknown'}</span>;
 }
@@ -269,6 +282,7 @@ function SchoolDetail({ school, onClose }) {
           <div style={{display:'flex',gap:10}}>
             {website && <a href={website} target="_blank" rel="noopener noreferrer" style={{flex:1,display:'block',textAlign:'center',padding:'11px',background:'#F5F0E8',color:'#1A1A2E',borderRadius:6,fontWeight:600,fontSize:'0.85rem',textDecoration:'none',border:'2px solid #D8D0C0'}}>School Website →</a>}
             {school.ofsted_url && <a href={school.ofsted_url} target="_blank" rel="noopener noreferrer" style={{flex:1,display:'block',textAlign:'center',padding:'11px',background:'#1A1A2E',color:'#D4A843',borderRadius:6,fontWeight:600,fontSize:'0.85rem',textDecoration:'none'}}>Ofsted Report →</a>}
+            <a href={snobeUrl(school.name)} target="_blank" rel="noopener noreferrer" style={{flex:1,display:'block',textAlign:'center',padding:'11px',background:'#7B2FBE',color:'white',borderRadius:6,fontWeight:600,fontSize:'0.85rem',textDecoration:'none'}}>View on Snobe →</a>
           </div>
         </div>
       </div>

@@ -1,0 +1,35 @@
+name: Monthly Data Refresh
+
+on:
+  schedule:
+    # Runs on the 15th of every month at 08:00 UTC
+    # Police API usually publishes the previous month's data around the 12th-14th
+    - cron: '0 8 15 * *'
+  workflow_dispatch: # Also allows manual trigger from GitHub Actions tab
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests pandas numpy
+
+      - name: Fetch crime data and rebuild schools.json
+        run: python3 scripts/refresh_data.py
+
+      - name: Commit updated schools.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add schools.json
+          git diff --staged --quiet || git commit -m "chore: monthly data refresh $(date +'%Y-%m')"
+          git push

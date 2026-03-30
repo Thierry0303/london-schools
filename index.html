@@ -157,7 +157,7 @@ const { useState, useEffect, useMemo, useRef, useCallback } = React;
 const API_BASE = 'http://localhost:8000';
 const JSON_FALLBACK = './schools.json';
 
-const BAND_COLORS = { 'Outstanding':'#27AE60', 'Good':'#2980B9', 'Requires improvement':'#E67E22', 'Inadequate':'#C0392B', 'Unknown':'#95A5A6' };
+const BAND_COLORS = { 'Outstanding':'#27AE60', 'Good':'#2980B9', 'Requires improvement':'#E67E22', 'Inadequate':'#C0392B', 'Ungraded (monitoring)':'#8E44AD', 'Report card (2025+)':'#16A085', 'Not yet rated':'#BDC3C7', 'Unknown':'#95A5A6' };
 const RATING_MAP = { 1:'Outstanding', 2:'Good', 3:'Requires improvement', 4:'Inadequate' };
 const RATING_SCORES = { 1:100, 2:80, 3:40, 4:0 };
 const PILL_CLASS = { 'Outstanding':'pill pill-o', 'Good':'pill pill-g', 'Requires improvement':'pill pill-r', 'Inadequate':'pill pill-i' };
@@ -239,6 +239,26 @@ function SchoolDetail({ school, onClose }) {
             <RatingBar label="Personal development" raw={school.personal_dev_raw} />
             <RatingBar label="Leadership & management" raw={school.leadership_raw} />
           </div>
+          {(school.rc_curriculum || school.rc_achievement) && (
+            <div className="detail-section">
+              <div className="detail-section-title">Ofsted Report Card (2025+ Framework)</div>
+              <p style={{fontSize:'0.8rem',color:'#888',marginBottom:12}}>This school was inspected under Ofsted's new framework, which replaced single-word grades with a 5-point scale.</p>
+              <div className="detail-grid">
+                {school.rc_curriculum && <div className="detail-field"><span className="detail-field-label">Curriculum & Teaching</span><span className="detail-field-val" style={{color:'#16A085',fontWeight:600}}>{school.rc_curriculum}</span></div>}
+                {school.rc_achievement && <div className="detail-field"><span className="detail-field-label">Achievement</span><span className="detail-field-val" style={{color:'#16A085',fontWeight:600}}>{school.rc_achievement}</span></div>}
+                {school.rc_attendance && <div className="detail-field"><span className="detail-field-label">Attendance & Behaviour</span><span className="detail-field-val" style={{color:'#16A085',fontWeight:600}}>{school.rc_attendance}</span></div>}
+                {school.rc_leadership && <div className="detail-field"><span className="detail-field-label">Leadership & Governance</span><span className="detail-field-val" style={{color:'#16A085',fontWeight:600}}>{school.rc_leadership}</span></div>}
+                {school.rc_safeguarding && <div className="detail-field"><span className="detail-field-label">Safeguarding</span><span className="detail-field-val" style={{color:'#16A085',fontWeight:600}}>{school.rc_safeguarding}</span></div>}
+              </div>
+            </div>
+          )}
+          {school.ungraded_outcome && (
+            <div className="detail-section">
+              <div className="detail-section-title">Latest Monitoring Inspection</div>
+              <p style={{fontSize:'0.88rem',color:'#555',padding:'10px 14px',background:'#F3EDF7',borderRadius:6,borderLeft:'3px solid #8E44AD'}}>{school.ungraded_outcome}</p>
+            </div>
+          )}
+
           <div className="detail-section">
             <div className="detail-section-title">School Information</div>
             <div className="detail-grid">
@@ -555,7 +575,7 @@ function App() {
               <div className="search-wrap"><span className="search-icon">🔍</span><input type="text" placeholder="Filter map by name or postcode..." value={filters.q} onChange={e => setFilter('q', e.target.value)} /></div>
               <div className="filter-group"><span className="filter-label">Phase</span><select value={filters.phase} onChange={e => setFilter('phase', e.target.value)}><option value="">All phases</option>{phases.map(p=><option key={p} value={p}>{p}</option>)}</select></div>
               <div className="filter-group"><span className="filter-label">Borough</span><select value={filters.local_authority} onChange={e => setFilter('local_authority', e.target.value)}><option value="">All boroughs</option>{localAuthorities.map(la=><option key={la} value={la}>{la}</option>)}</select></div>
-              <div className="filter-group"><span className="filter-label">Rating</span><select value={filters.score_band} onChange={e => setFilter('score_band', e.target.value)}><option value="">All ratings</option>{['Outstanding','Good','Requires improvement','Inadequate'].map(b=><option key={b} value={b}>{b}</option>)}</select></div>
+              <div className="filter-group"><span className="filter-label">Rating</span><select value={filters.score_band} onChange={e => setFilter('score_band', e.target.value)}><option value="">All ratings</option>{['Outstanding','Good','Requires improvement','Inadequate','Ungraded (monitoring)','Report card (2025+)'].map(b=><option key={b} value={b}>{b}</option>)}</select></div>
               {hasFilters && <button className="clear-btn" onClick={clearFilters}>✕ Clear</button>}
             </div>
             <MapView schools={filtered} onSelect={setSelected} />
@@ -566,7 +586,7 @@ function App() {
               <div className="search-wrap"><span className="search-icon">🔍</span><input type="text" placeholder="Search by name or postcode..." value={filters.q} onChange={e => setFilter('q', e.target.value)} /></div>
               <div className="filter-group"><span className="filter-label">Phase</span><select value={filters.phase} onChange={e => setFilter('phase', e.target.value)}><option value="">All phases</option>{phases.map(p=><option key={p} value={p}>{p}</option>)}</select></div>
               <div className="filter-group"><span className="filter-label">Borough</span><select value={filters.local_authority} onChange={e => setFilter('local_authority', e.target.value)}><option value="">All boroughs</option>{localAuthorities.map(la=><option key={la} value={la}>{la}</option>)}</select></div>
-              <div className="filter-group"><span className="filter-label">Rating</span><select value={filters.score_band} onChange={e => setFilter('score_band', e.target.value)}><option value="">All ratings</option>{['Outstanding','Good','Requires improvement','Inadequate'].map(b=><option key={b} value={b}>{b}</option>)}</select></div>
+              <div className="filter-group"><span className="filter-label">Rating</span><select value={filters.score_band} onChange={e => setFilter('score_band', e.target.value)}><option value="">All ratings</option>{['Outstanding','Good','Requires improvement','Inadequate','Ungraded (monitoring)','Report card (2025+)'].map(b=><option key={b} value={b}>{b}</option>)}</select></div>
               {hasFilters && <button className="clear-btn" onClick={clearFilters}>✕ Clear</button>}
             </div>
             <div className="results-header">

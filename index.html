@@ -157,6 +157,12 @@ const { useState, useEffect, useMemo, useRef, useCallback } = React;
 const API_BASE = 'http://localhost:8000';
 const JSON_FALLBACK = './schools.json';
 
+// National England averages for benchmarking (2023/24)
+const ENG_ATT8_AVG       = 39.5;  // England avg Attainment 8
+const ENG_G5_AVG         = 36.8;  // England avg % grade 5+ English & Maths
+const ENG_KS2_HIGHER_AVG = 7.4;   // England avg % KS2 higher standard
+const ENG_KS2_EXP_AVG    = 58.4;  // England avg % KS2 expected standard
+
 const BAND_COLORS = { 'Outstanding':'#27AE60', 'Good':'#2980B9', 'Requires improvement':'#E67E22', 'Inadequate':'#C0392B', 'Ungraded (monitoring)':'#8E44AD', 'Report card (2025+)':'#16A085', 'Not yet rated':'#BDC3C7', 'Unknown':'#95A5A6' };
 const RATING_MAP = { 1:'Outstanding', 2:'Good', 3:'Requires improvement', 4:'Inadequate' };
 const RATING_SCORES = { 1:100, 2:80, 3:40, 4:0 };
@@ -242,6 +248,86 @@ function SchoolDetail({ school, onClose }) {
             <div className="detail-section">
               <div className="detail-section-title">Latest Monitoring Inspection</div>
               <p style={{fontSize:'0.88rem',color:'#555',padding:'10px 14px',background:'#F3EDF7',borderRadius:6,borderLeft:'3px solid #8E44AD'}}>{school.ungraded_outcome}</p>
+            </div>
+          )}
+
+          {/* KS4 Results */}
+          {(school.ks4_att8 != null || school.ks4_grade5_em != null) && (
+            <div className="detail-section">
+              <div className="detail-section-title">GCSE Results 2024 · Year 11</div>
+              <div className="detail-grid">
+                {school.ks4_att8 != null && (() => {
+                  const pct = Math.min(school.ks4_att8 / 90 * 100, 100);
+                  const aboveAvg = school.ks4_att8 >= ENG_ATT8_AVG;
+                  const color = school.ks4_att8 >= 60 ? '#27AE60' : school.ks4_att8 >= 45 ? '#2980B9' : school.ks4_att8 >= 35 ? '#F57F17' : '#C0392B';
+                  return (
+                    <div className="detail-field" style={{gridColumn:'span 2'}}>
+                      <span className="detail-field-label">Attainment 8 score</span>
+                      <div style={{display:'flex',alignItems:'center',gap:10,marginTop:4}}>
+                        <div style={{flex:1,background:'#EDE8DF',borderRadius:4,height:8,overflow:'hidden',position:'relative'}}>
+                          <div style={{width:`${pct}%`,height:'100%',background:color,borderRadius:4}} />
+                          {/* National average marker */}
+                          <div style={{position:'absolute',top:0,left:`${ENG_ATT8_AVG/90*100}%`,width:2,height:'100%',background:'#666',opacity:0.5}} />
+                        </div>
+                        <span style={{fontFamily:"'Playfair Display',serif",fontSize:'1.4rem',fontWeight:700,color,minWidth:40}}>{school.ks4_att8}</span>
+                      </div>
+                      <div style={{display:'flex',justifyContent:'space-between',marginTop:4}}>
+                        <span style={{fontSize:'0.72rem',fontWeight:600,color}}>{aboveAvg ? '▲ Above national average' : '▼ Below national average'}</span>
+                        <span style={{fontSize:'0.72rem',color:'#aaa'}}>England avg: {ENG_ATT8_AVG} · max: 90</span>
+                      </div>
+                    </div>
+                  );
+                })()}
+                {school.ks4_grade5_em != null && (() => {
+                  const aboveAvg = school.ks4_grade5_em >= ENG_G5_AVG;
+                  const color = school.ks4_grade5_em >= 60 ? '#27AE60' : school.ks4_grade5_em >= 40 ? '#2980B9' : school.ks4_grade5_em >= 25 ? '#F57F17' : '#C0392B';
+                  return (
+                    <div className="detail-field" style={{gridColumn:'span 2'}}>
+                      <span className="detail-field-label">% Grade 5+ in English & Maths</span>
+                      <div style={{display:'flex',alignItems:'center',gap:10,marginTop:4}}>
+                        <div style={{flex:1,background:'#EDE8DF',borderRadius:4,height:8,overflow:'hidden',position:'relative'}}>
+                          <div style={{width:`${school.ks4_grade5_em}%`,height:'100%',background:color,borderRadius:4}} />
+                          <div style={{position:'absolute',top:0,left:`${ENG_G5_AVG}%`,width:2,height:'100%',background:'#666',opacity:0.5}} />
+                        </div>
+                        <span style={{fontFamily:"'Playfair Display',serif",fontSize:'1.4rem',fontWeight:700,color,minWidth:50}}>{school.ks4_grade5_em}%</span>
+                      </div>
+                      <div style={{display:'flex',justifyContent:'space-between',marginTop:4}}>
+                        <span style={{fontSize:'0.72rem',fontWeight:600,color}}>{aboveAvg ? '▲ Above national average' : '▼ Below national average'}</span>
+                        <span style={{fontSize:'0.72rem',color:'#aaa'}}>England avg: {ENG_G5_AVG}%</span>
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+            </div>
+          )}
+
+          {/* KS2 Results */}
+          {school.ks2_higher_pct != null && (
+            <div className="detail-section">
+              <div className="detail-section-title">SATs Results 2024 · Year 6</div>
+              <div className="detail-grid">
+                {(() => {
+                  const aboveAvg = school.ks2_higher_pct >= ENG_KS2_HIGHER_AVG;
+                  const color = school.ks2_higher_pct >= 25 ? '#27AE60' : school.ks2_higher_pct >= 15 ? '#2980B9' : school.ks2_higher_pct >= 7 ? '#F57F17' : '#C0392B';
+                  return (
+                    <div className="detail-field" style={{gridColumn:'span 2'}}>
+                      <span className="detail-field-label">% achieving higher standard (Reading, Writing & Maths)</span>
+                      <div style={{display:'flex',alignItems:'center',gap:10,marginTop:4}}>
+                        <div style={{flex:1,background:'#EDE8DF',borderRadius:4,height:8,overflow:'hidden',position:'relative'}}>
+                          <div style={{width:`${school.ks2_higher_pct}%`,height:'100%',background:color,borderRadius:4}} />
+                          <div style={{position:'absolute',top:0,left:`${ENG_KS2_HIGHER_AVG}%`,width:2,height:'100%',background:'#666',opacity:0.5}} />
+                        </div>
+                        <span style={{fontFamily:"'Playfair Display',serif",fontSize:'1.4rem',fontWeight:700,color,minWidth:50}}>{school.ks2_higher_pct}%</span>
+                      </div>
+                      <div style={{display:'flex',justifyContent:'space-between',marginTop:4}}>
+                        <span style={{fontSize:'0.72rem',fontWeight:600,color}}>{aboveAvg ? '▲ Above national average' : '▼ Below national average'}</span>
+                        <span style={{fontSize:'0.72rem',color:'#aaa'}}>England avg: {ENG_KS2_HIGHER_AVG}% · Expected std: {school.ks2_expected_pct}%</span>
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
             </div>
           )}
 
@@ -449,6 +535,9 @@ function ScoreCard({ school, onClick }) {
     ? { background:'#FFF8E1', color:'#E65100', border:'1px solid #FFE082' }
     : { background:'#F3F4F6', color:'#374151', border:'1px solid #D1D5DB' };
 
+  // Score — same logic as hero "Avg Score": ofsted_score 0-100
+  const score = school.ofsted_score;
+
   return (
     <div className="school-card" style={{'--band-color': color}} onClick={() => onClick(school)}>
       <div className="card-top">
@@ -462,12 +551,18 @@ function ScoreCard({ school, onClick }) {
       <div className="card-name">{school.name}</div>
       <div className="card-la">📍 {school.local_authority} · {school.postcode}</div>
 
-      {/* Ofsted grade bar */}
+      {/* Ofsted grade bar + numeric score */}
       <div style={{display:'flex', alignItems:'center', gap:10, margin:'10px 0 12px'}}>
-        <div style={{flex:1, background:'#EDE8DF', borderRadius:4, height:6, overflow:'hidden'}}>
-          <div style={{width:`${school.ofsted_score??0}%`, height:'100%', background:color, borderRadius:4, transition:'width 0.4s'}} />
+        <div className="score-badge" style={{background: score != null ? 'var(--ink)' : '#555', marginRight:2, flexShrink:0}}>
+          <span className="score-num" style={{color: score != null ? 'var(--gold)' : '#aaa', fontSize: score != null ? '1.25rem' : '0.85rem'}}>
+            {score != null ? score : '—'}
+          </span>
+          <span className="score-lbl">{score != null ? 'Score' : 'Unrated'}</span>
         </div>
-        <span style={{fontSize:'0.78rem', fontWeight:700, color, minWidth:110, textAlign:'right'}}>
+        <div style={{flex:1, background:'#EDE8DF', borderRadius:4, height:6, overflow:'hidden'}}>
+          <div style={{width:`${score??0}%`, height:'100%', background:color, borderRadius:4, transition:'width 0.4s'}} />
+        </div>
+        <span style={{fontSize:'0.78rem', fontWeight:700, color, minWidth:90, textAlign:'right'}}>
           {band}
         </span>
       </div>
@@ -492,6 +587,8 @@ function ScoreCard({ school, onClick }) {
           return <span style={{color,fontSize:'0.76rem',fontWeight:500}} title="Crime within 500m">🔒 {school.crime_label}</span>;
         })()}
         {school.apps_per_place == null && school.inspection_date && <span>📅 {school.inspection_date}</span>}
+        {school.ks4_att8 != null && <span style={{color: school.ks4_att8 >= ENG_ATT8_AVG ? '#27AE60' : '#E67E22', fontWeight:500, fontSize:'0.76rem'}} title="Attainment 8 score (2024)">📚 Att8: {school.ks4_att8}</span>}
+        {school.ks2_higher_pct != null && !school.ks4_att8 && <span style={{color: school.ks2_higher_pct >= ENG_KS2_HIGHER_AVG ? '#27AE60' : '#E67E22', fontWeight:500, fontSize:'0.76rem'}} title="% achieving higher standard KS2 (2024)">📚 Higher std: {school.ks2_higher_pct}%</span>}
       </div>
     </div>
   );
@@ -553,7 +650,7 @@ function App() {
         <h1>Find the right school<br />in <em>London</em></h1>
         <p className="hero-sub">Explore and compare London schools using official Ofsted inspection data, deprivation indices, and composite scoring.</p>
         <div className="hero-stats">
-          {[{n:stats.total,l:'London Schools'},{n:stats.outstanding,l:'Outstanding'},{n:stats.avg,l:'Avg Score'},{n:32,l:'Boroughs'}].map(({n,l}) => (
+          {[{n:stats.total,l:'London Schools'},{n:stats.outstanding,l:'Outstanding'},{n:stats.avg,l:'Avg Ofsted Score'},{n:32,l:'Boroughs'}].map(({n,l}) => (
             <div key={l} className="hero-stat"><span className="hero-stat-num">{n}</span><span className="hero-stat-label">{l}</span></div>
           ))}
         </div>
@@ -605,7 +702,10 @@ function App() {
                       <td style={{fontWeight:600,maxWidth:260}}>{s.name}</td>
                       <td style={{color:'#777'}}>{s.local_authority}</td>
                       <td style={{color:'#999',fontSize:'0.8rem'}}>{s.phase}</td>
-                      <td><BandChip band={band} /></td>
+                      <td>
+                        <BandChip band={band} />
+                        {s.ofsted_score != null && <span style={{fontFamily:"'Playfair Display',serif",fontWeight:700,color:BAND_COLORS[band],marginLeft:6}}>{s.ofsted_score}</span>}
+                      </td>
                       <td style={{fontSize:'0.82rem'}}>
                         {adm==='Selective' ? <span style={{color:'#E65100',fontWeight:600}}>🎓 Selective</span>
                           : adm==='Non-selective' ? <span style={{color:'#555'}}>Non-selective</span>

@@ -303,22 +303,50 @@ function StatsPage({ schools }) {
 
 function ScoreCard({ school, onClick }) {
   const band = school.score_band || school.quality_label || 'Unknown';
+  const color = BAND_COLORS[band] || '#ccc';
+
+  // Admissions badge
+  const admissions = school.admissions;
+  const showAdmissions = admissions && admissions !== 'Not applicable';
+  const admissionsStyle = admissions === 'Selective'
+    ? { background:'#FFF8E1', color:'#E65100', border:'1px solid #FFE082' }
+    : { background:'#F3F4F6', color:'#374151', border:'1px solid #D1D5DB' };
+
   return (
-    <div className="school-card" style={{'--band-color': BAND_COLORS[band]||'#ccc'}} onClick={() => onClick(school)}>
+    <div className="school-card" style={{'--band-color': color}} onClick={() => onClick(school)}>
       <div className="card-top">
         <span className="card-phase">{school.phase}</span>
-        {school.ofsted_score != null && <div className="score-badge"><span className="score-num">{school.ofsted_score}</span><span className="score-lbl">Score</span></div>}
+        {showAdmissions && (
+          <span className="pill" style={admissionsStyle}>
+            {admissions === 'Selective' ? '🎓 Selective' : admissions}
+          </span>
+        )}
       </div>
       <div className="card-name">{school.name}</div>
       <div className="card-la">📍 {school.local_authority} · {school.postcode}</div>
+
+      {/* Ofsted grade bar */}
+      <div style={{display:'flex', alignItems:'center', gap:10, margin:'10px 0 12px'}}>
+        <div style={{flex:1, background:'#EDE8DF', borderRadius:4, height:6, overflow:'hidden'}}>
+          <div style={{width:`${school.ofsted_score??0}%`, height:'100%', background:color, borderRadius:4, transition:'width 0.4s'}} />
+        </div>
+        <span style={{fontSize:'0.78rem', fontWeight:700, color, minWidth:110, textAlign:'right'}}>
+          {band}
+        </span>
+      </div>
+
       <div className="card-pills">
-        <span className={PILL_CLASS[band]||'pill pill-u'}>{band}</span>
         {school.sixth_form === 'Has a sixth form' && <span className="pill" style={{background:'#EDE7F6',color:'#4527A0'}}>Sixth Form</span>}
         {school.gender && school.gender !== 'Mixed' && <span className="pill" style={{background:'#FCE4EC',color:'#880E4F'}}>{school.gender}</span>}
+        {school.religious_character && school.religious_character !== 'Does not apply' && school.religious_character !== 'None' && (
+          <span className="pill" style={{background:'#E8F5E9',color:'#2E7D32'}}>⛪ {school.religious_character}</span>
+        )}
       </div>
+
       <div className="card-meta">
         <span>👥 {school.pupils??'—'} pupils</span>
-        <span>📅 {school.inspection_date||'—'}</span>
+        {school.inspection_date && <span>📅 {school.inspection_date}</span>}
+        {school.imd_score != null && <span title="Deprivation score — higher means less deprived">📊 IMD {school.imd_score}</span>}
       </div>
     </div>
   );
@@ -424,16 +452,20 @@ function App() {
               <div className="school-grid">{paged.map(s => <ScoreCard key={s.urn} school={s} onClick={setSelected} />)}</div>
             ) : (
               <table className="school-table">
-                <thead><tr><th>#</th><th>School</th><th>Borough</th><th>Phase</th><th>Rating</th><th>Score</th><th>Pupils</th><th>Inspected</th></tr></thead>
+                <thead><tr><th>#</th><th>School</th><th>Borough</th><th>Phase</th><th>Ofsted Grade</th><th>Admissions</th><th>Pupils</th><th>Inspected</th></tr></thead>
                 <tbody>
-                  {paged.map((s,i) => { const band=s.score_band||s.quality_label||'Unknown'; return (
+                  {paged.map((s,i) => { const band=s.score_band||s.quality_label||'Unknown'; const adm=s.admissions; return (
                     <tr key={s.urn} onClick={() => setSelected(s)}>
                       <td><span className="rank-num">{(page-1)*PAGE_SIZE+i+1}</span></td>
                       <td style={{fontWeight:600,maxWidth:260}}>{s.name}</td>
                       <td style={{color:'#777'}}>{s.local_authority}</td>
                       <td style={{color:'#999',fontSize:'0.8rem'}}>{s.phase}</td>
                       <td><BandChip band={band} /></td>
-                      <td style={{fontFamily:"'Playfair Display',serif",fontWeight:700,color:BAND_COLORS[band]}}>{s.ofsted_score??'—'}</td>
+                      <td style={{fontSize:'0.82rem'}}>
+                        {adm==='Selective' ? <span style={{color:'#E65100',fontWeight:600}}>🎓 Selective</span>
+                          : adm==='Non-selective' ? <span style={{color:'#555'}}>Non-selective</span>
+                          : <span style={{color:'#bbb'}}>—</span>}
+                      </td>
                       <td style={{color:'#777'}}>{s.pupils??'—'}</td>
                       <td style={{color:'#aaa',fontSize:'0.8rem'}}>{s.inspection_date||'—'}</td>
                     </tr>

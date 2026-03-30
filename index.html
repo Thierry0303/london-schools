@@ -279,6 +279,72 @@ function SchoolDetail({ school, onClose }) {
               {school.religious_character && school.religious_character !== 'Does not apply' && <div className="detail-field" style={{gridColumn:'span 2'}}><span className="detail-field-label">Religious Character</span><span className="detail-field-val">{school.religious_character}</span></div>}
             </div>
           </div>
+          {(school.apps_per_place != null || school.first_pref_success_pct != null) && (
+            <div className="detail-section">
+              <div className="detail-section-title">Admissions 2024 · This School</div>
+              <div className="detail-grid">
+
+                {/* Apps per place bar */}
+                {school.apps_per_place != null && (() => {
+                  const ratio = school.apps_per_place;
+                  const color = ratio > 3 ? '#C0392B' : ratio > 1.5 ? '#E67E22' : ratio > 1 ? '#F39C12' : '#27AE60';
+                  const label = ratio > 3 ? 'Highly oversubscribed' : ratio > 1.5 ? 'Oversubscribed' : ratio > 1 ? 'Slightly oversubscribed' : 'Undersubscribed';
+                  return (
+                    <div className="detail-field" style={{gridColumn:'span 2'}}>
+                      <span className="detail-field-label">First-choice applications per place</span>
+                      <div style={{display:'flex',alignItems:'center',gap:12,marginTop:6}}>
+                        <div style={{flex:1,background:'#EDE8DF',borderRadius:4,height:10,overflow:'hidden'}}>
+                          <div style={{width:`${Math.min(ratio/5*100,100)}%`,height:'100%',background:color,borderRadius:4}} />
+                        </div>
+                        <span style={{fontFamily:"'Playfair Display',serif",fontSize:'1.4rem',fontWeight:700,color,minWidth:50}}>{ratio}×</span>
+                      </div>
+                      <div style={{display:'flex',justifyContent:'space-between',marginTop:5}}>
+                        <span style={{fontSize:'0.75rem',fontWeight:600,color}}>{label}</span>
+                        <span style={{fontSize:'0.72rem',color:'#aaa'}}>{school.first_pref_applications?.toLocaleString()} first-choice apps · {school.places?.toLocaleString()} places</span>
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                {/* Success rate bar */}
+                {school.first_pref_success_pct != null && (() => {
+                  const pct = school.first_pref_success_pct;
+                  const color = pct >= 90 ? '#27AE60' : pct >= 70 ? '#E67E22' : '#C0392B';
+                  const label = pct >= 90 ? 'Most applicants get in' : pct >= 70 ? 'Some applicants miss out' : 'Many applicants miss out';
+                  return (
+                    <div className="detail-field" style={{gridColumn:'span 2'}}>
+                      <span className="detail-field-label">First-choice applicants who received an offer</span>
+                      <div style={{display:'flex',alignItems:'center',gap:12,marginTop:6}}>
+                        <div style={{flex:1,background:'#EDE8DF',borderRadius:4,height:10,overflow:'hidden'}}>
+                          <div style={{width:`${pct}%`,height:'100%',background:color,borderRadius:4}} />
+                        </div>
+                        <span style={{fontFamily:"'Playfair Display',serif",fontSize:'1.4rem',fontWeight:700,color,minWidth:60}}>{pct}%</span>
+                      </div>
+                      <div style={{display:'flex',justifyContent:'space-between',marginTop:5}}>
+                        <span style={{fontSize:'0.75rem',fontWeight:600,color}}>{label}</span>
+                        <span style={{fontSize:'0.72rem',color:'#aaa'}}>{school.first_pref_offers?.toLocaleString()} of {school.first_pref_applications?.toLocaleString()} first-choice applicants offered a place</span>
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                {/* Total demand */}
+                {school.total_applications != null && (
+                  <div className="detail-field">
+                    <span className="detail-field-label">Total times listed (any preference)</span>
+                    <span className="detail-field-val" style={{fontSize:'1rem',fontWeight:600}}>{school.total_applications?.toLocaleString()}</span>
+                  </div>
+                )}
+                {school.places != null && (
+                  <div className="detail-field">
+                    <span className="detail-field-label">Places available</span>
+                    <span className="detail-field-val" style={{fontSize:'1rem',fontWeight:600}}>{school.places?.toLocaleString()}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
           <div style={{display:'flex',gap:10}}>
             {website && <a href={website} target="_blank" rel="noopener noreferrer" style={{flex:1,display:'block',textAlign:'center',padding:'11px',background:'#F5F0E8',color:'#1A1A2E',borderRadius:6,fontWeight:600,fontSize:'0.85rem',textDecoration:'none',border:'2px solid #D8D0C0'}}>School Website →</a>}
             {school.ofsted_url && <a href={school.ofsted_url} target="_blank" rel="noopener noreferrer" style={{flex:1,display:'block',textAlign:'center',padding:'11px',background:'#1A1A2E',color:'#D4A843',borderRadius:6,fontWeight:600,fontSize:'0.85rem',textDecoration:'none'}}>Ofsted Report →</a>}
@@ -405,11 +471,12 @@ function ScoreCard({ school, onClick }) {
 
       <div className="card-meta">
         <span>👥 {school.pupils??'—'} pupils</span>
-        {school.inspection_date && <span>📅 {school.inspection_date}</span>}
-        {school.imd_decile != null && (() => {
-          const imd = imdLabel(school.imd_decile);
-          return imd ? <span style={{color:imd.color,fontWeight:500}} title="Area deprivation (IMD decile)">🏘 {imd.text}</span> : null;
+        {school.apps_per_place != null && (() => {
+          const r = school.apps_per_place;
+          const color = r > 3 ? '#C0392B' : r > 1.5 ? '#E67E22' : r > 1 ? '#F39C12' : '#27AE60';
+          return <span style={{color,fontWeight:600}} title="First-choice applications per place (2024)">🎯 {r}× oversubscribed</span>;
         })()}
+        {school.apps_per_place == null && school.inspection_date && <span>📅 {school.inspection_date}</span>}
       </div>
     </div>
   );

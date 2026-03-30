@@ -281,6 +281,22 @@ function SchoolDetail({ school, onClose }) {
                   </div>
                 ) : null;
               })()}
+              {school.crime_score != null && (() => {
+                const color = school.crime_score >= 80 ? '#27AE60' : school.crime_score >= 60 ? '#2980B9' : school.crime_score >= 40 ? '#F57F17' : school.crime_score >= 20 ? '#E67E22' : '#C0392B';
+                const bg    = school.crime_score >= 80 ? '#E8F5E9' : school.crime_score >= 60 ? '#E3F2FD' : school.crime_score >= 40 ? '#FFFDE7' : school.crime_score >= 20 ? '#FFF3E0' : '#FFEBEE';
+                return (
+                  <div className="detail-field" style={{gridColumn:'span 2'}}>
+                    <span className="detail-field-label">Local Crime (500m radius)</span>
+                    <div style={{display:'flex',alignItems:'center',gap:10,marginTop:4}}>
+                      <div style={{flex:1,background:'#EDE8DF',borderRadius:4,height:7,overflow:'hidden'}}>
+                        <div style={{width:`${school.crime_score}%`,height:'100%',background:color,borderRadius:4}} />
+                      </div>
+                      <span style={{background:bg,color,padding:'3px 10px',borderRadius:4,fontWeight:600,fontSize:'0.82rem',whiteSpace:'nowrap'}}>{school.crime_label}</span>
+                    </div>
+                    <span style={{fontSize:'0.72rem',color:'#aaa',marginTop:3,display:'block'}}>{school.crime_count?.toLocaleString()} recorded crimes nearby (Oct 2025–Jan 2026)</span>
+                  </div>
+                );
+              })()}
               {school.idaci_quintile != null && (() => {
                 const idaci = idaciLabel(school.idaci_quintile);
                 return idaci ? (
@@ -495,6 +511,10 @@ function ScoreCard({ school, onClick }) {
           const r = school.apps_per_place;
           const color = r > 3 ? '#C0392B' : r > 1.5 ? '#E67E22' : r > 1 ? '#F39C12' : '#27AE60';
           return <span style={{color,fontWeight:600}} title="First-choice applications per place (2024)">🎯 {r}× oversubscribed</span>;
+        })()}
+        {school.crime_label && (() => {
+          const color = school.crime_score >= 80 ? '#27AE60' : school.crime_score >= 60 ? '#2980B9' : school.crime_score >= 40 ? '#F57F17' : '#E67E22';
+          return <span style={{color,fontSize:'0.76rem',fontWeight:500}} title="Crime within 500m">🔒 {school.crime_label}</span>;
         })()}
         {school.apps_per_place == null && school.inspection_date && <span>📅 {school.inspection_date}</span>}
       </div>

@@ -21,7 +21,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install requests pandas numpy
+        run: pip install requests pandas numpy pyyaml
 
       - name: Fetch crime data and rebuild schools.json
         run: python3 scripts/refresh_data.py

@@ -218,8 +218,27 @@ const BOROUGHS = [
 ];
 
 function BoroughsGrid() {
+  const typePages = [
+    { label: "Outstanding schools", slug: "outstanding", color: "#1B5E20", bg: "#E8F5E9" },
+    { label: "Good schools",        slug: "good",        color: "#0D47A1", bg: "#E3F2FD" },
+    { label: "Grammar schools",     slug: "grammar",     color: "#4A148C", bg: "#F3E5F5" },
+    { label: "Selective schools",   slug: "selective",   color: "#E65100", bg: "#FFF3E0" },
+    { label: "Faith schools",       slug: "faith",       color: "#1A237E", bg: "#E8EAF6" },
+    { label: "Primary schools",     slug: "primary",     color: "#006064", bg: "#E0F7FA" },
+    { label: "Secondary schools",   slug: "secondary",   color: "#33691E", bg: "#F1F8E9" },
+    { label: "Schools with sixth forms", slug: "sixth-form", color: "#880E4F", bg: "#FCE4EC" },
+  ];
   return (
-    <div style={{marginTop: '2rem'}}>
+    <div style={{marginTop: '2.5rem'}}>
+      <h2 style={{fontFamily:"'Playfair Display',serif", fontSize:'1.3rem', fontWeight:700, marginBottom:'16px', color:'var(--ink)'}}>Browse by school type</h2>
+      <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(200px, 1fr))', gap:'8px', marginBottom:'2rem'}}>
+        {typePages.map(t => (
+          <a key={t.slug} href={`/schools/${t.slug}`}
+            style={{display:'block', padding:'10px 14px', background:t.bg, border:`1px solid ${t.color}44`, borderRadius:'6px', fontSize:'0.85rem', fontWeight:600, color:t.color, textDecoration:'none', transition:'all 0.15s'}}>
+            {t.label}
+          </a>
+        ))}
+      </div>
       <h2 style={{fontFamily:"'Playfair Display',serif", fontSize:'1.3rem', fontWeight:700, marginBottom:'16px', color:'var(--ink)'}}>Browse by borough</h2>
       <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(180px, 1fr))', gap:'8px'}}>
         {BOROUGHS.map(b => {

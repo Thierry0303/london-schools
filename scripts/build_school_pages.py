@@ -261,6 +261,7 @@ def build_school_page(school):
   <a href="/">London Schools Explorer</a> &mdash; helping families find the right school.
 </footer>
 
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>"""
 
@@ -354,6 +355,7 @@ for borough, borough_schools in by_borough.items():
   </table>
 </div>
 <footer><a href="/">London Schools Explorer</a> &mdash; helping families find the right school.</footer>
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>"""
 

@@ -147,6 +147,49 @@
       .header { padding: 0 16px; } .hero { padding: 36px 16px; } .main { padding: 16px; }
       .controls { flex-direction: column; } .school-grid { grid-template-columns: 1fr; }
     }
+
+    /* ── Address Checker ── */
+    .ac-wrap { max-width: 760px; margin: 0 auto; }
+    .ac-search-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 28px; margin-bottom: 24px; }
+    .ac-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; margin-bottom: 6px; }
+    .ac-sub { font-size: 0.84rem; color: #999; margin-bottom: 20px; line-height: 1.5; }
+    .ac-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .ac-input { flex: 1; min-width: 200px; padding: 11px 14px; border: 2px solid var(--border); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; background: white; color: var(--ink); outline: none; transition: border-color 0.2s; }
+    .ac-input:focus { border-color: var(--gold); }
+    .ac-input:disabled { opacity: 0.5; }
+    .ac-select { padding: 11px 28px 11px 11px; border: 2px solid var(--border); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; background: white; color: var(--ink); cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='2' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 9px center; outline: none; transition: border-color 0.2s; }
+    .ac-select:focus { border-color: var(--gold); }
+    .ac-btn { padding: 11px 24px; background: var(--ink); color: var(--gold); border: none; border-radius: 6px; font-family: 'Playfair Display', serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; white-space: nowrap; transition: background 0.2s; }
+    .ac-btn:hover { background: #2D2D44; }
+    .ac-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .ac-status { font-size: 0.83rem; color: #999; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; min-height: 22px; }
+    .ac-spinner { width: 14px; height: 14px; border: 2px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.65s linear infinite; flex-shrink: 0; }
+    .ac-error { background: #FDECEA; color: var(--red); border: 1px solid #F5C6C2; border-radius: 6px; padding: 10px 14px; font-size: 0.83rem; margin-bottom: 16px; }
+    .ac-results-title { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; margin-bottom: 14px; color: var(--ink); }
+    .ac-school-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px 18px; margin-bottom: 12px; display: flex; align-items: flex-start; gap: 16px; transition: all 0.2s; cursor: pointer; position: relative; overflow: hidden; }
+    .ac-school-card::before { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 4px; background: var(--band-color, var(--border)); }
+    .ac-school-card:hover { border-color: var(--gold); box-shadow: 0 4px 20px rgba(26,26,46,0.1); transform: translateY(-1px); }
+    .ac-rank { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; color: var(--gold); min-width: 32px; text-align: center; flex-shrink: 0; line-height: 1; margin-top: 2px; }
+    .ac-school-body { flex: 1; min-width: 0; }
+    .ac-school-name { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; margin-bottom: 3px; line-height: 1.3; }
+    .ac-school-la { font-size: 0.78rem; color: #999; margin-bottom: 8px; }
+    .ac-school-pills { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
+    .ac-school-meta { display: flex; gap: 14px; font-size: 0.76rem; color: #aaa; flex-wrap: wrap; }
+    .ac-score-box { background: var(--ink); color: var(--cream); border-radius: 6px; padding: 8px 12px; text-align: center; flex-shrink: 0; min-width: 60px; }
+    .ac-score-num { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: var(--gold); line-height: 1; }
+    .ac-score-lbl { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(245,240,232,0.5); margin-top: 3px; }
+    .ac-walk { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; min-width: 60px; }
+    .ac-walk-time { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--ink); line-height: 1; }
+    .ac-walk-dist { font-size: 0.67rem; color: #aaa; margin-top: 2px; }
+    .ac-empty { text-align: center; padding: 60px 20px; color: #aaa; }
+    .ac-empty-icon { font-size: 2.5rem; margin-bottom: 12px; }
+    .ac-empty h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: #888; margin-bottom: 8px; }
+    .ac-map { border-radius: 8px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 20px; }
+    #ac-map { height: 320px; width: 100%; }
+    .ac-address-banner { background: var(--ink); color: var(--cream); border-radius: 8px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+    .ac-address-pin { font-size: 1.2rem; }
+    .ac-address-text { font-size: 0.88rem; }
+    .ac-address-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(245,240,232,0.5); margin-bottom: 2px; }
   </style>
 </head>
 <body>
@@ -594,6 +637,225 @@ function ScoreCard({ school, onClick }) {
   );
 }
 
+// ── Address Checker ───────────────────────────────────────────────────────────
+
+const VERCEL_API = 'https://london-school-model.vercel.app/api';
+
+function haversineKm(lat1, lng1, lat2, lng2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+function kmToMiles(km) { return (km * 0.621371).toFixed(2); }
+function kmToWalkMins(km) { return Math.round(km / 0.08); } // ~5 km/h walking
+
+function AddressChecker({ schools, onSelectSchool }) {
+  const [address, setAddress]   = useState('');
+  const [phase, setPhase]       = useState('');
+  const [radius, setRadius]     = useState('1');
+  const [loading, setLoading]   = useState(false);
+  const [error, setError]       = useState(null);
+  const [results, setResults]   = useState(null);
+  const [userLatLng, setUserLatLng] = useState(null);
+  const mapRef = useRef(null);
+  const mapInstanceRef = useRef(null);
+  const markersRef = useRef([]);
+
+  const phases = useMemo(() => [...new Set(schools.map(s=>s.phase).filter(Boolean))].sort(), [schools]);
+
+  async function doCheck() {
+    if (!address.trim()) { setError('Please enter an address or postcode.'); return; }
+    setError(null); setLoading(true); setResults(null); setUserLatLng(null);
+
+    try {
+      // 1. Geocode address via Vercel API
+      const geoRes = await fetch(`${VERCEL_API}/schools?postcode=${encodeURIComponent(address.trim())}&radius=0.1`);
+      if (!geoRes.ok) throw new Error('Could not find that address. Try a London postcode.');
+
+      // Extract lat/lng from Google Maps geocode via a small trick —
+      // call the schools endpoint and grab coordinates from a custom header,
+      // OR use the browser's own geocode by parsing the Vercel response.
+      // Since our /schools endpoint returns geocoded results, we geocode via Google:
+      const geoData = await geoRes.json();
+
+      // Use Google Maps Geocoding directly (key is server-side only, so we go via our API)
+      // Instead: use a free geocoding fallback — postcodes.io for UK postcodes
+      let lat, lng, formattedAddress;
+
+      const postcode = address.trim().replace(/\s+/g, '').toUpperCase();
+      const pcRes = await fetch(`https://api.postcodes.io/postcodes/${postcode}`);
+      if (pcRes.ok) {
+        const pcData = await pcRes.json();
+        lat = pcData.result.latitude;
+        lng = pcData.result.longitude;
+        formattedAddress = `${pcData.result.postcode}, ${pcData.result.admin_district}, London`;
+      } else {
+        // Try partial postcode
+        const pcPartial = await fetch(`https://api.postcodes.io/postcodes/${postcode}/autocomplete`);
+        if (pcPartial.ok) {
+          const pcPartialData = await pcPartial.json();
+          if (pcPartialData.result?.length) {
+            const full = pcPartialData.result[0];
+            const fullRes = await fetch(`https://api.postcodes.io/postcodes/${full}`);
+            const fullData = await fullRes.json();
+            lat = fullData.result.latitude;
+            lng = fullData.result.longitude;
+            formattedAddress = `${fullData.result.postcode}, ${fullData.result.admin_district}`;
+          } else throw new Error('Postcode not found. Try a full London postcode like N1 2PL.');
+        } else throw new Error('Postcode not found. Try a full London postcode like N1 2PL.');
+      }
+
+      setUserLatLng({ lat, lng, formatted: formattedAddress });
+
+      // 2. Find nearby schools from our local dataset
+      const radiusKm = parseFloat(radius) * 1.60934;
+      let nearby = schools
+        .filter(s => s.lat && s.lng)
+        .map(s => ({ ...s, distKm: haversineKm(lat, lng, s.lat, s.lng) }))
+        .filter(s => s.distKm <= radiusKm);
+
+      if (phase) nearby = nearby.filter(s => s.phase === phase);
+      nearby.sort((a, b) => (b.ofsted_score ?? -1) - (a.ofsted_score ?? -1) || a.distKm - b.distKm);
+
+      setResults({ schools: nearby.slice(0, 15), lat, lng, formatted: formattedAddress });
+    } catch(e) {
+      setError(e.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // Map initialisation
+  useEffect(() => {
+    if (!results || !mapRef.current) return;
+    if (!mapInstanceRef.current) {
+      mapInstanceRef.current = L.map('ac-map').setView([results.lat, results.lng], 14);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap', maxZoom: 18 }).addTo(mapInstanceRef.current);
+    } else {
+      mapInstanceRef.current.setView([results.lat, results.lng], 14);
+    }
+
+    // Clear old markers
+    markersRef.current.forEach(m => m.remove());
+    markersRef.current = [];
+
+    // User location pin
+    const userIcon = L.divIcon({ className: '', html: `<div style="width:16px;height:16px;border-radius:50%;background:#D4A843;border:3px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.4)"></div>`, iconSize:[16,16], iconAnchor:[8,8] });
+    markersRef.current.push(L.marker([results.lat, results.lng], { icon: userIcon }).addTo(mapInstanceRef.current).bindPopup('Your address'));
+
+    // School markers
+    results.schools.forEach((s, i) => {
+      const band = s.score_band || s.quality_label || 'Unknown';
+      const color = BAND_COLORS[band] || '#95A5A6';
+      const icon = L.divIcon({ className: '', html: `<div style="width:11px;height:11px;border-radius:50%;background:${color};border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.3)"></div>`, iconSize:[11,11], iconAnchor:[5,5] });
+      const marker = L.marker([s.lat, s.lng], { icon }).addTo(mapInstanceRef.current);
+      marker.bindPopup(`<div style="font-family:'DM Sans',sans-serif;min-width:160px"><b style="font-family:'Playfair Display',serif">${s.name}</b><br/><span style="font-size:0.75rem;color:#888">${s.phase} · ${kmToMiles(s.distKm)} mi</span><br/><span style="background:${color};color:white;display:inline-block;padding:1px 6px;border-radius:3px;font-size:0.7rem;margin-top:4px">${band}</span></div>`);
+      markersRef.current.push(marker);
+    });
+  }, [results]);
+
+  return (
+    <div className="ac-wrap">
+      <div className="ac-search-box">
+        <div className="ac-title">Address Checker</div>
+        <div className="ac-sub">Enter any London postcode to instantly see the nearest schools ranked by our composite score, with walking distances.</div>
+        <div className="ac-row">
+          <input className="ac-input" type="text" placeholder="London postcode (e.g. N1 2PL, SW1A 1AA)" value={address} onChange={e=>setAddress(e.target.value)} onKeyDown={e=>e.key==='Enter'&&doCheck()} />
+          <select className="ac-select" value={radius} onChange={e=>setRadius(e.target.value)}>
+            <option value="0.5">½ mile</option>
+            <option value="1">1 mile</option>
+            <option value="1.5">1.5 miles</option>
+            <option value="2">2 miles</option>
+          </select>
+          <select className="ac-select" value={phase} onChange={e=>setPhase(e.target.value)}>
+            <option value="">All phases</option>
+            {phases.map(p=><option key={p} value={p}>{p}</option>)}
+          </select>
+          <button className="ac-btn" onClick={doCheck} disabled={loading}>{loading ? 'Checking…' : 'Check →'}</button>
+        </div>
+      </div>
+
+      {loading && <div className="ac-status"><div className="ac-spinner"/>Finding nearby schools…</div>}
+      {error && <div className="ac-error">⚠ {error}</div>}
+
+      {results && (
+        <>
+          <div className="ac-address-banner">
+            <span className="ac-address-pin">📍</span>
+            <div>
+              <div className="ac-address-label">Your address</div>
+              <div className="ac-address-text">{results.formatted}</div>
+            </div>
+            <span style={{marginLeft:'auto',fontSize:'0.83rem',color:'rgba(245,240,232,0.6)'}}>
+              {results.schools.length} school{results.schools.length!==1?'s':''} within {radius} mile{radius!=='1'?'s':''}
+            </span>
+          </div>
+
+          <div className="ac-map" ref={mapRef}><div id="ac-map"/></div>
+
+          {results.schools.length === 0 ? (
+            <div className="ac-empty">
+              <div className="ac-empty-icon">🏫</div>
+              <h3>No schools found</h3>
+              <p>Try increasing the radius or removing the phase filter.</p>
+            </div>
+          ) : (
+            <>
+              <div className="ac-results-title">Schools ranked by composite score</div>
+              {results.schools.map((s, i) => {
+                const band = s.score_band || s.quality_label || 'Unknown';
+                const color = BAND_COLORS[band] || '#95A5A6';
+                const walkMins = kmToWalkMins(s.distKm);
+                const distMiles = kmToMiles(s.distKm);
+                return (
+                  <div key={s.urn} className="ac-school-card" style={{'--band-color': color}} onClick={() => onSelectSchool(s)}>
+                    <div className="ac-rank">#{i+1}</div>
+                    <div className="ac-school-body">
+                      <div className="ac-school-name">{s.name}</div>
+                      <div className="ac-school-la">📍 {s.local_authority} · {s.postcode}</div>
+                      <div className="ac-school-pills">
+                        <span className="band-chip" style={{background:color}}>{band}</span>
+                        <span className="pill" style={{background:'#F5F5F5',color:'#555',border:'1px solid #ddd'}}>{s.phase}</span>
+                        {s.admissions==='Selective'&&<span className="pill" style={{background:'#FFF8E1',color:'#E65100',border:'1px solid #FFE082'}}>🎓 Selective</span>}
+                      </div>
+                      <div className="ac-school-meta">
+                        {s.pupils!=null&&<span>👥 {s.pupils} pupils</span>}
+                        {s.inspection_date&&<span>📅 {s.inspection_date}</span>}
+                        {s.apps_per_place!=null&&<span>🎯 {s.apps_per_place}× oversubscribed</span>}
+                      </div>
+                    </div>
+                    <div className="ac-score-box">
+                      <div className="ac-score-num">{s.ofsted_score??'—'}</div>
+                      <div className="ac-score-lbl">Score</div>
+                    </div>
+                    <div className="ac-walk">
+                      <div className="ac-walk-time">{walkMins} min</div>
+                      <div className="ac-walk-dist">{distMiles} mi</div>
+                    </div>
+                  </div>
+                );
+              })}
+            </>
+          )}
+        </>
+      )}
+
+      {!results && !loading && (
+        <div className="ac-empty">
+          <div className="ac-empty-icon">🗺</div>
+          <h3>Enter a postcode above</h3>
+          <p>We'll show you every school within your chosen radius, ranked by our composite Ofsted score.</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── End Address Checker ───────────────────────────────────────────────────────
+
 function App() {
   const [view, setView] = useState('schools');
   const [displayMode, setDisplayMode] = useState('grid');
@@ -639,7 +901,7 @@ function App() {
       <header className="header">
         <div className="header-logo">🏛 London <span>Schools</span><div className="header-badge">Explorer</div></div>
         <nav className="header-nav">
-          {[['schools','📋 Schools'],['map','🗺 Map'],['stats','📊 Statistics']].map(([v,label]) => (
+          {[['schools','📋 Schools'],['map','🗺 Map'],['stats','📊 Statistics'],['checker','📍 Address Checker']].map(([v,label]) => (
             <button key={v} className={`nav-btn ${view===v?'active':''}`} onClick={() => setView(v)}>{label}</button>
           ))}
         </nav>
@@ -659,6 +921,8 @@ function App() {
       <main className="main">
         {loading ? (
           <div className="loading"><div className="spinner" /> Loading schools...</div>
+        ) : view === 'checker' ? (
+          <AddressChecker schools={schools} onSelectSchool={setSelected} />
         ) : view === 'stats' ? (
           <StatsPage schools={schools} />
         ) : view === 'map' ? (

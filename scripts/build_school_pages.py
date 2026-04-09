@@ -364,6 +364,8 @@ print(f"Built {len(by_borough)} borough pages.")
 
 
 # ── Sitemap ───────────────────────────────────────────────────────────────────
+# Written as .txt so Vercel doesn't treat it as a binary asset.
+# vercel.json rewrites /sitemap.xml → /sitemap_data.txt transparently.
 lines = ['<?xml version="1.0" encoding="UTF-8"?>',
          '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
 for u in sitemap_urls:
@@ -371,7 +373,7 @@ for u in sitemap_urls:
     lines.append(f"  <url><loc>{safe_u}</loc></url>")
 lines.append("</urlset>")
 
-with open("sitemap.xml", "w", encoding="utf-8", newline="\n") as f:
+with open("sitemap_data.txt", "w", encoding="utf-8", newline="\n") as f:
     f.write("\n".join(lines) + "\n")
 print(f"Sitemap written with {len(sitemap_urls)} URLs.")
 

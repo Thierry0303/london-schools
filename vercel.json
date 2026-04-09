@@ -1,4 +1,4 @@
 {
-  "buildCommand": "bash build.sh",
+  "buildCommand": "python3 scripts/build_school_pages.py",
   "outputDirectory": "."
 }

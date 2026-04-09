@@ -1,0 +1,2 @@
+#!/bin/bash
+python3 scripts/build_school_pages.py

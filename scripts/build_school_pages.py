@@ -426,7 +426,154 @@ for borough, borough_schools in by_borough.items():
 print(f"Built {len(by_borough)} borough pages.")
 
 
-# ── Sitemap ───────────────────────────────────────────────────────────────────
+# ── School type landing pages ─────────────────────────────────────────────────
+def build_type_page(slug, title, meta_desc, intro, filter_fn):
+    matched = [s for s in schools if filter_fn(s)]
+    matched.sort(key=lambda s: (s.get("ofsted_score") or 0), reverse=True)
+
+    rows = ""
+    for s in matched:
+        b_slug  = slugify(s.get("local_authority", "unknown"))
+        s_slug  = slugify(s.get("name", "unknown"))
+        label   = s.get("quality_label") or s.get("score_band") or "Not yet rated"
+        tc, bc  = ofsted_badge_color(label)
+        score   = s.get("ofsted_score")
+        rows += f"""<tr>
+          <td><a href="/schools/{b_slug}/{s_slug}">{safe(s.get('name'))}</a></td>
+          <td>{safe(s.get('local_authority'))}</td>
+          <td>{safe(s.get('phase'))}</td>
+          <td><span style="background:{bc};color:{tc};padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">{label}</span></td>
+          <td style="font-weight:700;color:#1a1a1a">{int(score) if score else '—'}</td>
+        </tr>"""
+
+    url  = f"{BASE_URL}/schools/{slug}"
+    html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{title} | London Schools Explorer</title>
+  <meta name="description" content="{meta_desc}">
+  <link rel="canonical" href="{url}">
+  <meta property="og:title" content="{title} | London Schools Explorer">
+  <meta property="og:description" content="{meta_desc}">
+  <meta property="og:url" content="{url}">
+  <style>
+    *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
+    body {{ font-family: system-ui, -apple-system, sans-serif; color: #1a1a1a; background: #f8f9fa; line-height: 1.6; }}
+    a {{ color: #1565C0; }}
+    .topbar {{ background: #fff; border-bottom: 1px solid #e0e0e0; padding: 12px 20px; }}
+    .topbar a {{ text-decoration: none; font-weight: 600; color: #1a1a1a; font-size: 15px; }}
+    .topbar span {{ color: #888; margin: 0 8px; }}
+    .container {{ max-width: 960px; margin: 0 auto; padding: 32px 20px; }}
+    h1 {{ font-size: 28px; font-weight: 700; margin-bottom: 8px; }}
+    .intro {{ background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; font-size: 15px; color: #333; line-height: 1.7; }}
+    .count-badge {{ display: inline-block; background: #1565C0; color: #fff; font-size: 13px; font-weight: 600; padding: 4px 12px; border-radius: 20px; margin-bottom: 16px; }}
+    table {{ width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #e0e0e0; }}
+    th {{ background: #f5f5f5; padding: 12px 16px; text-align: left; font-size: 13px; color: #555; font-weight: 600; border-bottom: 1px solid #e0e0e0; white-space: nowrap; }}
+    td {{ padding: 11px 16px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }}
+    tr:last-child td {{ border-bottom: none; }}
+    tr:hover td {{ background: #fafafa; }}
+    .back {{ display: inline-block; margin-bottom: 20px; font-size: 14px; color: #555; text-decoration: none; }}
+    footer {{ text-align: center; padding: 32px 20px; font-size: 13px; color: #888; }}
+  </style>
+</head>
+<body>
+<div class="topbar">
+  <div style="max-width:960px;margin:0 auto">
+    <a href="/">London Schools Explorer</a>
+    <span>/</span>
+    {title}
+  </div>
+</div>
+<div class="container">
+  <a class="back" href="/">&#8592; All schools</a>
+  <h1>{title}</h1>
+  <span class="count-badge">{len(matched)} schools</span>
+  <div class="intro">{intro}</div>
+  <table>
+    <thead><tr><th>School</th><th>Borough</th><th>Phase</th><th>Ofsted</th><th>Score</th></tr></thead>
+    <tbody>{rows}</tbody>
+  </table>
+</div>
+<footer><a href="/">London Schools Explorer</a> &mdash; helping families find the right school in London.</footer>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>"""
+
+    page_dir = pathlib.Path("schools") / slug
+    page_dir.mkdir(parents=True, exist_ok=True)
+    (page_dir / "index.html").write_text(html, encoding="utf-8")
+    sitemap_urls.append(url)
+    print(f"  Built /schools/{slug} ({len(matched)} schools)")
+
+
+TYPE_PAGES = [
+    (
+        "outstanding",
+        "Outstanding Schools in London",
+        "Full list of all Outstanding-rated schools in London ranked by Ofsted score. Compare exam results, admissions and pupil data across all 32 boroughs.",
+        "Outstanding is the highest rating awarded by Ofsted inspectors and is given only to schools that are truly exceptional across all areas: quality of education, behaviour and attitudes, personal development, and leadership and management. Less than a quarter of London schools hold an Outstanding rating. This page lists every Outstanding-rated school in London, ranked by composite score, so you can compare them across boroughs, phases and school types.",
+        lambda s: (s.get("quality_label") or s.get("score_band")) == "Outstanding"
+    ),
+    (
+        "good",
+        "Good Schools in London",
+        "Browse all Good-rated schools in London by Ofsted. Compare results, admissions and borough across all 32 London boroughs.",
+        "Good is the second-highest Ofsted rating and represents a school that is performing well and meeting the needs of its pupils. The majority of London schools are rated Good. This page lists every Good-rated school in London, ranked by composite score. A Good school is an excellent choice for most families — many Good schools outperform Outstanding schools on exam results and have less oversubscribed admissions.",
+        lambda s: (s.get("quality_label") or s.get("score_band")) == "Good"
+    ),
+    (
+        "selective",
+        "Selective Schools in London",
+        "All selective schools in London including grammar schools and academically selective independents. Compare Ofsted ratings, exam results and admissions data.",
+        "Selective schools in London admit pupils based on academic ability, typically assessed through entrance exams taken in Year 5 or 6 for secondary entry. London has fewer grammar schools than areas like Kent or Buckinghamshire, but there are selective state schools and many academically selective independent schools. Selective schools are among the most oversubscribed in the capital. This page lists every school in London with a selective admissions policy, ranked by Ofsted score.",
+        lambda s: s.get("admissions") == "Selective"
+    ),
+    (
+        "grammar",
+        "Grammar Schools in London",
+        "All grammar schools in London. Compare Ofsted ratings, exam results, admissions and borough location for every London grammar school.",
+        "Grammar schools are state-funded secondary schools that select pupils by academic ability. London has significantly fewer grammar schools than surrounding counties — most are concentrated in Barnet, Bexley, Kingston, Redbridge and Sutton. Entry is typically via the 11-plus exam taken in Year 6. Places at London grammar schools are highly competitive, with many schools receiving ten or more applications per place. This page lists every grammar school in London ranked by Ofsted composite score.",
+        lambda s: "grammar" in s.get("school_type", "").lower()
+    ),
+    (
+        "faith",
+        "Faith Schools in London",
+        "All faith schools in London including Church of England, Catholic, Jewish, Muslim and other religious schools. Compare Ofsted ratings and admissions data.",
+        "London has one of the most diverse ranges of faith schools of any city in the world, reflecting its multicultural population. Church of England and Catholic schools make up the majority, but there are also Jewish, Muslim, Hindu, Sikh and other faith schools across the capital. Many faith schools are rated Outstanding or Good by Ofsted and are highly sought after. Admissions to faith schools often prioritise regular worshippers, so it is important to understand the admissions criteria carefully before applying.",
+        lambda s: s.get("religious_character") and s.get("religious_character") not in ("None", "Does not apply", "Not applicable", "N/A")
+    ),
+    (
+        "primary",
+        "Primary Schools in London",
+        "Browse all primary schools in London. Compare Ofsted ratings, KS2 SATs results, admissions and pupil data across all 32 boroughs.",
+        "London has over 2,000 primary schools spanning nursery, infant, junior and all-through primary phases, catering for children aged 3 to 11. Primary school places in inner London are among the most competitive in the country, with many schools receiving far more applications than they have places available. This page lists all primary schools in London ranked by Ofsted composite score. You can click any school to view its full profile including KS2 SATs results, admissions data and local area information.",
+        lambda s: s.get("phase") == "Primary"
+    ),
+    (
+        "secondary",
+        "Secondary Schools in London",
+        "Browse all secondary schools in London. Compare Ofsted ratings, GCSE results, sixth form provision and admissions data across all 32 boroughs.",
+        "London has over 500 secondary schools offering education to pupils aged 11 to 16 or 18. Secondary school choice in London is complex, with a mix of comprehensives, academies, selective grammar schools, faith schools and independent schools. GCSE results vary widely — from schools where nearly every pupil achieves grade 5 or above in English and Maths, to schools with significant challenges. This page lists all secondary schools in London ranked by Ofsted composite score, with GCSE Attainment 8 scores where available.",
+        lambda s: s.get("phase") in ("Secondary", "Middle deemed secondary")
+    ),
+    (
+        "sixth-form",
+        "Schools with Sixth Forms in London",
+        "All London schools and colleges with sixth forms. Compare A-level provision, Ofsted ratings and admissions across all 32 boroughs.",
+        "Having a sixth form means a school offers post-16 education, typically A-levels or BTECs, allowing students to continue their studies through Years 12 and 13 without changing schools. Not all London secondary schools have sixth forms — many pupils transfer to sixth form colleges or further education colleges at 16. This page lists every school in London that has a sixth form, ranked by Ofsted composite score.",
+        lambda s: s.get("sixth_form") == "Has a sixth form"
+    ),
+]
+
+print("Building school type pages...")
+for args in TYPE_PAGES:
+    build_type_page(*args)
+print(f"Built {len(TYPE_PAGES)} type pages.")
+
+
+
 # Written as .txt so Vercel doesn't treat it as a binary asset.
 # vercel.json rewrites /sitemap.xml → /sitemap_data.txt transparently.
 lines = ['<?xml version="1.0" encoding="UTF-8"?>',

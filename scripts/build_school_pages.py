@@ -3,7 +3,7 @@ import json, os, pathlib, re
 # Always run from repo root regardless of where Vercel calls this from
 os.chdir(pathlib.Path(__file__).parent.parent)
 
-BASE_URL = "https://london-schools.vercel.app"
+BASE_URL = "https://londonschool.directory"
 
 # Load school data
 with open("schools.json") as f:

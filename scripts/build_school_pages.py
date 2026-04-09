@@ -290,6 +290,42 @@ print(f"Built {built} pages successfully.")
 
 # ── Borough index pages ───────────────────────────────────────────────────────
 from collections import defaultdict
+
+BOROUGH_DESCRIPTIONS = {
+    "Barking and Dagenham": "Barking and Dagenham is one of East London's most affordable boroughs and has seen significant investment in its schools. The borough has a strong mix of primary and secondary provision, with several schools rated Outstanding by Ofsted. It borders Essex and offers good transport links into central London via the District and Overground lines.",
+    "Barnet": "Barnet is one of London's highest-performing boroughs for education, with a large number of Outstanding and Good schools across both primary and secondary phases. The borough includes several selective grammar schools and is consistently popular with families relocating from central London. Areas such as Finchley, East Barnet and Hendon are particularly sought after for their school catchments.",
+    "Bexley": "Bexley is a south-east London borough with a well-regarded school system and some of the lowest crime rates in the capital. The borough retains a selective grammar school system, making it attractive to families seeking academic pathways. Schools in areas like Bexleyheath, Sidcup and Welling consistently perform above national averages.",
+    "Bromley": "Bromley is one of London's largest boroughs and benefits from a strong educational landscape with numerous Outstanding-rated schools. Like Bexley, it operates grammar schools alongside comprehensive and faith schools. The borough has a suburban feel with good green space and is popular with families seeking larger homes within commuting distance of central London.",
+    "Camden": "Camden is an inner-London borough with a diverse and highly competitive school landscape. The borough is home to some of London's most oversubscribed primaries and highly regarded secondaries. Areas such as Hampstead, Primrose Hill and Gospel Oak attract families for their school catchments. Camden consistently invests in education and has a higher-than-average proportion of Outstanding schools.",
+    "City of London": "The City of London is the smallest local authority in the country, with just a handful of schools serving its resident and working population. Notable institutions include The Aldgate School, an Outstanding-rated Church of England primary, alongside several prestigious independent schools such as City of London School and City of London School for Girls.",
+    "Croydon": "Croydon is south London's largest borough and has one of the most varied school landscapes in the capital, ranging from Outstanding independents to schools requiring improvement. The borough is undergoing significant regeneration and has seen investment in its educational infrastructure. Selective and faith school options are available alongside a full range of comprehensive schools.",
+    "Ealing": "Ealing in west London has a strong reputation for education, particularly at primary level, with a high proportion of Good and Outstanding schools. The borough is ethnically diverse and multilingual, and schools reflect this rich cultural mix. Areas such as Hanwell, Northfields and Southall are popular with families, and the Elizabeth line has improved transport links significantly.",
+    "Enfield": "Enfield is a north London borough bordering Hertfordshire with a wide range of school types including grammar, faith, academy and independent schools. The borough spans leafy suburban areas in the north such as Winchmore Hill and Palmers Green, through to more urban areas in the south. Several schools consistently achieve above national average exam results.",
+    "Greenwich": "Greenwich combines historic significance with a growing and improving school landscape. The borough has seen considerable investment in new school places due to population growth. Secondary schools including Thomas Tallis and Corelli College are well regarded. The borough also benefits from proximity to Blackheath and Eltham, areas popular with families.",
+    "Hackney": "Hackney is one of East London's most dynamic boroughs and has transformed its educational offer over the past decade. The borough now has one of the highest proportions of Outstanding-rated schools in inner London. Highly regarded schools such as Gayhurst Community School and Queensbridge Primary make it a competitive catchment. Secondary provision includes Stoke Newington School and Mossbourne Community Academy.",
+    "Hammersmith and Fulham": "Hammersmith and Fulham is a compact west London borough with a strong concentration of Good and Outstanding schools. The borough is one of the most densely populated in London, making school places highly competitive. It borders Kensington and Chelsea to the east and has a mix of state, faith and independent school options.",
+    "Haringey": "Haringey spans from the affluent Muswell Hill and Crouch End in the west to the more diverse Tottenham and Wood Green in the east, and its school landscape reflects this contrast. The borough has made significant strides in improving school quality and has several Outstanding-rated primaries and secondaries. Alexandra Park School and Fortismere School are among the most popular secondaries.",
+    "Harrow": "Harrow is a north-west London borough with a diverse and high-performing school system. The borough is home to the renowned independent Harrow School as well as a strong state sector. Many schools serve large South Asian communities and have a strong ethos around academic achievement. Harrow-on-the-Hill and Pinner are particularly popular areas for families.",
+    "Havering": "Havering is the easternmost London borough, bordering Essex, and has a strong tradition of selective education with grammar schools including Royal Liberty and Coopers' Company and Coborn. The borough has a largely suburban character with lower house prices than inner London, making it attractive to families seeking larger homes and strong school options.",
+    "Hillingdon": "Hillingdon in west London includes areas ranging from urban Hayes and Southall through to the greener suburbs of Ruislip, Northwood and Uxbridge. The borough has a wide range of school types and several schools rated Outstanding. Proximity to Heathrow and good Crossrail links make it popular with commuting families.",
+    "Hounslow": "Hounslow is a diverse west London borough with a strong primary school sector and improving secondary provision. The borough spans from Chiswick in the east — with some of west London's most sought-after schools — to Feltham and Hanworth in the west. Many schools serve large South Asian and Eastern European communities.",
+    "Islington": "Islington is an inner-London borough with a highly competitive school landscape and some of the most oversubscribed schools in the capital. The borough borders Camden and Hackney and is popular with young professional families. Highbury Fields School, Elizabeth Garrett Anderson and Highgate Wood School are among the most popular secondaries. Primary catchments can be extremely tight.",
+    "Kensington and Chelsea": "Kensington and Chelsea is one of London's wealthiest boroughs and home to a concentration of prestigious independent schools as well as strong state provision. Holland Park School is one of the most celebrated state secondaries in the capital. The borough has some of the most competitive primary catchments in London, particularly around South Kensington and Chelsea.",
+    "Kingston upon Thames": "Kingston upon Thames is a prosperous south-west London borough with consistently high-performing schools across both primary and secondary phases. The borough benefits from a strong local economy and high levels of parental engagement. Schools in areas such as Surbiton, New Malden and Kingston town centre are popular with families relocating from central London.",
+    "Lambeth": "Lambeth is a vibrant south London borough stretching from the South Bank to Streatham, with a diverse and improving school landscape. The borough includes highly regarded schools such as Dunraven School and La Retraite RC Girls' School. Brixton, Clapham and Streatham are popular with young families drawn by relatively affordable housing and good transport links.",
+    "Lewisham": "Lewisham is a south-east London borough with a strong community feel and an improving school landscape. The borough has invested significantly in education over the past decade and several schools are now rated Outstanding. Areas such as Blackheath, Forest Hill and Lee are particularly popular with families. Prendergast schools and Haberdashers' Boys' School are among the most sought-after secondaries.",
+    "Merton": "Merton is a south London borough with a strong reputation for education, particularly in the Wimbledon and Raynes Park areas. The borough has several Outstanding-rated schools and benefits from good transport links via the District line and Thameslink. Rutlish School and Wimbledon College are popular secondary choices.",
+    "Newham": "Newham in east London has undergone remarkable educational improvement over the past two decades and now has one of the highest proportions of Good and Outstanding schools among inner-London boroughs. The borough benefited significantly from Olympic investment and regeneration. Schools such as Brampton Manor Academy — which sends more students to Oxbridge than most independent schools — have national reputations.",
+    "Redbridge": "Redbridge is a north-east London borough with a highly competitive school system and a large number of selective and faith school options. The borough has one of the highest proportions of grammar school places in London. Ilford County High and Woodford County High are among the most academically selective schools in the country. The borough borders Essex and has a large South Asian community.",
+    "Richmond upon Thames": "Richmond upon Thames is consistently rated as one of the best boroughs in London for education and quality of life. The borough has an exceptionally high proportion of Outstanding-rated schools and benefits from low crime, extensive green space and strong community networks. Schools in Richmond, Twickenham and Ham are highly sought after and catchments can be very tight.",
+    "Southwark": "Southwark is an inner-south London borough with a rapidly improving school landscape. The borough spans from London Bridge and Bermondsey through to Peckham, Dulwich and Forest Hill. Dulwich in particular is home to several prestigious independent schools. State secondaries such as Notre Dame RC Girls' School and Harris Academy Peckham are well regarded.",
+    "Sutton": "Sutton is a south London borough with one of the strongest selective school systems in the capital. Grammar schools including Nonsuch High School for Girls, Wallington High School for Girls and Sutton Grammar School are among the most academically competitive in London. The borough has consistently high Ofsted ratings across both primary and secondary phases.",
+    "Tower Hamlets": "Tower Hamlets is one of London's most densely populated and diverse boroughs, and has one of the most improved school systems in the country. The borough now performs significantly above national averages at both primary and secondary level, a remarkable turnaround from a decade ago. Schools such as Mulberry Academy Shoreditch and George Green's School on the Isle of Dogs are well regarded.",
+    "Waltham Forest": "Waltham Forest in north-east London has seen significant improvement in its school quality over the past decade. The borough is increasingly popular with young families priced out of Hackney and Islington, attracted by its improving schools and better value housing. Areas such as Walthamstow, Leytonstone and Chingford offer a range of primary and secondary options.",
+    "Wandsworth": "Wandsworth is a south London borough with one of the strongest state school systems in the capital. The borough consistently produces some of the best primary and secondary results in London. Areas such as Battersea, Tooting, Balham and Putney are highly sought after for their school catchments. Ernest Bevin College and Burntwood School are among the most popular secondaries.",
+    "Westminster": "Westminster is central London's most prominent borough and home to a mix of outstanding state schools and prestigious independent institutions. The borough is one of the most diverse in London and its schools reflect this. Several primaries are among the most oversubscribed in the capital. Secondary options include Grey Coat Hospital School and The Grey Coat Hospital.",
+}
+
 by_borough = defaultdict(list)
 for school in schools:
     b = school.get("local_authority", "unknown")
@@ -299,6 +335,10 @@ for borough, borough_schools in by_borough.items():
     borough_slug = slugify(borough)
     borough_dir  = out_root / borough_slug
     borough_dir.mkdir(parents=True, exist_ok=True)
+
+    # Count outstanding schools for the meta description
+    outstanding = sum(1 for s in borough_schools if (s.get("quality_label") or s.get("score_band")) == "Outstanding")
+    desc_intro  = BOROUGH_DESCRIPTIONS.get(borough, f"Browse all {len(borough_schools)} schools in {borough}, London. Find outstanding schools by Ofsted rating, phase and type.")
 
     rows = ""
     for s in sorted(borough_schools, key=lambda x: x.get("name", "")):
@@ -317,9 +357,12 @@ for borough, borough_schools in by_borough.items():
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Schools in {borough} | London Schools Explorer</title>
-  <meta name="description" content="Browse all {len(borough_schools)} schools in {borough}, London. Filter by Ofsted rating, phase, and type. Find outstanding schools near you.">
+  <title>Schools in {borough}, London | Ofsted Ratings &amp; Results | London Schools Explorer</title>
+  <meta name="description" content="{len(borough_schools)} schools in {borough}, London. {outstanding} rated Outstanding by Ofsted. Compare by rating, phase, admissions and exam results.">
   <link rel="canonical" href="{BASE_URL}/schools/{borough_slug}">
+  <meta property="og:title" content="Schools in {borough} | London Schools Explorer">
+  <meta property="og:description" content="{len(borough_schools)} schools in {borough}. {outstanding} Outstanding-rated. Compare Ofsted ratings, exam results and admissions.">
+  <meta property="og:url" content="{BASE_URL}/schools/{borough_slug}">
   <style>
     *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
     body {{ font-family: system-ui, -apple-system, sans-serif; color: #1a1a1a; background: #f8f9fa; line-height: 1.6; }}
@@ -329,13 +372,20 @@ for borough, borough_schools in by_borough.items():
     .topbar span {{ color: #888; margin: 0 8px; }}
     .container {{ max-width: 900px; margin: 0 auto; padding: 32px 20px; }}
     h1 {{ font-size: 28px; font-weight: 700; margin-bottom: 8px; }}
-    .subtitle {{ color: #555; margin-bottom: 24px; }}
+    .intro {{ background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; font-size: 15px; color: #333; line-height: 1.7; }}
+    .stats-row {{ display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }}
+    .stat-box {{ background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 14px 18px; flex: 1; min-width: 120px; }}
+    .stat-num {{ font-size: 24px; font-weight: 700; color: #1a1a1a; line-height: 1; }}
+    .stat-lbl {{ font-size: 12px; color: #888; margin-top: 4px; }}
     table {{ width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #e0e0e0; }}
     th {{ background: #f5f5f5; padding: 12px 16px; text-align: left; font-size: 13px; color: #555; font-weight: 600; border-bottom: 1px solid #e0e0e0; }}
     td {{ padding: 12px 16px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }}
     tr:last-child td {{ border-bottom: none; }}
     tr:hover td {{ background: #fafafa; }}
+    .back {{ display: inline-block; margin-bottom: 20px; font-size: 14px; color: #555; text-decoration: none; }}
+    .back:hover {{ color: #111; }}
     footer {{ text-align: center; padding: 32px 20px; font-size: 13px; color: #888; }}
+    @media (max-width: 600px) {{ .stats-row {{ flex-direction: column; }} }}
   </style>
 </head>
 <body>
@@ -347,14 +397,24 @@ for borough, borough_schools in by_borough.items():
   </div>
 </div>
 <div class="container">
+  <a class="back" href="/">&#8592; All boroughs</a>
   <h1>Schools in {borough}</h1>
-  <p class="subtitle">{len(borough_schools)} schools &mdash; browse by name, phase or Ofsted rating</p>
+
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-num">{len(borough_schools)}</div><div class="stat-lbl">Total schools</div></div>
+    <div class="stat-box"><div class="stat-num">{outstanding}</div><div class="stat-lbl">Outstanding</div></div>
+    <div class="stat-box"><div class="stat-num">{sum(1 for s in borough_schools if (s.get("quality_label") or s.get("score_band")) == "Good")}</div><div class="stat-lbl">Good</div></div>
+    <div class="stat-box"><div class="stat-num">{len(set(s.get("phase","") for s in borough_schools if s.get("phase") and s.get("phase") != "Not applicable"))}</div><div class="stat-lbl">School phases</div></div>
+  </div>
+
+  <div class="intro">{desc_intro}</div>
+
   <table>
     <thead><tr><th>School</th><th>Phase</th><th>Ofsted</th><th>Pupils</th></tr></thead>
     <tbody>{rows}</tbody>
   </table>
 </div>
-<footer><a href="/">London Schools Explorer</a> &mdash; helping families find the right school.</footer>
+<footer><a href="/">London Schools Explorer</a> &mdash; helping families find the right school in London.</footer>
 <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>"""

@@ -174,6 +174,18 @@ def build_school_page(school):
     .back-link {{ font-size: 14px; color: #555; text-decoration: none; }}
     .back-link:hover {{ color: #111; }}
     footer {{ text-align: center; padding: 32px 20px; font-size: 13px; color: #888; }}
+    @media (max-width: 600px) {{
+      .hero {{ padding: 20px 14px 16px; }}
+      h1 {{ font-size: 22px; }}
+      .meta {{ font-size: 13px; }}
+      .actions {{ flex-direction: column; }}
+      .btn {{ text-align: center; }}
+      .container {{ padding: 16px 12px; gap: 12px; }}
+      .grid {{ grid-template-columns: 1fr; }}
+      .card {{ padding: 14px 16px; }}
+      td {{ font-size: 13px; padding: 6px 0; }}
+      .topbar {{ padding: 10px 12px; font-size: 13px; }}
+    }}
     @media (max-width: 520px) {{ .grid {{ grid-template-columns: 1fr; }} }}
   </style>
 </head>
@@ -386,6 +398,15 @@ for borough, borough_schools in by_borough.items():
     .back {{ display: inline-block; margin-bottom: 20px; font-size: 14px; color: #555; text-decoration: none; }}
     .back:hover {{ color: #111; }}
     footer {{ text-align: center; padding: 32px 20px; font-size: 13px; color: #888; }}
+    @media (max-width: 600px) {{
+      .container {{ padding: 16px 12px; }}
+      h1 {{ font-size: 22px; }}
+      .stats-row {{ grid-template-columns: 1fr 1fr; }}
+      .intro {{ padding: 14px 16px; font-size: 14px; }}
+      table {{ font-size: 13px; }}
+      th, td {{ padding: 10px 10px; }}
+      .topbar {{ padding: 10px 12px; font-size: 13px; }}
+    }}
     @media (max-width: 600px) {{ .stats-row {{ flex-direction: column; }} }}
   </style>
 </head>
@@ -476,6 +497,16 @@ def build_type_page(slug, title, meta_desc, intro, filter_fn):
     tr:hover td {{ background: #fafafa; }}
     .back {{ display: inline-block; margin-bottom: 20px; font-size: 14px; color: #555; text-decoration: none; }}
     footer {{ text-align: center; padding: 32px 20px; font-size: 13px; color: #888; }}
+    @media (max-width: 600px) {{
+      .container {{ padding: 16px 12px; }}
+      h1 {{ font-size: 22px; }}
+      .intro {{ padding: 14px 16px; font-size: 14px; }}
+      table {{ font-size: 12px; }}
+      th, td {{ padding: 8px 8px; }}
+      th:nth-child(3), td:nth-child(3),
+      th:nth-child(5), td:nth-child(5) {{ display: none; }}
+      .topbar {{ padding: 10px 12px; font-size: 13px; }}
+    }}
   </style>
 </head>
 <body>

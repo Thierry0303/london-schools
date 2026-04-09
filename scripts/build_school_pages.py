@@ -364,11 +364,17 @@ print(f"Built {len(by_borough)} borough pages.")
 
 
 # ── Sitemap ───────────────────────────────────────────────────────────────────
-sitemap_xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
-sitemap_xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-sitemap_xml += "\n".join(f"  <url><loc>{u}</loc></url>" for u in sitemap_urls)
-sitemap_xml += "\n</urlset>"
-pathlib.Path("sitemap.xml").write_text(sitemap_xml, encoding="utf-8")
+import xml.etree.ElementTree as ET
+
+urlset = ET.Element("urlset", xmlns="http://www.sitemaps.org/schemas/sitemap/0.9")
+for u in sitemap_urls:
+    url_el = ET.SubElement(urlset, "url")
+    ET.SubElement(url_el, "loc").text = u
+
+tree = ET.ElementTree(urlset)
+ET.indent(tree, space="  ")
+with open("sitemap.xml", "wb") as f:
+    tree.write(f, encoding="utf-8", xml_declaration=True)
 print(f"Sitemap written with {len(sitemap_urls)} URLs.")
 
 

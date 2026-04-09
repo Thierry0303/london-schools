@@ -207,7 +207,36 @@ function snobeUrl(name) {
   return `https://snobe.co.uk/schools/${slug}`;
 }
 
-function BandChip({ band }) {
+const BOROUGHS = [
+  "Barking and Dagenham","Barnet","Bexley","Bromley","Camden",
+  "City of London","Croydon","Ealing","Enfield","Greenwich",
+  "Hackney","Hammersmith and Fulham","Haringey","Harrow","Havering",
+  "Hillingdon","Hounslow","Islington","Kensington and Chelsea",
+  "Kingston upon Thames","Lambeth","Lewisham","Merton","Newham",
+  "Redbridge","Richmond upon Thames","Southwark","Sutton",
+  "Tower Hamlets","Waltham Forest","Wandsworth","Westminster"
+];
+
+function BoroughsGrid() {
+  return (
+    <div style={{marginTop: '2rem'}}>
+      <h2 style={{fontFamily:"'Playfair Display',serif", fontSize:'1.3rem', fontWeight:700, marginBottom:'16px', color:'var(--ink)'}}>Browse by borough</h2>
+      <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(180px, 1fr))', gap:'8px'}}>
+        {BOROUGHS.map(b => {
+          const slug = b.toLowerCase().replace(/[''']/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+          return (
+            <a key={b} href={`/schools/${slug}`}
+              style={{display:'block', padding:'10px 14px', background:'var(--card-bg)', border:'1px solid var(--border)', borderRadius:'6px', fontSize:'0.85rem', fontWeight:500, color:'var(--ink)', textDecoration:'none', transition:'all 0.15s'}}
+              onMouseOver={e=>{e.currentTarget.style.borderColor='var(--gold)';e.currentTarget.style.color='var(--gold)';}}
+              onMouseOut={e=>{e.currentTarget.style.borderColor='var(--border)';e.currentTarget.style.color='var(--ink)';}}>
+              {b}
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
   return <span className="band-chip" style={{ background: BAND_COLORS[band]||'#95A5A6' }}>{band||'Unknown'}</span>;
 }
 
@@ -687,8 +716,7 @@ function App() {
               <div className="empty-state"><h3>No schools found</h3><p>Try adjusting your filters.</p></div>
             ) : displayMode === 'grid' ? (
               <div className="school-grid">{paged.map(s => <ScoreCard key={s.urn} school={s} />)}</div>
-            ) : (
-              <table className="school-table">
+            ) : (              <table className="school-table">
                 <thead><tr><th>#</th><th>School</th><th>Borough</th><th>Phase</th><th>Ofsted Grade</th><th>Admissions</th><th>Pupils</th><th>Inspected</th></tr></thead>
                 <tbody>
                   {paged.map((s,i) => {
@@ -724,6 +752,7 @@ function App() {
                 <button className="page-btn" onClick={() => setPage(p=>p+1)} disabled={page===totalPages}>›</button>
               </div>
             )}
+            <BoroughsGrid />
           </>
         )}
       </main>

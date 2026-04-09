@@ -199,7 +199,8 @@ def build_school_page(school):
     <div class="actions">
       {"<a class='btn btn-primary' href='" + ofsted_url + "' target='_blank' rel='noopener'>View Ofsted report</a>" if ofsted_url else ""}
       {"<a class='btn' href='" + maps_link + "' target='_blank' rel='noopener'>View on map</a>" if maps_link else ""}
-      <a class="btn" href="/">Browse all schools</a>
+      <a class="btn" href="/schools/{borough_slug}">More schools in {borough}</a>
+      <a class="btn" href="/">All London schools</a>
     </div>
   </div>
 </div>

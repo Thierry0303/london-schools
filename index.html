@@ -716,7 +716,8 @@ function App() {
               <div className="empty-state"><h3>No schools found</h3><p>Try adjusting your filters.</p></div>
             ) : displayMode === 'grid' ? (
               <div className="school-grid">{paged.map(s => <ScoreCard key={s.urn} school={s} />)}</div>
-            ) : (              <table className="school-table">
+            ) : (
+              <table className="school-table">
                 <thead><tr><th>#</th><th>School</th><th>Borough</th><th>Phase</th><th>Ofsted Grade</th><th>Admissions</th><th>Pupils</th><th>Inspected</th></tr></thead>
                 <tbody>
                   {paged.map((s,i) => {

@@ -237,6 +237,8 @@ function BoroughsGrid() {
     </div>
   );
 }
+
+function BandChip({ band }) {
   return <span className="band-chip" style={{ background: BAND_COLORS[band]||'#95A5A6' }}>{band||'Unknown'}</span>;
 }
 

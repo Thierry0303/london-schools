@@ -20,6 +20,8 @@ def slugify(text):
 def safe(val, fallback="N/A"):
     if val is None or (isinstance(val, float) and str(val) == "nan"):
         return fallback
+    if isinstance(val, float) and val == int(val):
+        return str(int(val))
     return str(val)
 
 def format_phone(tel):

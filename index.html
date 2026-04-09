@@ -92,33 +92,6 @@
     .map-legend { display: flex; gap: 18px; flex-wrap: wrap; font-size: 0.78rem; color: #888; margin-top: 12px; align-items: center; }
     .map-legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 5px; }
 
-    .detail-overlay { position: fixed; inset: 0; background: rgba(26,26,46,0.5); z-index: 2000; display: flex; justify-content: flex-end; animation: fadeIn 0.2s; }
-    @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
-    @keyframes slideIn { from { transform: translateX(100%) } to { transform: translateX(0) } }
-    .detail-panel { width: 100%; max-width: 540px; background: var(--card-bg); height: 100%; overflow-y: auto; animation: slideIn 0.25s cubic-bezier(0.25,0.46,0.45,0.94); }
-    .detail-header { background: var(--ink); color: var(--cream); padding: 28px; position: relative; }
-    .detail-close { position: absolute; top: 18px; right: 18px; background: rgba(255,255,255,0.1); border: none; color: var(--cream); width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
-    .detail-close:hover { background: rgba(255,255,255,0.2); }
-    .detail-phase-tag { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--gold); margin-bottom: 8px; }
-    .detail-name { font-family: 'Playfair Display', serif; font-size: 1.65rem; font-weight: 900; line-height: 1.15; margin-bottom: 6px; }
-    .detail-la { font-size: 0.87rem; color: rgba(245,240,232,0.6); }
-    .detail-score-row { display: flex; gap: 12px; margin-top: 20px; }
-    .detail-score-box { background: rgba(255,255,255,0.08); border-radius: 8px; padding: 12px 14px; text-align: center; flex: 1; }
-    .detail-score-val { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--gold); line-height: 1; }
-    .detail-score-desc { font-size: 0.67rem; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(245,240,232,0.5); margin-top: 4px; }
-    .detail-body { padding: 24px 28px; }
-    .detail-section { margin-bottom: 22px; }
-    .detail-section-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: #aaa; margin-bottom: 12px; padding-bottom: 7px; border-bottom: 1px solid var(--border); }
-    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .detail-field { display: flex; flex-direction: column; gap: 2px; }
-    .detail-field-label { font-size: 0.7rem; color: #bbb; text-transform: uppercase; letter-spacing: 0.06em; }
-    .detail-field-val { font-size: 0.9rem; font-weight: 500; color: var(--ink); }
-    .rating-row { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
-    .rating-label { font-size: 0.8rem; color: var(--ink-soft); width: 170px; flex-shrink: 0; }
-    .rating-bar-wrap { flex: 1; background: var(--border); border-radius: 4px; height: 7px; overflow: hidden; }
-    .rating-bar-fill { height: 100%; border-radius: 4px; }
-    .rating-chip { font-size: 0.7rem; font-weight: 600; width: 100px; text-align: right; }
-
     .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; margin-bottom: 24px; }
     .stat-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 18px; }
     .stat-card-num { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: var(--ink); line-height: 1; margin-bottom: 4px; }
@@ -200,36 +173,37 @@ const { useState, useEffect, useMemo, useRef, useCallback } = React;
 const API_BASE = 'http://localhost:8000';
 const JSON_FALLBACK = './schools.json';
 
-// National England averages for benchmarking (2023/24)
-const ENG_ATT8_AVG       = 39.5;  // England avg Attainment 8
-const ENG_G5_AVG         = 36.8;  // England avg % grade 5+ English & Maths
-const ENG_KS2_HIGHER_AVG = 7.4;   // England avg % KS2 higher standard
-const ENG_KS2_EXP_AVG    = 58.4;  // England avg % KS2 expected standard
+const ENG_ATT8_AVG       = 39.5;
+const ENG_G5_AVG         = 36.8;
+const ENG_KS2_HIGHER_AVG = 7.4;
+const ENG_KS2_EXP_AVG    = 58.4;
 
 const BAND_COLORS = { 'Outstanding':'#27AE60', 'Good':'#2980B9', 'Requires improvement':'#E67E22', 'Inadequate':'#C0392B', 'Ungraded (monitoring)':'#8E44AD', 'Report card (2025+)':'#16A085', 'Not yet rated':'#BDC3C7', 'Unknown':'#95A5A6' };
 const RATING_MAP = { 1:'Outstanding', 2:'Good', 3:'Requires improvement', 4:'Inadequate' };
 const RATING_SCORES = { 1:100, 2:80, 3:40, 4:0 };
-const PILL_CLASS = { 'Outstanding':'pill pill-o', 'Good':'pill pill-g', 'Requires improvement':'pill pill-r', 'Inadequate':'pill pill-i' };
 
-// FSM quintile: derived from % free school meals — reliable pupil deprivation measure
-// 1 = lowest FSM (least deprived), 5 = highest FSM (most deprived)
+// ── SLUGIFY — matches the Python build script exactly ──────────────────────
+function slugify(text) {
+  if (!text) return 'unknown';
+  return text.toString().toLowerCase()
+    .replace(/[''']/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+function schoolUrl(school) {
+  return `/schools/${slugify(school.local_authority)}/${slugify(school.name)}`;
+}
+// ──────────────────────────────────────────────────────────────────────────
+
 function fsmLabel(s) {
   if (!s) return null;
   return { text: s.fsm_label, color: s.fsm_color, bg: s.fsm_bg };
 }
 
-
-
-// Generate Snobe URL from school name
-// e.g. "St Mary's Primary School" → "st-marys-primary-school"
 function snobeUrl(name) {
   if (!name) return null;
-  const slug = name
-    .toLowerCase()
-    .replace(/['']/g, '')           // remove apostrophes
-    .replace(/[^a-z0-9\s-]/g, '')  // remove other special chars
-    .trim()
-    .replace(/\s+/g, '-');          // spaces to hyphens
+  const slug = name.toLowerCase().replace(/['']/g, '').replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-');
   return `https://snobe.co.uk/schools/${slug}`;
 }
 
@@ -244,254 +218,6 @@ function RatingBar({ label, raw }) {
       <div className="rating-label">{label}</div>
       <div className="rating-bar-wrap"><div className="rating-bar-fill" style={{ width:`${score}%`, background:BAND_COLORS[text] }} /></div>
       <div className="rating-chip" style={{ color:BAND_COLORS[text] }}>{text}</div>
-    </div>
-  );
-}
-
-function SchoolDetail({ school, onClose }) {
-  if (!school) return null;
-  const band = school.score_band || school.quality_label || 'Unknown';
-  const website = school.website ? (school.website.startsWith('http') ? school.website : `https://${school.website}`) : null;
-  return (
-    <div className="detail-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
-      <div className="detail-panel">
-        <div className="detail-header">
-          <button className="detail-close" onClick={onClose}>✕</button>
-          <div className="detail-phase-tag">{school.phase} · {school.school_type}</div>
-          <div className="detail-name">{school.name}</div>
-          <div className="detail-la">📍 {school.local_authority} · {school.postcode}</div>
-          <div className="detail-score-row">
-            <div className="detail-score-box"><div className="detail-score-val">{school.ofsted_score??'—'}</div><div className="detail-score-desc">Score</div></div>
-            <div className="detail-score-box" style={{flex:1.6}}><div style={{paddingTop:6}}><BandChip band={band} /></div><div className="detail-score-desc" style={{marginTop:6}}>Rating</div></div>
-            <div className="detail-score-box"><div className="detail-score-val">{school.pupils??'—'}</div><div className="detail-score-desc">Pupils</div></div>
-          </div>
-        </div>
-        <div className="detail-body">
-          <div className="detail-section">
-            <div className="detail-section-title">Ofsted Ratings</div>
-            <RatingBar label="Quality of education" raw={school.quality_raw} />
-            <RatingBar label="Behaviour & attitudes" raw={school.behaviour_raw} />
-            <RatingBar label="Personal development" raw={school.personal_dev_raw} />
-            <RatingBar label="Leadership & management" raw={school.leadership_raw} />
-          </div>
-          {(school.rc_curriculum || school.rc_achievement) && (
-            <div className="detail-section">
-              <div className="detail-section-title">Ofsted Report Card (2025+ Framework)</div>
-              <p style={{fontSize:'0.8rem',color:'#888',marginBottom:12}}>This school was inspected under Ofsted's new framework, which replaced single-word grades with a 5-point scale.</p>
-              <div className="detail-grid">
-                {school.rc_curriculum && <div className="detail-field"><span className="detail-field-label">Curriculum & Teaching</span><span className="detail-field-val" style={{color:'#16A085',fontWeight:600}}>{school.rc_curriculum}</span></div>}
-                {school.rc_achievement && <div className="detail-field"><span className="detail-field-label">Achievement</span><span className="detail-field-val" style={{color:'#16A085',fontWeight:600}}>{school.rc_achievement}</span></div>}
-                {school.rc_attendance && <div className="detail-field"><span className="detail-field-label">Attendance & Behaviour</span><span className="detail-field-val" style={{color:'#16A085',fontWeight:600}}>{school.rc_attendance}</span></div>}
-                {school.rc_leadership && <div className="detail-field"><span className="detail-field-label">Leadership & Governance</span><span className="detail-field-val" style={{color:'#16A085',fontWeight:600}}>{school.rc_leadership}</span></div>}
-                {school.rc_safeguarding && <div className="detail-field"><span className="detail-field-label">Safeguarding</span><span className="detail-field-val" style={{color:'#16A085',fontWeight:600}}>{school.rc_safeguarding}</span></div>}
-              </div>
-            </div>
-          )}
-          {school.ungraded_outcome && (
-            <div className="detail-section">
-              <div className="detail-section-title">Latest Monitoring Inspection</div>
-              <p style={{fontSize:'0.88rem',color:'#555',padding:'10px 14px',background:'#F3EDF7',borderRadius:6,borderLeft:'3px solid #8E44AD'}}>{school.ungraded_outcome}</p>
-            </div>
-          )}
-
-          {/* KS4 Results */}
-          {(school.ks4_att8 != null || school.ks4_grade5_em != null) && (
-            <div className="detail-section">
-              <div className="detail-section-title">GCSE Results 2024 · Year 11</div>
-              <div className="detail-grid">
-                {school.ks4_att8 != null && (() => {
-                  const pct = Math.min(school.ks4_att8 / 90 * 100, 100);
-                  const aboveAvg = school.ks4_att8 >= ENG_ATT8_AVG;
-                  const color = school.ks4_att8 >= 60 ? '#27AE60' : school.ks4_att8 >= 45 ? '#2980B9' : school.ks4_att8 >= 35 ? '#F57F17' : '#C0392B';
-                  return (
-                    <div className="detail-field" style={{gridColumn:'span 2'}}>
-                      <span className="detail-field-label">Attainment 8 score</span>
-                      <div style={{display:'flex',alignItems:'center',gap:10,marginTop:4}}>
-                        <div style={{flex:1,background:'#EDE8DF',borderRadius:4,height:8,overflow:'hidden',position:'relative'}}>
-                          <div style={{width:`${pct}%`,height:'100%',background:color,borderRadius:4}} />
-                          {/* National average marker */}
-                          <div style={{position:'absolute',top:0,left:`${ENG_ATT8_AVG/90*100}%`,width:2,height:'100%',background:'#666',opacity:0.5}} />
-                        </div>
-                        <span style={{fontFamily:"'Playfair Display',serif",fontSize:'1.4rem',fontWeight:700,color,minWidth:40}}>{school.ks4_att8}</span>
-                      </div>
-                      <div style={{display:'flex',justifyContent:'space-between',marginTop:4}}>
-                        <span style={{fontSize:'0.72rem',fontWeight:600,color}}>{aboveAvg ? '▲ Above national average' : '▼ Below national average'}</span>
-                        <span style={{fontSize:'0.72rem',color:'#aaa'}}>England avg: {ENG_ATT8_AVG} · max: 90</span>
-                      </div>
-                    </div>
-                  );
-                })()}
-                {school.ks4_grade5_em != null && (() => {
-                  const aboveAvg = school.ks4_grade5_em >= ENG_G5_AVG;
-                  const color = school.ks4_grade5_em >= 60 ? '#27AE60' : school.ks4_grade5_em >= 40 ? '#2980B9' : school.ks4_grade5_em >= 25 ? '#F57F17' : '#C0392B';
-                  return (
-                    <div className="detail-field" style={{gridColumn:'span 2'}}>
-                      <span className="detail-field-label">% Grade 5+ in English & Maths</span>
-                      <div style={{display:'flex',alignItems:'center',gap:10,marginTop:4}}>
-                        <div style={{flex:1,background:'#EDE8DF',borderRadius:4,height:8,overflow:'hidden',position:'relative'}}>
-                          <div style={{width:`${school.ks4_grade5_em}%`,height:'100%',background:color,borderRadius:4}} />
-                          <div style={{position:'absolute',top:0,left:`${ENG_G5_AVG}%`,width:2,height:'100%',background:'#666',opacity:0.5}} />
-                        </div>
-                        <span style={{fontFamily:"'Playfair Display',serif",fontSize:'1.4rem',fontWeight:700,color,minWidth:50}}>{school.ks4_grade5_em}%</span>
-                      </div>
-                      <div style={{display:'flex',justifyContent:'space-between',marginTop:4}}>
-                        <span style={{fontSize:'0.72rem',fontWeight:600,color}}>{aboveAvg ? '▲ Above national average' : '▼ Below national average'}</span>
-                        <span style={{fontSize:'0.72rem',color:'#aaa'}}>England avg: {ENG_G5_AVG}%</span>
-                      </div>
-                    </div>
-                  );
-                })()}
-              </div>
-            </div>
-          )}
-
-          {/* KS2 Results */}
-          {school.ks2_higher_pct != null && (
-            <div className="detail-section">
-              <div className="detail-section-title">SATs Results 2024 · Year 6</div>
-              <div className="detail-grid">
-                {(() => {
-                  const aboveAvg = school.ks2_higher_pct >= ENG_KS2_HIGHER_AVG;
-                  const color = school.ks2_higher_pct >= 25 ? '#27AE60' : school.ks2_higher_pct >= 15 ? '#2980B9' : school.ks2_higher_pct >= 7 ? '#F57F17' : '#C0392B';
-                  return (
-                    <div className="detail-field" style={{gridColumn:'span 2'}}>
-                      <span className="detail-field-label">% achieving higher standard (Reading, Writing & Maths)</span>
-                      <div style={{display:'flex',alignItems:'center',gap:10,marginTop:4}}>
-                        <div style={{flex:1,background:'#EDE8DF',borderRadius:4,height:8,overflow:'hidden',position:'relative'}}>
-                          <div style={{width:`${school.ks2_higher_pct}%`,height:'100%',background:color,borderRadius:4}} />
-                          <div style={{position:'absolute',top:0,left:`${ENG_KS2_HIGHER_AVG}%`,width:2,height:'100%',background:'#666',opacity:0.5}} />
-                        </div>
-                        <span style={{fontFamily:"'Playfair Display',serif",fontSize:'1.4rem',fontWeight:700,color,minWidth:50}}>{school.ks2_higher_pct}%</span>
-                      </div>
-                      <div style={{display:'flex',justifyContent:'space-between',marginTop:4}}>
-                        <span style={{fontSize:'0.72rem',fontWeight:600,color}}>{aboveAvg ? '▲ Above national average' : '▼ Below national average'}</span>
-                        <span style={{fontSize:'0.72rem',color:'#aaa'}}>England avg: {ENG_KS2_HIGHER_AVG}% · Expected std: {school.ks2_expected_pct}%</span>
-                      </div>
-                    </div>
-                  );
-                })()}
-              </div>
-            </div>
-          )}
-
-          <div className="detail-section">
-            <div className="detail-section-title">School Information</div>
-            <div className="detail-grid">
-              <div className="detail-field"><span className="detail-field-label">Age Range</span><span className="detail-field-val">{school.age_from}–{school.age_to}</span></div>
-              <div className="detail-field"><span className="detail-field-label">Gender</span><span className="detail-field-val">{school.gender||'—'}</span></div>
-              <div className="detail-field"><span className="detail-field-label">Sixth Form</span><span className="detail-field-val">{school.sixth_form==='Has a sixth form'?'✓ Yes':'No'}</span></div>
-              <div className="detail-field"><span className="detail-field-label">Admissions</span><span className="detail-field-val">{school.admissions||'—'}</span></div>
-              <div className="detail-field"><span className="detail-field-label">Safeguarding</span><span className="detail-field-val" style={{color:school.safeguarding==='Yes'?'#27AE60':'#E74C3C'}}>{school.safeguarding==='Yes'?'✓ Effective':school.safeguarding||'—'}</span></div>
-              <div className="detail-field"><span className="detail-field-label">Last Inspection</span><span className="detail-field-val">{school.inspection_date||'—'}</span></div>
-              {school.pct_fsm != null && <div className="detail-field"><span className="detail-field-label">Free School Meals</span><span className="detail-field-val">{school.pct_fsm}%</span></div>}
-
-              {school.crime_score != null && (() => {
-                const color = school.crime_score >= 80 ? '#27AE60' : school.crime_score >= 60 ? '#2980B9' : school.crime_score >= 40 ? '#F57F17' : school.crime_score >= 20 ? '#E67E22' : '#C0392B';
-                const bg    = school.crime_score >= 80 ? '#E8F5E9' : school.crime_score >= 60 ? '#E3F2FD' : school.crime_score >= 40 ? '#FFFDE7' : school.crime_score >= 20 ? '#FFF3E0' : '#FFEBEE';
-                return (
-                  <div className="detail-field" style={{gridColumn:'span 2'}}>
-                    <span className="detail-field-label">Local Crime (500m radius)</span>
-                    <div style={{display:'flex',alignItems:'center',gap:10,marginTop:4}}>
-                      <div style={{flex:1,background:'#EDE8DF',borderRadius:4,height:7,overflow:'hidden'}}>
-                        <div style={{width:`${school.crime_score}%`,height:'100%',background:color,borderRadius:4}} />
-                      </div>
-                      <span style={{background:bg,color,padding:'3px 10px',borderRadius:4,fontWeight:600,fontSize:'0.82rem',whiteSpace:'nowrap'}}>{school.crime_label}</span>
-                    </div>
-                    <span style={{fontSize:'0.72rem',color:'#aaa',marginTop:3,display:'block'}}>{school.crime_count?.toLocaleString()} recorded crimes nearby (Oct 2025–Jan 2026)</span>
-                  </div>
-                );
-              })()}
-              {school.fsm_quintile != null && (() => {
-                const fsm = fsmLabel(school);
-                return fsm ? (
-                  <div className="detail-field" style={{gridColumn:'span 2'}}>
-                    <span className="detail-field-label">Pupil Deprivation (Free School Meals)</span>
-                    <span style={{display:'inline-flex',alignItems:'center',gap:8,marginTop:2}}>
-                      <span style={{background:fsm.bg,color:fsm.color,padding:'3px 10px',borderRadius:4,fontWeight:600,fontSize:'0.85rem'}}>{fsm.text}</span>
-                      <span style={{fontSize:'0.75rem',color:'#aaa'}}>{school.pct_fsm}% FSM · quintile {school.fsm_quintile} of 5</span>
-                    </span>
-                  </div>
-                ) : null;
-              })()}
-              {school.head_name && <div className="detail-field" style={{gridColumn:'span 2'}}><span className="detail-field-label">Headteacher</span><span className="detail-field-val">{school.head_name}</span></div>}
-              {school.telephone && <div className="detail-field"><span className="detail-field-label">Telephone</span><span className="detail-field-val">{school.telephone}</span></div>}
-              {school.mat_name && <div className="detail-field" style={{gridColumn:'span 2'}}><span className="detail-field-label">Academy Trust</span><span className="detail-field-val">{school.mat_name}</span></div>}
-              {school.religious_character && school.religious_character !== 'Does not apply' && <div className="detail-field" style={{gridColumn:'span 2'}}><span className="detail-field-label">Religious Character</span><span className="detail-field-val">{school.religious_character}</span></div>}
-            </div>
-          </div>
-          {(school.apps_per_place != null || school.first_pref_success_pct != null) && (
-            <div className="detail-section">
-              <div className="detail-section-title">Admissions 2024 · This School</div>
-              <div className="detail-grid">
-
-                {/* Apps per place bar */}
-                {school.apps_per_place != null && (() => {
-                  const ratio = school.apps_per_place;
-                  const color = ratio > 3 ? '#C0392B' : ratio > 1.5 ? '#E67E22' : ratio > 1 ? '#F39C12' : '#27AE60';
-                  const label = ratio > 3 ? 'Highly oversubscribed' : ratio > 1.5 ? 'Oversubscribed' : ratio > 1 ? 'Slightly oversubscribed' : 'Undersubscribed';
-                  return (
-                    <div className="detail-field" style={{gridColumn:'span 2'}}>
-                      <span className="detail-field-label">First-choice applications per place</span>
-                      <div style={{display:'flex',alignItems:'center',gap:12,marginTop:6}}>
-                        <div style={{flex:1,background:'#EDE8DF',borderRadius:4,height:10,overflow:'hidden'}}>
-                          <div style={{width:`${Math.min(ratio/5*100,100)}%`,height:'100%',background:color,borderRadius:4}} />
-                        </div>
-                        <span style={{fontFamily:"'Playfair Display',serif",fontSize:'1.4rem',fontWeight:700,color,minWidth:50}}>{ratio}×</span>
-                      </div>
-                      <div style={{display:'flex',justifyContent:'space-between',marginTop:5}}>
-                        <span style={{fontSize:'0.75rem',fontWeight:600,color}}>{label}</span>
-                        <span style={{fontSize:'0.72rem',color:'#aaa'}}>{school.first_pref_applications?.toLocaleString()} first-choice apps · {school.places?.toLocaleString()} places</span>
-                      </div>
-                    </div>
-                  );
-                })()}
-
-                {/* Success rate bar */}
-                {school.first_pref_success_pct != null && (() => {
-                  const pct = school.first_pref_success_pct;
-                  const color = pct >= 90 ? '#27AE60' : pct >= 70 ? '#E67E22' : '#C0392B';
-                  const label = pct >= 90 ? 'Most applicants get in' : pct >= 70 ? 'Some applicants miss out' : 'Many applicants miss out';
-                  return (
-                    <div className="detail-field" style={{gridColumn:'span 2'}}>
-                      <span className="detail-field-label">First-choice applicants who received an offer</span>
-                      <div style={{display:'flex',alignItems:'center',gap:12,marginTop:6}}>
-                        <div style={{flex:1,background:'#EDE8DF',borderRadius:4,height:10,overflow:'hidden'}}>
-                          <div style={{width:`${pct}%`,height:'100%',background:color,borderRadius:4}} />
-                        </div>
-                        <span style={{fontFamily:"'Playfair Display',serif",fontSize:'1.4rem',fontWeight:700,color,minWidth:60}}>{pct}%</span>
-                      </div>
-                      <div style={{display:'flex',justifyContent:'space-between',marginTop:5}}>
-                        <span style={{fontSize:'0.75rem',fontWeight:600,color}}>{label}</span>
-                        <span style={{fontSize:'0.72rem',color:'#aaa'}}>{school.first_pref_offers?.toLocaleString()} of {school.first_pref_applications?.toLocaleString()} first-choice applicants offered a place</span>
-                      </div>
-                    </div>
-                  );
-                })()}
-
-                {/* Total demand */}
-                {school.total_applications != null && (
-                  <div className="detail-field">
-                    <span className="detail-field-label">Total times listed (any preference)</span>
-                    <span className="detail-field-val" style={{fontSize:'1rem',fontWeight:600}}>{school.total_applications?.toLocaleString()}</span>
-                  </div>
-                )}
-                {school.places != null && (
-                  <div className="detail-field">
-                    <span className="detail-field-label">Places available</span>
-                    <span className="detail-field-val" style={{fontSize:'1rem',fontWeight:600}}>{school.places?.toLocaleString()}</span>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          <div style={{display:'flex',gap:10}}>
-            {website && <a href={website} target="_blank" rel="noopener noreferrer" style={{flex:1,display:'block',textAlign:'center',padding:'11px',background:'#F5F0E8',color:'#1A1A2E',borderRadius:6,fontWeight:600,fontSize:'0.85rem',textDecoration:'none',border:'2px solid #D8D0C0'}}>School Website →</a>}
-            {school.ofsted_url && <a href={school.ofsted_url} target="_blank" rel="noopener noreferrer" style={{flex:1,display:'block',textAlign:'center',padding:'11px',background:'#1A1A2E',color:'#D4A843',borderRadius:6,fontWeight:600,fontSize:'0.85rem',textDecoration:'none'}}>Ofsted Report →</a>}
-            <a href={snobeUrl(school.name)} target="_blank" rel="noopener noreferrer" style={{flex:1,display:'block',textAlign:'center',padding:'11px',background:'#7B2FBE',color:'white',borderRadius:6,fontWeight:600,fontSize:'0.85rem',textDecoration:'none'}}>View on Snobe →</a>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
@@ -519,7 +245,11 @@ function MapView({ schools, onSelect }) {
       marker.bindPopup(`<div style="font-family:'DM Sans',sans-serif;min-width:190px"><div style="font-family:'Playfair Display',serif;font-weight:700;font-size:0.95rem;margin-bottom:3px">${school.name}</div><div style="font-size:0.78rem;color:#888;margin-bottom:7px">${school.local_authority} · ${school.postcode}</div><span class="band-chip" style="background:${color};color:white;display:inline-block;padding:2px 7px;border-radius:3px;font-size:0.7rem;font-weight:600">${band}</span><br/><button onclick="window.__sel(${school.urn})" style="display:block;width:100%;text-align:center;padding:7px;background:#1A1A2E;color:#D4A843;border-radius:4px;font-size:0.78rem;font-weight:600;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;margin-top:8px">View Details →</button></div>`);
       markersRef.current.push(marker);
     });
-    window.__sel = (urn) => { const s = schools.find(x => x.urn === urn); if (s) onSelect(s); };
+    // ── Map popup button navigates to static page ──
+    window.__sel = (urn) => {
+      const s = schools.find(x => x.urn === urn);
+      if (s) window.location.href = schoolUrl(s);
+    };
   }, [schools]);
 
   const withCoords = schools.filter(s => s.lat && s.lng).length;
@@ -567,22 +297,23 @@ function StatsPage({ schools }) {
   );
 }
 
-function ScoreCard({ school, onClick }) {
+function ScoreCard({ school }) {
   const band = school.score_band || school.quality_label || 'Unknown';
   const color = BAND_COLORS[band] || '#ccc';
-
-  // Admissions badge
   const admissions = school.admissions;
   const showAdmissions = admissions && admissions !== 'Not applicable';
   const admissionsStyle = admissions === 'Selective'
     ? { background:'#FFF8E1', color:'#E65100', border:'1px solid #FFE082' }
     : { background:'#F3F4F6', color:'#374151', border:'1px solid #D1D5DB' };
-
-  // Score — same logic as hero "Avg Score": ofsted_score 0-100
   const score = school.ofsted_score;
 
+  // ── Navigate to pre-rendered static page ──
+  function handleClick() {
+    window.location.href = schoolUrl(school);
+  }
+
   return (
-    <div className="school-card" style={{'--band-color': color}} onClick={() => onClick(school)}>
+    <div className="school-card" style={{'--band-color': color}} onClick={handleClick}>
       <div className="card-top">
         <span className="card-phase">{school.phase}</span>
         {showAdmissions && (
@@ -593,8 +324,6 @@ function ScoreCard({ school, onClick }) {
       </div>
       <div className="card-name">{school.name}</div>
       <div className="card-la">📍 {school.local_authority} · {school.postcode}</div>
-
-      {/* Ofsted grade bar + numeric score */}
       <div style={{display:'flex', alignItems:'center', gap:10, margin:'10px 0 12px'}}>
         <div className="score-badge" style={{background: score != null ? 'var(--ink)' : '#555', marginRight:2, flexShrink:0}}>
           <span className="score-num" style={{color: score != null ? 'var(--gold)' : '#aaa', fontSize: score != null ? '1.25rem' : '0.85rem'}}>
@@ -609,7 +338,6 @@ function ScoreCard({ school, onClick }) {
           {band}
         </span>
       </div>
-
       <div className="card-pills">
         {school.sixth_form === 'Has a sixth form' && <span className="pill" style={{background:'#EDE7F6',color:'#4527A0'}}>Sixth Form</span>}
         {school.gender && school.gender !== 'Mixed' && <span className="pill" style={{background:'#FCE4EC',color:'#880E4F'}}>{school.gender}</span>}
@@ -617,17 +345,16 @@ function ScoreCard({ school, onClick }) {
           <span className="pill" style={{background:'#E8F5E9',color:'#2E7D32'}}>⛪ {school.religious_character}</span>
         )}
       </div>
-
       <div className="card-meta">
         <span>👥 {school.pupils??'—'} pupils</span>
         {school.apps_per_place != null && (() => {
           const r = school.apps_per_place;
-          const color = r > 3 ? '#C0392B' : r > 1.5 ? '#E67E22' : r > 1 ? '#F39C12' : '#27AE60';
-          return <span style={{color,fontWeight:600}} title="First-choice applications per place (2024)">🎯 {r}× oversubscribed</span>;
+          const c = r > 3 ? '#C0392B' : r > 1.5 ? '#E67E22' : r > 1 ? '#F39C12' : '#27AE60';
+          return <span style={{color:c,fontWeight:600}} title="First-choice applications per place (2024)">🎯 {r}× oversubscribed</span>;
         })()}
         {school.crime_label && (() => {
-          const color = school.crime_score >= 80 ? '#27AE60' : school.crime_score >= 60 ? '#2980B9' : school.crime_score >= 40 ? '#F57F17' : '#E67E22';
-          return <span style={{color,fontSize:'0.76rem',fontWeight:500}} title="Crime within 500m">🔒 {school.crime_label}</span>;
+          const c = school.crime_score >= 80 ? '#27AE60' : school.crime_score >= 60 ? '#2980B9' : school.crime_score >= 40 ? '#F57F17' : '#E67E22';
+          return <span style={{color:c,fontSize:'0.76rem',fontWeight:500}} title="Crime within 500m">🔒 {school.crime_label}</span>;
         })()}
         {school.apps_per_place == null && school.inspection_date && <span>📅 {school.inspection_date}</span>}
         {school.ks4_att8 != null && <span style={{color: school.ks4_att8 >= ENG_ATT8_AVG ? '#27AE60' : '#E67E22', fontWeight:500, fontSize:'0.76rem'}} title="Attainment 8 score (2024)">📚 Att8: {school.ks4_att8}</span>}
@@ -638,7 +365,6 @@ function ScoreCard({ school, onClick }) {
 }
 
 // ── Address Checker ───────────────────────────────────────────────────────────
-
 const VERCEL_API = 'https://london-school-model.vercel.app/api';
 
 function haversineKm(lat1, lng1, lat2, lng2) {
@@ -650,16 +376,15 @@ function haversineKm(lat1, lng1, lat2, lng2) {
 }
 
 function kmToMiles(km) { return (km * 0.621371).toFixed(2); }
-function kmToWalkMins(km) { return Math.round(km / 0.08); } // ~5 km/h walking
+function kmToWalkMins(km) { return Math.round(km / 0.08); }
 
-function AddressChecker({ schools, onSelectSchool }) {
+function AddressChecker({ schools }) {
   const [address, setAddress]   = useState('');
   const [phase, setPhase]       = useState('');
   const [radius, setRadius]     = useState('1');
   const [loading, setLoading]   = useState(false);
   const [error, setError]       = useState(null);
   const [results, setResults]   = useState(null);
-  const [userLatLng, setUserLatLng] = useState(null);
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
   const markersRef = useRef([]);
@@ -668,32 +393,16 @@ function AddressChecker({ schools, onSelectSchool }) {
 
   async function doCheck() {
     if (!address.trim()) { setError('Please enter an address or postcode.'); return; }
-    setError(null); setLoading(true); setResults(null); setUserLatLng(null);
-
+    setError(null); setLoading(true); setResults(null);
     try {
-      // 1. Geocode address via Vercel API
-      const geoRes = await fetch(`${VERCEL_API}/schools?postcode=${encodeURIComponent(address.trim())}&radius=0.1`);
-      if (!geoRes.ok) throw new Error('Could not find that address. Try a London postcode.');
-
-      // Extract lat/lng from Google Maps geocode via a small trick —
-      // call the schools endpoint and grab coordinates from a custom header,
-      // OR use the browser's own geocode by parsing the Vercel response.
-      // Since our /schools endpoint returns geocoded results, we geocode via Google:
-      const geoData = await geoRes.json();
-
-      // Use Google Maps Geocoding directly (key is server-side only, so we go via our API)
-      // Instead: use a free geocoding fallback — postcodes.io for UK postcodes
       let lat, lng, formattedAddress;
-
       const postcode = address.trim().replace(/\s+/g, '').toUpperCase();
       const pcRes = await fetch(`https://api.postcodes.io/postcodes/${postcode}`);
       if (pcRes.ok) {
         const pcData = await pcRes.json();
-        lat = pcData.result.latitude;
-        lng = pcData.result.longitude;
+        lat = pcData.result.latitude; lng = pcData.result.longitude;
         formattedAddress = `${pcData.result.postcode}, ${pcData.result.admin_district}, London`;
       } else {
-        // Try partial postcode
         const pcPartial = await fetch(`https://api.postcodes.io/postcodes/${postcode}/autocomplete`);
         if (pcPartial.ok) {
           const pcPartialData = await pcPartial.json();
@@ -701,25 +410,18 @@ function AddressChecker({ schools, onSelectSchool }) {
             const full = pcPartialData.result[0];
             const fullRes = await fetch(`https://api.postcodes.io/postcodes/${full}`);
             const fullData = await fullRes.json();
-            lat = fullData.result.latitude;
-            lng = fullData.result.longitude;
+            lat = fullData.result.latitude; lng = fullData.result.longitude;
             formattedAddress = `${fullData.result.postcode}, ${fullData.result.admin_district}`;
           } else throw new Error('Postcode not found. Try a full London postcode like N1 2PL.');
         } else throw new Error('Postcode not found. Try a full London postcode like N1 2PL.');
       }
-
-      setUserLatLng({ lat, lng, formatted: formattedAddress });
-
-      // 2. Find nearby schools from our local dataset
       const radiusKm = parseFloat(radius) * 1.60934;
       let nearby = schools
         .filter(s => s.lat && s.lng)
         .map(s => ({ ...s, distKm: haversineKm(lat, lng, s.lat, s.lng) }))
         .filter(s => s.distKm <= radiusKm);
-
       if (phase) nearby = nearby.filter(s => s.phase === phase);
       nearby.sort((a, b) => (b.ofsted_score ?? -1) - (a.ofsted_score ?? -1) || a.distKm - b.distKm);
-
       setResults({ schools: nearby.slice(0, 15), lat, lng, formatted: formattedAddress });
     } catch(e) {
       setError(e.message);
@@ -728,7 +430,6 @@ function AddressChecker({ schools, onSelectSchool }) {
     }
   }
 
-  // Map initialisation
   useEffect(() => {
     if (!results || !mapRef.current) return;
     if (!mapInstanceRef.current) {
@@ -737,17 +438,11 @@ function AddressChecker({ schools, onSelectSchool }) {
     } else {
       mapInstanceRef.current.setView([results.lat, results.lng], 14);
     }
-
-    // Clear old markers
     markersRef.current.forEach(m => m.remove());
     markersRef.current = [];
-
-    // User location pin
     const userIcon = L.divIcon({ className: '', html: `<div style="width:16px;height:16px;border-radius:50%;background:#D4A843;border:3px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.4)"></div>`, iconSize:[16,16], iconAnchor:[8,8] });
     markersRef.current.push(L.marker([results.lat, results.lng], { icon: userIcon }).addTo(mapInstanceRef.current).bindPopup('Your address'));
-
-    // School markers
-    results.schools.forEach((s, i) => {
+    results.schools.forEach(s => {
       const band = s.score_band || s.quality_label || 'Unknown';
       const color = BAND_COLORS[band] || '#95A5A6';
       const icon = L.divIcon({ className: '', html: `<div style="width:11px;height:11px;border-radius:50%;background:${color};border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.3)"></div>`, iconSize:[11,11], iconAnchor:[5,5] });
@@ -777,10 +472,8 @@ function AddressChecker({ schools, onSelectSchool }) {
           <button className="ac-btn" onClick={doCheck} disabled={loading}>{loading ? 'Checking…' : 'Check →'}</button>
         </div>
       </div>
-
       {loading && <div className="ac-status"><div className="ac-spinner"/>Finding nearby schools…</div>}
       {error && <div className="ac-error">⚠ {error}</div>}
-
       {results && (
         <>
           <div className="ac-address-banner">
@@ -793,9 +486,7 @@ function AddressChecker({ schools, onSelectSchool }) {
               {results.schools.length} school{results.schools.length!==1?'s':''} within {radius} mile{radius!=='1'?'s':''}
             </span>
           </div>
-
           <div className="ac-map" ref={mapRef}><div id="ac-map"/></div>
-
           {results.schools.length === 0 ? (
             <div className="ac-empty">
               <div className="ac-empty-icon">🏫</div>
@@ -810,21 +501,15 @@ function AddressChecker({ schools, onSelectSchool }) {
                 const color = BAND_COLORS[band] || '#95A5A6';
                 const walkMins = kmToWalkMins(s.distKm);
                 const distMiles = kmToMiles(s.distKm);
-
-                // Oversubscription
                 const oversubRatio = s.apps_per_place;
                 const isHighlyOversubscribed = oversubRatio > 3;
                 const isMedOversubscribed = oversubRatio > 1.5 && oversubRatio <= 3;
                 const oversubColor = isHighlyOversubscribed ? '#C0392B' : isMedOversubscribed ? '#E67E22' : '#27AE60';
                 const oversubBg   = isHighlyOversubscribed ? '#FDECEA' : isMedOversubscribed ? '#FFF3E0' : '#E8F5E9';
-
-                // Attainment — show whichever is available
                 const hasKS4 = s.ks4_att8 != null;
                 const hasKS2 = s.ks2_higher_pct != null;
                 const att8Above = hasKS4 && s.ks4_att8 >= ENG_ATT8_AVG;
                 const ks2Above  = hasKS2 && s.ks2_higher_pct >= ENG_KS2_HIGHER_AVG;
-
-                // Suitability summary line
                 const suitParts = [
                   s.gender && s.gender !== 'Mixed' ? s.gender : 'Mixed',
                   s.age_from != null && s.age_to != null ? `Ages ${s.age_from}–${s.age_to}` : null,
@@ -833,29 +518,23 @@ function AddressChecker({ schools, onSelectSchool }) {
                 ].filter(Boolean).join(' · ');
 
                 return (
-                  <div key={s.urn} className="ac-school-card" style={{'--band-color': color}} onClick={() => onSelectSchool(s)}>
+                  <div key={s.urn} className="ac-school-card" style={{'--band-color': color}}
+                    onClick={() => { window.location.href = schoolUrl(s); }}>
                     <div className="ac-rank">#{i+1}</div>
                     <div className="ac-school-body">
                       <div className="ac-school-name">{s.name}</div>
                       <div className="ac-school-la">📍 {s.local_authority} · {s.postcode}</div>
-
-                      {/* Suitability summary */}
                       {suitParts && <div style={{fontSize:'0.76rem',color:'#888',marginBottom:8}}>{suitParts}</div>}
-
                       <div className="ac-school-pills">
                         <span className="band-chip" style={{background:color}}>{band}</span>
                         <span className="pill" style={{background:'#F5F5F5',color:'#555',border:'1px solid #ddd'}}>{s.phase}</span>
                         {s.admissions==='Selective'&&<span className="pill" style={{background:'#FFF8E1',color:'#E65100',border:'1px solid #FFE082'}}>🎓 Selective</span>}
-
-                        {/* Oversubscription badge */}
                         {oversubRatio != null && (
                           <span className="pill" style={{background:oversubBg, color:oversubColor, border:`1px solid ${oversubColor}44`, fontWeight:600}}>
                             {isHighlyOversubscribed ? '⚠ ' : ''}{oversubRatio}× {isHighlyOversubscribed ? 'Highly oversubscribed' : isMedOversubscribed ? 'Oversubscribed' : 'Low demand'}
                           </span>
                         )}
                       </div>
-
-                      {/* Attainment row */}
                       {(hasKS4 || hasKS2) && (
                         <div style={{display:'flex', gap:10, margin:'6px 0 8px', flexWrap:'wrap'}}>
                           {hasKS4 && (
@@ -874,7 +553,6 @@ function AddressChecker({ schools, onSelectSchool }) {
                           )}
                         </div>
                       )}
-
                       <div className="ac-school-meta">
                         {s.pupils!=null&&<span>👥 {s.pupils} pupils</span>}
                         {s.inspection_date&&<span>📅 Inspected {s.inspection_date}</span>}
@@ -882,8 +560,6 @@ function AddressChecker({ schools, onSelectSchool }) {
                         {s.fsm_label&&<span title="Free school meals — deprivation indicator">📊 {s.fsm_label}</span>}
                       </div>
                     </div>
-
-                    {/* Right side: score + walk */}
                     <div style={{display:'flex', flexDirection:'column', gap:8, alignItems:'center', flexShrink:0}}>
                       <div className="ac-score-box">
                         <div className="ac-score-num">{s.ofsted_score??'—'}</div>
@@ -901,7 +577,6 @@ function AddressChecker({ schools, onSelectSchool }) {
           )}
         </>
       )}
-
       {!results && !loading && (
         <div className="ac-empty">
           <div className="ac-empty-icon">🗺</div>
@@ -913,14 +588,11 @@ function AddressChecker({ schools, onSelectSchool }) {
   );
 }
 
-// ── End Address Checker ───────────────────────────────────────────────────────
-
 function App() {
   const [view, setView] = useState('schools');
   const [displayMode, setDisplayMode] = useState('grid');
   const [schools, setSchools] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selected, setSelected] = useState(null);
   const [page, setPage] = useState(1);
   const PAGE_SIZE = 24;
   const [filters, setFilters] = useState({ q:'', phase:'', local_authority:'', score_band:'' });
@@ -928,7 +600,7 @@ function App() {
   useEffect(() => {
     async function load() {
       try { const r = await fetch(`${API_BASE}/schools?limit=500`); if (!r.ok) throw new Error(); const d = await r.json(); setSchools(d.schools); setLoading(false); return; } catch {}
-      try { const r = await fetch(JSON_FALLBACK); if (!r.ok) throw new Error(); const d = await r.json(); setSchools(d); } catch { console.warn('Could not load school data. Place schools.json in the same folder as this HTML file.'); }
+      try { const r = await fetch(JSON_FALLBACK); if (!r.ok) throw new Error(); const d = await r.json(); setSchools(d); } catch { console.warn('Could not load school data.'); }
       setLoading(false);
     }
     load();
@@ -981,7 +653,7 @@ function App() {
         {loading ? (
           <div className="loading"><div className="spinner" /> Loading schools...</div>
         ) : view === 'checker' ? (
-          <AddressChecker schools={schools} onSelectSchool={setSelected} />
+          <AddressChecker schools={schools} />
         ) : view === 'stats' ? (
           <StatsPage schools={schools} />
         ) : view === 'map' ? (
@@ -993,7 +665,7 @@ function App() {
               <div className="filter-group"><span className="filter-label">Rating</span><select value={filters.score_band} onChange={e => setFilter('score_band', e.target.value)}><option value="">All ratings</option>{['Outstanding','Good','Requires improvement','Inadequate','Ungraded (monitoring)','Report card (2025+)'].map(b=><option key={b} value={b}>{b}</option>)}</select></div>
               {hasFilters && <button className="clear-btn" onClick={clearFilters}>✕ Clear</button>}
             </div>
-            <MapView schools={filtered} onSelect={setSelected} />
+            <MapView schools={filtered} onSelect={() => {}} />
           </>
         ) : (
           <>
@@ -1014,30 +686,34 @@ function App() {
             {filtered.length === 0 ? (
               <div className="empty-state"><h3>No schools found</h3><p>Try adjusting your filters.</p></div>
             ) : displayMode === 'grid' ? (
-              <div className="school-grid">{paged.map(s => <ScoreCard key={s.urn} school={s} onClick={setSelected} />)}</div>
+              <div className="school-grid">{paged.map(s => <ScoreCard key={s.urn} school={s} />)}</div>
             ) : (
               <table className="school-table">
                 <thead><tr><th>#</th><th>School</th><th>Borough</th><th>Phase</th><th>Ofsted Grade</th><th>Admissions</th><th>Pupils</th><th>Inspected</th></tr></thead>
                 <tbody>
-                  {paged.map((s,i) => { const band=s.score_band||s.quality_label||'Unknown'; const adm=s.admissions; return (
-                    <tr key={s.urn} onClick={() => setSelected(s)}>
-                      <td><span className="rank-num">{(page-1)*PAGE_SIZE+i+1}</span></td>
-                      <td style={{fontWeight:600,maxWidth:260}}>{s.name}</td>
-                      <td style={{color:'#777'}}>{s.local_authority}</td>
-                      <td style={{color:'#999',fontSize:'0.8rem'}}>{s.phase}</td>
-                      <td>
-                        <BandChip band={band} />
-                        {s.ofsted_score != null && <span style={{fontFamily:"'Playfair Display',serif",fontWeight:700,color:BAND_COLORS[band],marginLeft:6}}>{s.ofsted_score}</span>}
-                      </td>
-                      <td style={{fontSize:'0.82rem'}}>
-                        {adm==='Selective' ? <span style={{color:'#E65100',fontWeight:600}}>🎓 Selective</span>
-                          : adm==='Non-selective' ? <span style={{color:'#555'}}>Non-selective</span>
-                          : <span style={{color:'#bbb'}}>—</span>}
-                      </td>
-                      <td style={{color:'#777'}}>{s.pupils??'—'}</td>
-                      <td style={{color:'#aaa',fontSize:'0.8rem'}}>{s.inspection_date||'—'}</td>
-                    </tr>
-                  ); })}
+                  {paged.map((s,i) => {
+                    const band=s.score_band||s.quality_label||'Unknown';
+                    const adm=s.admissions;
+                    return (
+                      <tr key={s.urn} onClick={() => { window.location.href = schoolUrl(s); }}>
+                        <td><span className="rank-num">{(page-1)*PAGE_SIZE+i+1}</span></td>
+                        <td style={{fontWeight:600,maxWidth:260}}>{s.name}</td>
+                        <td style={{color:'#777'}}>{s.local_authority}</td>
+                        <td style={{color:'#999',fontSize:'0.8rem'}}>{s.phase}</td>
+                        <td>
+                          <BandChip band={band} />
+                          {s.ofsted_score != null && <span style={{fontFamily:"'Playfair Display',serif",fontWeight:700,color:BAND_COLORS[band],marginLeft:6}}>{s.ofsted_score}</span>}
+                        </td>
+                        <td style={{fontSize:'0.82rem'}}>
+                          {adm==='Selective' ? <span style={{color:'#E65100',fontWeight:600}}>🎓 Selective</span>
+                            : adm==='Non-selective' ? <span style={{color:'#555'}}>Non-selective</span>
+                            : <span style={{color:'#bbb'}}>—</span>}
+                        </td>
+                        <td style={{color:'#777'}}>{s.pupils??'—'}</td>
+                        <td style={{color:'#aaa',fontSize:'0.8rem'}}>{s.inspection_date||'—'}</td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             )}
@@ -1051,7 +727,6 @@ function App() {
           </>
         )}
       </main>
-      {selected && <SchoolDetail school={selected} onClose={() => setSelected(null)} />}
     </>
   );
 }

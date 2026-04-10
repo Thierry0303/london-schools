@@ -118,6 +118,7 @@
 
     /* ── Mobile ── */
     @media (max-width: 768px) {
+      .hide-mobile { display: none !important; }
       /* Header */
       .header { padding: 10px 12px; height: auto; flex-direction: column; align-items: flex-start; gap: 8px; }
       .header-logo { font-size: 1.1rem; }
@@ -804,7 +805,7 @@ function AddressChecker({ schools, initialPostcode }) {
 
 function App() {
   const [view, setView] = useState('schools');
-  const [displayMode, setDisplayMode] = useState('grid');
+  const [displayMode, setDisplayMode] = useState(window.innerWidth < 768 ? 'grid' : 'grid');
   const [schools, setSchools] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -913,7 +914,7 @@ function App() {
             </div>
             <div className="results-header">
               <div className="results-count">Showing <strong>{filtered.length}</strong> school{filtered.length!==1?'s':''}{schools.length!==filtered.length?` of ${schools.length}`:''}</div>
-              <div className="view-toggle">
+              <div className="view-toggle" style={{display: window.innerWidth < 600 ? 'none' : 'flex'}}>
                 <button className={`view-btn ${displayMode==='grid'?'active':''}`} onClick={() => setDisplayMode('grid')}>⊞</button>
                 <button className={`view-btn ${displayMode==='table'?'active':''}`} onClick={() => setDisplayMode('table')}>☰</button>
               </div>
@@ -924,7 +925,18 @@ function App() {
               <div className="school-grid">{paged.map(s => <ScoreCard key={s.urn} school={s} />)}</div>
             ) : (
               <table className="school-table">
-                <thead><tr><th>#</th><th>School</th><th>Borough</th><th>Phase</th><th>Ofsted Grade</th><th>Admissions</th><th>Pupils</th><th>Inspected</th></tr></thead>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>School</th>
+                    <th className="hide-mobile">Borough</th>
+                    <th className="hide-mobile">Phase</th>
+                    <th>Ofsted</th>
+                    <th className="hide-mobile">Admissions</th>
+                    <th className="hide-mobile">Pupils</th>
+                    <th className="hide-mobile">Inspected</th>
+                  </tr>
+                </thead>
                 <tbody>
                   {paged.map((s,i) => {
                     const band=s.score_band||s.quality_label||'Unknown';
@@ -932,20 +944,20 @@ function App() {
                     return (
                       <tr key={s.urn} onClick={() => { window.location.href = schoolUrl(s); }}>
                         <td><span className="rank-num">{(page-1)*PAGE_SIZE+i+1}</span></td>
-                        <td style={{fontWeight:600,maxWidth:260}}>{s.name}</td>
-                        <td style={{color:'#777'}}>{s.local_authority}</td>
-                        <td style={{color:'#999',fontSize:'0.8rem'}}>{s.phase}</td>
+                        <td style={{fontWeight:600,maxWidth:200}}>{s.name}<div style={{fontSize:'0.75rem',color:'#999',fontWeight:400}}>{s.local_authority}</div></td>
+                        <td className="hide-mobile" style={{color:'#777'}}>{s.local_authority}</td>
+                        <td className="hide-mobile" style={{color:'#999',fontSize:'0.8rem'}}>{s.phase}</td>
                         <td>
                           <BandChip band={band} />
-                          {s.ofsted_score != null && <span style={{fontFamily:"'Playfair Display',serif",fontWeight:700,color:BAND_COLORS[band],marginLeft:6}}>{s.ofsted_score}</span>}
+                          {s.ofsted_score != null && <div style={{fontFamily:"'Playfair Display',serif",fontWeight:700,color:BAND_COLORS[band],fontSize:'0.85rem',marginTop:2}}>{s.ofsted_score}</div>}
                         </td>
-                        <td style={{fontSize:'0.82rem'}}>
+                        <td className="hide-mobile" style={{fontSize:'0.82rem'}}>
                           {adm==='Selective' ? <span style={{color:'#E65100',fontWeight:600}}>🎓 Selective</span>
                             : adm==='Non-selective' ? <span style={{color:'#555'}}>Non-selective</span>
                             : <span style={{color:'#bbb'}}>—</span>}
                         </td>
-                        <td style={{color:'#777'}}>{s.pupils??'—'}</td>
-                        <td style={{color:'#aaa',fontSize:'0.8rem'}}>{s.inspection_date||'—'}</td>
+                        <td className="hide-mobile" style={{color:'#777'}}>{s.pupils??'—'}</td>
+                        <td className="hide-mobile" style={{color:'#aaa',fontSize:'0.8rem'}}>{s.inspection_date||'—'}</td>
                       </tr>
                     );
                   })}

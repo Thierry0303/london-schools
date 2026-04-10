@@ -247,14 +247,17 @@ def parse_gias(df):
             except (ValueError, TypeError):
                 school[coord] = None
 
-        # Generate Snobe URL from school name
+        # Generate Snobe URL — matches Snobe's slug format exactly
+        # Snobe removes stop words: the, of, for, and, a, at, in, by, with
+        SNOBE_STOP_WORDS = {"the", "of", "for", "and", "a", "at", "in", "by", "with", "an"}
         name_val = school.get("name", "")
         if name_val:
-            snobe_slug = str(name_val).lower()\
+            words = str(name_val).lower()\
                 .replace("'", "").replace("'", "").replace("'", "")\
-                .replace(",", "").replace(".", "")\
-                .strip()\
-                .replace(" ", "-")
+                .replace(",", "").replace(".", "").replace("(", "").replace(")", "")\
+                .strip().split()
+            filtered = [w for w in words if w not in SNOBE_STOP_WORDS]
+            snobe_slug = "-".join(filtered)
             snobe_slug = re.sub(r"-+", "-", snobe_slug).strip("-")
             school["snobe_url"] = f"https://snobe.co.uk/schools/{snobe_slug}"
         else:

@@ -496,8 +496,8 @@ function haversineKm(lat1, lng1, lat2, lng2) {
 function kmToMiles(km) { return (km * 0.621371).toFixed(2); }
 function kmToWalkMins(km) { return Math.round(km / 0.08); }
 
-function AddressChecker({ schools }) {
-  const [address, setAddress]   = useState('');
+function AddressChecker({ schools, initialPostcode }) {
+  const [address, setAddress]   = useState(initialPostcode || '');
   const [phase, setPhase]       = useState('');
   const [radius, setRadius]     = useState('1');
   const [loading, setLoading]   = useState(false);
@@ -507,14 +507,22 @@ function AddressChecker({ schools }) {
   const mapInstanceRef = useRef(null);
   const markersRef = useRef([]);
 
+  // Auto-trigger search if initialPostcode provided
+  useEffect(() => {
+    if (initialPostcode && initialPostcode.trim()) {
+      doCheck(initialPostcode.trim());
+    }
+  }, [initialPostcode]);
+
   const phases = useMemo(() => [...new Set(schools.map(s=>s.phase).filter(Boolean))].sort(), [schools]);
 
-  async function doCheck() {
-    if (!address.trim()) { setError('Please enter an address or postcode.'); return; }
+  async function doCheck(overridePostcode) {
+    const query = overridePostcode || address;
+    if (!query.trim()) { setError('Please enter an address or postcode.'); return; }
     setError(null); setLoading(true); setResults(null);
     try {
       let lat, lng, formattedAddress;
-      const postcode = address.trim().replace(/\s+/g, '').toUpperCase();
+      const postcode = query.trim().replace(/\s+/g, '').toUpperCase();
       const pcRes = await fetch(`https://api.postcodes.io/postcodes/${postcode}`);
       if (pcRes.ok) {
         const pcData = await pcRes.json();
@@ -587,7 +595,7 @@ function AddressChecker({ schools }) {
             <option value="">All phases</option>
             {phases.map(p=><option key={p} value={p}>{p}</option>)}
           </select>
-          <button className="ac-btn" onClick={doCheck} disabled={loading}>{loading ? 'Checking…' : 'Check →'}</button>
+          <button className="ac-btn" onClick={()=>doCheck()} disabled={loading}>{loading ? 'Checking…' : 'Check →'}</button>
         </div>
       </div>
       {loading && <div className="ac-status"><div className="ac-spinner"/>Finding nearby schools…</div>}
@@ -745,12 +753,14 @@ function App() {
     return { total:schools.length, outstanding:schools.filter(s=>(s.score_band||s.quality_label)==='Outstanding').length, avg:rated.length?Math.round(rated.reduce((a,s)=>a+s.ofsted_score,0)/rated.length):0 };
   }, [schools]);
 
+  const [heroPostcode, setHeroPostcode] = useState('');
+
   return (
     <>
       <header className="header">
         <div className="header-logo">🏛 London <span>Schools</span><div className="header-badge">Explorer</div></div>
         <nav className="header-nav">
-          {[['schools','📋 Schools'],['map','🗺 Map'],['stats','📊 Statistics'],['checker','📍 Address Checker']].map(([v,label]) => (
+          {[['checker','📍 Near Me'],['schools','📋 Schools'],['map','🗺 Map'],['stats','📊 Stats']].map(([v,label]) => (
             <button key={v} className={`nav-btn ${view===v?'active':''}`} onClick={() => setView(v)}>{label}</button>
           ))}
         </nav>
@@ -759,7 +769,22 @@ function App() {
       <section className="hero">
         <div className="hero-eyebrow">Ofsted Data · 32 London Boroughs</div>
         <h1>Find the right school<br />in <em>London</em></h1>
-        <p className="hero-sub">Explore and compare London schools using official Ofsted inspection data, deprivation indices, and composite scoring.</p>
+        <p className="hero-sub">Enter your postcode to instantly see every school near you, ranked by Ofsted rating, exam results and admissions data.</p>
+        <div style={{display:'flex', gap:'8px', flexWrap:'wrap', marginBottom:'32px', maxWidth:'520px'}}>
+          <input
+            type="text"
+            value={heroPostcode}
+            onChange={e => setHeroPostcode(e.target.value)}
+            onKeyDown={e => { if(e.key==='Enter') setView('checker'); }}
+            placeholder="e.g. N1 2PL, SW1A 1AA"
+            style={{flex:1, minWidth:'180px', padding:'13px 16px', borderRadius:'8px', border:'none', fontSize:'1rem', fontFamily:"'DM Sans',sans-serif", outline:'none', color:'#1A1A2E'}}
+          />
+          <button
+            onClick={() => setView('checker')}
+            style={{padding:'13px 22px', background:'var(--gold)', color:'var(--ink)', border:'none', borderRadius:'8px', fontFamily:"'Playfair Display',serif", fontWeight:700, fontSize:'1rem', cursor:'pointer', whiteSpace:'nowrap'}}>
+            Find schools →
+          </button>
+        </div>
         <div className="hero-stats">
           {[{n:stats.total,l:'London Schools'},{n:stats.outstanding,l:'Outstanding'},{n:stats.avg,l:'Avg Ofsted Score'},{n:32,l:'Boroughs'}].map(({n,l}) => (
             <div key={l} className="hero-stat"><span className="hero-stat-num">{n}</span><span className="hero-stat-label">{l}</span></div>
@@ -771,7 +796,7 @@ function App() {
         {loading ? (
           <div className="loading"><div className="spinner" /> Loading schools...</div>
         ) : view === 'checker' ? (
-          <AddressChecker schools={schools} />
+          <AddressChecker schools={schools} initialPostcode={heroPostcode} />
         ) : view === 'stats' ? (
           <StatsPage schools={schools} />
         ) : view === 'map' ? (

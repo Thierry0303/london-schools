@@ -133,6 +133,17 @@ def build_school_page(school):
     head_title    = safe(school.get("head_job_title", "Headteacher"))
     website       = school.get("website") or ""
     telephone     = format_phone(school.get("telephone"))
+    snobe_url     = school.get("snobe_url") or ""
+
+    # Generate snobe_url if missing
+    if not snobe_url and name:
+        import re as _re
+        snobe_slug = str(name).lower()\
+            .replace("'", "").replace("'", "").replace("'", "")\
+            .replace(",", "").replace(".", "")\
+            .strip().replace(" ", "-")
+        snobe_slug = _re.sub(r"-+", "-", snobe_slug).strip("-")
+        snobe_url = f"https://snobe.co.uk/schools/{snobe_slug}"
     ofsted_label  = safe(school.get("quality_label") or school.get("score_band"), "Not yet rated")
     ofsted_url    = school.get("ofsted_url") or ""
     inspection    = safe(school.get("inspection_date"), "")
@@ -276,6 +287,7 @@ def build_school_page(school):
     <div class="actions">
       {"<a class='btn btn-primary' href='" + ofsted_url + "' target='_blank' rel='noopener'>View Ofsted report</a>" if ofsted_url else ""}
       {"<a class='btn' href='" + maps_link + "' target='_blank' rel='noopener'>View on map</a>" if maps_link else ""}
+      {"<a class='btn' href='" + snobe_url + "' target='_blank' rel='noopener' style='background:#7B2FBE;color:white;border-color:#7B2FBE'>View on Snobe</a>" if snobe_url else ""}
       <a class="btn" href="/schools/{borough_slug}">More schools in {borough}</a>
       <a class="btn" href="/">All London schools</a>
     </div>

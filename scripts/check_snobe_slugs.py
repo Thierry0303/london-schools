@@ -1,193 +1,156 @@
 """
 check_snobe_slugs.py
 ────────────────────
-Checks every school in schools.json against Snobe to find which ones
-have wrong slugs (404 on Snobe) and attempts to find the correct URL.
+Checks every school in schools.json against Snobe to find wrong slugs.
 
-Run from your repo root:
-    python3 scripts/check_snobe_slugs.py
+USAGE:
+  Test first (10 schools, ~30 seconds):
+      python3 scripts/check_snobe_slugs.py --test
 
-Outputs:
-    snobe_corrections.json  — schools with wrong slugs + correct URLs
-    snobe_missing.json      — schools not on Snobe at all
+  Full run (3,000+ schools, ~50 minutes):
+      python3 scripts/check_snobe_slugs.py
 
 Requirements: pip install requests
 """
 
-import json
-import time
-import re
-import requests
+import json, re, sys, time, requests
 
-SCHOOLS_FILE   = "schools.json"
+SCHOOLS_FILE     = "schools.json"
 CORRECTIONS_FILE = "snobe_corrections.json"
 MISSING_FILE     = "snobe_missing.json"
+SNOBE_BASE       = "https://snobe.co.uk/schools/"
+STOP_WORDS       = {"the","of","for","and","a","at","in","by","with","an"}
+HEADERS          = {"User-Agent": "Mozilla/5.0 (compatible; LondonSchoolDirectory/1.0)"}
 
-SNOBE_BASE = "https://snobe.co.uk/schools/"
-SNOBE_SEARCH = "https://snobe.co.uk/best-schools/search/london?search="
-
-STOP_WORDS = {"the", "of", "for", "and", "a", "at", "in", "by", "with", "an"}
-
-HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; LondonSchoolDirectory/1.0)"
-}
+TEST_NAMES = [
+    "The Aldgate School",               # EXPECT FIX: 'aldgate-school'
+    "Ashbourne College",                # EXPECT FIX: 'ashbourne-independent-school'
+    "City of London School for Girls",  # EXPECT FIX: 'city-london-school-girls'
+    "Camden School for Girls",          # EXPECT FIX: 'camden-school-girls'
+    "The Archbishop Lanfranc Academy",  # EXPECT FIX: 'archbishop-lanfranc-academy'
+    "Hackney New School",               # EXPECT OK
+    "Haverstock School",                # EXPECT OK
+    "St Paul's Cathedral School",       # EXPECT OK (apostrophe stripped)
+    "Queen's College",                  # EXPECT CHECK
+    "St Mary's CofE Primary School",    # EXPECT CHECK
+]
 
 
 def make_slug(name):
-    """Generate our current Snobe slug from a school name."""
     words = str(name).lower()\
-        .replace("'", "").replace("'", "").replace("'", "")\
-        .replace(",", "").replace(".", "").replace("(", "").replace(")", "")\
-        .strip().split()
-    filtered = [w for w in words if w not in STOP_WORDS]
-    slug = "-".join(filtered)
-    slug = re.sub(r"-+", "-", slug).strip("-")
-    return slug
+        .replace("\u2019","").replace("\u2018","").replace("'","")\
+        .replace(",","").replace(".","").replace("(","").replace(")","").strip().split()
+    slug = "-".join(w for w in words if w not in STOP_WORDS)
+    return re.sub(r"-+", "-", slug).strip("-")
 
 
-def check_snobe_url(slug):
-    """Check if a Snobe URL returns 200 or 404."""
-    url = SNOBE_BASE + slug
+def check_url(slug):
     try:
-        r = requests.get(url, headers=HEADERS, timeout=15, allow_redirects=True)
+        r = requests.get(SNOBE_BASE + slug, headers=HEADERS, timeout=15, allow_redirects=True)
         return r.status_code, r.url
     except Exception as e:
         return None, str(e)
 
 
-def try_alternate_slugs(name):
-    """
-    Try several alternate slug variations to find the correct Snobe URL.
-    Snobe sometimes uses:
-    - Full name including stop words
-    - Different abbreviations
-    - 'Independent School' instead of 'College'
-    - 'Academy' instead of 'School'
-    """
+def try_alternates(name):
+    base = make_slug(name)
     variants = set()
 
-    # Variant 1: full name, no stop word removal
-    full = str(name).lower()\
-        .replace("'", "").replace(",", "").replace(".", "")\
-        .replace("(", "").replace(")", "").strip()
+    # Full name with stop words kept
+    full = str(name).lower().replace("\u2019","").replace("'","").replace(",","").replace(".","").strip()
     variants.add(re.sub(r"\s+", "-", full))
 
-    # Variant 2: replace 'college' with 'independent-school'
-    v2 = make_slug(name).replace("college", "independent-school")
-    variants.add(v2)
+    # College/Academy swaps
+    variants.add(base.replace("college", "independent-school"))
+    variants.add(base.replace("college", "school"))
+    variants.add(base.replace("academy", "school"))
+    variants.add(base.replace("school", "academy"))
 
-    # Variant 3: replace 'college' with 'school'
-    v3 = make_slug(name).replace("college", "school")
-    variants.add(v3)
-
-    # Variant 4: add 'school' at end if not present
-    base = make_slug(name)
-    if not base.endswith("school") and not base.endswith("college") and not base.endswith("academy"):
+    # Add -school suffix if no institution word
+    if not any(w in base for w in {"school","academy","college","institute"}):
         variants.add(base + "-school")
 
-    # Variant 5: remove 'and' without stop word filter (some schools keep 'and')
-    words_with_and = str(name).lower()\
-        .replace("'", "").replace(",", "").replace(".", "")\
-        .strip().split()
-    slug_with_and = "-".join(words_with_and)
-    variants.add(re.sub(r"-+", "-", slug_with_and).strip("-"))
+    variants.discard(base)
+    variants.discard("")
 
-    for slug in variants:
-        if slug == make_slug(name):
-            continue  # already checked this one
-        status, final_url = check_snobe_url(slug)
+    for v in sorted(variants):
+        status, url = check_url(v)
         if status == 200:
-            return slug, SNOBE_BASE + slug
-
+            return v, SNOBE_BASE + v
     return None, None
 
 
 def main():
-    print("Loading schools.json...")
+    test_mode = "--test" in sys.argv
+
+    print("=" * 55)
+    print("Snobe Slug Checker — London Schools Explorer")
+    print("=" * 55)
+
     with open(SCHOOLS_FILE, encoding="utf-8") as f:
-        schools = json.load(f)
+        all_schools = json.load(f)
+    all_schools = [s for s in all_schools if s.get("name") and s.get("urn")]
 
-    # Only check schools that are in London (should all be, but just in case)
-    # Skip schools without names
-    schools = [s for s in schools if s.get("name") and s.get("urn")]
+    if test_mode:
+        schools = [s for s in all_schools if s.get("name") in TEST_NAMES]
+        print(f"\nTEST MODE — {len(schools)} schools (~30 seconds)\n")
+        print("Expected: Aldgate=fix, Ashbourne=fix, City of London Girls=fix")
+        print("         Hackney New School=OK, Haverstock=OK\n")
+    else:
+        schools = all_schools
+        print(f"\nFull run — {len(schools):,} schools (~50 minutes)\n")
 
-    print(f"Total schools to check: {len(schools):,}")
-    print("This will take a while due to rate limiting. Checking 1 school/second.\n")
-
-    corrections = []
-    missing = []
+    corrections, missing = [], []
     ok_count = 0
-    checked = 0
 
-    for s in schools:
-        name = s["name"]
-        urn  = s["urn"]
+    for i, s in enumerate(schools):
+        name, urn = s["name"], s["urn"]
         slug = make_slug(name)
-
-        status, final_url = check_snobe_url(slug)
-        checked += 1
+        status, _ = check_url(slug)
 
         if status == 200:
             ok_count += 1
-            if checked % 100 == 0:
-                print(f"  [{checked}/{len(schools)}] {ok_count} OK, {len(corrections)} wrong, {len(missing)} missing...")
-
-        elif status == 404 or status is None:
-            # Try alternate slugs
-            correct_slug, correct_url = try_alternate_slugs(name)
-
+            print(f"  ✅ OK:      {name}")
+        else:
+            correct_slug, correct_url = try_alternates(name)
             if correct_url:
-                corrections.append({
-                    "urn":          urn,
-                    "name":         name,
-                    "wrong_slug":   slug,
-                    "correct_slug": correct_slug,
-                    "correct_url":  correct_url,
-                })
-                print(f"  ✓ FIXED: {name}")
-                print(f"    Wrong:   {SNOBE_BASE + slug}")
-                print(f"    Correct: {correct_url}")
+                corrections.append({"urn": urn, "name": name,
+                    "wrong_slug": slug, "correct_slug": correct_slug,
+                    "correct_url": correct_url})
+                print(f"  🔧 FIXED:   {name}")
+                print(f"             wrong:   {SNOBE_BASE + slug}")
+                print(f"             correct: {correct_url}")
             else:
-                missing.append({
-                    "urn":  urn,
-                    "name": name,
-                    "tried_slug": slug,
-                })
-                print(f"  ✗ NOT ON SNOBE: {name}")
+                missing.append({"urn": urn, "name": name, "tried_slug": slug})
+                print(f"  ❌ MISSING: {name}")
 
-        # Rate limit — 1 request per second to be respectful
+        if not test_mode and (i + 1) % 100 == 0:
+            print(f"\n  [{i+1}/{len(schools)}] ✅{ok_count} OK | 🔧{len(corrections)} fixed | ❌{len(missing)} missing\n")
+
         time.sleep(1.0)
 
-    # Save results
+    print(f"\n{'=' * 55}")
+    print(f"Results: ✅ {ok_count} OK | 🔧 {len(corrections)} fixed | ❌ {len(missing)} missing")
+    print(f"{'=' * 55}")
+
+    if test_mode:
+        print("\nIf results look right, run without --test for the full check.")
+        return
+
     with open(CORRECTIONS_FILE, "w", encoding="utf-8") as f:
         json.dump(corrections, f, indent=2, ensure_ascii=False)
-
     with open(MISSING_FILE, "w", encoding="utf-8") as f:
         json.dump(missing, f, indent=2, ensure_ascii=False)
 
-    print(f"\n{'='*50}")
-    print(f"Done. Checked {checked:,} schools.")
-    print(f"  ✅ Correct slug:  {ok_count:,}")
-    print(f"  🔧 Wrong slug:    {len(corrections):,}  → saved to {CORRECTIONS_FILE}")
-    print(f"  ❌ Not on Snobe:  {len(missing):,}  → saved to {MISSING_FILE}")
-    print(f"{'='*50}")
-
-    # Now apply corrections to schools.json
     if corrections:
-        print(f"\nApplying {len(corrections)} corrections to schools.json...")
-        correction_map = {c["urn"]: c["correct_url"] for c in corrections}
-
-        updated = 0
-        for s in schools:
-            if s.get("urn") in correction_map:
-                s["snobe_url"] = correction_map[s["urn"]]
-                updated += 1
-
+        cmap = {c["urn"]: c["correct_url"] for c in corrections}
+        for s in all_schools:
+            if s.get("urn") in cmap:
+                s["snobe_url"] = cmap[s["urn"]]
         with open(SCHOOLS_FILE, "w", encoding="utf-8") as f:
-            json.dump(schools, f, ensure_ascii=False, separators=(",", ":"))
-
-        print(f"Updated schools.json with {updated} corrected Snobe URLs.")
-        print("Run build_school_pages.py to rebuild all pages with correct links.")
+            json.dump(all_schools, f, ensure_ascii=False, separators=(",",":"))
+        print(f"\nPatched {len(corrections)} URLs in schools.json")
+        print("Next: python3 scripts/build_school_pages.py → commit → push")
 
 
 if __name__ == "__main__":

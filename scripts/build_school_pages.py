@@ -135,15 +135,17 @@ def build_school_page(school):
     telephone     = format_phone(school.get("telephone"))
     snobe_url     = school.get("snobe_url") or ""
 
-    # Generate snobe_url if missing
+    # Generate snobe_url if missing — Snobe removes stop words from slugs
     if not snobe_url and name:
-        import re as _re
-        snobe_slug = str(name).lower()\
+        _stop = {"the", "of", "for", "and", "a", "at", "in", "by", "with", "an"}
+        _words = str(name).lower()\
             .replace("'", "").replace("'", "").replace("'", "")\
-            .replace(",", "").replace(".", "")\
-            .strip().replace(" ", "-")
-        snobe_slug = _re.sub(r"-+", "-", snobe_slug).strip("-")
-        snobe_url = f"https://snobe.co.uk/schools/{snobe_slug}"
+            .replace(",", "").replace(".", "").replace("(", "").replace(")", "")\
+            .strip().split()
+        _slug = "-".join(w for w in _words if w not in _stop)
+        import re as _re
+        _slug = _re.sub(r"-+", "-", _slug).strip("-")
+        snobe_url = f"https://snobe.co.uk/schools/{_slug}"
     ofsted_label  = safe(school.get("quality_label") or school.get("score_band"), "Not yet rated")
     ofsted_url    = school.get("ofsted_url") or ""
     inspection    = safe(school.get("inspection_date"), "")

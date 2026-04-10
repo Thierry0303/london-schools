@@ -852,6 +852,149 @@ function App() {
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App />);
 </script>
+
+<!-- ── Feedback Widget ── -->
+<script>
+(function() {
+  const SUPA_URL = 'https://kwqyogicwbubzbrjwues.supabase.co';
+  const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt3cXlvZ2ljd2J1enpicmp3dWVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU2MDYxNjMsImV4cCI6MjA2MTE4MjE2M30.placeholder';
+
+  const css = `
+    #fb-btn { position:fixed; bottom:24px; right:24px; z-index:9999; background:#1A1A2E; color:#D4A843; border:2px solid #D4A843; border-radius:24px; padding:10px 18px; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow:0 4px 16px rgba(0,0,0,0.25); transition:all 0.2s; }
+    #fb-btn:hover { background:#D4A843; color:#1A1A2E; }
+    #fb-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:10000; display:none; align-items:flex-end; justify-content:center; padding:0 0 80px; }
+    #fb-overlay.open { display:flex; }
+    #fb-panel { background:#FDFAF4; border-radius:16px 16px 0 0; width:100%; max-width:480px; padding:28px 24px 24px; font-family:'DM Sans',sans-serif; animation:fbSlide 0.25s ease; }
+    @keyframes fbSlide { from { transform:translateY(40px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+    #fb-panel h3 { font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:700; margin-bottom:4px; color:#1A1A2E; }
+    #fb-panel p { font-size:0.83rem; color:#888; margin-bottom:16px; }
+    .fb-stars { display:flex; gap:6px; margin-bottom:16px; }
+    .fb-star { font-size:28px; cursor:pointer; color:#D8D0C0; transition:color 0.1s; line-height:1; }
+    .fb-star.active { color:#D4A843; }
+    .fb-input { width:100%; padding:10px 12px; border:2px solid #D8D0C0; border-radius:8px; font-family:'DM Sans',sans-serif; font-size:14px; color:#1A1A2E; background:white; margin-bottom:10px; outline:none; transition:border-color 0.2s; box-sizing:border-box; }
+    .fb-input:focus { border-color:#D4A843; }
+    textarea.fb-input { resize:vertical; min-height:90px; }
+    #fb-submit { width:100%; padding:12px; background:#1A1A2E; color:#D4A843; border:none; border-radius:8px; font-family:'Playfair Display',serif; font-size:1rem; font-weight:700; cursor:pointer; transition:background 0.2s; }
+    #fb-submit:hover { background:#2D2D44; }
+    #fb-submit:disabled { opacity:0.5; cursor:not-allowed; }
+    #fb-close { position:absolute; top:16px; right:16px; background:none; border:none; font-size:20px; cursor:pointer; color:#aaa; line-height:1; }
+    #fb-success { text-align:center; padding:20px 0; }
+    #fb-success .fb-tick { font-size:3rem; margin-bottom:8px; }
+    #fb-success h3 { font-family:'Playfair Display',serif; font-size:1.2rem; color:#27AE60; margin-bottom:4px; }
+    #fb-success p { font-size:0.85rem; color:#888; }
+    #fb-panel { position:relative; }
+    @media(max-width:520px) { #fb-btn { bottom:16px; right:16px; padding:8px 14px; font-size:13px; } #fb-panel { border-radius:12px 12px 0 0; padding:20px 16px 16px; } }
+  `;
+
+  const style = document.createElement('style');
+  style.textContent = css;
+  document.head.appendChild(style);
+
+  document.body.insertAdjacentHTML('beforeend', `
+    <button id="fb-btn">💬 Feedback</button>
+    <div id="fb-overlay">
+      <div id="fb-panel">
+        <button id="fb-close">✕</button>
+        <div id="fb-form-wrap">
+          <h3>Share your feedback</h3>
+          <p>Help us improve London Schools Explorer — takes 30 seconds.</p>
+          <div class="fb-stars">
+            <span class="fb-star" data-v="1">★</span>
+            <span class="fb-star" data-v="2">★</span>
+            <span class="fb-star" data-v="3">★</span>
+            <span class="fb-star" data-v="4">★</span>
+            <span class="fb-star" data-v="5">★</span>
+          </div>
+          <input id="fb-name" class="fb-input" type="text" placeholder="Your name (optional)" />
+          <input id="fb-email" class="fb-input" type="email" placeholder="Email (optional — for follow-up)" />
+          <textarea id="fb-comment" class="fb-input" placeholder="What did you think? What's missing? What would help you most?"></textarea>
+          <button id="fb-submit">Send feedback</button>
+        </div>
+        <div id="fb-success" style="display:none">
+          <div class="fb-tick">✅</div>
+          <h3>Thank you!</h3>
+          <p>Your feedback helps us improve the site for London parents.</p>
+        </div>
+      </div>
+    </div>
+  `);
+
+  let rating = 0;
+
+  document.getElementById('fb-btn').onclick = () => {
+    document.getElementById('fb-overlay').classList.add('open');
+  };
+  document.getElementById('fb-close').onclick = () => {
+    document.getElementById('fb-overlay').classList.remove('open');
+  };
+  document.getElementById('fb-overlay').onclick = (e) => {
+    if (e.target === document.getElementById('fb-overlay'))
+      document.getElementById('fb-overlay').classList.remove('open');
+  };
+
+  document.querySelectorAll('.fb-star').forEach(star => {
+    star.onclick = () => {
+      rating = parseInt(star.dataset.v);
+      document.querySelectorAll('.fb-star').forEach(s => {
+        s.classList.toggle('active', parseInt(s.dataset.v) <= rating);
+      });
+    };
+  });
+
+  document.getElementById('fb-submit').onclick = async () => {
+    const comment = document.getElementById('fb-comment').value.trim();
+    if (!comment) { document.getElementById('fb-comment').focus(); return; }
+
+    const btn = document.getElementById('fb-submit');
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+
+    const payload = {
+      page_url: window.location.href,
+      name: document.getElementById('fb-name').value.trim() || null,
+      email: document.getElementById('fb-email').value.trim() || null,
+      rating: rating || null,
+      comment: comment,
+    };
+
+    try {
+      const res = await fetch(`${SUPA_URL}/rest/v1/feedback`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPA_KEY,
+          'Authorization': `Bearer ${SUPA_KEY}`,
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok || res.status === 201) {
+        document.getElementById('fb-form-wrap').style.display = 'none';
+        document.getElementById('fb-success').style.display = 'block';
+        setTimeout(() => {
+          document.getElementById('fb-overlay').classList.remove('open');
+          document.getElementById('fb-form-wrap').style.display = 'block';
+          document.getElementById('fb-success').style.display = 'none';
+          document.getElementById('fb-comment').value = '';
+          document.getElementById('fb-name').value = '';
+          document.getElementById('fb-email').value = '';
+          rating = 0;
+          document.querySelectorAll('.fb-star').forEach(s => s.classList.remove('active'));
+          btn.disabled = false;
+          btn.textContent = 'Send feedback';
+        }, 3000);
+      } else {
+        throw new Error('Failed');
+      }
+    } catch(e) {
+      btn.disabled = false;
+      btn.textContent = 'Try again';
+      alert('Something went wrong. Please try again.');
+    }
+  };
+})();
+</script>
 <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

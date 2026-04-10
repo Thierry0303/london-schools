@@ -27,6 +27,13 @@ from datetime import datetime, timedelta
 
 OUTPUT_FILE = "schools.json"
 
+# Fields to preserve from the existing schools.json that don't come from official sources
+PRESERVE_FIELDS = [
+    "website", "ofsted_url", "mat_name", "lsoa_code",
+    "imd_rank", "imd_decile", "imd_score",
+    "num_boys", "num_girls",
+]
+
 LONDON_LAS = {
     "Barking and Dagenham", "Barnet", "Bexley", "Brent", "Bromley",
     "Camden", "City of London", "Croydon", "Ealing", "Enfield",
@@ -894,6 +901,52 @@ def clean_school(s):
     return cleaned
 
 
+# ── Preserve existing enriched data ──────────────────────────────────────────
+
+def load_existing(path="schools.json"):
+    """
+    Load the current schools.json and index by URN.
+    Used to carry over fields that aren't available from official sources.
+    """
+    try:
+        with open(path, encoding="utf-8") as f:
+            existing = json.load(f)
+        index = {int(s["urn"]): s for s in existing if s.get("urn")}
+        print(f"  Loaded {len(index):,} existing schools from {path}")
+        return index
+    except FileNotFoundError:
+        print(f"  No existing {path} found — starting fresh")
+        return {}
+    except Exception as e:
+        print(f"  Could not load existing {path}: {e}")
+        return {}
+
+
+def merge_existing(schools, existing_map):
+    """
+    For each school, carry over fields from the previous schools.json
+    that are not available from official API sources (e.g. website URLs,
+    Snobe links, IMD data, MAT names).
+    Only fills in fields that the new data left empty — never overwrites
+    fresh official data with stale cached data.
+    """
+    carried = 0
+    for s in schools:
+        urn = s.get("urn")
+        if not urn or int(urn) not in existing_map:
+            continue
+        old = existing_map[int(urn)]
+        changed = False
+        for field in PRESERVE_FIELDS:
+            if not s.get(field) and old.get(field):
+                s[field] = old[field]
+                changed = True
+        if changed:
+            carried += 1
+    print(f"  Carried over preserved fields for {carried:,} schools")
+    return schools
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main():
@@ -934,7 +987,12 @@ def main():
     # 6. FSM deprivation
     apply_fsm_deprivation(schools)
 
-    # 7. Final clean and save
+    # 7. Preserve fields from existing schools.json
+    print("\nMerging preserved fields from existing data...")
+    existing_map = load_existing()
+    schools = merge_existing(schools, existing_map)
+
+    # 8. Final clean and save
     schools = [clean_school(s) for s in schools]
     schools = [s for s in schools if s.get("name") and s.get("local_authority")]
 

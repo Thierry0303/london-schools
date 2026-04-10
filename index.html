@@ -384,33 +384,121 @@ function MapView({ schools, onSelect }) {
   );
 }
 
-function StatsPage({ schools }) {
+function StatsPage({ schools, onFilter }) {
+  const [activeFilter, setActiveFilter] = useState(null);
+
   const byBand = useMemo(() => { const c={}; schools.forEach(s=>{const b=s.score_band||s.quality_label||'Unknown';c[b]=(c[b]||0)+1;}); return c; }, [schools]);
-  const byPhase = useMemo(() => { const c={}; schools.forEach(s=>{c[s.phase||'Unknown']=(c[s.phase||'Unknown']||0)+1;}); return Object.entries(c).sort((a,b)=>b[1]-a[1]); }, [schools]);
+  const byPhase = useMemo(() => { const c={}; schools.forEach(s=>{c[s.phase||'Unknown']=(c[s.phase||'Unknown']||0)+1;}); return Object.entries(c).filter(([p])=>p!=='Unknown').sort((a,b)=>b[1]-a[1]); }, [schools]);
   const byLA = useMemo(() => { const c={}; schools.forEach(s=>{c[s.local_authority||'Unknown']=(c[s.local_authority||'Unknown']||0)+1;}); return Object.entries(c).sort((a,b)=>b[1]-a[1]).slice(0,16); }, [schools]);
   const rated = schools.filter(s=>s.ofsted_score!=null);
   const avg = rated.length ? Math.round(rated.reduce((a,s)=>a+s.ofsted_score,0)/rated.length) : 0;
+
+  function handleBandClick(band) {
+    onFilter({ type: 'score_band', value: band });
+  }
+  function handlePhaseClick(phase) {
+    onFilter({ type: 'phase', value: phase });
+  }
+  function handleLAClick(la) {
+    onFilter({ type: 'local_authority', value: la });
+  }
+
+  const statCards = [
+    { num: schools.length, label: 'Total Schools', color: '#1A1A2E', onClick: () => onFilter(null) },
+    { num: byBand['Outstanding']||0, label: 'Outstanding', color: '#27AE60', onClick: () => handleBandClick('Outstanding') },
+    { num: byBand['Good']||0, label: 'Good', color: '#2980B9', onClick: () => handleBandClick('Good') },
+    { num: avg, label: 'Avg Score', color: '#D4A843', onClick: null },
+  ];
+
   return (
-    <div>
-      <div className="stats-grid">
-        {[{num:schools.length,label:'Total Schools'},{num:byBand['Outstanding']||0,label:'Outstanding'},{num:byBand['Good']||0,label:'Good'},{num:avg,label:'Avg Score'}].map(({num,label})=>(
-          <div key={label} className="stat-card"><div className="stat-card-num">{num}</div><div className="stat-card-label">{label}</div></div>
+    <div style={{display:'flex', flexDirection:'column', gap:16}}>
+
+      {/* Stat cards — clickable */}
+      <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(140px,1fr))', gap:12}}>
+        {statCards.map(({num,label,color,onClick}) => (
+          <div key={label}
+            onClick={onClick}
+            style={{background:'white', border:`2px solid ${color}33`, borderRadius:10, padding:'16px 14px', cursor:onClick?'pointer':'default', transition:'all 0.15s', textAlign:'center'}}
+            onMouseOver={e=>{ if(onClick) e.currentTarget.style.borderColor=color; }}
+            onMouseOut={e=>{ e.currentTarget.style.borderColor=`${color}33`; }}>
+            <div style={{fontFamily:"'Playfair Display',serif", fontSize:'2rem', fontWeight:700, color, lineHeight:1}}>{num.toLocaleString()}</div>
+            <div style={{fontSize:'0.72rem', color:'#888', textTransform:'uppercase', letterSpacing:'0.06em', marginTop:6}}>{label}</div>
+            {onClick && <div style={{fontSize:'0.68rem', color, marginTop:4, fontWeight:600}}>tap to filter →</div>}
+          </div>
         ))}
       </div>
-      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:18,marginBottom:18}}>
-        <div className="chart-section">
-          <div className="chart-title">Schools by Ofsted Rating</div>
-          {['Outstanding','Good','Requires improvement','Inadequate','Unknown'].map(band => { const count=byBand[band]||0; if(!count) return null; const pct=Math.round((count/schools.length)*100); return (<div key={band} className="bar-chart-row"><div className="bar-chart-label">{band}</div><div className="bar-chart-wrap"><div className="bar-chart-fill" style={{width:`${pct}%`,background:BAND_COLORS[band]}}>{pct>6?`${pct}%`:''}</div></div><div className="bar-chart-count">{count}</div></div>); })}
-        </div>
-        <div className="chart-section">
-          <div className="chart-title">Schools by Phase</div>
-          {byPhase.map(([phase,count])=>{const pct=Math.round((count/byPhase[0][1])*100);return(<div key={phase} className="bar-chart-row"><div className="bar-chart-label">{phase}</div><div className="bar-chart-wrap"><div className="bar-chart-fill" style={{width:`${pct}%`,background:'#1A1A2E'}}>{count}</div></div><div className="bar-chart-count">{count}</div></div>);})}
-        </div>
-      </div>
+
+      {/* Ofsted rating bars — clickable */}
       <div className="chart-section">
-        <div className="chart-title">Schools by London Borough</div>
-        {byLA.map(([la,count])=>{const pct=Math.round((count/byLA[0][1])*100);return(<div key={la} className="bar-chart-row"><div className="bar-chart-label">{la}</div><div className="bar-chart-wrap"><div className="bar-chart-fill" style={{width:`${pct}%`,background:'#D4A843'}}>{count}</div></div><div className="bar-chart-count">{count}</div></div>);})}
+        <div className="chart-title">Schools by Ofsted rating</div>
+        <p style={{fontSize:'0.78rem', color:'#aaa', marginBottom:12}}>Tap a rating to filter the school list</p>
+        {['Outstanding','Good','Requires improvement','Inadequate'].map(band => {
+          const count = byBand[band]||0;
+          if (!count) return null;
+          const pct = Math.round((count/schools.length)*100);
+          return (
+            <div key={band} onClick={() => handleBandClick(band)}
+              style={{display:'flex', alignItems:'center', gap:10, marginBottom:10, cursor:'pointer', padding:'6px 8px', borderRadius:6, transition:'background 0.15s'}}
+              onMouseOver={e=>e.currentTarget.style.background='#F5F0E8'}
+              onMouseOut={e=>e.currentTarget.style.background='transparent'}>
+              <div style={{fontSize:'0.78rem', width:160, flexShrink:0, color:'#333', fontWeight:500}}>{band}</div>
+              <div style={{flex:1, background:'#EDE8DF', borderRadius:4, height:24, overflow:'hidden', position:'relative'}}>
+                <div style={{width:`${pct}%`, height:'100%', background:BAND_COLORS[band], borderRadius:4, display:'flex', alignItems:'center', paddingLeft:8, minWidth:32}}>
+                  <span style={{fontSize:'0.72rem', fontWeight:700, color:'white'}}>{pct > 8 ? `${pct}%` : ''}</span>
+                </div>
+              </div>
+              <div style={{fontSize:'0.8rem', color:'#888', width:36, textAlign:'right', fontWeight:600}}>{count}</div>
+            </div>
+          );
+        })}
       </div>
+
+      {/* Phase bars — clickable */}
+      <div className="chart-section">
+        <div className="chart-title">Schools by phase</div>
+        <p style={{fontSize:'0.78rem', color:'#aaa', marginBottom:12}}>Tap a phase to filter the school list</p>
+        {byPhase.map(([phase,count]) => {
+          const pct = Math.round((count/byPhase[0][1])*100);
+          return (
+            <div key={phase} onClick={() => handlePhaseClick(phase)}
+              style={{display:'flex', alignItems:'center', gap:10, marginBottom:10, cursor:'pointer', padding:'6px 8px', borderRadius:6, transition:'background 0.15s'}}
+              onMouseOver={e=>e.currentTarget.style.background='#F5F0E8'}
+              onMouseOut={e=>e.currentTarget.style.background='transparent'}>
+              <div style={{fontSize:'0.78rem', width:160, flexShrink:0, color:'#333', fontWeight:500}}>{phase}</div>
+              <div style={{flex:1, background:'#EDE8DF', borderRadius:4, height:24, overflow:'hidden'}}>
+                <div style={{width:`${pct}%`, height:'100%', background:'#1A1A2E', borderRadius:4, display:'flex', alignItems:'center', paddingLeft:8, minWidth:32}}>
+                  <span style={{fontSize:'0.72rem', fontWeight:700, color:'#D4A843'}}>{count}</span>
+                </div>
+              </div>
+              <div style={{fontSize:'0.8rem', color:'#888', width:36, textAlign:'right', fontWeight:600}}>{count}</div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Borough bars — clickable */}
+      <div className="chart-section">
+        <div className="chart-title">Schools by borough</div>
+        <p style={{fontSize:'0.78rem', color:'#aaa', marginBottom:12}}>Tap a borough to filter the school list</p>
+        {byLA.map(([la,count]) => {
+          const pct = Math.round((count/byLA[0][1])*100);
+          return (
+            <div key={la} onClick={() => handleLAClick(la)}
+              style={{display:'flex', alignItems:'center', gap:10, marginBottom:10, cursor:'pointer', padding:'6px 8px', borderRadius:6, transition:'background 0.15s'}}
+              onMouseOver={e=>e.currentTarget.style.background='#F5F0E8'}
+              onMouseOut={e=>e.currentTarget.style.background='transparent'}>
+              <div style={{fontSize:'0.78rem', width:160, flexShrink:0, color:'#333', fontWeight:500}}>{la}</div>
+              <div style={{flex:1, background:'#EDE8DF', borderRadius:4, height:24, overflow:'hidden'}}>
+                <div style={{width:`${pct}%`, height:'100%', background:'#D4A843', borderRadius:4, display:'flex', alignItems:'center', paddingLeft:8, minWidth:32}}>
+                  <span style={{fontSize:'0.72rem', fontWeight:700, color:'#1A1A2E'}}>{count}</span>
+                </div>
+              </div>
+              <div style={{fontSize:'0.8rem', color:'#888', width:36, textAlign:'right', fontWeight:600}}>{count}</div>
+            </div>
+          );
+        })}
+      </div>
+
     </div>
   );
 }
@@ -798,7 +886,11 @@ function App() {
         ) : view === 'checker' ? (
           <AddressChecker schools={schools} initialPostcode={heroPostcode} />
         ) : view === 'stats' ? (
-          <StatsPage schools={schools} />
+          <StatsPage schools={schools} onFilter={(f) => {
+            if (!f) { clearFilters(); setView('schools'); return; }
+            setFilter(f.type, f.value);
+            setView('schools');
+          }} />
         ) : view === 'map' ? (
           <>
             <div className="controls" style={{marginBottom:16}}>

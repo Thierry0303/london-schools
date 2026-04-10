@@ -6,7 +6,7 @@ os.chdir(pathlib.Path(__file__).parent.parent)
 BASE_URL = "https://londonschool.directory"
 
 SUPA_URL = "https://kwqyogicwbubzbrjwues.supabase.co"
-SUPA_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt3cXlvZ2ljd2J1enpicamp3dWVzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU2MDYxNjMsImV4cCI6MjA2MTE4MjE2M30.placeholder"
+SUPA_KEY = "sb_publishable_488SMcDgCgQx14JB6ngw7A_qay_j9cd"
 
 FEEDBACK_WIDGET = f"""<style>
   #fb-btn{{position:fixed;bottom:24px;right:24px;z-index:9999;background:#1A1A2E;color:#D4A843;border:2px solid #D4A843;border-radius:24px;padding:10px 18px;font-family:system-ui,sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 4px 16px rgba(0,0,0,0.25);transition:all 0.2s;}}

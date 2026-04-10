@@ -272,7 +272,16 @@ function fsmLabel(s) {
 
 function snobeUrl(name) {
   if (!name) return null;
-  const slug = name.toLowerCase().replace(/['']/g, '').replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-');
+  const stopWords = new Set(['the','of','for','and','a','at','in','by','with','an']);
+  const slug = name.toLowerCase()
+    .replace(/[''']/g, '')
+    .replace(/[,.()\-]/g, '')
+    .trim()
+    .split(/\s+/)
+    .filter(w => !stopWords.has(w))
+    .join('-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
   return `https://snobe.co.uk/schools/${slug}`;
 }
 

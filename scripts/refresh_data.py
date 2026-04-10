@@ -31,7 +31,7 @@ OUTPUT_FILE = "schools.json"
 PRESERVE_FIELDS = [
     "website", "ofsted_url", "mat_name", "lsoa_code",
     "imd_rank", "imd_decile", "imd_score",
-    "num_boys", "num_girls",
+    "num_boys", "num_girls", "snobe_url",
 ]
 
 LONDON_LAS = {
@@ -246,6 +246,19 @@ def parse_gias(df):
                 school[coord] = float(school[coord]) if school[coord] is not None else None
             except (ValueError, TypeError):
                 school[coord] = None
+
+        # Generate Snobe URL from school name
+        name_val = school.get("name", "")
+        if name_val:
+            snobe_slug = str(name_val).lower()\
+                .replace("'", "").replace("'", "").replace("'", "")\
+                .replace(",", "").replace(".", "")\
+                .strip()\
+                .replace(" ", "-")
+            snobe_slug = re.sub(r"-+", "-", snobe_slug).strip("-")
+            school["snobe_url"] = f"https://snobe.co.uk/schools/{snobe_slug}"
+        else:
+            school["snobe_url"] = None
 
         if school["urn"] and school["name"]:
             schools.append(school)

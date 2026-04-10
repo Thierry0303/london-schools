@@ -594,23 +594,82 @@ function haversineKm(lat1, lng1, lat2, lng2) {
 function kmToMiles(km) { return (km * 0.621371).toFixed(2); }
 function kmToWalkMins(km) { return Math.round(km / 0.08); }
 
-function AddressChecker({ schools, initialPostcode }) {
+function AddressChecker({ schools, initialPostcode, initialCoords }) {
   const [address, setAddress]   = useState(initialPostcode || '');
   const [phase, setPhase]       = useState('');
   const [radius, setRadius]     = useState('1');
   const [loading, setLoading]   = useState(false);
   const [error, setError]       = useState(null);
   const [results, setResults]   = useState(null);
+  const [locating, setLocating] = useState(false);
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
   const markersRef = useRef([]);
 
-  // Auto-trigger search if initialPostcode provided
+  // Auto-trigger from postcode
   useEffect(() => {
     if (initialPostcode && initialPostcode.trim()) {
       doCheck(initialPostcode.trim());
     }
   }, [initialPostcode]);
+
+  // Auto-trigger from geolocation coords
+  useEffect(() => {
+    if (initialCoords) {
+      doCheckByCoords(initialCoords.lat, initialCoords.lng);
+    }
+  }, [initialCoords]);
+
+  function handleGeolocate() {
+    if (!navigator.geolocation) {
+      setError('Geolocation is not supported by your browser.');
+      return;
+    }
+    setLocating(true);
+    setError(null);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setLocating(false);
+        doCheckByCoords(pos.coords.latitude, pos.coords.longitude);
+      },
+      () => {
+        setLocating(false);
+        setError('Could not get your location. Please enter your postcode instead.');
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  }
+
+  async function doCheckByCoords(lat, lng) {
+    setError(null); setLoading(true); setResults(null);
+    try {
+      // Reverse geocode to get a readable address
+      let formattedAddress = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+      try {
+        const rev = await fetch(`https://api.postcodes.io/postcodes?lon=${lng}&lat=${lat}&limit=1`);
+        if (rev.ok) {
+          const revData = await rev.json();
+          if (revData.result && revData.result.length > 0) {
+            const r = revData.result[0];
+            formattedAddress = `${r.postcode}, ${r.admin_district}, London`;
+          }
+        }
+      } catch {}
+
+      const radiusKm = parseFloat(radius) * 1.60934;
+      let nearby = schools
+        .filter(s => s.lat && s.lng)
+        .map(s => ({ ...s, distKm: haversineKm(lat, lng, s.lat, s.lng) }))
+        .filter(s => s.distKm <= radiusKm);
+      if (phase) nearby = nearby.filter(s => s.phase === phase);
+      nearby.sort((a, b) => (b.ofsted_score ?? -1) - (a.ofsted_score ?? -1) || a.distKm - b.distKm);
+      setResults({ schools: nearby.slice(0, 15), lat, lng, formatted: formattedAddress });
+    } catch(e) {
+      setError('Could not find nearby schools. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const phases = useMemo(() => [...new Set(schools.map(s=>s.phase).filter(Boolean))].sort(), [schools]);
 
@@ -680,7 +739,7 @@ function AddressChecker({ schools, initialPostcode }) {
     <div className="ac-wrap">
       <div className="ac-search-box">
         <div className="ac-title">Address Checker</div>
-        <div className="ac-sub">Enter any London postcode to instantly see the nearest schools ranked by our composite score, with walking distances.</div>
+        <div className="ac-sub">Enter a London postcode to see every nearby school ranked by Ofsted rating, exam results and admissions data.</div>
         <div className="ac-row">
           <input className="ac-input" type="text" placeholder="London postcode (e.g. N1 2PL, SW1A 1AA)" value={address} onChange={e=>setAddress(e.target.value)} onKeyDown={e=>e.key==='Enter'&&doCheck()} />
           <select className="ac-select" value={radius} onChange={e=>setRadius(e.target.value)}>
@@ -693,7 +752,17 @@ function AddressChecker({ schools, initialPostcode }) {
             <option value="">All phases</option>
             {phases.map(p=><option key={p} value={p}>{p}</option>)}
           </select>
-          <button className="ac-btn" onClick={()=>doCheck()} disabled={loading}>{loading ? 'Checking…' : 'Check →'}</button>
+          <button className="ac-btn" onClick={()=>doCheck()} disabled={loading}>{loading ? 'Checking…' : 'Search →'}</button>
+        </div>
+        <div style={{marginTop:'10px'}}>
+          <button
+            onClick={handleGeolocate}
+            disabled={locating || loading}
+            style={{display:'flex', alignItems:'center', gap:'6px', background:'transparent', border:'1px solid var(--border)', borderRadius:'6px', padding:'8px 14px', fontFamily:"'DM Sans',sans-serif", fontSize:'0.85rem', color:'var(--ink)', cursor:'pointer', transition:'all 0.2s'}}
+            onMouseOver={e=>{e.currentTarget.style.borderColor='var(--gold)';e.currentTarget.style.color='var(--gold)';}}
+            onMouseOut={e=>{e.currentTarget.style.borderColor='var(--border)';e.currentTarget.style.color='var(--ink)';}}>
+            {locating ? '📍 Getting your location…' : '📍 Use my current location'}
+          </button>
         </div>
       </div>
       {loading && <div className="ac-status"><div className="ac-spinner"/>Finding nearby schools…</div>}
@@ -852,6 +921,7 @@ function App() {
   }, [schools]);
 
   const [heroPostcode, setHeroPostcode] = useState('');
+  const [geoCoords, setGeoCoords] = useState(null);
 
   return (
     <>
@@ -882,6 +952,28 @@ function App() {
             style={{padding:'13px 22px', background:'var(--gold)', color:'var(--ink)', border:'none', borderRadius:'8px', fontFamily:"'Playfair Display',serif", fontWeight:700, fontSize:'1rem', cursor:'pointer', whiteSpace:'nowrap'}}>
             Find schools →
           </button>
+          <button
+            onClick={() => {
+              if (!navigator.geolocation) {
+                alert('Geolocation is not supported by your browser.');
+                return;
+              }
+              navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                  const { latitude: lat, longitude: lng } = pos.coords;
+                  setGeoCoords({ lat, lng });
+                  setView('checker');
+                },
+                (err) => {
+                  alert('Could not get your location. Please enter your postcode instead.');
+                },
+                { enableHighAccuracy: true, timeout: 10000 }
+              );
+            }}
+            title="Use my current location"
+            style={{padding:'13px 16px', background:'rgba(255,255,255,0.12)', color:'var(--cream)', border:'1px solid rgba(255,255,255,0.25)', borderRadius:'8px', fontSize:'1.1rem', cursor:'pointer', whiteSpace:'nowrap'}}>
+            📍
+          </button>
         </div>
         <div className="hero-stats">
           {[{n:stats.total,l:'London Schools'},{n:stats.outstanding,l:'Outstanding'},{n:stats.avg,l:'Avg Ofsted Score'},{n:32,l:'Boroughs'}].map(({n,l}) => (
@@ -894,7 +986,7 @@ function App() {
         {loading ? (
           <div className="loading"><div className="spinner" /> Loading schools...</div>
         ) : view === 'checker' ? (
-          <AddressChecker schools={schools} initialPostcode={heroPostcode} />
+          <AddressChecker schools={schools} initialPostcode={heroPostcode} initialCoords={geoCoords} />
         ) : view === 'stats' ? (
           <StatsPage schools={schools} onFilter={(f) => {
             if (!f) { clearFilters(); setView('schools'); return; }

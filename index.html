@@ -636,14 +636,16 @@ function AddressChecker({ schools, initialPostcode, initialCoords }) {
     setError(null); setLoading(true); setResults(null);
     try {
       // Reverse geocode to get a readable address
-      let formattedAddress = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+      // Reverse geocode to get a postcode — Google Maps uses this as a
+      // fixed address origin, preventing GPS from overriding the location
+      let formattedAddress = `${lat.toFixed(5)},${lng.toFixed(5)}`;
       try {
         const rev = await fetch(`https://api.postcodes.io/postcodes?lon=${lng}&lat=${lat}&limit=1`);
         if (rev.ok) {
           const revData = await rev.json();
           if (revData.result && revData.result.length > 0) {
             const r = revData.result[0];
-            formattedAddress = `${r.postcode}, ${r.admin_district}, London`;
+            formattedAddress = r.postcode; // just the postcode — cleaner for Maps
           }
         }
       } catch {}
@@ -676,7 +678,7 @@ function AddressChecker({ schools, initialPostcode, initialCoords }) {
       if (pcRes.ok) {
         const pcData = await pcRes.json();
         lat = pcData.result.latitude; lng = pcData.result.longitude;
-        formattedAddress = `${pcData.result.postcode}, ${pcData.result.admin_district}, London`;
+        formattedAddress = pcData.result.postcode; // just postcode — cleaner Google Maps origin
       } else {
         const pcPartial = await fetch(`https://api.postcodes.io/postcodes/${postcode}/autocomplete`);
         if (pcPartial.ok) {
@@ -857,7 +859,7 @@ function AddressChecker({ schools, initialPostcode, initialCoords }) {
                       </div>
                       {results.lat && results.lng && s.lat && s.lng && (
                         <a
-                          href={`https://www.google.com/maps/dir/?api=1&origin=${results.lat},${results.lng}&destination=${s.lat},${s.lng}&travelmode=walking&dir_action=navigate`}
+                          href={`https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(results.formatted)}&destination=${s.lat},${s.lng}&travelmode=walking`}
                           target="_blank"
                           rel="noopener"
                           onClick={e => e.stopPropagation()}
@@ -869,7 +871,7 @@ function AddressChecker({ schools, initialPostcode, initialCoords }) {
                       )}
                       {results.lat && results.lng && s.lat && s.lng && (
                         <a
-                          href={`https://www.google.com/maps/dir/?api=1&origin=${results.lat},${results.lng}&destination=${s.lat},${s.lng}&travelmode=transit&dir_action=navigate`}
+                          href={`https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(results.formatted)}&destination=${s.lat},${s.lng}&travelmode=transit`}
                           target="_blank"
                           rel="noopener"
                           onClick={e => e.stopPropagation()}

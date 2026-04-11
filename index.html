@@ -1204,21 +1204,37 @@ function App() {
 
       {/* ── Compare modal ── */}
       {showCompare && compareList.length>=2 && (()=>{
-        const rows=[
-          {label:'Borough',       fn:s=>s.local_authority||'—'},
-          {label:'Phase',         fn:s=>s.phase||'—'},
-          {label:'Ofsted rating', fn:s=>s.quality_label||'Not rated', num:s=>s.ofsted_score, higher:true},
-          {label:'Composite score',fn:s=>s.ofsted_score!=null?s.ofsted_score+'%':'—', num:s=>s.ofsted_score, higher:true},
-          {label:'Apps per place', fn:s=>s.apps_per_place!=null?s.apps_per_place+'×':'—', num:s=>s.apps_per_place, higher:false},
-          {label:'Pupils',        fn:s=>s.pupils!=null?Number(s.pupils).toLocaleString():'—'},
-          {label:'Attainment 8',  fn:s=>s.ks4_att8!=null?s.ks4_att8:'—', num:s=>s.ks4_att8, higher:true},
-          {label:'KS2 higher std',fn:s=>s.ks2_higher_pct!=null?s.ks2_higher_pct+'%':'—', num:s=>s.ks2_higher_pct, higher:true},
-          {label:'Gender',        fn:s=>s.gender||'Mixed'},
-          {label:'Sixth form',    fn:s=>s.sixth_form==='Has a sixth form'?'✓ Yes':'No'},
-          {label:'Faith',         fn:s=>s.religious_character&&s.religious_character!=='Does not apply'&&s.religious_character!=='None'?s.religious_character:'None'},
-          {label:'Deprivation',   fn:s=>s.fsm_label||'—'},
-          {label:'Crime',         fn:s=>s.crime_label||'—'},
+        // Determine what phases are in the comparison
+        const phases = compareList.map(s=>(s.phase||'').toLowerCase());
+        const hasSecondary = phases.some(p=>p.includes('secondary')||p.includes('16'));
+        const hasPrimary = phases.some(p=>p.includes('primary')||p.includes('nursery')||p.includes('middle'));
+
+        const allRows=[
+          {label:'Borough',        fn:s=>s.local_authority||'—', always:true},
+          {label:'Phase',          fn:s=>s.phase||'—', always:true},
+          {label:'Ofsted rating',  fn:s=>s.quality_label||'Not rated', num:s=>s.ofsted_score, higher:true, always:true},
+          {label:'Composite score',fn:s=>s.ofsted_score!=null?s.ofsted_score+'%':'—', num:s=>s.ofsted_score, higher:true, always:true},
+          {label:'Apps per place', fn:s=>s.apps_per_place!=null?s.apps_per_place+'×':'—', num:s=>s.apps_per_place, higher:false, always:true},
+          {label:'Pupils',         fn:s=>s.pupils!=null?Number(s.pupils).toLocaleString():'—', always:true},
+          {label:'Attainment 8 (GCSE)', fn:s=>s.ks4_att8!=null?s.ks4_att8:'N/A — primary', num:s=>s.ks4_att8, higher:true, secondary:true},
+          {label:'Grade 5+ Eng & Maths',fn:s=>s.ks4_grade5_em!=null?s.ks4_grade5_em+'%':'N/A — primary', num:s=>s.ks4_grade5_em, higher:true, secondary:true},
+          {label:'KS2 higher standard',  fn:s=>s.ks2_higher_pct!=null?s.ks2_higher_pct+'%':s.ks4_att8!=null?'N/A — secondary':'No data', num:s=>s.ks2_higher_pct, higher:true, primary:true},
+          {label:'KS2 expected standard',fn:s=>s.ks2_expected_pct!=null?s.ks2_expected_pct+'%':s.ks4_att8!=null?'N/A — secondary':'No data', num:s=>s.ks2_expected_pct, higher:true, primary:true},
+          {label:'Gender',         fn:s=>s.gender||'Mixed', always:true},
+          {label:'Sixth form',     fn:s=>s.sixth_form==='Has a sixth form'?'✓ Yes':'No', always:true},
+          {label:'Faith',          fn:s=>s.religious_character&&s.religious_character!=='Does not apply'&&s.religious_character!=='None'?s.religious_character:'None', always:true},
+          {label:'Deprivation',    fn:s=>s.fsm_label||'—', always:true},
+          {label:'Crime',          fn:s=>s.crime_label||'—', always:true},
         ];
+
+        // Filter rows: always show 'always' rows, show secondary/primary rows based on what's being compared
+        const rows = allRows.filter(r =>
+          r.always ||
+          (r.secondary && hasSecondary) ||
+          (r.primary && hasPrimary) ||
+          (r.secondary && !hasSecondary && !hasPrimary) ||
+          (r.primary && !hasPrimary && !hasSecondary)
+        );
         const cols=compareList.length;
         const gridCols=`170px repeat(${cols},1fr)`;
         return(
@@ -1228,6 +1244,17 @@ function App() {
                 <h2>Side-by-side comparison</h2>
                 <button className="cmp-close" onClick={()=>setShowCompare(false)}>×</button>
               </div>
+              {/* Data availability note */}
+              {compareList.some(s=>s.ks2_higher_pct==null&&s.ks4_att8==null) && (
+                <div style={{background:'#FFF8E1',borderBottom:'1px solid #FFE082',padding:'10px 20px',fontSize:'0.8rem',color:'#7B5800',display:'flex',gap:8,alignItems:'flex-start'}}>
+                  <span style={{flexShrink:0}}>ℹ️</span>
+                  <span>
+                    <strong>Exam data:</strong> KS2 results are published for primary schools by the DfE each autumn.
+                    KS4 (GCSE) results apply to secondary schools only.
+                    If a school shows "No data" it may be a nursery, new school, or data may not yet be in our dataset — visit the school page for the latest Ofsted report.
+                  </span>
+                </div>
+              )}
               <div style={{overflowX:'auto'}}>
                 <div style={{display:'grid',gridTemplateColumns:gridCols,minWidth:480}}>
                   <div className="cmp-cell label" style={{background:'#1A1A2E'}}></div>

@@ -23,16 +23,16 @@ STOP_WORDS       = {"the","of","for","and","a","at","in","by","with","an"}
 HEADERS          = {"User-Agent": "Mozilla/5.0 (compatible; LondonSchoolDirectory/1.0)"}
 
 TEST_NAMES = [
-    "The Aldgate School",               # EXPECT FIX: 'aldgate-school'
+    "The Aldgate School",               # EXPECT FIX: drop 'the'
     "Ashbourne College",                # EXPECT FIX: 'ashbourne-independent-school'
-    "City of London School for Girls",  # EXPECT FIX: 'city-london-school-girls'
-    "Camden School for Girls",          # EXPECT FIX: 'camden-school-girls'
-    "The Archbishop Lanfranc Academy",  # EXPECT FIX: 'archbishop-lanfranc-academy'
+    "City of London School for Girls",  # EXPECT FIX: drop 'of','for'
+    "Camden School for Girls",          # EXPECT FIX: drop 'for'
+    "The Archbishop Lanfranc Academy",  # EXPECT FIX: drop 'the'
     "Hackney New School",               # EXPECT OK
     "Haverstock School",                # EXPECT OK
-    "St Paul's Cathedral School",       # EXPECT OK (apostrophe stripped)
-    "Queen's College",                  # EXPECT CHECK
-    "St Mary's CofE Primary School",    # EXPECT CHECK
+    "St Paul's Cathedral School",       # EXPECT OK
+    "St Vincent de Paul RC Primary School",  # EXPECT FIX: needs '-0' suffix
+    "St Mary's CofE Primary School",    # EXPECT FIX: needs '-0' or similar suffix
 ]
 
 
@@ -77,6 +77,17 @@ def try_alternates(name):
         status, url = check_url(v)
         if status == 200:
             return v, SNOBE_BASE + v
+
+    # Try numeric suffixes — Snobe appends -0, -1, -2 when multiple
+    # schools share the same name (e.g. St Vincent de Paul exists in many LAs)
+    all_slugs = [base] + list(variants)
+    for slug in all_slugs:
+        for n in range(0, 5):
+            suffixed = f"{slug}-{n}"
+            status, url = check_url(suffixed)
+            if status == 200:
+                return suffixed, SNOBE_BASE + suffixed
+
     return None, None
 
 

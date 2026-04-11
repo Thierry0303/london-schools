@@ -33,6 +33,8 @@ TEST_NAMES = [
     "St Paul's Cathedral School",       # EXPECT OK
     "St Vincent de Paul RC Primary School",  # EXPECT FIX: needs '-0' suffix
     "St Mary's CofE Primary School",    # EXPECT FIX: needs '-0' or similar suffix
+    "Thomas Coram Centre",              # EXPECT FIX: needs /nursery/ prefix
+    "St Francis of Assisi Catholic Primary School",  # EXPECT FIX: saint- prefix
 ]
 
 
@@ -44,9 +46,13 @@ def make_slug(name):
     return re.sub(r"-+", "-", slug).strip("-")
 
 
-def check_url(slug):
+SNOBE_NURSERY_BASE = "https://snobe.co.uk/nursery/"
+
+def check_url(slug, prefix=None):
+    """Check a Snobe URL. Tries /schools/ by default, or specified prefix."""
+    base = prefix or SNOBE_BASE
     try:
-        r = requests.get(SNOBE_BASE + slug, headers=HEADERS, timeout=15, allow_redirects=True)
+        r = requests.get(base + slug, headers=HEADERS, timeout=15, allow_redirects=True)
         return r.status_code, r.url
     except Exception as e:
         return None, str(e)
@@ -70,23 +76,51 @@ def try_alternates(name):
     if not any(w in base for w in {"school","academy","college","institute"}):
         variants.add(base + "-school")
 
+    # St <-> Saint expansion — Snobe inconsistently uses both
+    # e.g. "St Francis" -> "saint-francis" and vice versa
+    if base.startswith("st-"):
+        variants.add("saint-" + base[3:])
+    elif base.startswith("saint-"):
+        variants.add("st-" + base[6:])
+
+    # Also try saint/st swap in middle of slug (e.g. "our-lady-st-xxx")
+    if "-st-" in base:
+        variants.add(base.replace("-st-", "-saint-"))
+    if "-saint-" in base:
+        variants.add(base.replace("-saint-", "-st-"))
+
     variants.discard(base)
     variants.discard("")
 
-    for v in sorted(variants):
+    all_slugs = [base] + sorted(variants)
+
+    # Try /schools/ prefix first (most common)
+    for v in all_slugs:
         status, url = check_url(v)
         if status == 200:
             return v, SNOBE_BASE + v
 
-    # Try numeric suffixes — Snobe appends -0, -1, -2 when multiple
-    # schools share the same name (e.g. St Vincent de Paul exists in many LAs)
-    all_slugs = [base] + list(variants)
+    # Try /nursery/ prefix — Snobe uses this for nursery schools
+    for v in all_slugs:
+        status, url = check_url(v, prefix=SNOBE_NURSERY_BASE)
+        if status == 200:
+            return v, SNOBE_NURSERY_BASE + v
+
+    # Try numeric suffixes on /schools/ — Snobe appends -0, -1, -2 for duplicate names
     for slug in all_slugs:
         for n in range(0, 5):
             suffixed = f"{slug}-{n}"
             status, url = check_url(suffixed)
             if status == 200:
                 return suffixed, SNOBE_BASE + suffixed
+
+    # Try numeric suffixes on /nursery/
+    for slug in all_slugs:
+        for n in range(0, 5):
+            suffixed = f"{slug}-{n}"
+            status, url = check_url(suffixed, prefix=SNOBE_NURSERY_BASE)
+            if status == 200:
+                return suffixed, SNOBE_NURSERY_BASE + suffixed
 
     return None, None
 

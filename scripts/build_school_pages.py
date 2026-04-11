@@ -187,6 +187,7 @@ def build_school_page(school):
     ofsted_link  = f'<a href="{ofsted_url}" target="_blank" rel="noopener">View Ofsted report</a>' if ofsted_url else ""
     phone_link   = f'<a href="tel:{telephone}">{telephone}</a>' if telephone else "N/A"
     maps_link    = f"https://www.google.com/maps/search/?api=1&query={lat},{lng}" if lat and lng else ""
+    school_name_url = name.replace(" ", "+").replace("&", "and") if name else ""
 
     meta_desc = f"{ofsted_label} {phase} school in {borough}, London. {pupils} pupils. {street}, {postcode}. View Ofsted report and admissions info."
 
@@ -288,8 +289,10 @@ def build_school_page(school):
     </div>
     <div class="actions">
       {"<a class='btn btn-primary' href='" + ofsted_url + "' target='_blank' rel='noopener'>View Ofsted report</a>" if ofsted_url else ""}
-      {"<a class='btn' href='" + maps_link + "' target='_blank' rel='noopener'>View on map</a>" if maps_link else ""}
-      {"<a class='btn' href='" + snobe_url + "' target='_blank' rel='noopener' style='background:#7B2FBE;color:white;border-color:#7B2FBE'>View on Snobe</a>" if snobe_url else ""}
+      {"<a class='btn' href='" + maps_link + "' target='_blank' rel='noopener'>📍 View on map</a>" if maps_link else ""}
+      {"<a class='btn' href='https://www.google.com/maps/dir/?api=1&destination=" + str(lat) + "," + str(lng) + "&travelmode=walking' target='_blank' rel='noopener' style='background:#E8F5E9;color:#27AE60;border-color:#A5D6A7'>🚶 Walking route</a>" if lat and lng else ""}
+      {"<a class='btn' href='https://www.google.com/maps/dir/?api=1&destination=" + str(lat) + "," + str(lng) + "&travelmode=transit' target='_blank' rel='noopener' style='background:#E3F2FD;color:#1565C0;border-color:#90CAF9'>🚌 Bus / Tube route</a>" if lat and lng else ""}
+      {"<a class='btn' href='https://snobe.co.uk/best-schools/search/" + borough_slug.replace('-', '-') + "?search=" + school_name_url + "' target='_blank' rel='noopener' style='background:#7B2FBE;color:white;border-color:#7B2FBE'>Search on Snobe</a>" if name else ""}
       <a class="btn" href="/schools/{borough_slug}">More schools in {borough}</a>
       <a class="btn" href="/">All London schools</a>
     </div>
@@ -344,6 +347,33 @@ def build_school_page(school):
       {"<tr><td>Pupil deprivation</td><td><strong>" + fsm_label + "</strong></td></tr>" if fsm_label else ""}
       {"<tr><td>Crime level</td><td><strong>" + crime_label + "</strong></td></tr>" if crime_label else ""}
     </table>
+  </section>
+
+  <section class="card" style="background:linear-gradient(135deg,#fff 0%,#f0f7ff 100%);border-color:#dbeafe;">
+    <h2 style="display:flex;align-items:center;gap:8px;">
+      <span style="font-size:20px;">👕</span> School uniform
+    </h2>
+    <p style="font-size:14px;color:#555;margin-bottom:16px;line-height:1.6;">
+      Find school uniform for {name} from trusted UK retailers.
+      M&amp;S is the UK's most popular school uniform retailer — available online and in store across London.
+    </p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <a href="https://www.marksandspencer.com/c/school-uniform?q={school_name_url}" target="_blank" rel="noopener sponsored"
+         style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;background:#00543B;color:white;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;">
+        🛒 M&amp;S School Uniform
+      </a>
+      <a href="https://www.next.co.uk/shop/gender-boys-gender-girls/school/all/ctype-uniform?searchterm={school_name_url}+uniform" target="_blank" rel="noopener sponsored"
+         style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;background:#333;color:white;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;">
+        🛒 Next Schoolwear
+      </a>
+      <a href="https://www.amazon.co.uk/s?k={school_name_url}+school+uniform" target="_blank" rel="noopener sponsored"
+         style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;background:#FF9900;color:#111;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;">
+        🛒 Amazon
+      </a>
+    </div>
+    <p style="font-size:11px;color:#999;margin-top:12px;">
+      Links above may earn a small commission at no extra cost to you, which helps keep this site free.
+    </p>
   </section>
 
 </div>

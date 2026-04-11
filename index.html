@@ -865,7 +865,7 @@ function AddressChecker({ schools, initialPostcode, initialCoords }) {
                       </div>
                       {results.lat && results.lng && s.lat && s.lng && (
                         <a
-                          href={`https://www.google.com/maps/dir/?api=1&origin=${results.lat},${results.lng}&destination=${s.lat},${s.lng}&travelmode=walking`}
+                          href={`https://www.google.com/maps/dir/?api=1&origin=${results.lat},${results.lng}&destination=${s.lat},${s.lng}&travelmode=walking&dir_action=navigate`}
                           target="_blank"
                           rel="noopener"
                           onClick={e => e.stopPropagation()}
@@ -877,7 +877,7 @@ function AddressChecker({ schools, initialPostcode, initialCoords }) {
                       )}
                       {results.lat && results.lng && s.lat && s.lng && (
                         <a
-                          href={`https://www.google.com/maps/dir/?api=1&origin=${results.lat},${results.lng}&destination=${s.lat},${s.lng}&travelmode=transit`}
+                          href={`https://www.google.com/maps/dir/?api=1&origin=${results.lat},${results.lng}&destination=${s.lat},${s.lng}&travelmode=transit&dir_action=navigate`}
                           target="_blank"
                           rel="noopener"
                           onClick={e => e.stopPropagation()}

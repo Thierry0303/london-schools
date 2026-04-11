@@ -747,6 +747,7 @@ function AddressChecker({ schools, initialPostcode, initialCoords }) {
             <option value="1">1 mile</option>
             <option value="1.5">1.5 miles</option>
             <option value="2">2 miles</option>
+            <option value="3">3 miles</option>
           </select>
           <select className="ac-select" value={phase} onChange={e=>setPhase(e.target.value)}>
             <option value="">All phases</option>
@@ -860,8 +861,32 @@ function AddressChecker({ schools, initialPostcode, initialCoords }) {
                       </div>
                       <div className="ac-walk">
                         <div className="ac-walk-time">{walkMins} min</div>
-                        <div className="ac-walk-dist">{distMiles} mi</div>
+                        <div className="ac-walk-dist">{distMiles} mi walk</div>
                       </div>
+                      {results.lat && results.lng && s.lat && s.lng && (
+                        <a
+                          href={`https://www.google.com/maps/dir/?api=1&origin=${results.lat},${results.lng}&destination=${s.lat},${s.lng}&travelmode=walking`}
+                          target="_blank"
+                          rel="noopener"
+                          onClick={e => e.stopPropagation()}
+                          title="Walking directions"
+                          style={{display:'flex',flexDirection:'column',alignItems:'center',gap:2,padding:'6px 8px',background:'#E8F5E9',borderRadius:6,textDecoration:'none',border:'1px solid #A5D6A7',flexShrink:0}}>
+                          <span style={{fontSize:'1rem'}}>🚶</span>
+                          <span style={{fontSize:'0.62rem',color:'#27AE60',fontWeight:600,whiteSpace:'nowrap'}}>Walk</span>
+                        </a>
+                      )}
+                      {results.lat && results.lng && s.lat && s.lng && (
+                        <a
+                          href={`https://www.google.com/maps/dir/?api=1&origin=${results.lat},${results.lng}&destination=${s.lat},${s.lng}&travelmode=transit`}
+                          target="_blank"
+                          rel="noopener"
+                          onClick={e => e.stopPropagation()}
+                          title="Public transport directions"
+                          style={{display:'flex',flexDirection:'column',alignItems:'center',gap:2,padding:'6px 8px',background:'#E3F2FD',borderRadius:6,textDecoration:'none',border:'1px solid #90CAF9',flexShrink:0}}>
+                          <span style={{fontSize:'1rem'}}>🚌</span>
+                          <span style={{fontSize:'0.62rem',color:'#1565C0',fontWeight:600,whiteSpace:'nowrap'}}>Bus/Tube</span>
+                        </a>
+                      )}
                     </div>
                   </div>
                 );

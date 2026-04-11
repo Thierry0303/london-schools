@@ -232,6 +232,38 @@
     .ac-address-pin { font-size: 1.2rem; }
     .ac-address-text { font-size: 0.88rem; }
     .ac-address-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(245,240,232,0.5); margin-bottom: 2px; }
+
+    /* ── Compare feature ──────────────────────────────────────────────── */
+    .compare-btn { position:absolute; top:10px; right:10px; z-index:2; width:28px; height:28px; border-radius:50%; border:2px solid var(--border); background:white; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:0.75rem; transition:all 0.2s; color:#999; }
+    .compare-btn:hover { border-color:var(--gold); color:var(--gold); }
+    .compare-btn.selected { background:var(--gold); border-color:var(--gold); color:var(--ink); }
+    .compare-bar { position:fixed; bottom:0; left:0; right:0; background:var(--ink); color:var(--cream); padding:12px 24px; display:flex; align-items:center; gap:12px; z-index:9000; transform:translateY(100%); transition:transform 0.3s; box-shadow:0 -4px 20px rgba(0,0,0,0.3); }
+    .compare-bar.visible { transform:translateY(0); }
+    .compare-bar-schools { display:flex; gap:8px; flex:1; flex-wrap:wrap; }
+    .compare-bar-chip { background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); border-radius:4px; padding:4px 8px; font-size:0.78rem; display:flex; align-items:center; gap:6px; }
+    .compare-bar-chip button { background:none; border:none; color:rgba(255,255,255,0.5); cursor:pointer; font-size:0.9rem; padding:0; line-height:1; }
+    .compare-bar-chip button:hover { color:white; }
+    .compare-bar-btn { padding:8px 20px; background:var(--gold); color:var(--ink); border:none; border-radius:6px; font-family:'Playfair Display',serif; font-weight:700; font-size:0.9rem; cursor:pointer; white-space:nowrap; }
+    .compare-bar-btn:disabled { opacity:0.5; cursor:default; }
+    .compare-bar-clear { background:none; border:none; color:rgba(255,255,255,0.5); cursor:pointer; font-size:0.8rem; text-decoration:underline; }
+    .compare-bar-clear:hover { color:white; }
+    /* Modal */
+    .cmp-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:9500; display:flex; align-items:flex-start; justify-content:center; padding:20px; overflow-y:auto; }
+    .cmp-modal { background:var(--cream); border-radius:12px; width:100%; max-width:1000px; margin:auto; overflow:hidden; }
+    .cmp-header { background:var(--ink); color:var(--cream); padding:18px 24px; display:flex; align-items:center; justify-content:space-between; }
+    .cmp-header h2 { font-family:'Playfair Display',serif; font-size:1.2rem; }
+    .cmp-close { background:none; border:none; color:var(--cream); font-size:1.4rem; cursor:pointer; opacity:0.7; }
+    .cmp-close:hover { opacity:1; }
+    .cmp-grid { display:grid; gap:0; overflow-x:auto; }
+    .cmp-row { display:contents; }
+    .cmp-cell { padding:12px 16px; border-bottom:1px solid var(--border); font-size:0.85rem; }
+    .cmp-cell.label { background:#F5F0E8; font-weight:500; font-size:0.78rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.05em; }
+    .cmp-cell.school-header { background:var(--ink); color:var(--cream); padding:16px; text-align:center; position:sticky; top:0; }
+    .cmp-school-name { font-family:'Playfair Display',serif; font-size:0.95rem; font-weight:700; margin-bottom:4px; }
+    .cmp-school-la { font-size:0.72rem; opacity:0.6; }
+    .cmp-best { background:#E8F5E9; font-weight:600; color:#2E7D32; }
+    .cmp-worst { background:#FFF3E0; }
+    .cmp-bar { height:6px; border-radius:3px; margin-top:4px; }
   </style>
 </head>
 <body>
@@ -505,7 +537,7 @@ function StatsPage({ schools, onFilter }) {
   );
 }
 
-function ScoreCard({ school }) {
+function ScoreCard({ school, compareList, toggleCompare }) {
   const band = school.score_band || school.quality_label || 'Unknown';
   const color = BAND_COLORS[band] || '#ccc';
   const admissions = school.admissions;
@@ -522,6 +554,11 @@ function ScoreCard({ school }) {
 
   return (
     <div className="school-card" style={{'--band-color': color}} onClick={handleClick}>
+      <button
+        className={`compare-btn ${compareList&&compareList.find(s=>s.urn===school.urn)?'selected':''}`}
+        onClick={e=>toggleCompare&&toggleCompare(school,e)}
+        title={compareList&&compareList.find(s=>s.urn===school.urn)?'Remove from comparison':'Add to comparison (max 3)'}
+      >{compareList&&compareList.find(s=>s.urn===school.urn)?'✓':'+'}</button>
       <div className="card-top">
         <span className="card-phase">{school.phase}</span>
         {showAdmissions && (
@@ -941,6 +978,17 @@ function App() {
 
   const [heroPostcode, setHeroPostcode] = useState('');
   const [geoCoords, setGeoCoords] = useState(null);
+  const [compareList, setCompareList] = useState([]);
+  const [showCompare, setShowCompare] = useState(false);
+
+  function toggleCompare(school, e) {
+    e.stopPropagation();
+    setCompareList(prev => {
+      if (prev.find(s => s.urn === school.urn)) return prev.filter(s => s.urn !== school.urn);
+      if (prev.length >= 3) return prev;
+      return [...prev, school];
+    });
+  }
 
   return (
     <>
@@ -1043,7 +1091,7 @@ function App() {
             {filtered.length === 0 ? (
               <div className="empty-state"><h3>No schools found</h3><p>Try adjusting your filters.</p></div>
             ) : displayMode === 'grid' ? (
-              <div className="school-grid">{paged.map(s => <ScoreCard key={s.urn} school={s} />)}</div>
+              <div className="school-grid">{paged.map(s => <ScoreCard key={s.urn} school={s} compareList={compareList} toggleCompare={toggleCompare} />)}</div>
             ) : (
               <table className="school-table">
                 <thead>
@@ -1096,6 +1144,98 @@ function App() {
           </>
         )}
       </main>
+
+      {/* ── Compare bar ── */}
+      <div className={`compare-bar ${compareList.length>0?'visible':''}`}>
+        <div style={{fontSize:'0.78rem',color:'rgba(255,255,255,0.5)',whiteSpace:'nowrap'}}>Compare ({compareList.length}/3)</div>
+        <div className="compare-bar-schools">
+          {compareList.map(s=>(
+            <div key={s.urn} className="compare-bar-chip">
+              <span style={{maxWidth:160,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{s.name}</span>
+              <button onClick={()=>setCompareList(p=>p.filter(x=>x.urn!==s.urn))}>×</button>
+            </div>
+          ))}
+        </div>
+        <button className="compare-bar-clear" onClick={()=>setCompareList([])}>Clear all</button>
+        <button className="compare-bar-btn" disabled={compareList.length<2} onClick={()=>setShowCompare(true)}>
+          Compare {compareList.length>1?compareList.length:''} schools →
+        </button>
+      </div>
+
+      {/* ── Compare modal ── */}
+      {showCompare && compareList.length>=2 && (()=>{
+        const rows=[
+          {label:'Borough',       fn:s=>s.local_authority||'—'},
+          {label:'Phase',         fn:s=>s.phase||'—'},
+          {label:'Ofsted rating', fn:s=>s.quality_label||'Not rated', num:s=>s.ofsted_score, higher:true},
+          {label:'Composite score',fn:s=>s.ofsted_score!=null?s.ofsted_score+'%':'—', num:s=>s.ofsted_score, higher:true},
+          {label:'Apps per place', fn:s=>s.apps_per_place!=null?s.apps_per_place+'×':'—', num:s=>s.apps_per_place, higher:false},
+          {label:'Pupils',        fn:s=>s.pupils!=null?Number(s.pupils).toLocaleString():'—'},
+          {label:'Attainment 8',  fn:s=>s.ks4_att8!=null?s.ks4_att8:'—', num:s=>s.ks4_att8, higher:true},
+          {label:'KS2 higher std',fn:s=>s.ks2_higher_pct!=null?s.ks2_higher_pct+'%':'—', num:s=>s.ks2_higher_pct, higher:true},
+          {label:'Gender',        fn:s=>s.gender||'Mixed'},
+          {label:'Sixth form',    fn:s=>s.sixth_form==='Has a sixth form'?'✓ Yes':'No'},
+          {label:'Faith',         fn:s=>s.religious_character&&s.religious_character!=='Does not apply'&&s.religious_character!=='None'?s.religious_character:'None'},
+          {label:'Deprivation',   fn:s=>s.fsm_label||'—'},
+          {label:'Crime',         fn:s=>s.crime_label||'—'},
+        ];
+        const cols=compareList.length;
+        const gridCols=`170px repeat(${cols},1fr)`;
+        return(
+          <div className="cmp-overlay" onClick={e=>{if(e.target.className==='cmp-overlay')setShowCompare(false)}}>
+            <div className="cmp-modal">
+              <div className="cmp-header">
+                <h2>Side-by-side comparison</h2>
+                <button className="cmp-close" onClick={()=>setShowCompare(false)}>×</button>
+              </div>
+              <div style={{overflowX:'auto'}}>
+                <div style={{display:'grid',gridTemplateColumns:gridCols,minWidth:480}}>
+                  <div className="cmp-cell label" style={{background:'#1A1A2E'}}></div>
+                  {compareList.map(s=>{
+                    const band=s.score_band||s.quality_label||'Unknown';
+                    const col=BAND_COLORS[band]||'#95A5A6';
+                    return(
+                      <div key={s.urn} className="cmp-cell school-header" style={{borderTop:`4px solid ${col}`}}>
+                        <div className="cmp-school-name">{s.name}</div>
+                        <div className="cmp-school-la">{s.local_authority} · {s.postcode}</div>
+                        <div style={{marginTop:8}}><span className="band-chip" style={{background:col}}>{band}</span></div>
+                      </div>
+                    );
+                  })}
+                  {rows.map(row=>{
+                    const nums=row.num?compareList.map(s=>row.num(s)).filter(v=>v!=null):[];
+                    const best=nums.length>1?(row.higher?Math.max(...nums):Math.min(...nums)):null;
+                    const worst=nums.length>1?(row.higher?Math.min(...nums):Math.max(...nums)):null;
+                    return(
+                      <React.Fragment key={row.label}>
+                        <div className="cmp-cell label">{row.label}</div>
+                        {compareList.map(s=>{
+                          const num=row.num?row.num(s):null;
+                          const isBest=num!=null&&num===best&&best!==worst;
+                          const isWorst=num!=null&&num===worst&&best!==worst;
+                          return(
+                            <div key={s.urn} className={`cmp-cell${isBest?' cmp-best':isWorst?' cmp-worst':''}`}>
+                              {row.fn(s)}
+                              {isBest&&<span style={{marginLeft:6,fontSize:'0.68rem',color:'#2E7D32',fontWeight:600}}>▲</span>}
+                            </div>
+                          );
+                        })}
+                      </React.Fragment>
+                    );
+                  })}
+                  <div className="cmp-cell label">View</div>
+                  {compareList.map(s=>(
+                    <div key={s.urn} className="cmp-cell" style={{display:'flex',flexDirection:'column',gap:6}}>
+                      <a href={schoolUrl(s)} style={{display:'block',padding:'7px 12px',background:'var(--ink)',color:'var(--gold)',borderRadius:5,fontSize:'0.8rem',fontWeight:600,textDecoration:'none',textAlign:'center'}}>View school →</a>
+                      <button onClick={()=>setCompareList(p=>p.filter(x=>x.urn!==s.urn))} style={{padding:'6px',background:'transparent',border:'1px solid #ddd',borderRadius:5,fontSize:'0.75rem',cursor:'pointer',color:'#999'}}>Remove</button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </>
   );
 }

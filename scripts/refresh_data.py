@@ -151,9 +151,12 @@ def parse_gias(df):
             return fallback
 
         # Build head name
+        head_title_prefix = v("headtitlename", "") or v("headtitle", "") or ""
         head_first = v("headfirstname", "")
         head_last  = v("headlastname", "")
-        head_name  = f"{head_first} {head_last}".strip() or None
+        # Build full name with title prefix, ensuring spaces between each part
+        parts = [p.strip() for p in [head_title_prefix, head_first, head_last] if p and str(p).strip()]
+        head_name = " ".join(parts) or None
 
         school = {
             "urn":               v("urn"),
@@ -246,20 +249,27 @@ def parse_gias(df):
                 school[coord] = float(school[coord]) if school[coord] is not None else None
             except (ValueError, TypeError):
                 school[coord] = None
-
-        # Generate Snobe URL — matches Snobe's slug format exactly
-        # Snobe removes stop words: the, of, for, and, a, at, in, by, with
+        # Generate Snobe URL — matches Snobe slug format
+        # Snobe uses /nursery/ prefix for nurseries, /schools/ for everything else
+        # Stop words are removed from slugs
         SNOBE_STOP_WORDS = {"the", "of", "for", "and", "a", "at", "in", "by", "with", "an"}
-        name_val = school.get("name", "")
+        name_val  = school.get("name", "")
+        phase_val = str(school.get("phase", "")).lower()
+        type_val  = str(school.get("school_type", "")).lower()
+
+        is_nursery = (
+            phase_val == "nursery" or
+            "nursery" in type_val or
+            "nursery" in str(name_val).lower()
+        )
+        snobe_prefix = "nursery" if is_nursery else "schools"
+
         if name_val:
-            words = str(name_val).lower()\
-                .replace("'", "").replace("'", "").replace("'", "")\
-                .replace(",", "").replace(".", "").replace("(", "").replace(")", "")\
-                .strip().split()
+            words = str(name_val).lower()                .replace("’", "").replace("‘", "").replace("'", "")                .replace(",", "").replace(".", "").replace("(", "").replace(")", "")                .strip().split()
             filtered = [w for w in words if w not in SNOBE_STOP_WORDS]
             snobe_slug = "-".join(filtered)
             snobe_slug = re.sub(r"-+", "-", snobe_slug).strip("-")
-            school["snobe_url"] = f"https://snobe.co.uk/schools/{snobe_slug}"
+            school["snobe_url"] = f"https://snobe.co.uk/{snobe_prefix}/{snobe_slug}"
         else:
             school["snobe_url"] = None
 

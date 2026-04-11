@@ -234,6 +234,14 @@
     .ac-address-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(245,240,232,0.5); margin-bottom: 2px; }
 
     /* ── Compare feature ──────────────────────────────────────────────── */
+    .compare-guide { position:fixed; bottom:80px; right:24px; background:var(--ink); color:var(--cream); border-radius:10px; padding:14px 18px; max-width:240px; font-size:0.82rem; line-height:1.6; z-index:8999; box-shadow:0 8px 32px rgba(0,0,0,0.3); animation:guideIn 0.3s ease; }
+    .compare-guide::after { content:''; position:absolute; bottom:-8px; right:20px; width:0; height:0; border-left:8px solid transparent; border-right:8px solid transparent; border-top:8px solid var(--ink); }
+    .compare-guide-title { font-family:'Playfair Display',serif; font-size:0.9rem; margin-bottom:6px; color:var(--gold); }
+    .compare-guide-close { position:absolute; top:8px; right:10px; background:none; border:none; color:rgba(255,255,255,0.4); cursor:pointer; font-size:1rem; line-height:1; }
+    .compare-guide-close:hover { color:white; }
+    .compare-guide-step { display:flex; gap:8px; margin-bottom:6px; }
+    .compare-guide-step-num { width:18px; height:18px; border-radius:50%; background:var(--gold); color:var(--ink); font-size:0.68rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
+    @keyframes guideIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
     .compare-btn { position:absolute; top:10px; right:10px; z-index:2; width:28px; height:28px; border-radius:50%; border:2px solid var(--border); background:white; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:0.75rem; transition:all 0.2s; color:#999; }
     .compare-btn:hover { border-color:var(--gold); color:var(--gold); }
     .compare-btn.selected { background:var(--gold); border-color:var(--gold); color:var(--ink); }
@@ -980,6 +988,13 @@ function App() {
   const [geoCoords, setGeoCoords] = useState(null);
   const [compareList, setCompareList] = useState([]);
   const [showCompare, setShowCompare] = useState(false);
+  const [showGuide, setShowGuide] = useState(() => {
+    try { return localStorage.getItem('compareGuideSeen') !== '1'; } catch { return true; }
+  });
+  function dismissGuide() {
+    setShowGuide(false);
+    try { localStorage.setItem('compareGuideSeen', '1'); } catch {}
+  }
 
   function toggleCompare(school, e) {
     e.stopPropagation();
@@ -1082,7 +1097,12 @@ function App() {
               {hasFilters && <button className="clear-btn" onClick={clearFilters}>✕ Clear</button>}
             </div>
             <div className="results-header">
-              <div className="results-count">Showing <strong>{filtered.length}</strong> school{filtered.length!==1?'s':''}{schools.length!==filtered.length?` of ${schools.length}`:''}</div>
+              <div style={{display:'flex',alignItems:'center',gap:12,flexWrap:'wrap'}}>
+                <div className="results-count">Showing <strong>{filtered.length}</strong> school{filtered.length!==1?'s':''}{schools.length!==filtered.length?` of ${schools.length}`:''}</div>
+                <button onClick={()=>setShowGuide(g=>!g)} style={{background:'rgba(212,168,67,0.12)',border:'1px solid rgba(212,168,67,0.3)',borderRadius:5,padding:'3px 10px',fontSize:'0.75rem',color:'var(--gold)',cursor:'pointer',fontFamily:"'DM Sans',sans-serif"}}>
+                  ⊞ Compare schools
+                </button>
+              </div>
               <div className="view-toggle" style={{display: window.innerWidth < 600 ? 'none' : 'flex'}}>
                 <button className={`view-btn ${displayMode==='grid'?'active':''}`} onClick={() => setDisplayMode('grid')}>⊞</button>
                 <button className={`view-btn ${displayMode==='table'?'active':''}`} onClick={() => setDisplayMode('table')}>☰</button>
@@ -1144,6 +1164,26 @@ function App() {
           </>
         )}
       </main>
+
+      {/* ── Compare guide tooltip ── */}
+      {showGuide && view === 'schools' && (
+        <div className="compare-guide">
+          <button className="compare-guide-close" onClick={dismissGuide} title="Dismiss">×</button>
+          <div className="compare-guide-title">Compare schools</div>
+          <div className="compare-guide-step">
+            <div className="compare-guide-step-num">1</div>
+            <span>Click the <strong>+</strong> button on any school card to add it</span>
+          </div>
+          <div className="compare-guide-step">
+            <div className="compare-guide-step-num">2</div>
+            <span>Add up to <strong>3 schools</strong> — a bar appears at the bottom</span>
+          </div>
+          <div className="compare-guide-step">
+            <div className="compare-guide-step-num">3</div>
+            <span>Click <strong>Compare</strong> to see them side by side</span>
+          </div>
+        </div>
+      )}
 
       {/* ── Compare bar ── */}
       <div className={`compare-bar ${compareList.length>0?'visible':''}`}>

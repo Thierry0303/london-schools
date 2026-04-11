@@ -80,10 +80,12 @@
 
     /* ADVICE BOXES */
     .advice-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 32px; }
-    .advice-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+    .advice-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 20px; cursor: pointer; transition: all 0.2s; text-decoration: none; color: inherit; display: block; }
+    .advice-card:hover { border-color: var(--gold); box-shadow: 0 4px 16px rgba(212,168,67,0.15); transform: translateY(-2px); }
     .advice-card .num { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--gold); margin-bottom: 8px; }
     .advice-card h3 { font-size: 0.9rem; font-weight: 500; margin-bottom: 6px; }
     .advice-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+    .advice-card .card-cta { font-size: 0.75rem; color: var(--gold); font-weight: 500; margin-top: 10px; display: flex; align-items: center; gap: 4px; }
 
     /* FILTER ROW */
     .filter-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }
@@ -190,7 +192,7 @@
     </select>
   </div>
 
-  <table class="borough-table" id="borough-table">
+  <table class="borough-table" id="borough-table" style="scroll-margin-top: 80px;">
     <thead>
       <tr>
         <th>Borough</th>
@@ -207,7 +209,7 @@
   <div class="chart-card">
     <div class="chart-title">Which school types are most likely to overturn a refusal?</div>
     <div class="chart-sub">Foundation and voluntary aided schools run their own appeals — historically higher success rates</div>
-    <div style="position:relative;height:200px;">
+    <div id="type-chart" style="position:relative;height:200px;">
       <canvas id="typeChart"></canvas>
     </div>
   </div>
@@ -215,36 +217,42 @@
   <!-- ADVICE SECTION -->
   <div class="section-title">Should you appeal?</div>
   <div class="advice-grid">
-    <div class="advice-card">
+    <a class="advice-card" onclick="scrollToSection('borough-table'); return false;" href="#borough-table">
       <div class="num">01</div>
       <h3>Know your grounds</h3>
       <p>Appeals succeed on two grounds: the admission authority made an error, or the school's case for keeping numbers down is outweighed by your child's need to attend. The second is harder to win but more common.</p>
-    </div>
-    <div class="advice-card">
+      <div class="card-cta">See success rates by borough →</div>
+    </a>
+    <a class="advice-card" onclick="scrollToSection('type-chart'); highlightTypeChart(); return false;" href="#type-chart">
       <div class="num">02</div>
       <h3>Foundation schools are worth it</h3>
       <p>Foundation and voluntary aided schools (most faith schools) have a 24% success rate — significantly above average. If your child was refused a faith school place on distance grounds, it's almost always worth appealing.</p>
-    </div>
-    <div class="advice-card">
+      <div class="card-cta">See success rates by school type →</div>
+    </a>
+    <a class="advice-card" href="https://www.gov.uk/appeal-school-place" target="_blank" rel="noopener">
       <div class="num">03</div>
       <h3>Gather your evidence</h3>
       <p>Medical or social needs linked specifically to that school carry most weight. Sibling links, proximity arguments, and academic fit all help but rarely win on their own. Start gathering evidence the day you receive the refusal.</p>
-    </div>
-    <div class="advice-card">
+      <div class="card-cta">GOV.UK — how to appeal →</div>
+    </a>
+    <a class="advice-card" href="https://www.gov.uk/government/publications/school-admissions-appeals-code" target="_blank" rel="noopener">
       <div class="num">04</div>
       <h3>Check the admissions code</h3>
       <p>If the school made a procedural error — wrong distance measurement, incorrect application of their faith criteria, or failing to consider your circumstances — you have a much stronger case. Request the school's full admissions file.</p>
-    </div>
-    <div class="advice-card">
+      <div class="card-cta">Read the Admissions Appeals Code →</div>
+    </a>
+    <a class="advice-card" onclick="switchPhase('primary'); scrollToSection('borough-table'); return false;" href="#borough-table">
       <div class="num">05</div>
       <h3>Infant class size rules</h3>
       <p>For Reception, Year 1 and Year 2, class sizes are capped at 30. Appeals for these year groups can only succeed if the school made an error. Success rates are much lower — typically under 5%.</p>
-    </div>
-    <div class="advice-card">
+      <div class="card-cta">See primary appeal rates by borough →</div>
+    </a>
+    <a class="advice-card" href="/" target="_blank" rel="noopener">
       <div class="num">06</div>
       <h3>Accept another offer</h3>
       <p>Accepting a school place does not affect your right to appeal. Always accept the offer you've been given while pursuing your appeal — it protects your child's right to a school place whatever happens.</p>
-    </div>
+      <div class="card-cta">Find alternative schools near you →</div>
+    </a>
   </div>
 
   <!-- USEFUL LINKS -->
@@ -465,6 +473,30 @@ function sortTable() {
 // ── Init ──────────────────────────────────────────────────────────────────────
 updateTrendChart();
 sortTable();
+
+// ── Interactive card helpers ───────────────────────────────────────────────────
+function scrollToSection(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function switchPhase(phase) {
+  const tablePhase = document.getElementById('phase-filter-table');
+  if (tablePhase) {
+    tablePhase.value = phase;
+    sortTable();
+  }
+}
+
+function highlightTypeChart() {
+  const el = document.getElementById('type-chart');
+  if (!el) return;
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  el.style.transition = 'box-shadow 0.3s';
+  el.style.boxShadow = '0 0 0 3px var(--gold)';
+  el.style.borderRadius = '10px';
+  setTimeout(() => { el.style.boxShadow = ''; }, 2000);
+}
 </script>
 
 </body>

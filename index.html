@@ -270,19 +270,11 @@ function fsmLabel(s) {
   return { text: s.fsm_label, color: s.fsm_color, bg: s.fsm_bg };
 }
 
-function snobeUrl(name) {
-  if (!name) return null;
-  const stopWords = new Set(['the','of','for','and','a','at','in','by','with','an']);
-  const slug = name.toLowerCase()
-    .replace(/[''']/g, '')
-    .replace(/[,.()\-]/g, '')
-    .trim()
-    .split(/\s+/)
-    .filter(w => !stopWords.has(w))
-    .join('-')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '');
-  return `https://snobe.co.uk/schools/${slug}`;
+function snobeUrl(school) {
+  // Uses verified snobe_url from schools.json set by check_snobe_slugs.py
+  // Slug generation from names is unreliable due to Snobe's -0/-1/-2 suffixes
+  if (!school) return null;
+  return school.snobe_url || null;
 }
 
 const BOROUGHS = [

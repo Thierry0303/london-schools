@@ -133,19 +133,10 @@ def build_school_page(school):
     head_title    = safe(school.get("head_job_title", "Headteacher"))
     website       = school.get("website") or ""
     telephone     = format_phone(school.get("telephone"))
-    snobe_url     = school.get("snobe_url") or ""
-
-    # Generate snobe_url if missing — Snobe removes stop words from slugs
-    if not snobe_url and name:
-        _stop = {"the", "of", "for", "and", "a", "at", "in", "by", "with", "an"}
-        _words = str(name).lower()\
-            .replace("'", "").replace("'", "").replace("'", "")\
-            .replace(",", "").replace(".", "").replace("(", "").replace(")", "")\
-            .strip().split()
-        _slug = "-".join(w for w in _words if w not in _stop)
-        import re as _re
-        _slug = _re.sub(r"-+", "-", _slug).strip("-")
-        snobe_url = f"https://snobe.co.uk/schools/{_slug}"
+    # Only use verified snobe_url from schools.json — set by check_snobe_slugs.py
+    # Never generate slugs from name: Snobe uses -0/-1/-2 suffixes for duplicates
+    # and different naming conventions to GIAS. Unverified links cause 404s.
+    snobe_url = school.get("snobe_url") or ""
     ofsted_label  = safe(school.get("quality_label") or school.get("score_band"), "Not yet rated")
     ofsted_url    = school.get("ofsted_url") or ""
     inspection    = safe(school.get("inspection_date"), "")
@@ -292,7 +283,7 @@ def build_school_page(school):
       {"<a class='btn' href='" + maps_link + "' target='_blank' rel='noopener'>📍 View on map</a>" if maps_link else ""}
       {"<a class='btn' href='https://www.google.com/maps/dir/?api=1&destination=" + str(lat) + "," + str(lng) + "&travelmode=walking' target='_blank' rel='noopener' style='background:#E8F5E9;color:#27AE60;border-color:#A5D6A7'>🚶 Walking route</a>" if lat and lng else ""}
       {"<a class='btn' href='https://www.google.com/maps/dir/?api=1&destination=" + str(lat) + "," + str(lng) + "&travelmode=transit' target='_blank' rel='noopener' style='background:#E3F2FD;color:#1565C0;border-color:#90CAF9'>🚌 Bus / Tube route</a>" if lat and lng else ""}
-      {"<a class='btn' href='https://snobe.co.uk/best-schools/search/" + borough_slug.replace('-', '-') + "?search=" + school_name_url + "' target='_blank' rel='noopener' style='background:#7B2FBE;color:white;border-color:#7B2FBE'>Search on Snobe</a>" if name else ""}
+      {"<a class='btn' href='" + snobe_url + "' target='_blank' rel='noopener' style='background:#7B2FBE;color:white;border-color:#7B2FBE'>View on Snobe</a>" if snobe_url else ""}
       <a class="btn" href="/schools/{borough_slug}">More schools in {borough}</a>
       <a class="btn" href="/">All London schools</a>
     </div>

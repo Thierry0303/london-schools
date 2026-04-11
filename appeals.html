@@ -95,6 +95,15 @@
     /* FOOTER */
     .data-note { font-size: 0.75rem; color: var(--muted); line-height: 1.6; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); }
 
+    /* Interactive cards */
+    .advice-link, .stat-link { text-decoration: none; color: inherit; display: block; cursor: pointer; }
+    .advice-link:hover, .stat-link:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(26,26,46,0.08); transition: all 0.2s; }
+    .advice-card { transition: all 0.2s; }
+    .card-arrow { font-size: 0.9rem; color: var(--gold); margin-left: 4px; }
+    .card-tag { margin-top: 10px; font-size: 0.72rem; font-weight: 500; color: var(--gold); background: rgba(212,168,67,0.08); border: 1px solid rgba(212,168,67,0.2); border-radius: 4px; padding: 3px 8px; display: inline-block; }
+    .stat-cta { margin-top: 8px; font-size: 0.72rem; font-weight: 500; color: var(--gold); }
+    .stat-link:hover .stat-num { transform: scale(1.05); transition: transform 0.15s; }
+
     @media (max-width: 600px) {
       .stats-grid { grid-template-columns: repeat(2, 1fr); }
       nav a:not(:first-child):not(:last-child) { display: none; }
@@ -130,34 +139,40 @@
 
   <!-- KEY STATS -->
   <div class="stats-grid">
-    <div class="stat-card">
+    <a class="stat-card stat-link" href="#trend-section" onclick="document.getElementById('trend-section').scrollIntoView({behavior:'smooth'});document.getElementById('phase-filter').value='secondary';updateTrendChart();return false;">
       <div class="stat-num gold">29,640</div>
       <div class="stat-label">Secondary appeals heard in London 2024</div>
-    </div>
-    <div class="stat-card">
+      <div class="stat-cta">View trend →</div>
+    </a>
+    <a class="stat-card stat-link" href="#borough-section" onclick="document.getElementById('borough-section').scrollIntoView({behavior:'smooth'});document.getElementById('phase-filter-table').value='secondary';sortTable();return false;">
       <div class="stat-num green">21%</div>
       <div class="stat-label">Average secondary appeal success rate</div>
-    </div>
-    <div class="stat-card">
+      <div class="stat-cta">By borough →</div>
+    </a>
+    <a class="stat-card stat-link" href="#trend-section" onclick="document.getElementById('trend-section').scrollIntoView({behavior:'smooth'});document.getElementById('phase-filter').value='primary';updateTrendChart();return false;">
       <div class="stat-num">8,999</div>
       <div class="stat-label">Primary appeals heard in London 2024</div>
-    </div>
-    <div class="stat-card">
+      <div class="stat-cta">View trend →</div>
+    </a>
+    <a class="stat-card stat-link" href="#borough-section" onclick="document.getElementById('borough-section').scrollIntoView({behavior:'smooth'});document.getElementById('phase-filter-table').value='primary';sortTable();return false;">
       <div class="stat-num green">18%</div>
       <div class="stat-label">Average primary appeal success rate</div>
-    </div>
-    <div class="stat-card">
+      <div class="stat-cta">By borough →</div>
+    </a>
+    <a class="stat-card stat-link" href="#type-chart" onclick="document.getElementById('type-chart').scrollIntoView({behavior:'smooth'});return false;">
       <div class="stat-num gold">24%</div>
       <div class="stat-label">Foundation school success rate (highest)</div>
-    </div>
-    <div class="stat-card">
+      <div class="stat-cta">See breakdown →</div>
+    </a>
+    <a class="stat-card stat-link" href="#type-chart" onclick="document.getElementById('type-chart').scrollIntoView({behavior:'smooth'});return false;">
       <div class="stat-num">16%</div>
       <div class="stat-label">Community school success rate (lowest)</div>
-    </div>
+      <div class="stat-cta">See breakdown →</div>
+    </a>
   </div>
 
   <!-- SUCCESS RATE TREND -->
-  <div class="section-title">Appeal success rates over time <span>2016–2024</span></div>
+  <div id="trend-section" class="section-title">Appeal success rates over time <span>2016–2024</span></div>
 
   <div class="filter-row">
     <label>Phase:</label>
@@ -176,7 +191,7 @@
   </div>
 
   <!-- BOROUGH TABLE -->
-  <div class="section-title">Appeals by London borough <span>2024</span></div>
+  <div id="borough-section" class="section-title">Appeals by London borough <span>2024</span></div>
 
   <div class="filter-row">
     <label>Sort by:</label>
@@ -205,7 +220,7 @@
   </table>
 
   <!-- SCHOOL TYPE BREAKDOWN -->
-  <div class="section-title">Success rate by school type <span>2024</span></div>
+  <div id="type-chart" class="section-title">Success rate by school type <span>2024</span></div>
   <div class="chart-card">
     <div class="chart-title">Which school types are most likely to overturn a refusal?</div>
     <div class="chart-sub">Foundation and voluntary aided schools run their own appeals — historically higher success rates</div>
@@ -229,7 +244,7 @@
       <p>Foundation and voluntary aided schools (most faith schools) have a 24% success rate — significantly above average. If your child was refused a faith school place on distance grounds, it's almost always worth appealing.</p>
       <div class="card-cta">See success rates by school type →</div>
     </a>
-    <a class="advice-card" href="https://www.gov.uk/appeal-school-place" target="_blank" rel="noopener">
+    <a class="advice-card" href="https://www.gov.uk/schools-admissions/appealing-a-schools-decision" target="_blank" rel="noopener">
       <div class="num">03</div>
       <h3>Gather your evidence</h3>
       <p>Medical or social needs linked specifically to that school carry most weight. Sibling links, proximity arguments, and academic fit all help but rarely win on their own. Start gathering evidence the day you receive the refusal.</p>
@@ -258,7 +273,7 @@
   <!-- USEFUL LINKS -->
   <div class="section-title">Useful resources</div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:32px;">
-    <a href="https://www.gov.uk/appeal-school-place" target="_blank" rel="noopener" style="display:block;background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:14px 16px;text-decoration:none;color:var(--ink);">
+    <a href="https://www.gov.uk/schools-admissions/appealing-a-schools-decision" target="_blank" rel="noopener" style="display:block;background:var(--card-bg);border:1px solid var(--border);border-radius:8px;padding:14px 16px;text-decoration:none;color:var(--ink);">
       <div style="font-size:0.85rem;font-weight:500;margin-bottom:4px;">GOV.UK — Appeal a school place</div>
       <div style="font-size:0.75rem;color:var(--muted);">Official guidance and your rights</div>
     </a>

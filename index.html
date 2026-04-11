@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>London Schools Explorer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    :root {
+      --cream: #F5F0E8; --ink: #1A1A2E; --ink-soft: #2D2D44;
+      --red: #C0392B; --gold: #D4A843; --green: #27AE60;
+      --border: #D8D0C0; --card-bg: #FDFAF4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; }
+
+    .header { background: var(--ink); color: var(--cream); padding: 0 40px; position: sticky; top: 0; z-index: 1000; border-bottom: 3px solid var(--gold); display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .header-logo { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+    .header-logo span { color: var(--gold); }
+    .header-badge { background: var(--gold); color: var(--ink); font-size: 0.7rem; font-weight: 600; padding: 3px 8px; border-radius: 2px; letter-spacing: 0.08em; text-transform: uppercase; }
+    .header-nav { display: flex; gap: 6px; }
+    .nav-btn { background: transparent; border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.7); padding: 7px 16px; border-radius: 4px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; }
+    .nav-btn.active, .nav-btn:hover { background: var(--gold); color: var(--ink); border-color: var(--gold); font-weight: 600; }
+
+    .hero { background: var(--ink); color: var(--cream); padding: 56px 40px 44px; position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; top: -80px; right: -80px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(212,168,67,0.15) 0%, transparent 70%); pointer-events: none; }
+    .hero-eyebrow { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
+    .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 900; line-height: 1.05; margin-bottom: 14px; max-width: 680px; }
+    .hero h1 em { font-style: italic; color: var(--gold); }
+    .hero-sub { font-size: 1rem; color: rgba(245,240,232,0.7); max-width: 500px; line-height: 1.6; margin-bottom: 36px; }
+    .hero-stats { display: flex; gap: 40px; flex-wrap: wrap; }
+    .hero-stat { display: flex; flex-direction: column; }
+    .hero-stat-num { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; color: var(--gold); line-height: 1; }
+    .hero-stat-label { font-size: 0.78rem; color: rgba(245,240,232,0.6); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px; }
+
+    .main { max-width: 1400px; margin: 0 auto; padding: 28px 40px; }
+
+    .controls { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; align-items: flex-end; }
+    .search-wrap { flex: 1; min-width: 220px; position: relative; }
+    .search-wrap input { width: 100%; padding: 10px 14px 10px 40px; border: 2px solid var(--border); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; background: white; color: var(--ink); outline: none; transition: border-color 0.2s; }
+    .search-wrap input:focus { border-color: var(--gold); }
+    .search-icon { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: #aaa; }
+    .filter-group { display: flex; flex-direction: column; gap: 3px; }
+    .filter-label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #999; }
+    select { padding: 9px 28px 9px 11px; border: 2px solid var(--border); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; background: white; color: var(--ink); cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='2' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 9px center; outline: none; transition: border-color 0.2s; min-width: 150px; }
+    select:focus { border-color: var(--gold); }
+    .clear-btn { padding: 9px 16px; background: transparent; border: 2px solid var(--border); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.83rem; color: #999; cursor: pointer; transition: all 0.2s; align-self: flex-end; }
+    .clear-btn:hover { border-color: var(--red); color: var(--red); }
+
+    .results-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+    .results-count { font-size: 0.88rem; color: #777; }
+    .results-count strong { color: var(--ink); font-size: 0.95rem; }
+    .view-toggle { display: flex; border: 2px solid var(--border); border-radius: 6px; overflow: hidden; }
+    .view-btn { padding: 6px 12px; background: white; border: none; cursor: pointer; font-size: 1rem; color: #bbb; transition: all 0.15s; }
+    .view-btn.active { background: var(--ink); color: var(--cream); }
+
+    .school-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; }
+    .school-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 22px; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; }
+    .school-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--band-color, var(--border)); }
+    .school-card:hover { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(26,26,46,0.14); border-color: var(--gold); }
+    .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+    .card-phase { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #999; background: rgba(0,0,0,0.05); padding: 3px 7px; border-radius: 3px; }
+    .score-badge { display: flex; flex-direction: column; align-items: center; background: var(--ink); color: var(--cream); border-radius: 5px; padding: 5px 10px; min-width: 50px; }
+    .score-num { font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 700; line-height: 1; color: var(--gold); }
+    .score-lbl { font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(245,240,232,0.55); }
+    .card-name { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; line-height: 1.3; margin-bottom: 5px; }
+    .card-la { font-size: 0.8rem; color: #999; margin-bottom: 12px; }
+    .card-pills { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px; }
+    .pill { font-size: 0.72rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+    .pill-o { background: #E8F5E9; color: #1B5E20; } .pill-g { background: #E3F2FD; color: #0D47A1; }
+    .pill-r { background: #FFF3E0; color: #E65100; } .pill-i { background: #FFEBEE; color: #B71C1C; }
+    .pill-u { background: #F5F5F5; color: #757575; }
+    .card-meta { display: flex; gap: 14px; font-size: 0.78rem; color: #aaa; border-top: 1px solid var(--border); padding-top: 10px; }
+
+    .school-table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); font-size: 0.865rem; }
+    .school-table th { background: var(--ink); color: var(--cream); padding: 11px 14px; text-align: left; font-weight: 600; font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap; }
+    .school-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    .school-table tr:last-child td { border-bottom: none; }
+    .school-table tr:hover td { background: #FFFBF0; cursor: pointer; }
+    .rank-num { font-family: 'Playfair Display', serif; font-weight: 700; color: var(--gold); font-size: 0.95rem; }
+    .band-chip { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 0.72rem; font-weight: 600; color: white; }
+
+    .map-wrap { border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+    #school-map { height: 560px; width: 100%; }
+    .map-legend { display: flex; gap: 18px; flex-wrap: wrap; font-size: 0.78rem; color: #888; margin-top: 12px; align-items: center; }
+    .map-legend-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 5px; }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; margin-bottom: 24px; }
+    .stat-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 18px; }
+    .stat-card-num { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: var(--ink); line-height: 1; margin-bottom: 4px; }
+    .stat-card-label { font-size: 0.76rem; color: #aaa; text-transform: uppercase; letter-spacing: 0.06em; }
+    .chart-section { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 22px; margin-bottom: 18px; }
+    .chart-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; margin-bottom: 18px; }
+    .bar-chart-row { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
+    .bar-chart-label { font-size: 0.8rem; width: 170px; flex-shrink: 0; color: var(--ink-soft); }
+    .bar-chart-wrap { flex: 1; background: #EDE8DF; border-radius: 3px; height: 20px; overflow: hidden; }
+    .bar-chart-fill { height: 100%; border-radius: 3px; display: flex; align-items: center; padding-left: 7px; font-size: 0.72rem; font-weight: 600; color: white; min-width: 20px; }
+    .bar-chart-count { font-size: 0.78rem; color: #aaa; width: 34px; text-align: right; }
+
+    .pagination { display: flex; justify-content: center; align-items: center; gap: 6px; margin-top: 28px; }
+    .page-btn { width: 34px; height: 34px; border: 2px solid var(--border); border-radius: 6px; background: white; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.83rem; color: var(--ink); transition: all 0.15s; display: flex; align-items: center; justify-content: center; }
+    .page-btn.active { background: var(--ink); color: var(--cream); border-color: var(--ink); font-weight: 700; }
+    .page-btn:hover:not(.active) { border-color: var(--gold); color: var(--gold); }
+    .page-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    .loading { display: flex; align-items: center; justify-content: center; padding: 60px; font-size: 0.9rem; color: #aaa; gap: 10px; }
+    .spinner { width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.6s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg) } }
+    .empty-state { text-align: center; padding: 60px; color: #aaa; }
+    .empty-state h3 { font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 8px; color: #888; }
+
+    /* ── Mobile ── */
+    @media (max-width: 768px) {
+      .hide-mobile { display: none !important; }
+      /* Header */
+      .header { padding: 10px 12px; height: auto; flex-direction: column; align-items: flex-start; gap: 8px; }
+      .header-logo { font-size: 1.1rem; }
+      .header-badge { display: none; }
+      .header-nav { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+      .nav-btn { font-size: 0.75rem; padding: 8px 4px; text-align: center; }
+
+      /* Hero */
+      .hero { padding: 28px 16px 24px; }
+      .hero h1 { font-size: clamp(1.6rem, 7vw, 2.4rem); }
+      .hero-sub { font-size: 0.9rem; margin-bottom: 24px; }
+      .hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px; }
+      .hero-stat-num { font-size: 1.8rem; }
+
+      /* Main content */
+      .main { padding: 12px; }
+
+      /* Filters */
+      .controls { flex-direction: column; gap: 8px; }
+      .search-wrap { min-width: unset; width: 100%; }
+      .filter-group { width: 100%; }
+      select { width: 100%; min-width: unset; }
+      .clear-btn { width: 100%; text-align: center; }
+
+      /* Results header */
+      .results-header { flex-direction: column; gap: 8px; align-items: flex-start; }
+
+      /* Grid */
+      .school-grid { grid-template-columns: 1fr; gap: 12px; }
+      .school-card { padding: 16px; }
+      .card-meta { flex-wrap: wrap; gap: 6px; font-size: 0.72rem; }
+
+      /* Table — hide less important columns */
+      .school-table { font-size: 0.78rem; }
+      .school-table th, .school-table td { padding: 8px 8px; }
+      .school-table th:nth-child(3),
+      .school-table td:nth-child(3),
+      .school-table th:nth-child(6),
+      .school-table td:nth-child(6),
+      .school-table th:nth-child(8),
+      .school-table td:nth-child(8) { display: none; }
+
+      /* Map */
+      #school-map { height: 380px; }
+      .map-legend { gap: 10px; font-size: 0.72rem; }
+
+      /* Stats page */
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .chart-section { padding: 14px; }
+      .bar-chart-label { width: 110px; font-size: 0.72rem; }
+
+      /* Pagination */
+      .page-btn { width: 30px; height: 30px; font-size: 0.78rem; }
+
+      /* Address checker */
+      .ac-search-box { padding: 16px; }
+      .ac-row { flex-direction: column; }
+      .ac-input, .ac-select, .ac-btn { width: 100%; }
+      .ac-school-card { padding: 12px 12px 12px 16px; }
+      #ac-map { height: 240px; }
+    }
+
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 1.5rem; }
+      .hero-stats { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .hero-stat-num { font-size: 1.5rem; }
+      .school-card { padding: 14px; }
+      .card-name { font-size: 0.95rem; }
+      .stats-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── Address Checker ── */
+    .ac-wrap { max-width: 760px; margin: 0 auto; }
+    .ac-search-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 28px; margin-bottom: 24px; }
+    .ac-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; margin-bottom: 6px; }
+    .ac-sub { font-size: 0.84rem; color: #999; margin-bottom: 20px; line-height: 1.5; }
+    .ac-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .ac-input { flex: 1; min-width: 200px; padding: 11px 14px; border: 2px solid var(--border); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; background: white; color: var(--ink); outline: none; transition: border-color 0.2s; }
+    .ac-input:focus { border-color: var(--gold); }
+    .ac-input:disabled { opacity: 0.5; }
+    .ac-select { padding: 11px 28px 11px 11px; border: 2px solid var(--border); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; background: white; color: var(--ink); cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='2' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 9px center; outline: none; transition: border-color 0.2s; }
+    .ac-select:focus { border-color: var(--gold); }
+    .ac-btn { padding: 11px 24px; background: var(--ink); color: var(--gold); border: none; border-radius: 6px; font-family: 'Playfair Display', serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; white-space: nowrap; transition: background 0.2s; }
+    .ac-btn:hover { background: #2D2D44; }
+    .ac-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .ac-status { font-size: 0.83rem; color: #999; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; min-height: 22px; }
+    .ac-spinner { width: 14px; height: 14px; border: 2px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.65s linear infinite; flex-shrink: 0; }
+    .ac-error { background: #FDECEA; color: var(--red); border: 1px solid #F5C6C2; border-radius: 6px; padding: 10px 14px; font-size: 0.83rem; margin-bottom: 16px; }
+    .ac-results-title { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; margin-bottom: 14px; color: var(--ink); }
+    .ac-school-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px 18px; margin-bottom: 12px; display: flex; align-items: flex-start; gap: 16px; transition: all 0.2s; cursor: pointer; position: relative; overflow: hidden; }
+    .ac-school-card::before { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 4px; background: var(--band-color, var(--border)); }
+    .ac-school-card:hover { border-color: var(--gold); box-shadow: 0 4px 20px rgba(26,26,46,0.1); transform: translateY(-1px); }
+    .ac-rank { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; color: var(--gold); min-width: 32px; text-align: center; flex-shrink: 0; line-height: 1; margin-top: 2px; }
+    .ac-school-body { flex: 1; min-width: 0; }
+    .ac-school-name { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; margin-bottom: 3px; line-height: 1.3; }
+    .ac-school-la { font-size: 0.78rem; color: #999; margin-bottom: 8px; }
+    .ac-school-pills { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
+    .ac-school-meta { display: flex; gap: 14px; font-size: 0.76rem; color: #aaa; flex-wrap: wrap; }
+    .ac-score-box { background: var(--ink); color: var(--cream); border-radius: 6px; padding: 8px 12px; text-align: center; flex-shrink: 0; min-width: 60px; }
+    .ac-score-num { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: var(--gold); line-height: 1; }
+    .ac-score-lbl { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(245,240,232,0.5); margin-top: 3px; }
+    .ac-walk { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; min-width: 60px; }
+    .ac-walk-time { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--ink); line-height: 1; }
+    .ac-walk-dist { font-size: 0.67rem; color: #aaa; margin-top: 2px; }
+    .ac-empty { text-align: center; padding: 60px 20px; color: #aaa; }
+    .ac-empty-icon { font-size: 2.5rem; margin-bottom: 12px; }
+    .ac-empty h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: #888; margin-bottom: 8px; }
+    .ac-map { border-radius: 8px; overflow: hidden; border: 1px solid var(--border); margin-bottom: 20px; }
+    #ac-map { height: 320px; width: 100%; }
+    .ac-address-banner { background: var(--ink); color: var(--cream); border-radius: 8px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+    .ac-address-pin { font-size: 1.2rem; }
+    .ac-address-text { font-size: 0.88rem; }
+    .ac-address-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(245,240,232,0.5); margin-bottom: 2px; }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useMemo, useRef, useCallback } = React;
+
+const API_BASE = 'http://localhost:8000';
+const JSON_FALLBACK = './schools.json';
+
+const ENG_ATT8_AVG       = 39.5;
+const ENG_G5_AVG         = 36.8;
+const ENG_KS2_HIGHER_AVG = 7.4;
+const ENG_KS2_EXP_AVG    = 58.4;
+
+const BAND_COLORS = { 'Outstanding':'#27AE60', 'Good':'#2980B9', 'Requires improvement':'#E67E22', 'Inadequate':'#C0392B', 'Ungraded (monitoring)':'#8E44AD', 'Report card (2025+)':'#16A085', 'Not yet rated':'#BDC3C7', 'Unknown':'#95A5A6' };
+const RATING_MAP = { 1:'Outstanding', 2:'Good', 3:'Requires improvement', 4:'Inadequate' };
+const RATING_SCORES = { 1:100, 2:80, 3:40, 4:0 };
+
+// ── SLUGIFY — matches the Python build script exactly ──────────────────────
+function slugify(text) {
+  if (!text) return 'unknown';
+  return text.toString().toLowerCase()
+    .replace(/[''']/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+function schoolUrl(school) {
+  return `/schools/${slugify(school.local_authority)}/${slugify(school.name)}`;
+}
+// ──────────────────────────────────────────────────────────────────────────
+
+function fsmLabel(s) {
+  if (!s) return null;
+  return { text: s.fsm_label, color: s.fsm_color, bg: s.fsm_bg };
+}
+
+function snobeUrl(school) {
+  // Uses verified snobe_url from schools.json set by check_snobe_slugs.py
+  // Slug generation from names is unreliable due to Snobe's -0/-1/-2 suffixes
+  if (!school) return null;
+  return school.snobe_url || null;
+}
+
+const BOROUGHS = [
+  "Barking and Dagenham","Barnet","Bexley","Bromley","Camden",
+  "City of London","Croydon","Ealing","Enfield","Greenwich",
+  "Hackney","Hammersmith and Fulham","Haringey","Harrow","Havering",
+  "Hillingdon","Hounslow","Islington","Kensington and Chelsea",
+  "Kingston upon Thames","Lambeth","Lewisham","Merton","Newham",
+  "Redbridge","Richmond upon Thames","Southwark","Sutton",
+  "Tower Hamlets","Waltham Forest","Wandsworth","Westminster"
+];
+
+function BoroughsGrid() {
+  const typePages = [
+    { label: "Outstanding schools", slug: "outstanding", color: "#1B5E20", bg: "#E8F5E9" },
+    { label: "Good schools",        slug: "good",        color: "#0D47A1", bg: "#E3F2FD" },
+    { label: "Grammar schools",     slug: "grammar",     color: "#4A148C", bg: "#F3E5F5" },
+    { label: "Selective schools",   slug: "selective",   color: "#E65100", bg: "#FFF3E0" },
+    { label: "Faith schools",       slug: "faith",       color: "#1A237E", bg: "#E8EAF6" },
+    { label: "Primary schools",     slug: "primary",     color: "#006064", bg: "#E0F7FA" },
+    { label: "Secondary schools",   slug: "secondary",   color: "#33691E", bg: "#F1F8E9" },
+    { label: "Schools with sixth forms", slug: "sixth-form", color: "#880E4F", bg: "#FCE4EC" },
+  ];
+  return (
+    <div style={{marginTop: '2.5rem'}}>
+      <h2 style={{fontFamily:"'Playfair Display',serif", fontSize:'1.3rem', fontWeight:700, marginBottom:'16px', color:'var(--ink)'}}>Browse by school type</h2>
+      <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(200px, 1fr))', gap:'8px', marginBottom:'2rem'}}>
+        {typePages.map(t => (
+          <a key={t.slug} href={`/schools/${t.slug}`}
+            style={{display:'block', padding:'10px 14px', background:t.bg, border:`1px solid ${t.color}44`, borderRadius:'6px', fontSize:'0.85rem', fontWeight:600, color:t.color, textDecoration:'none', transition:'all 0.15s'}}>
+            {t.label}
+          </a>
+        ))}
+      </div>
+      <h2 style={{fontFamily:"'Playfair Display',serif", fontSize:'1.3rem', fontWeight:700, marginBottom:'16px', color:'var(--ink)'}}>Browse by borough</h2>
+      <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(140px, 1fr))', gap:'8px'}}>
+        {BOROUGHS.map(b => {
+          const slug = b.toLowerCase().replace(/[''']/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+          return (
+            <a key={b} href={`/schools/${slug}`}
+              style={{display:'block', padding:'12px 14px', background:'var(--card-bg)', border:'1px solid var(--border)', borderRadius:'6px', fontSize:'0.85rem', fontWeight:500, color:'var(--ink)', textDecoration:'none', transition:'all 0.15s', minHeight:'44px', display:'flex', alignItems:'center'}}
+              onMouseOver={e=>{e.currentTarget.style.borderColor='var(--gold)';e.currentTarget.style.color='var(--gold)';}}
+              onMouseOut={e=>{e.currentTarget.style.borderColor='var(--border)';e.currentTarget.style.color='var(--ink)';}}>
+              {b}
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function BandChip({ band }) {
+  return <span className="band-chip" style={{ background: BAND_COLORS[band]||'#95A5A6' }}>{band||'Unknown'}</span>;
+}
+
+function RatingBar({ label, raw }) {
+  const text = RATING_MAP[raw]; const score = RATING_SCORES[raw]; if (!text) return null;
+  return (
+    <div className="rating-row">
+      <div className="rating-label">{label}</div>
+      <div className="rating-bar-wrap"><div className="rating-bar-fill" style={{ width:`${score}%`, background:BAND_COLORS[text] }} /></div>
+      <div className="rating-chip" style={{ color:BAND_COLORS[text] }}>{text}</div>
+    </div>
+  );
+}
+
+function MapView({ schools, onSelect }) {
+  const mapInstance = useRef(null);
+  const markersRef = useRef([]);
+
+  useEffect(() => {
+    if (mapInstance.current) return;
+    mapInstance.current = L.map('school-map').setView([51.505, -0.1], 10);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap contributors', maxZoom: 18 }).addTo(mapInstance.current);
+  }, []);
+
+  useEffect(() => {
+    if (!mapInstance.current) return;
+    markersRef.current.forEach(m => m.remove());
+    markersRef.current = [];
+    const withCoords = schools.filter(s => s.lat && s.lng);
+    withCoords.forEach(school => {
+      const band = school.score_band || school.quality_label || 'Unknown';
+      const color = BAND_COLORS[band] || '#95A5A6';
+      const icon = L.divIcon({ className: '', html: `<div style="width:12px;height:12px;border-radius:50%;background:${color};border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.35)"></div>`, iconSize:[12,12], iconAnchor:[6,6] });
+      const marker = L.marker([school.lat, school.lng], { icon }).addTo(mapInstance.current);
+      marker.bindPopup(`<div style="font-family:'DM Sans',sans-serif;min-width:190px"><div style="font-family:'Playfair Display',serif;font-weight:700;font-size:0.95rem;margin-bottom:3px">${school.name}</div><div style="font-size:0.78rem;color:#888;margin-bottom:7px">${school.local_authority} · ${school.postcode}</div><span class="band-chip" style="background:${color};color:white;display:inline-block;padding:2px 7px;border-radius:3px;font-size:0.7rem;font-weight:600">${band}</span><br/><button onclick="window.__sel(${school.urn})" style="display:block;width:100%;text-align:center;padding:7px;background:#1A1A2E;color:#D4A843;border-radius:4px;font-size:0.78rem;font-weight:600;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;margin-top:8px">View Details →</button></div>`);
+      markersRef.current.push(marker);
+    });
+    // ── Map popup button navigates to static page ──
+    window.__sel = (urn) => {
+      const s = schools.find(x => x.urn === urn);
+      if (s) window.location.href = schoolUrl(s);
+    };
+  }, [schools]);
+
+  const withCoords = schools.filter(s => s.lat && s.lng).length;
+  return (
+    <div>
+      <div className="map-wrap"><div id="school-map" /></div>
+      <div className="map-legend">
+        {Object.entries(BAND_COLORS).filter(([b]) => b !== 'Unknown').map(([band, color]) => (
+          <span key={band}><span className="map-legend-dot" style={{background:color}} />{band}</span>
+        ))}
+        <span style={{marginLeft:'auto'}}>{withCoords} of {schools.length} schools mapped</span>
+      </div>
+    </div>
+  );
+}
+
+function StatsPage({ schools, onFilter }) {
+  const [activeFilter, setActiveFilter] = useState(null);
+
+  const byBand = useMemo(() => { const c={}; schools.forEach(s=>{const b=s.score_band||s.quality_label||'Unknown';c[b]=(c[b]||0)+1;}); return c; }, [schools]);
+  const byPhase = useMemo(() => { const c={}; schools.forEach(s=>{c[s.phase||'Unknown']=(c[s.phase||'Unknown']||0)+1;}); return Object.entries(c).filter(([p])=>p!=='Unknown').sort((a,b)=>b[1]-a[1]); }, [schools]);
+  const byLA = useMemo(() => { const c={}; schools.forEach(s=>{c[s.local_authority||'Unknown']=(c[s.local_authority||'Unknown']||0)+1;}); return Object.entries(c).sort((a,b)=>b[1]-a[1]).slice(0,16); }, [schools]);
+  const rated = schools.filter(s=>s.ofsted_score!=null);
+  const avg = rated.length ? Math.round(rated.reduce((a,s)=>a+s.ofsted_score,0)/rated.length) : 0;
+
+  function handleBandClick(band) {
+    onFilter({ type: 'score_band', value: band });
+  }
+  function handlePhaseClick(phase) {
+    onFilter({ type: 'phase', value: phase });
+  }
+  function handleLAClick(la) {
+    onFilter({ type: 'local_authority', value: la });
+  }
+
+  const statCards = [
+    { num: schools.length, label: 'Total Schools', color: '#1A1A2E', onClick: () => onFilter(null) },
+    { num: byBand['Outstanding']||0, label: 'Outstanding', color: '#27AE60', onClick: () => handleBandClick('Outstanding') },
+    { num: byBand['Good']||0, label: 'Good', color: '#2980B9', onClick: () => handleBandClick('Good') },
+    { num: avg, label: 'Avg Score', color: '#D4A843', onClick: null },
+  ];
+
+  return (
+    <div style={{display:'flex', flexDirection:'column', gap:16}}>
+
+      {/* Stat cards — clickable */}
+      <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(140px,1fr))', gap:12}}>
+        {statCards.map(({num,label,color,onClick}) => (
+          <div key={label}
+            onClick={onClick}
+            style={{background:'white', border:`2px solid ${color}33`, borderRadius:10, padding:'16px 14px', cursor:onClick?'pointer':'default', transition:'all 0.15s', textAlign:'center'}}
+            onMouseOver={e=>{ if(onClick) e.currentTarget.style.borderColor=color; }}
+            onMouseOut={e=>{ e.currentTarget.style.borderColor=`${color}33`; }}>
+            <div style={{fontFamily:"'Playfair Display',serif", fontSize:'2rem', fontWeight:700, color, lineHeight:1}}>{num.toLocaleString()}</div>
+            <div style={{fontSize:'0.72rem', color:'#888', textTransform:'uppercase', letterSpacing:'0.06em', marginTop:6}}>{label}</div>
+            {onClick && <div style={{fontSize:'0.68rem', color, marginTop:4, fontWeight:600}}>tap to filter →</div>}
+          </div>
+        ))}
+      </div>
+
+      {/* Ofsted rating bars — clickable */}
+      <div className="chart-section">
+        <div className="chart-title">Schools by Ofsted rating</div>
+        <p style={{fontSize:'0.78rem', color:'#aaa', marginBottom:12}}>Tap a rating to filter the school list</p>
+        {['Outstanding','Good','Requires improvement','Inadequate'].map(band => {
+          const count = byBand[band]||0;
+          if (!count) return null;
+          const pct = Math.round((count/schools.length)*100);
+          return (
+            <div key={band} onClick={() => handleBandClick(band)}
+              style={{display:'flex', alignItems:'center', gap:10, marginBottom:10, cursor:'pointer', padding:'6px 8px', borderRadius:6, transition:'background 0.15s'}}
+              onMouseOver={e=>e.currentTarget.style.background='#F5F0E8'}
+              onMouseOut={e=>e.currentTarget.style.background='transparent'}>
+              <div style={{fontSize:'0.78rem', width:160, flexShrink:0, color:'#333', fontWeight:500}}>{band}</div>
+              <div style={{flex:1, background:'#EDE8DF', borderRadius:4, height:24, overflow:'hidden', position:'relative'}}>
+                <div style={{width:`${pct}%`, height:'100%', background:BAND_COLORS[band], borderRadius:4, display:'flex', alignItems:'center', paddingLeft:8, minWidth:32}}>
+                  <span style={{fontSize:'0.72rem', fontWeight:700, color:'white'}}>{pct > 8 ? `${pct}%` : ''}</span>
+                </div>
+              </div>
+              <div style={{fontSize:'0.8rem', color:'#888', width:36, textAlign:'right', fontWeight:600}}>{count}</div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Phase bars — clickable */}
+      <div className="chart-section">
+        <div className="chart-title">Schools by phase</div>
+        <p style={{fontSize:'0.78rem', color:'#aaa', marginBottom:12}}>Tap a phase to filter the school list</p>
+        {byPhase.map(([phase,count]) => {
+          const pct = Math.round((count/byPhase[0][1])*100);
+          return (
+            <div key={phase} onClick={() => handlePhaseClick(phase)}
+              style={{display:'flex', alignItems:'center', gap:10, marginBottom:10, cursor:'pointer', padding:'6px 8px', borderRadius:6, transition:'background 0.15s'}}
+              onMouseOver={e=>e.currentTarget.style.background='#F5F0E8'}
+              onMouseOut={e=>e.currentTarget.style.background='transparent'}>
+              <div style={{fontSize:'0.78rem', width:160, flexShrink:0, color:'#333', fontWeight:500}}>{phase}</div>
+              <div style={{flex:1, background:'#EDE8DF', borderRadius:4, height:24, overflow:'hidden'}}>
+                <div style={{width:`${pct}%`, height:'100%', background:'#1A1A2E', borderRadius:4, display:'flex', alignItems:'center', paddingLeft:8, minWidth:32}}>
+                  <span style={{fontSize:'0.72rem', fontWeight:700, color:'#D4A843'}}>{count}</span>
+                </div>
+              </div>
+              <div style={{fontSize:'0.8rem', color:'#888', width:36, textAlign:'right', fontWeight:600}}>{count}</div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Borough bars — clickable */}
+      <div className="chart-section">
+        <div className="chart-title">Schools by borough</div>
+        <p style={{fontSize:'0.78rem', color:'#aaa', marginBottom:12}}>Tap a borough to filter the school list</p>
+        {byLA.map(([la,count]) => {
+          const pct = Math.round((count/byLA[0][1])*100);
+          return (
+            <div key={la} onClick={() => handleLAClick(la)}
+              style={{display:'flex', alignItems:'center', gap:10, marginBottom:10, cursor:'pointer', padding:'6px 8px', borderRadius:6, transition:'background 0.15s'}}
+              onMouseOver={e=>e.currentTarget.style.background='#F5F0E8'}
+              onMouseOut={e=>e.currentTarget.style.background='transparent'}>
+              <div style={{fontSize:'0.78rem', width:160, flexShrink:0, color:'#333', fontWeight:500}}>{la}</div>
+              <div style={{flex:1, background:'#EDE8DF', borderRadius:4, height:24, overflow:'hidden'}}>
+                <div style={{width:`${pct}%`, height:'100%', background:'#D4A843', borderRadius:4, display:'flex', alignItems:'center', paddingLeft:8, minWidth:32}}>
+                  <span style={{fontSize:'0.72rem', fontWeight:700, color:'#1A1A2E'}}>{count}</span>
+                </div>
+              </div>
+              <div style={{fontSize:'0.8rem', color:'#888', width:36, textAlign:'right', fontWeight:600}}>{count}</div>
+            </div>
+          );
+        })}
+      </div>
+
+    </div>
+  );
+}
+
+function ScoreCard({ school }) {
+  const band = school.score_band || school.quality_label || 'Unknown';
+  const color = BAND_COLORS[band] || '#ccc';
+  const admissions = school.admissions;
+  const showAdmissions = admissions && admissions !== 'Not applicable';
+  const admissionsStyle = admissions === 'Selective'
+    ? { background:'#FFF8E1', color:'#E65100', border:'1px solid #FFE082' }
+    : { background:'#F3F4F6', color:'#374151', border:'1px solid #D1D5DB' };
+  const score = school.ofsted_score;
+
+  // ── Navigate to pre-rendered static page ──
+  function handleClick() {
+    window.location.href = schoolUrl(school);
+  }
+
+  return (
+    <div className="school-card" style={{'--band-color': color}} onClick={handleClick}>
+      <div className="card-top">
+        <span className="card-phase">{school.phase}</span>
+        {showAdmissions && (
+          <span className="pill" style={admissionsStyle}>
+            {admissions === 'Selective' ? '🎓 Selective' : admissions}
+          </span>
+        )}
+      </div>
+      <div className="card-name">{school.name}</div>
+      <div className="card-la">📍 {school.local_authority} · {school.postcode}</div>
+      <div style={{display:'flex', alignItems:'center', gap:10, margin:'10px 0 12px'}}>
+        <div className="score-badge" style={{background: score != null ? 'var(--ink)' : '#555', marginRight:2, flexShrink:0}}>
+          <span className="score-num" style={{color: score != null ? 'var(--gold)' : '#aaa', fontSize: score != null ? '1.25rem' : '0.85rem'}}>
+            {score != null ? score : '—'}
+          </span>
+          <span className="score-lbl">{score != null ? 'Score' : 'Unrated'}</span>
+        </div>
+        <div style={{flex:1, background:'#EDE8DF', borderRadius:4, height:6, overflow:'hidden'}}>
+          <div style={{width:`${score??0}%`, height:'100%', background:color, borderRadius:4, transition:'width 0.4s'}} />
+        </div>
+        <span style={{fontSize:'0.78rem', fontWeight:700, color, minWidth:90, textAlign:'right'}}>
+          {band}
+        </span>
+      </div>
+      <div className="card-pills">
+        {school.sixth_form === 'Has a sixth form' && <span className="pill" style={{background:'#EDE7F6',color:'#4527A0'}}>Sixth Form</span>}
+        {school.gender && school.gender !== 'Mixed' && <span className="pill" style={{background:'#FCE4EC',color:'#880E4F'}}>{school.gender}</span>}
+        {school.religious_character && school.religious_character !== 'Does not apply' && school.religious_character !== 'None' && (
+          <span className="pill" style={{background:'#E8F5E9',color:'#2E7D32'}}>⛪ {school.religious_character}</span>
+        )}
+      </div>
+      <div className="card-meta">
+        <span>👥 {school.pupils??'—'} pupils</span>
+        {school.apps_per_place != null && (() => {
+          const r = school.apps_per_place;
+          const c = r > 3 ? '#C0392B' : r > 1.5 ? '#E67E22' : r > 1 ? '#F39C12' : '#27AE60';
+          return <span style={{color:c,fontWeight:600}} title="First-choice applications per place (2024)">🎯 {r}× oversubscribed</span>;
+        })()}
+        {school.crime_label && (() => {
+          const c = school.crime_score >= 80 ? '#27AE60' : school.crime_score >= 60 ? '#2980B9' : school.crime_score >= 40 ? '#F57F17' : '#E67E22';
+          return <span style={{color:c,fontSize:'0.76rem',fontWeight:500}} title="Crime within 500m">🔒 {school.crime_label}</span>;
+        })()}
+        {school.apps_per_place == null && school.inspection_date && <span>📅 {school.inspection_date}</span>}
+        {school.ks4_att8 != null && <span style={{color: school.ks4_att8 >= ENG_ATT8_AVG ? '#27AE60' : '#E67E22', fontWeight:500, fontSize:'0.76rem'}} title="Attainment 8 score (2024)">📚 Att8: {school.ks4_att8}</span>}
+        {school.ks2_higher_pct != null && !school.ks4_att8 && <span style={{color: school.ks2_higher_pct >= ENG_KS2_HIGHER_AVG ? '#27AE60' : '#E67E22', fontWeight:500, fontSize:'0.76rem'}} title="% achieving higher standard KS2 (2024)">📚 Higher std: {school.ks2_higher_pct}%</span>}
+      </div>
+    </div>
+  );
+}
+
+// ── Address Checker ───────────────────────────────────────────────────────────
+const VERCEL_API = 'https://london-school-model.vercel.app/api';
+
+function haversineKm(lat1, lng1, lat2, lng2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+function kmToMiles(km) { return (km * 0.621371).toFixed(2); }
+function kmToWalkMins(km) { return Math.round(km / 0.08); }
+
+function AddressChecker({ schools, initialPostcode, initialCoords }) {
+  const [address, setAddress]   = useState(initialPostcode || '');
+  const [phase, setPhase]       = useState('');
+  const [radius, setRadius]     = useState('1');
+  const [loading, setLoading]   = useState(false);
+  const [error, setError]       = useState(null);
+  const [results, setResults]   = useState(null);
+  const [locating, setLocating] = useState(false);
+  const mapRef = useRef(null);
+  const mapInstanceRef = useRef(null);
+  const markersRef = useRef([]);
+
+  // Auto-trigger from postcode
+  useEffect(() => {
+    if (initialPostcode && initialPostcode.trim()) {
+      doCheck(initialPostcode.trim());
+    }
+  }, [initialPostcode]);
+
+  // Auto-trigger from geolocation coords
+  useEffect(() => {
+    if (initialCoords) {
+      doCheckByCoords(initialCoords.lat, initialCoords.lng);
+    }
+  }, [initialCoords]);
+
+  function handleGeolocate() {
+    if (!navigator.geolocation) {
+      setError('Geolocation is not supported by your browser.');
+      return;
+    }
+    setLocating(true);
+    setError(null);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setLocating(false);
+        doCheckByCoords(pos.coords.latitude, pos.coords.longitude);
+      },
+      () => {
+        setLocating(false);
+        setError('Could not get your location. Please enter your postcode instead.');
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  }
+
+  async function doCheckByCoords(lat, lng) {
+    setError(null); setLoading(true); setResults(null);
+    try {
+      // Reverse geocode to get a readable address
+      // Reverse geocode to get a postcode — Google Maps uses this as a
+      // fixed address origin, preventing GPS from overriding the location
+      let formattedAddress = `${lat.toFixed(5)},${lng.toFixed(5)}`;
+      try {
+        const rev = await fetch(`https://api.postcodes.io/postcodes?lon=${lng}&lat=${lat}&limit=1`);
+        if (rev.ok) {
+          const revData = await rev.json();
+          if (revData.result && revData.result.length > 0) {
+            const r = revData.result[0];
+            formattedAddress = r.postcode; // just the postcode — cleaner for Maps
+          }
+        }
+      } catch {}
+
+      const radiusKm = parseFloat(radius) * 1.60934;
+      let nearby = schools
+        .filter(s => s.lat && s.lng)
+        .map(s => ({ ...s, distKm: haversineKm(lat, lng, s.lat, s.lng) }))
+        .filter(s => s.distKm <= radiusKm);
+      if (phase) nearby = nearby.filter(s => s.phase === phase);
+      nearby.sort((a, b) => (b.ofsted_score ?? -1) - (a.ofsted_score ?? -1) || a.distKm - b.distKm);
+      setResults({ schools: nearby.slice(0, 15), lat, lng, formatted: formattedAddress });
+    } catch(e) {
+      setError('Could not find nearby schools. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const phases = useMemo(() => [...new Set(schools.map(s=>s.phase).filter(Boolean))].sort(), [schools]);
+
+  async function doCheck(overridePostcode) {
+    const query = overridePostcode || address;
+    if (!query.trim()) { setError('Please enter an address or postcode.'); return; }
+    setError(null); setLoading(true); setResults(null);
+    try {
+      let lat, lng, formattedAddress;
+      const postcode = query.trim().replace(/\s+/g, '').toUpperCase();
+      const pcRes = await fetch(`https://api.postcodes.io/postcodes/${postcode}`);
+      if (pcRes.ok) {
+        const pcData = await pcRes.json();
+        lat = pcData.result.latitude; lng = pcData.result.longitude;
+        formattedAddress = pcData.result.postcode; // just postcode — cleaner Google Maps origin
+      } else {
+        const pcPartial = await fetch(`https://api.postcodes.io/postcodes/${postcode}/autocomplete`);
+        if (pcPartial.ok) {
+          const pcPartialData = await pcPartial.json();
+          if (pcPartialData.result?.length) {
+            const full = pcPartialData.result[0];
+            const fullRes = await fetch(`https://api.postcodes.io/postcodes/${full}`);
+            const fullData = await fullRes.json();
+            lat = fullData.result.latitude; lng = fullData.result.longitude;
+            formattedAddress = `${fullData.result.postcode}, ${fullData.result.admin_district}`;
+          } else throw new Error('Postcode not found. Try a full London postcode like N1 2PL.');
+        } else throw new Error('Postcode not found. Try a full London postcode like N1 2PL.');
+      }
+      const radiusKm = parseFloat(radius) * 1.60934;
+      let nearby = schools
+        .filter(s => s.lat && s.lng)
+        .map(s => ({ ...s, distKm: haversineKm(lat, lng, s.lat, s.lng) }))
+        .filter(s => s.distKm <= radiusKm);
+      if (phase) nearby = nearby.filter(s => s.phase === phase);
+      nearby.sort((a, b) => (b.ofsted_score ?? -1) - (a.ofsted_score ?? -1) || a.distKm - b.distKm);
+      setResults({ schools: nearby.slice(0, 15), lat, lng, formatted: formattedAddress });
+    } catch(e) {
+      setError(e.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    if (!results || !mapRef.current) return;
+    if (!mapInstanceRef.current) {
+      mapInstanceRef.current = L.map('ac-map').setView([results.lat, results.lng], 14);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap', maxZoom: 18 }).addTo(mapInstanceRef.current);
+    } else {
+      mapInstanceRef.current.setView([results.lat, results.lng], 14);
+    }
+    markersRef.current.forEach(m => m.remove());
+    markersRef.current = [];
+    const userIcon = L.divIcon({ className: '', html: `<div style="width:16px;height:16px;border-radius:50%;background:#D4A843;border:3px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.4)"></div>`, iconSize:[16,16], iconAnchor:[8,8] });
+    markersRef.current.push(L.marker([results.lat, results.lng], { icon: userIcon }).addTo(mapInstanceRef.current).bindPopup('Your address'));
+    results.schools.forEach(s => {
+      const band = s.score_band || s.quality_label || 'Unknown';
+      const color = BAND_COLORS[band] || '#95A5A6';
+      const icon = L.divIcon({ className: '', html: `<div style="width:11px;height:11px;border-radius:50%;background:${color};border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.3)"></div>`, iconSize:[11,11], iconAnchor:[5,5] });
+      const marker = L.marker([s.lat, s.lng], { icon }).addTo(mapInstanceRef.current);
+      marker.bindPopup(`<div style="font-family:'DM Sans',sans-serif;min-width:160px"><b style="font-family:'Playfair Display',serif">${s.name}</b><br/><span style="font-size:0.75rem;color:#888">${s.phase} · ${kmToMiles(s.distKm)} mi</span><br/><span style="background:${color};color:white;display:inline-block;padding:1px 6px;border-radius:3px;font-size:0.7rem;margin-top:4px">${band}</span></div>`);
+      markersRef.current.push(marker);
+    });
+  }, [results]);
+
+  return (
+    <div className="ac-wrap">
+      <div className="ac-search-box">
+        <div className="ac-title">Address Checker</div>
+        <div className="ac-sub">Enter a London postcode to see every nearby school ranked by Ofsted rating, exam results and admissions data.</div>
+        <div className="ac-row">
+          <input className="ac-input" type="text" placeholder="London postcode (e.g. N1 2PL, SW1A 1AA)" value={address} onChange={e=>setAddress(e.target.value)} onKeyDown={e=>e.key==='Enter'&&doCheck()} />
+          <select className="ac-select" value={radius} onChange={e=>setRadius(e.target.value)}>
+            <option value="0.5">½ mile</option>
+            <option value="1">1 mile</option>
+            <option value="1.5">1.5 miles</option>
+            <option value="2">2 miles</option>
+            <option value="3">3 miles</option>
+          </select>
+          <select className="ac-select" value={phase} onChange={e=>setPhase(e.target.value)}>
+            <option value="">All phases</option>
+            {phases.map(p=><option key={p} value={p}>{p}</option>)}
+          </select>
+          <button className="ac-btn" onClick={()=>doCheck()} disabled={loading}>{loading ? 'Checking…' : 'Search →'}</button>
+        </div>
+        <div style={{marginTop:'10px'}}>
+          <button
+            onClick={handleGeolocate}
+            disabled={locating || loading}
+            style={{display:'flex', alignItems:'center', gap:'6px', background:'transparent', border:'1px solid var(--border)', borderRadius:'6px', padding:'8px 14px', fontFamily:"'DM Sans',sans-serif", fontSize:'0.85rem', color:'var(--ink)', cursor:'pointer', transition:'all 0.2s'}}
+            onMouseOver={e=>{e.currentTarget.style.borderColor='var(--gold)';e.currentTarget.style.color='var(--gold)';}}
+            onMouseOut={e=>{e.currentTarget.style.borderColor='var(--border)';e.currentTarget.style.color='var(--ink)';}}>
+            {locating ? '📍 Getting your location…' : '📍 Use my current location'}
+          </button>
+        </div>
+      </div>
+      {loading && <div className="ac-status"><div className="ac-spinner"/>Finding nearby schools…</div>}
+      {error && <div className="ac-error">⚠ {error}</div>}
+      {results && (
+        <>
+          <div className="ac-address-banner">
+            <span className="ac-address-pin">📍</span>
+            <div>
+              <div className="ac-address-label">Your address</div>
+              <div className="ac-address-text">{results.formatted}</div>
+            </div>
+            <span style={{marginLeft:'auto',fontSize:'0.83rem',color:'rgba(245,240,232,0.6)'}}>
+              {results.schools.length} school{results.schools.length!==1?'s':''} within {radius} mile{radius!=='1'?'s':''}
+            </span>
+          </div>
+          <div className="ac-map" ref={mapRef}><div id="ac-map"/></div>
+          {results.schools.length === 0 ? (
+            <div className="ac-empty">
+              <div className="ac-empty-icon">🏫</div>
+              <h3>No schools found</h3>
+              <p>Try increasing the radius or removing the phase filter.</p>
+            </div>
+          ) : (
+            <>
+              <div className="ac-results-title">Schools ranked by composite score</div>
+              {results.schools.map((s, i) => {
+                const band = s.score_band || s.quality_label || 'Unknown';
+                const color = BAND_COLORS[band] || '#95A5A6';
+                const walkMins = kmToWalkMins(s.distKm);
+                const distMiles = kmToMiles(s.distKm);
+                const oversubRatio = s.apps_per_place;
+                const isHighlyOversubscribed = oversubRatio > 3;
+                const isMedOversubscribed = oversubRatio > 1.5 && oversubRatio <= 3;
+                const oversubColor = isHighlyOversubscribed ? '#C0392B' : isMedOversubscribed ? '#E67E22' : '#27AE60';
+                const oversubBg   = isHighlyOversubscribed ? '#FDECEA' : isMedOversubscribed ? '#FFF3E0' : '#E8F5E9';
+                const hasKS4 = s.ks4_att8 != null;
+                const hasKS2 = s.ks2_higher_pct != null;
+                const att8Above = hasKS4 && s.ks4_att8 >= ENG_ATT8_AVG;
+                const ks2Above  = hasKS2 && s.ks2_higher_pct >= ENG_KS2_HIGHER_AVG;
+                const suitParts = [
+                  s.gender && s.gender !== 'Mixed' ? s.gender : 'Mixed',
+                  s.age_from != null && s.age_to != null ? `Ages ${s.age_from}–${s.age_to}` : null,
+                  s.sixth_form === 'Has a sixth form' ? 'Sixth form' : null,
+                  s.religious_character && s.religious_character !== 'Does not apply' && s.religious_character !== 'None' ? s.religious_character : null,
+                ].filter(Boolean).join(' · ');
+
+                return (
+                  <div key={s.urn} className="ac-school-card" style={{'--band-color': color}}
+                    onClick={() => { window.location.href = schoolUrl(s); }}>
+                    <div className="ac-rank">#{i+1}</div>
+                    <div className="ac-school-body">
+                      <div className="ac-school-name">{s.name}</div>
+                      <div className="ac-school-la">📍 {s.local_authority} · {s.postcode}</div>
+                      {suitParts && <div style={{fontSize:'0.76rem',color:'#888',marginBottom:8}}>{suitParts}</div>}
+                      <div className="ac-school-pills">
+                        <span className="band-chip" style={{background:color}}>{band}</span>
+                        <span className="pill" style={{background:'#F5F5F5',color:'#555',border:'1px solid #ddd'}}>{s.phase}</span>
+                        {s.admissions==='Selective'&&<span className="pill" style={{background:'#FFF8E1',color:'#E65100',border:'1px solid #FFE082'}}>🎓 Selective</span>}
+                        {oversubRatio != null && (
+                          <span className="pill" style={{background:oversubBg, color:oversubColor, border:`1px solid ${oversubColor}44`, fontWeight:600}}>
+                            {isHighlyOversubscribed ? '⚠ ' : ''}{oversubRatio}× {isHighlyOversubscribed ? 'Highly oversubscribed' : isMedOversubscribed ? 'Oversubscribed' : 'Low demand'}
+                          </span>
+                        )}
+                      </div>
+                      {(hasKS4 || hasKS2) && (
+                        <div style={{display:'flex', gap:10, margin:'6px 0 8px', flexWrap:'wrap'}}>
+                          {hasKS4 && (
+                            <div style={{background: att8Above?'#E8F5E9':'#FFF3E0', border:`1px solid ${att8Above?'#A5D6A7':'#FFCC80'}`, borderRadius:5, padding:'4px 10px', fontSize:'0.74rem'}}>
+                              <span style={{color:'#888', marginRight:4}}>Attainment 8</span>
+                              <span style={{fontWeight:700, color: att8Above?'#27AE60':'#E67E22'}}>{s.ks4_att8}</span>
+                              <span style={{color:'#aaa', marginLeft:3, fontSize:'0.68rem'}}>/ eng avg {ENG_ATT8_AVG}</span>
+                            </div>
+                          )}
+                          {hasKS2 && (
+                            <div style={{background: ks2Above?'#E8F5E9':'#FFF3E0', border:`1px solid ${ks2Above?'#A5D6A7':'#FFCC80'}`, borderRadius:5, padding:'4px 10px', fontSize:'0.74rem'}}>
+                              <span style={{color:'#888', marginRight:4}}>KS2 higher std</span>
+                              <span style={{fontWeight:700, color: ks2Above?'#27AE60':'#E67E22'}}>{s.ks2_higher_pct}%</span>
+                              <span style={{color:'#aaa', marginLeft:3, fontSize:'0.68rem'}}>/ eng avg {ENG_KS2_HIGHER_AVG}%</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                      <div className="ac-school-meta">
+                        {s.pupils!=null&&<span>👥 {s.pupils} pupils</span>}
+                        {s.inspection_date&&<span>📅 Inspected {s.inspection_date}</span>}
+                        {s.crime_label&&<span>🔒 {s.crime_label}</span>}
+                        {s.fsm_label&&<span title="Free school meals — deprivation indicator">📊 {s.fsm_label}</span>}
+                      </div>
+                    </div>
+                    <div style={{display:'flex', flexDirection:'column', gap:8, alignItems:'center', flexShrink:0}}>
+                      <div className="ac-score-box">
+                        <div className="ac-score-num">{s.ofsted_score??'—'}</div>
+                        <div className="ac-score-lbl">Score</div>
+                      </div>
+                      <div className="ac-walk">
+                        <div className="ac-walk-time">{walkMins} min</div>
+                        <div className="ac-walk-dist">{distMiles} mi walk</div>
+                      </div>
+                      {results.lat && results.lng && s.lat && s.lng && (
+                        <a
+                          href={`https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lng}&travelmode=walking`}
+                          target="_blank"
+                          rel="noopener"
+                          onClick={e => e.stopPropagation()}
+                          title="Walking directions"
+                          style={{display:'flex',flexDirection:'column',alignItems:'center',gap:2,padding:'6px 8px',background:'#E8F5E9',borderRadius:6,textDecoration:'none',border:'1px solid #A5D6A7',flexShrink:0}}>
+                          <span style={{fontSize:'1rem'}}>🚶</span>
+                          <span style={{fontSize:'0.62rem',color:'#27AE60',fontWeight:600,whiteSpace:'nowrap'}}>Walk</span>
+                        </a>
+                      )}
+                      {results.lat && results.lng && s.lat && s.lng && (
+                        <a
+                          href={`https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lng}&travelmode=transit`}
+                          target="_blank"
+                          rel="noopener"
+                          onClick={e => e.stopPropagation()}
+                          title="Public transport directions"
+                          style={{display:'flex',flexDirection:'column',alignItems:'center',gap:2,padding:'6px 8px',background:'#E3F2FD',borderRadius:6,textDecoration:'none',border:'1px solid #90CAF9',flexShrink:0}}>
+                          <span style={{fontSize:'1rem'}}>🚌</span>
+                          <span style={{fontSize:'0.62rem',color:'#1565C0',fontWeight:600,whiteSpace:'nowrap'}}>Bus/Tube</span>
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </>
+          )}
+        </>
+      )}
+      {!results && !loading && (
+        <div className="ac-empty">
+          <div className="ac-empty-icon">🗺</div>
+          <h3>Enter a postcode above</h3>
+          <p>We'll show you every school within your chosen radius, ranked by our composite Ofsted score.</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function App() {
+  const [view, setView] = useState('schools');
+  const [displayMode, setDisplayMode] = useState(window.innerWidth < 768 ? 'grid' : 'grid');
+  const [schools, setSchools] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const PAGE_SIZE = 24;
+  const [filters, setFilters] = useState({ q:'', phase:'', local_authority:'', score_band:'' });
+
+  useEffect(() => {
+    async function load() {
+      try { const r = await fetch(`${API_BASE}/schools?limit=500`); if (!r.ok) throw new Error(); const d = await r.json(); setSchools(d.schools); setLoading(false); return; } catch {}
+      try { const r = await fetch(JSON_FALLBACK); if (!r.ok) throw new Error(); const d = await r.json(); setSchools(d); } catch { console.warn('Could not load school data.'); }
+      setLoading(false);
+    }
+    load();
+  }, []);
+
+  const phases = useMemo(() => [...new Set(schools.map(s=>s.phase).filter(Boolean))].sort(), [schools]);
+  const localAuthorities = useMemo(() => [...new Set(schools.map(s=>s.local_authority).filter(Boolean))].sort(), [schools]);
+  const filtered = useMemo(() => {
+    let r = schools;
+    if (filters.q) r = r.filter(s => s.name.toLowerCase().includes(filters.q.toLowerCase()) || (s.postcode||'').toLowerCase().includes(filters.q.toLowerCase()));
+    if (filters.phase) r = r.filter(s => s.phase === filters.phase);
+    if (filters.local_authority) r = r.filter(s => s.local_authority === filters.local_authority);
+    if (filters.score_band) r = r.filter(s => (s.score_band||s.quality_label) === filters.score_band);
+    return r.sort((a,b) => (b.ofsted_score??-1)-(a.ofsted_score??-1));
+  }, [schools, filters]);
+
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  const paged = filtered.slice((page-1)*PAGE_SIZE, page*PAGE_SIZE);
+  const setFilter = useCallback((k,v) => { setFilters(f=>({...f,[k]:v})); setPage(1); }, []);
+  const clearFilters = () => { setFilters({q:'',phase:'',local_authority:'',score_band:''}); setPage(1); };
+  const hasFilters = filters.q || filters.phase || filters.local_authority || filters.score_band;
+  const stats = useMemo(() => {
+    const rated = schools.filter(s=>s.ofsted_score!=null);
+    return { total:schools.length, outstanding:schools.filter(s=>(s.score_band||s.quality_label)==='Outstanding').length, avg:rated.length?Math.round(rated.reduce((a,s)=>a+s.ofsted_score,0)/rated.length):0 };
+  }, [schools]);
+
+  const [heroPostcode, setHeroPostcode] = useState('');
+  const [geoCoords, setGeoCoords] = useState(null);
+
+  return (
+    <>
+      <header className="header">
+        <div className="header-logo">🏛 London <span>Schools</span><div className="header-badge">Explorer</div></div>
+        <nav className="header-nav">
+          {[['checker','📍 Near Me'],['schools','📋 Schools'],['map','🗺 Map'],['stats','📊 Stats']].map(([v,label]) => (
+            <button key={v} className={`nav-btn ${view===v?'active':''}`} onClick={() => setView(v)}>{label}</button>
+          ))}
+          <a href="/appeals" className="nav-btn" style={{textDecoration:'none',display:'inline-flex',alignItems:'center'}}>⚖️ Appeals</a>
+        </nav>
+      </header>
+
+      <section className="hero">
+        <div className="hero-eyebrow">Ofsted Data · 32 London Boroughs</div>
+        <h1>Find the right school<br />in <em>London</em></h1>
+        <p className="hero-sub">Enter your postcode to instantly see every school near you, ranked by Ofsted rating, exam results and admissions data.</p>
+        <div style={{display:'flex', gap:'8px', flexWrap:'wrap', marginBottom:'32px', maxWidth:'520px'}}>
+          <input
+            type="text"
+            value={heroPostcode}
+            onChange={e => setHeroPostcode(e.target.value)}
+            onKeyDown={e => { if(e.key==='Enter') setView('checker'); }}
+            placeholder="e.g. N1 2PL, SW1A 1AA"
+            style={{flex:1, minWidth:'180px', padding:'13px 16px', borderRadius:'8px', border:'none', fontSize:'1rem', fontFamily:"'DM Sans',sans-serif", outline:'none', color:'#1A1A2E'}}
+          />
+          <button
+            onClick={() => setView('checker')}
+            style={{padding:'13px 22px', background:'var(--gold)', color:'var(--ink)', border:'none', borderRadius:'8px', fontFamily:"'Playfair Display',serif", fontWeight:700, fontSize:'1rem', cursor:'pointer', whiteSpace:'nowrap'}}>
+            Find schools →
+          </button>
+          <button
+            onClick={() => {
+              if (!navigator.geolocation) {
+                alert('Geolocation is not supported by your browser.');
+                return;
+              }
+              navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                  const { latitude: lat, longitude: lng } = pos.coords;
+                  setGeoCoords({ lat, lng });
+                  setView('checker');
+                },
+                (err) => {
+                  alert('Could not get your location. Please enter your postcode instead.');
+                },
+                { enableHighAccuracy: true, timeout: 10000 }
+              );
+            }}
+            title="Use my current location"
+            style={{padding:'13px 16px', background:'rgba(255,255,255,0.12)', color:'var(--cream)', border:'1px solid rgba(255,255,255,0.25)', borderRadius:'8px', fontSize:'1.1rem', cursor:'pointer', whiteSpace:'nowrap'}}>
+            📍
+          </button>
+        </div>
+        <div className="hero-stats">
+          {[{n:stats.total,l:'London Schools'},{n:stats.outstanding,l:'Outstanding'},{n:stats.avg,l:'Avg Ofsted Score'},{n:32,l:'Boroughs'}].map(({n,l}) => (
+            <div key={l} className="hero-stat"><span className="hero-stat-num">{n}</span><span className="hero-stat-label">{l}</span></div>
+          ))}
+        </div>
+      </section>
+
+      <main className="main">
+        {loading ? (
+          <div className="loading"><div className="spinner" /> Loading schools...</div>
+        ) : view === 'checker' ? (
+          <AddressChecker schools={schools} initialPostcode={heroPostcode} initialCoords={geoCoords} />
+        ) : view === 'stats' ? (
+          <StatsPage schools={schools} onFilter={(f) => {
+            if (!f) { clearFilters(); setView('schools'); return; }
+            setFilter(f.type, f.value);
+            setView('schools');
+          }} />
+        ) : view === 'map' ? (
+          <>
+            <div className="controls" style={{marginBottom:16}}>
+              <div className="search-wrap"><span className="search-icon">🔍</span><input type="text" placeholder="Filter map by name or postcode..." value={filters.q} onChange={e => setFilter('q', e.target.value)} /></div>
+              <div className="filter-group"><span className="filter-label">Phase</span><select value={filters.phase} onChange={e => setFilter('phase', e.target.value)}><option value="">All phases</option>{phases.map(p=><option key={p} value={p}>{p}</option>)}</select></div>
+              <div className="filter-group"><span className="filter-label">Borough</span><select value={filters.local_authority} onChange={e => setFilter('local_authority', e.target.value)}><option value="">All boroughs</option>{localAuthorities.map(la=><option key={la} value={la}>{la}</option>)}</select></div>
+              <div className="filter-group"><span className="filter-label">Rating</span><select value={filters.score_band} onChange={e => setFilter('score_band', e.target.value)}><option value="">All ratings</option>{['Outstanding','Good','Requires improvement','Inadequate','Ungraded (monitoring)','Report card (2025+)'].map(b=><option key={b} value={b}>{b}</option>)}</select></div>
+              {hasFilters && <button className="clear-btn" onClick={clearFilters}>✕ Clear</button>}
+            </div>
+            <MapView schools={filtered} onSelect={() => {}} />
+          </>
+        ) : (
+          <>
+            <div className="controls">
+              <div className="search-wrap"><span className="search-icon">🔍</span><input type="text" placeholder="Search by name or postcode..." value={filters.q} onChange={e => setFilter('q', e.target.value)} /></div>
+              <div className="filter-group"><span className="filter-label">Phase</span><select value={filters.phase} onChange={e => setFilter('phase', e.target.value)}><option value="">All phases</option>{phases.map(p=><option key={p} value={p}>{p}</option>)}</select></div>
+              <div className="filter-group"><span className="filter-label">Borough</span><select value={filters.local_authority} onChange={e => setFilter('local_authority', e.target.value)}><option value="">All boroughs</option>{localAuthorities.map(la=><option key={la} value={la}>{la}</option>)}</select></div>
+              <div className="filter-group"><span className="filter-label">Rating</span><select value={filters.score_band} onChange={e => setFilter('score_band', e.target.value)}><option value="">All ratings</option>{['Outstanding','Good','Requires improvement','Inadequate','Ungraded (monitoring)','Report card (2025+)'].map(b=><option key={b} value={b}>{b}</option>)}</select></div>
+              {hasFilters && <button className="clear-btn" onClick={clearFilters}>✕ Clear</button>}
+            </div>
+            <div className="results-header">
+              <div className="results-count">Showing <strong>{filtered.length}</strong> school{filtered.length!==1?'s':''}{schools.length!==filtered.length?` of ${schools.length}`:''}</div>
+              <div className="view-toggle" style={{display: window.innerWidth < 600 ? 'none' : 'flex'}}>
+                <button className={`view-btn ${displayMode==='grid'?'active':''}`} onClick={() => setDisplayMode('grid')}>⊞</button>
+                <button className={`view-btn ${displayMode==='table'?'active':''}`} onClick={() => setDisplayMode('table')}>☰</button>
+              </div>
+            </div>
+            {filtered.length === 0 ? (
+              <div className="empty-state"><h3>No schools found</h3><p>Try adjusting your filters.</p></div>
+            ) : displayMode === 'grid' ? (
+              <div className="school-grid">{paged.map(s => <ScoreCard key={s.urn} school={s} />)}</div>
+            ) : (
+              <table className="school-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>School</th>
+                    <th className="hide-mobile">Borough</th>
+                    <th className="hide-mobile">Phase</th>
+                    <th>Ofsted</th>
+                    <th className="hide-mobile">Admissions</th>
+                    <th className="hide-mobile">Pupils</th>
+                    <th className="hide-mobile">Inspected</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {paged.map((s,i) => {
+                    const band=s.score_band||s.quality_label||'Unknown';
+                    const adm=s.admissions;
+                    return (
+                      <tr key={s.urn} onClick={() => { window.location.href = schoolUrl(s); }}>
+                        <td><span className="rank-num">{(page-1)*PAGE_SIZE+i+1}</span></td>
+                        <td style={{fontWeight:600,maxWidth:200}}>{s.name}<div style={{fontSize:'0.75rem',color:'#999',fontWeight:400}}>{s.local_authority}</div></td>
+                        <td className="hide-mobile" style={{color:'#777'}}>{s.local_authority}</td>
+                        <td className="hide-mobile" style={{color:'#999',fontSize:'0.8rem'}}>{s.phase}</td>
+                        <td>
+                          <BandChip band={band} />
+                          {s.ofsted_score != null && <div style={{fontFamily:"'Playfair Display',serif",fontWeight:700,color:BAND_COLORS[band],fontSize:'0.85rem',marginTop:2}}>{s.ofsted_score}</div>}
+                        </td>
+                        <td className="hide-mobile" style={{fontSize:'0.82rem'}}>
+                          {adm==='Selective' ? <span style={{color:'#E65100',fontWeight:600}}>🎓 Selective</span>
+                            : adm==='Non-selective' ? <span style={{color:'#555'}}>Non-selective</span>
+                            : <span style={{color:'#bbb'}}>—</span>}
+                        </td>
+                        <td className="hide-mobile" style={{color:'#777'}}>{s.pupils??'—'}</td>
+                        <td className="hide-mobile" style={{color:'#aaa',fontSize:'0.8rem'}}>{s.inspection_date||'—'}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            )}
+            {totalPages > 1 && (
+              <div className="pagination">
+                <button className="page-btn" onClick={() => setPage(p=>p-1)} disabled={page===1}>‹</button>
+                {Array.from({length:Math.min(7,totalPages)},(_,i) => { let p; if(totalPages<=7) p=i+1; else if(page<=4) p=i+1; else if(page>=totalPages-3) p=totalPages-6+i; else p=page-3+i; return <button key={p} className={`page-btn ${page===p?'active':''}`} onClick={() => setPage(p)}>{p}</button>; })}
+                <button className="page-btn" onClick={() => setPage(p=>p+1)} disabled={page===totalPages}>›</button>
+              </div>
+            )}
+            <BoroughsGrid />
+          </>
+        )}
+      </main>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+
+<!-- ── Feedback Widget ── -->
+<script>
+(function() {
+  const SUPA_URL = 'https://kwqyogicwbubzbrjwues.supabase.co';
+  const SUPA_KEY = 'sb_publishable_488SMcDgCgQx14JB6ngw7A_qay_j9cd';
+
+  const css = `
+    #fb-btn { position:fixed; bottom:24px; right:24px; z-index:9999; background:#1A1A2E; color:#D4A843; border:2px solid #D4A843; border-radius:24px; padding:10px 18px; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow:0 4px 16px rgba(0,0,0,0.25); transition:all 0.2s; }
+    #fb-btn:hover { background:#D4A843; color:#1A1A2E; }
+    #fb-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:10000; display:none; align-items:flex-end; justify-content:center; padding:0 0 80px; }
+    #fb-overlay.open { display:flex; }
+    #fb-panel { background:#FDFAF4; border-radius:16px 16px 0 0; width:100%; max-width:480px; padding:28px 24px 24px; font-family:'DM Sans',sans-serif; animation:fbSlide 0.25s ease; }
+    @keyframes fbSlide { from { transform:translateY(40px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+    #fb-panel h3 { font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:700; margin-bottom:4px; color:#1A1A2E; }
+    #fb-panel p { font-size:0.83rem; color:#888; margin-bottom:16px; }
+    .fb-stars { display:flex; gap:6px; margin-bottom:16px; }
+    .fb-star { font-size:28px; cursor:pointer; color:#D8D0C0; transition:color 0.1s; line-height:1; }
+    .fb-star.active { color:#D4A843; }
+    .fb-input { width:100%; padding:10px 12px; border:2px solid #D8D0C0; border-radius:8px; font-family:'DM Sans',sans-serif; font-size:14px; color:#1A1A2E; background:white; margin-bottom:10px; outline:none; transition:border-color 0.2s; box-sizing:border-box; }
+    .fb-input:focus { border-color:#D4A843; }
+    textarea.fb-input { resize:vertical; min-height:90px; }
+    #fb-submit { width:100%; padding:12px; background:#1A1A2E; color:#D4A843; border:none; border-radius:8px; font-family:'Playfair Display',serif; font-size:1rem; font-weight:700; cursor:pointer; transition:background 0.2s; }
+    #fb-submit:hover { background:#2D2D44; }
+    #fb-submit:disabled { opacity:0.5; cursor:not-allowed; }
+    #fb-close { position:absolute; top:16px; right:16px; background:none; border:none; font-size:20px; cursor:pointer; color:#aaa; line-height:1; }
+    #fb-success { text-align:center; padding:20px 0; }
+    #fb-success .fb-tick { font-size:3rem; margin-bottom:8px; }
+    #fb-success h3 { font-family:'Playfair Display',serif; font-size:1.2rem; color:#27AE60; margin-bottom:4px; }
+    #fb-success p { font-size:0.85rem; color:#888; }
+    #fb-panel { position:relative; }
+    @media(max-width:520px) { #fb-btn { bottom:16px; right:16px; padding:8px 14px; font-size:13px; } #fb-panel { border-radius:12px 12px 0 0; padding:20px 16px 16px; } }
+  `;
+
+  const style = document.createElement('style');
+  style.textContent = css;
+  document.head.appendChild(style);
+
+  document.body.insertAdjacentHTML('beforeend', `
+    <button id="fb-btn">💬 Feedback</button>
+    <div id="fb-overlay">
+      <div id="fb-panel">
+        <button id="fb-close">✕</button>
+        <div id="fb-form-wrap">
+          <h3>Share your feedback</h3>
+          <p>Help us improve London Schools Explorer — takes 30 seconds.</p>
+          <div class="fb-stars">
+            <span class="fb-star" data-v="1">★</span>
+            <span class="fb-star" data-v="2">★</span>
+            <span class="fb-star" data-v="3">★</span>
+            <span class="fb-star" data-v="4">★</span>
+            <span class="fb-star" data-v="5">★</span>
+          </div>
+          <input id="fb-name" class="fb-input" type="text" placeholder="Your name (optional)" />
+          <input id="fb-email" class="fb-input" type="email" placeholder="Email (optional — for follow-up)" />
+          <textarea id="fb-comment" class="fb-input" placeholder="What did you think? What's missing? What would help you most?"></textarea>
+          <button id="fb-submit">Send feedback</button>
+        </div>
+        <div id="fb-success" style="display:none">
+          <div class="fb-tick">✅</div>
+          <h3>Thank you!</h3>
+          <p>Your feedback helps us improve the site for London parents.</p>
+        </div>
+      </div>
+    </div>
+  `);
+
+  let rating = 0;
+
+  document.getElementById('fb-btn').onclick = () => {
+    document.getElementById('fb-overlay').classList.add('open');
+  };
+  document.getElementById('fb-close').onclick = () => {
+    document.getElementById('fb-overlay').classList.remove('open');
+  };
+  document.getElementById('fb-overlay').onclick = (e) => {
+    if (e.target === document.getElementById('fb-overlay'))
+      document.getElementById('fb-overlay').classList.remove('open');
+  };
+
+  document.querySelectorAll('.fb-star').forEach(star => {
+    star.onclick = () => {
+      rating = parseInt(star.dataset.v);
+      document.querySelectorAll('.fb-star').forEach(s => {
+        s.classList.toggle('active', parseInt(s.dataset.v) <= rating);
+      });
+    };
+  });
+
+  document.getElementById('fb-submit').onclick = async () => {
+    const comment = document.getElementById('fb-comment').value.trim();
+    if (!comment) { document.getElementById('fb-comment').focus(); return; }
+
+    const btn = document.getElementById('fb-submit');
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+
+    const payload = {
+      page_url: window.location.href,
+      name: document.getElementById('fb-name').value.trim() || null,
+      email: document.getElementById('fb-email').value.trim() || null,
+      rating: rating || null,
+      comment: comment,
+    };
+
+    try {
+      const res = await fetch(`${SUPA_URL}/rest/v1/feedback`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPA_KEY,
+          'Authorization': `Bearer ${SUPA_KEY}`,
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok || res.status === 201) {
+        document.getElementById('fb-form-wrap').style.display = 'none';
+        document.getElementById('fb-success').style.display = 'block';
+        setTimeout(() => {
+          document.getElementById('fb-overlay').classList.remove('open');
+          document.getElementById('fb-form-wrap').style.display = 'block';
+          document.getElementById('fb-success').style.display = 'none';
+          document.getElementById('fb-comment').value = '';
+          document.getElementById('fb-name').value = '';
+          document.getElementById('fb-email').value = '';
+          rating = 0;
+          document.querySelectorAll('.fb-star').forEach(s => s.classList.remove('active'));
+          btn.disabled = false;
+          btn.textContent = 'Send feedback';
+        }, 3000);
+      } else {
+        throw new Error('Failed');
+      }
+    } catch(e) {
+      btn.disabled = false;
+      btn.textContent = 'Try again';
+      alert('Something went wrong. Please try again.');
+    }
+  };
+})();
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>

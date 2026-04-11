@@ -26,6 +26,13 @@ jobs:
       - name: Rebuild schools.json from official sources
         run: python3 scripts/refresh_data.py
 
+      - name: Fix and validate all Snobe URLs
+        run: python3 scripts/reset_snobe_urls.py
+
+      - name: Verify Snobe URLs against live site (overnight check)
+        run: python3 scripts/check_snobe_slugs.py
+        continue-on-error: true  # Don't fail the whole workflow if Snobe is slow
+
       - name: Rebuild static site pages
         run: python3 scripts/build_school_pages.py
 

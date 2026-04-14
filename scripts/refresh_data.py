@@ -159,7 +159,7 @@ def parse_gias(df):
             return fallback
 
         # Build head name
-        head_title_prefix = v("headtitlename", "") or v("headtitle", "") or ""
+        head_title_prefix = v("headtitlename", "") or v("headtitle", "") or v("headtitlename", "") or ""
         head_first = v("headfirstname", "")
         head_last  = v("headlastname", "")
         # Build full name with title prefix, ensuring spaces between each part
@@ -169,13 +169,13 @@ def parse_gias(df):
         school = {
             "urn":               v("urn"),
             "name":              v("establishmentname"),
-            "local_authority":   v("laname"),
+            "local_authority":   v("la"),
             "postcode":          v("postcode"),
             "phase":             v("phaseofeducation"),
             "school_type":       v("typeofestablishment"),
             "age_from":          v("statutorylowage"),
             "age_to":            v("statutoryhighage"),
-            "sixth_form":        v("officialsixthindicator"),
+            "sixth_form":        v("officialsixthform"),
             "gender":            v("gender"),
             "admissions":        v("admissionspolicy"),
             "pupils":            v("numberofpupils"),
@@ -192,7 +192,7 @@ def parse_gias(df):
             "lat":               v("latitude"),
             "lng":               v("longitude"),
             "lsoa_code":         v("lsoa"),
-            "constituency":      v("parliamentaryconstituency"),
+            "constituency":      v("constituencyparliamentary"),
             # Ofsted fields — filled in later
             "quality_label":     None,
             "quality_raw":       None,

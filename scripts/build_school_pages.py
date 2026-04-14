@@ -414,6 +414,7 @@ def build_school_page(school):
     <table>
       <tr><td>Overall rating</td><td><span class="badge" style="background:{ofsted_bg_color};color:{ofsted_text_color}">{ofsted_label}</span></td></tr>
       {"<tr><td>Last inspected</td><td><strong>" + inspection + "</strong></td></tr>" if inspection else ""}
+      {"<tr><td>Monitoring outcome</td><td><strong>" + safe(school.get("ungraded_outcome")) + "</strong></td></tr>" if school.get("ungraded_outcome") else ""}
       {"<tr><td>Report</td><td>" + ofsted_link + "</td></tr>" if ofsted_link else ""}
     </table>
   </section>

@@ -28,10 +28,18 @@ from datetime import datetime, timedelta
 OUTPUT_FILE = "schools.json"
 
 # Fields to preserve from the existing schools.json that don't come from official sources
+# These are carried over when the API fetch returns None/empty
 PRESERVE_FIELDS = [
+    # School profile
     "website", "ofsted_url", "mat_name", "lsoa_code",
     "imd_rank", "imd_decile", "imd_score",
     "num_boys", "num_girls", "snobe_url",
+    # Exam results — preserved when EES API is unavailable
+    "ks2_expected_pct", "ks2_higher_pct",
+    "ks4_att8", "ks4_pupils", "ks4_grade5_em", "ks4_grade4_em",
+    # Admissions — preserved when DfE data unavailable
+    "places", "first_pref_applications", "first_pref_offers",
+    "total_applications", "apps_per_place", "first_pref_success_pct",
 ]
 
 LONDON_LAS = {
@@ -964,7 +972,9 @@ def merge_existing(schools, existing_map):
         old = existing_map[int(urn)]
         changed = False
         for field in PRESERVE_FIELDS:
-            if not s.get(field) and old.get(field):
+            # Preserve old value when new value is None or missing
+            # This ensures exam/admissions data survives when APIs are unavailable
+            if s.get(field) is None and old.get(field) is not None:
                 s[field] = old[field]
                 changed = True
         if changed:

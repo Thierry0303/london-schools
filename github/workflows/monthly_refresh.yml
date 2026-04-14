@@ -51,3 +51,4 @@ jobs:
           git add schools.json schools/ sitemap_data.txt robots.txt
           git diff --staged --quiet || git commit -m "chore: monthly data refresh $(date +'%Y-%m')"
           git push
+

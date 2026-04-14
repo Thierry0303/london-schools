@@ -2,10 +2,13 @@ name: Monthly Data Refresh
 
 on:
   schedule:
-    # Runs on the 15th of every month at 08:00 UTC
-    # Police API publishes previous month's data around the 12th-14th
     - cron: '0 8 15 * *'
-  workflow_dispatch: # Manual trigger from GitHub Actions tab
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason for manual run'
+        required: false
+        default: 'Manual trigger'
 
 jobs:
   refresh:
@@ -43,4 +46,3 @@ jobs:
           git add schools.json schools/ sitemap_data.txt robots.txt
           git diff --staged --quiet || git commit -m "chore: monthly data refresh $(date +'%Y-%m')"
           git push
-

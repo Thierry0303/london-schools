@@ -34,6 +34,8 @@ PRESERVE_FIELDS = [
     "website", "ofsted_url", "mat_name", "lsoa_code",
     "imd_rank", "imd_decile", "imd_score",
     "num_boys", "num_girls", "snobe_url",
+    # Coordinates — preserved if GIAS fetch returns None
+    "lat", "lng",
     # Exam results — preserved when EES API is unavailable
     "ks2_expected_pct", "ks2_higher_pct",
     "ks4_att8", "ks4_pupils", "ks4_grade5_em", "ks4_grade4_em",

@@ -1,6 +1,6 @@
 name: Monthly Data Refresh
 
-on:
+on:  # yamllint disable-line rule:truthy
   schedule:
     - cron: '0 8 15 * *'
   workflow_dispatch:
@@ -10,6 +10,9 @@ on:
         required: false
         default: 'Manual trigger'
 
+permissions:
+  contents: write
+
 jobs:
   refresh:
     runs-on: ubuntu-latest
@@ -17,6 +20,8 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -32,9 +37,9 @@ jobs:
       - name: Fix and validate all Snobe URLs
         run: python3 scripts/reset_snobe_urls.py
 
-      - name: Verify Snobe URLs against live site (overnight check)
+      - name: Verify Snobe URLs against live site
         run: python3 scripts/check_snobe_slugs.py
-        continue-on-error: true  # Don't fail the whole workflow if Snobe is slow
+        continue-on-error: true
 
       - name: Rebuild static site pages
         run: python3 scripts/build_school_pages.py

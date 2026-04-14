@@ -42,6 +42,13 @@ PRESERVE_FIELDS = [
     # Admissions — preserved when DfE data unavailable
     "places", "first_pref_applications", "first_pref_offers",
     "total_applications", "apps_per_place", "first_pref_success_pct",
+    # Crime — preserved when Police API is unavailable
+    "crime_count", "crime_score", "crime_label",
+    # Ofsted sub-grades — preserved between inspections
+    "behaviour_raw", "personal_dev_raw", "leadership_raw", "safeguarding",
+    "inspection_date", "ungraded_outcome",
+    # Deprivation
+    "idaci_quintile", "fsm_label",
 ]
 
 LONDON_LAS = {
@@ -452,58 +459,72 @@ KS4_CSV_URL = "https://content.explore-education-statistics.service.gov.uk/api/r
 def fetch_ks2_results():
     """
     Fetch KS2 SATs results from EES.
-    Returns URN → {ks2_expected_pct, ks2_higher_pct} mapping.
+    Tries multiple approaches in order. Returns URN → {ks2_expected_pct, ks2_higher_pct}.
     """
     print("Step 3a: Fetching KS2 SATs results from EES...")
 
-    # Try the EES statistics API for the latest release
+    # Approach 1: EES content API — discovers latest release automatically
     try:
-        pub_url = "https://api.education.gov.uk/statistics/publications?search=key+stage+2+attainment&pageSize=3"
+        api = "https://content.explore-education-statistics.service.gov.uk/api"
+        pub = requests.get(f"{api}/publications/key-stage-2-attainment", timeout=30)
+        if pub.ok:
+            latest_slug = pub.json().get("latestReleaseSlug", "")
+            if latest_slug:
+                rel = requests.get(f"{api}/publications/key-stage-2-attainment/releases/{latest_slug}", timeout=30)
+                if rel.ok:
+                    data_sets = rel.json().get("downloadFiles", [])
+                    for ds in data_sets:
+                        name = ds.get("name", "").lower()
+                        if "school" in name and ("level" in name or "underlying" in name):
+                            dl_url = ds.get("url", "")
+                            if dl_url:
+                                r = requests.get(dl_url, timeout=120)
+                                if r.ok:
+                                    result = parse_ks2_csv(r.content)
+                                    if result:
+                                        print(f"  KS2 fetched via EES content API")
+                                        return result
+    except Exception as e:
+        print(f"  KS2 content API failed: {e}")
+
+    # Approach 2: EES statistics API — search for publication then download
+    try:
+        pub_url = "https://api.education.gov.uk/statistics/publications?search=key+stage+2+attainment&pageSize=5"
         r = requests.get(pub_url, timeout=30)
-        releases = r.json().get("results", [])
-        if releases:
-            pub_id = releases[0].get("id")
-            rel_url = f"https://api.education.gov.uk/statistics/releases?publicationId={pub_id}&pageSize=1"
-            r2 = requests.get(rel_url, timeout=30)
-            latest = r2.json().get("results", [{}])[0]
-            release_id = latest.get("id")
-            if release_id:
-                files_url = f"https://api.education.gov.uk/statistics/releases/{release_id}/files"
-                r3 = requests.get(files_url, timeout=30)
-                files = r3.json().get("results", [])
-                for f in files:
-                    if "school" in f.get("name", "").lower() and "level" in f.get("name", "").lower():
-                        dl_url = f"https://api.education.gov.uk/statistics/releases/{release_id}/files/{f['id']}/download"
-                        r4 = requests.get(dl_url, timeout=90)
-                        if r4.ok:
-                            return parse_ks2_csv(r4.content)
+        if r.ok:
+            pubs = r.json().get("results", [])
+            for pub in pubs:
+                if "key stage 2" in pub.get("title", "").lower() and "attainment" in pub.get("title", "").lower():
+                    pub_id = pub.get("id")
+                    rel_r = requests.get(
+                        f"https://api.education.gov.uk/statistics/releases?publicationId={pub_id}&pageSize=1",
+                        timeout=30
+                    )
+                    if rel_r.ok:
+                        releases = rel_r.json().get("results", [])
+                        if releases:
+                            release_id = releases[0]["id"]
+                            files_r = requests.get(
+                                f"https://api.education.gov.uk/statistics/releases/{release_id}/files",
+                                timeout=30
+                            )
+                            if files_r.ok:
+                                for f in files_r.json().get("results", []):
+                                    name = f.get("name", "").lower()
+                                    if "school" in name and ("level" in name or "underlying" in name):
+                                        dl = requests.get(
+                                            f"https://api.education.gov.uk/statistics/releases/{release_id}/files/{f['id']}/download",
+                                            timeout=120
+                                        )
+                                        if dl.ok:
+                                            result = parse_ks2_csv(dl.content)
+                                            if result:
+                                                print(f"  KS2 fetched via statistics API")
+                                                return result
     except Exception as e:
-        print(f"  EES API approach failed: {e}, trying direct download...")
+        print(f"  KS2 statistics API failed: {e}")
 
-    # Fallback: try known stable URL pattern
-    try:
-        # Find latest KS2 release page
-        page = requests.get(
-            "https://explore-education-statistics.service.gov.uk/find-statistics/key-stage-2-attainment",
-            timeout=30
-        )
-        # Extract CSV links
-        csv_links = re.findall(r'href="([^"]+school[^"]*\.csv[^"]*)"', page.text, re.IGNORECASE)
-        for link in csv_links[:3]:
-            if not link.startswith("http"):
-                link = "https://explore-education-statistics.service.gov.uk" + link
-            try:
-                r = requests.get(link, timeout=90)
-                if r.ok:
-                    result = parse_ks2_csv(r.content)
-                    if result:
-                        return result
-            except Exception:
-                continue
-    except Exception as e:
-        print(f"  KS2 fallback failed: {e}")
-
-    print("  KS2 data unavailable — skipping")
+    print("  KS2 data unavailable — preserved fields will be used from existing data")
     return {}
 
 
@@ -636,27 +657,48 @@ def apply_exam_results(schools, ks2_map, ks4_map):
 
 # ── Step 4: Admissions data from EES ─────────────────────────────────────────
 
-EES_ADM_PUB_ID = "66c8e9db-8bf2-4b0b-b094-cfab25c20b05"
-EES_API_BASE   = "https://api.education.gov.uk/statistics"
+EES_API_BASE = "https://api.education.gov.uk/statistics"
+ADM_SEARCH_TERMS = ["secondary school applications", "applications offers", "admissions"]
+
+def _find_admissions_release_id():
+    """Auto-discover the latest admissions release ID — never hardcodes a publication ID."""
+    for term in ADM_SEARCH_TERMS:
+        try:
+            r = requests.get(
+                f"{EES_API_BASE}/publications?search={requests.utils.quote(term)}&pageSize=5",
+                timeout=30
+            )
+            if not r.ok:
+                continue
+            for pub in r.json().get("results", []):
+                title = pub.get("title", "").lower()
+                if "application" in title and ("offer" in title or "admission" in title):
+                    pub_id = pub.get("id")
+                    r2 = requests.get(
+                        f"{EES_API_BASE}/releases?publicationId={pub_id}&pageSize=1",
+                        timeout=30
+                    )
+                    if r2.ok:
+                        results = r2.json().get("results", [])
+                        if results:
+                            return results[0]["id"]
+        except Exception:
+            continue
+    return None
 
 def fetch_admissions():
     """
     Fetch secondary school applications & offers from EES.
+    Auto-discovers the latest release — no hardcoded publication IDs.
     Returns URN → {places, first_pref_applications, total_applications,
                     first_pref_offers, apps_per_place, first_pref_success_pct}
     """
     print("Step 4: Fetching admissions data from EES...")
     try:
-        r = requests.get(
-            f"{EES_API_BASE}/releases?publicationId={EES_ADM_PUB_ID}&pageSize=1",
-            timeout=30
-        )
-        r.raise_for_status()
-        releases = r.json().get("results", [])
-        if not releases:
-            print("  No admissions releases found")
+        release_id = _find_admissions_release_id()
+        if not release_id:
+            print("  Could not discover admissions release — preserved data will be used")
             return {}
-        release_id = releases[0]["id"]
 
         r2 = requests.get(f"{EES_API_BASE}/releases/{release_id}/files", timeout=30)
         r2.raise_for_status()
@@ -851,6 +893,7 @@ def apply_crime(schools):
     counts = []
     school_indices = []
     consecutive_failures = 0
+    fetched = 0
 
     for i, s in enumerate(schools):
         lat, lng = s.get("lat"), s.get("lng")
@@ -860,13 +903,14 @@ def apply_crime(schools):
                 consecutive_failures += 1
             else:
                 consecutive_failures = 0
+                fetched += 1
             s["crime_count"] = count
             if count is not None:
                 counts.append(count)
                 school_indices.append(i)
-            # Bail out if API keeps failing
+            # Bail out after 20 consecutive failures — API is down
             if consecutive_failures >= 20:
-                print(f"  Crime API failing consistently — stopping at {i} schools")
+                print(f"  Crime API failing consistently — stopping at {i} (fetched {fetched})")
                 break
         # Rate limiting — Police API allows ~15 req/s
         if i % 10 == 0:
@@ -980,24 +1024,29 @@ def load_existing(path="schools.json"):
 
 def merge_existing(schools, existing_map):
     """
-    For each school, carry over fields from the previous schools.json
-    that are not available from official API sources (e.g. website URLs,
-    Snobe links, IMD data, MAT names).
-    Only fills in fields that the new data left empty — never overwrites
-    fresh official data with stale cached data.
+    Merge preserved fields from the previous schools.json into fresh data.
+
+    Rules:
+    - Fresh official data (from APIs) always wins — never overwritten
+    - If a field is None/missing in fresh data but exists in old data → carry over
+    - This ensures crime, exam, admissions data survive when APIs are temporarily down
+    - Schools that no longer exist in GIAS are dropped (not carried over)
     """
     carried = 0
     for s in schools:
         urn = s.get("urn")
-        if not urn or int(urn) not in existing_map:
+        if not urn:
             continue
-        old = existing_map[int(urn)]
+        old = existing_map.get(int(urn))
+        if not old:
+            continue
         changed = False
         for field in PRESERVE_FIELDS:
-            # Preserve old value when new value is None or missing
-            # This ensures exam/admissions data survives when APIs are unavailable
-            if s.get(field) is None and old.get(field) is not None:
-                s[field] = old[field]
+            new_val = s.get(field)
+            old_val = old.get(field)
+            # Only carry over if fresh data has nothing
+            if new_val is None and old_val is not None:
+                s[field] = old_val
                 changed = True
         if changed:
             carried += 1

@@ -698,8 +698,7 @@ def build_type_page(slug, title, meta_desc, intro, filter_fn):
     "@type": "BreadcrumbList",
     "itemListElement": [
       {{"@type": "ListItem", "position": 1, "name": "London Schools Explorer", "item": "https://londonschool.directory/"}},
-      {{"@type": "ListItem", "position": 2, "name": "{borough}", "item": "{BASE_URL}/schools/{borough_slug}"}},
-      {{"@type": "ListItem", "position": 3, "name": "{name}", "item": "{url}"}}
+      {{"@type": "ListItem", "position": 2, "name": "{title}", "item": "{url}"}}
     ]
   }}</script>
   <meta property="og:title" content="{title} | London Schools Explorer">

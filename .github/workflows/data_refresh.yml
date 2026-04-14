@@ -23,16 +23,14 @@ jobs:
 
       - run: pip install requests pandas numpy pyyaml
 
-      - run: python3 scripts/refresh_data.py
+      - name: Refresh data from official sources
+        run: python3 scripts/refresh_data.py
 
-      - run: python3 scripts/reset_snobe_urls.py
+      - name: Rebuild static site pages
+        run: python3 scripts/build_school_pages.py
 
-      - run: python3 scripts/check_snobe_slugs.py
-        continue-on-error: true
-
-      - run: python3 scripts/build_school_pages.py
-
-      - run: |
+      - name: Commit and push
+        run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add schools.json schools/ sitemap_data.txt robots.txt

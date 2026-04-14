@@ -634,7 +634,7 @@ function ScoreCard({ school, compareList, toggleCompare }) {
           const c = school.crime_score >= 80 ? '#27AE60' : school.crime_score >= 60 ? '#2980B9' : school.crime_score >= 40 ? '#F57F17' : '#E67E22';
           return <span style={{color:c,fontSize:'0.76rem',fontWeight:500}} title="Crime within 500m">🔒 {school.crime_label}</span>;
         })()}
-        {school.apps_per_place == null && school.inspection_date && <span>📅 {school.inspection_date}</span>}
+        {school.apps_per_place == null && !school.crime_label && school.inspection_date && <span>📅 {school.inspection_date}</span>}
         {school.ks4_att8 != null && <span style={{color: school.ks4_att8 >= ENG_ATT8_AVG ? '#27AE60' : '#E67E22', fontWeight:500, fontSize:'0.76rem'}} title="Attainment 8 score (2024)">📚 Att8: {school.ks4_att8}</span>}
         {school.ks2_higher_pct != null && !school.ks4_att8 && <span style={{color: school.ks2_higher_pct >= ENG_KS2_HIGHER_AVG ? '#27AE60' : '#E67E22', fontWeight:500, fontSize:'0.76rem'}} title="% achieving higher standard KS2 (2024)">📚 Higher std: {school.ks2_higher_pct}%</span>}
       </div>

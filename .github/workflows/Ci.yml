@@ -1,0 +1,58 @@
+name: CI — Test & Deploy
+
+on:
+  push:
+    branches: [main, staging]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  # ── JOB 1: Test ───────────────────────────────────────────
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests pandas numpy --break-system-packages -q
+
+      - name: Run test suite
+        run: python3 scripts/test_site.py
+
+  # ── JOB 2: Build (only after tests pass, only on main) ────
+  build:
+    name: Build & deploy
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests pandas numpy pyyaml --break-system-packages -q
+
+      - name: Build static pages
+        run: python3 scripts/build_school_pages.py
+
+      - name: Commit built pages
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add schools/ sitemap_data.txt robots.txt
+          git diff --staged --quiet || git commit -m "chore: rebuild pages [skip ci]"
+          git push

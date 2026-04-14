@@ -149,7 +149,14 @@ def build_school_page(school):
     ofsted_label  = safe(school.get("quality_label") or school.get("score_band"), "Not yet rated")
     ofsted_url    = school.get("ofsted_url") or ""
     inspection    = safe(school.get("inspection_date"), "")
-    fsm_label     = safe(school.get("fsm_label"), "")
+    # Generate fsm_label from pct_fsm if not set
+    fsm_label = school.get("fsm_label") or ""
+    if not fsm_label and school.get("pct_fsm") is not None:
+        pct = float(school["pct_fsm"])
+        if pct >= 35:   fsm_label = "High deprivation"
+        elif pct >= 20: fsm_label = "Above average deprivation"
+        elif pct >= 10: fsm_label = "Average deprivation"
+        else:           fsm_label = "Below average deprivation"
     crime_label   = safe(school.get("crime_label"), "")
     lat           = school.get("lat", "")
     lng           = school.get("lng", "")

@@ -611,6 +611,11 @@ function ScoreCard({ school, compareList, toggleCompare }) {
           {band}
         </span>
       </div>
+      {school.ungraded_outcome && (
+        <div style={{fontSize:'0.72rem', color:'#888', marginTop:'-4px', marginBottom:'6px', fontStyle:'italic'}}>
+          {school.ungraded_outcome}
+        </div>
+      )}
       <div className="card-pills">
         {school.sixth_form === 'Has a sixth form' && <span className="pill" style={{background:'#EDE7F6',color:'#4527A0'}}>Sixth Form</span>}
         {school.gender && school.gender !== 'Mixed' && <span className="pill" style={{background:'#FCE4EC',color:'#880E4F'}}>{school.gender}</span>}
@@ -1245,6 +1250,7 @@ function App() {
           {label:'Borough',        fn:s=>s.local_authority||'—', always:true},
           {label:'Phase',          fn:s=>s.phase||'—', always:true},
           {label:'Ofsted rating',  fn:s=>s.quality_label||'Not rated', num:s=>s.ofsted_score, higher:true, always:true},
+          {label:'Monitoring outcome',fn:s=>s.ungraded_outcome||'—', always:true},
           {label:'Composite score',fn:s=>s.ofsted_score!=null?s.ofsted_score+'%':'—', num:s=>s.ofsted_score, higher:true, always:true},
           {label:'Apps per place', fn:s=>s.apps_per_place!=null?s.apps_per_place+'×':'—', num:s=>s.apps_per_place, higher:false, always:true},
           {label:'Pupils',         fn:s=>s.pupils!=null?Number(s.pupils).toLocaleString():'—', always:true},

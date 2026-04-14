@@ -1,5 +1,4 @@
 {
-  "buildCommand": "python3 scripts/build_school_pages.py",
   "outputDirectory": ".",
   "cleanUrls": true,
   "rewrites": [

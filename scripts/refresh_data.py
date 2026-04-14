@@ -829,26 +829,46 @@ def score_crime(count, all_counts):
 def apply_crime(schools):
     """
     Fetch crime data for all schools and add crime_count, crime_score, crime_label.
-    Batches requests to avoid rate limiting.
+    Batches requests to avoid rate limiting. Skips if API is unavailable.
     """
     print("Step 5: Fetching crime data from Police API...")
+    
+    # First check if Police API is reachable at all
+    try:
+        test = requests.get("https://data.police.uk/api/crime-last-updated", timeout=10)
+        if not test.ok:
+            print("  Police API unavailable — skipping crime data (will use preserved values)")
+            return
+    except Exception as e:
+        print(f"  Police API unreachable ({e}) — skipping crime data")
+        return
+
     crime_date = get_crime_date()
     print(f"  Using crime data month: {crime_date}")
 
     counts = []
     school_indices = []
+    consecutive_failures = 0
 
     for i, s in enumerate(schools):
         lat, lng = s.get("lat"), s.get("lng")
         if lat and lng:
             count = fetch_crime_for_school(lat, lng, crime_date)
+            if count is None:
+                consecutive_failures += 1
+            else:
+                consecutive_failures = 0
             s["crime_count"] = count
             if count is not None:
                 counts.append(count)
                 school_indices.append(i)
+            # Bail out if API keeps failing
+            if consecutive_failures >= 20:
+                print(f"  Crime API failing consistently — stopping at {i} schools")
+                break
         # Rate limiting — Police API allows ~15 req/s
         if i % 10 == 0:
-            time.sleep(0.7)
+            time.sleep(0.5)
         if i % 100 == 0 and i > 0:
             print(f"  Crime data: {i}/{len(schools)} schools processed...")
 

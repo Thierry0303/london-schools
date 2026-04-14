@@ -184,11 +184,22 @@ def build_school_page(school):
     maps_link    = f"https://www.google.com/maps/search/?api=1&query={lat},{lng}" if lat and lng else ""
     school_name_url = name.replace(" ", "+").replace("&", "and") if name else ""
 
-    meta_desc = f"{ofsted_label} {phase} school in {borough}, London. {pupils} pupils. {street}, {postcode}. View Ofsted report and admissions info."
+    # Rich meta description with actual data
+    meta_parts = [f"{ofsted_label} {phase} school in {borough}, London"]
+    if school.get("apps_per_place"):
+        meta_parts.append(f"{school['apps_per_place']}× oversubscribed")
+    if ks4_att8:
+        meta_parts.append(f"Attainment 8: {ks4_att8}")
+    elif ks2_expected:
+        meta_parts.append(f"KS2 expected: {ks2_expected}%")
+    if pupils:
+        meta_parts.append(f"{pupils} pupils")
+    meta_parts.append(f"{postcode}")
+    meta_desc = ". ".join(meta_parts) + ". Free admissions, Ofsted and exam data."
 
     schema = {
         "@context": "https://schema.org",
-        "@type": "EducationalOrganization",
+        "@type": "School",
         "name": name,
         "address": {
             "@type": "PostalAddress",
@@ -200,11 +211,83 @@ def build_school_page(school):
         },
         "url": url,
         "description": meta_desc,
+        "isAccessibleForFree": True,
+        "publicAccess": True,
     }
     if telephone:
         schema["telephone"] = telephone
     if website:
         schema["sameAs"] = f"https://{website}" if not website.startswith("http") else website
+    if lat and lng:
+        schema["geo"] = {
+            "@type": "GeoCoordinates",
+            "latitude": lat,
+            "longitude": lng
+        }
+    if pupils:
+        try:
+            schema["numberOfStudents"] = int(pupils)
+        except:
+            pass
+    if school.get("gender") and school["gender"] != "Mixed":
+        schema["gender"] = school["gender"]
+
+    # FAQ schema — answers common questions parents search for
+    faq_items = []
+    if school.get("apps_per_place"):
+        r = school["apps_per_place"]
+        faq_items.append({
+            "@type": "Question",
+            "name": f"How oversubscribed is {name}?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": f"{name} received {r} first-choice applications per available place in the 2025 admissions round."
+            }
+        })
+    if ofsted_label and ofsted_label != "Not yet rated":
+        faq_items.append({
+            "@type": "Question",
+            "name": f"What is {name}\'s Ofsted rating?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": f"{name} was rated {ofsted_label} by Ofsted{(' on ' + inspection) if inspection else ''}. View the full report on the Ofsted website."
+            }
+        })
+    if ks4_att8:
+        faq_items.append({
+            "@type": "Question",
+            "name": f"What are {name}\'s GCSE results?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": f"{name} achieved an Attainment 8 score of {ks4_att8} in 2024/25. The national average is 46.4."
+            }
+        })
+    elif ks2_expected:
+        faq_items.append({
+            "@type": "Question",
+            "name": f"What are {name}\'s KS2 results?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": f"At {name}, {ks2_expected}% of pupils met the expected standard in reading, writing and maths at KS2 in 2024/25."
+            }
+        })
+    if school.get("crime_label"):
+        faq_items.append({
+            "@type": "Question",
+            "name": f"Is the area around {name} safe?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": f"The area within 500m of {name} is classified as {school['crime_label'].lower()} based on Metropolitan Police data."
+            }
+        })
+
+    faq_schema = None
+    if faq_items:
+        faq_schema = {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": faq_items
+        }
 
     html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -214,11 +297,21 @@ def build_school_page(school):
   <title>{name}, {borough} | London Schools Explorer</title>
   <meta name="description" content="{meta_desc}">
   <link rel="canonical" href="{url}">
+  <script type="application/ld+json">{{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {{"@type": "ListItem", "position": 1, "name": "London Schools Explorer", "item": "https://londonschool.directory/"}},
+      {{"@type": "ListItem", "position": 2, "name": "{borough}", "item": "{BASE_URL}/schools/{borough_slug}"}},
+      {{"@type": "ListItem", "position": 3, "name": "{name}", "item": "{url}"}}
+    ]
+  }}</script>
   <meta property="og:title" content="{name} | London Schools Explorer">
   <meta property="og:description" content="{meta_desc}">
   <meta property="og:url" content="{url}">
   <meta property="og:type" content="website">
   <script type="application/ld+json">{json.dumps(schema, indent=2)}</script>
+  {f'<script type="application/ld+json">{json.dumps(faq_schema, indent=2)}</script>' if faq_schema else ''}
   <style>
     *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
     body {{ font-family: system-ui, -apple-system, sans-serif; color: #1a1a1a; background: #f8f9fa; line-height: 1.6; }}
@@ -457,6 +550,7 @@ for borough, borough_schools in by_borough.items():
 
     # Count outstanding schools for the meta description
     outstanding = sum(1 for s in borough_schools if (s.get("quality_label") or s.get("score_band")) == "Outstanding")
+    good        = sum(1 for s in borough_schools if (s.get("quality_label") or s.get("score_band")) == "Good")
     desc_intro  = BOROUGH_DESCRIPTIONS.get(borough, f"Browse all {len(borough_schools)} schools in {borough}, London. Find outstanding schools by Ofsted rating, phase and type.")
 
     rows = ""
@@ -477,7 +571,23 @@ for borough, borough_schools in by_borough.items():
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Schools in {borough}, London | Ofsted Ratings &amp; Results | London Schools Explorer</title>
-  <meta name="description" content="{len(borough_schools)} schools in {borough}, London. {outstanding} rated Outstanding by Ofsted. Compare by rating, phase, admissions and exam results.">
+  <meta name="description" content="{len(borough_schools)} schools in {borough}, London. {outstanding} Outstanding, {good} Good-rated by Ofsted. Compare admissions oversubscription, exam results and crime data. Free.">
+  <script type="application/ld+json">{{
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Schools in {borough}, London",
+    "description": "{len(borough_schools)} schools in {borough}, London rated by Ofsted",
+    "numberOfItems": {len(borough_schools)},
+    "url": "{BASE_URL}/schools/{borough_slug}"
+  }}</script>
+  <script type="application/ld+json">{{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {{"@type": "ListItem", "position": 1, "name": "London Schools Explorer", "item": "https://londonschool.directory/"}},
+      {{"@type": "ListItem", "position": 2, "name": "Schools in {borough}", "item": "{BASE_URL}/schools/{borough_slug}"}}
+    ]
+  }}</script>
   <link rel="canonical" href="{BASE_URL}/schools/{borough_slug}">
   <meta property="og:title" content="Schools in {borough} | London Schools Explorer">
   <meta property="og:description" content="{len(borough_schools)} schools in {borough}. {outstanding} Outstanding-rated. Compare Ofsted ratings, exam results and admissions.">
@@ -583,6 +693,15 @@ def build_type_page(slug, title, meta_desc, intro, filter_fn):
   <title>{title} | London Schools Explorer</title>
   <meta name="description" content="{meta_desc}">
   <link rel="canonical" href="{url}">
+  <script type="application/ld+json">{{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {{"@type": "ListItem", "position": 1, "name": "London Schools Explorer", "item": "https://londonschool.directory/"}},
+      {{"@type": "ListItem", "position": 2, "name": "{borough}", "item": "{BASE_URL}/schools/{borough_slug}"}},
+      {{"@type": "ListItem", "position": 3, "name": "{name}", "item": "{url}"}}
+    ]
+  }}</script>
   <meta property="og:title" content="{title} | London Schools Explorer">
   <meta property="og:description" content="{meta_desc}">
   <meta property="og:url" content="{url}">
@@ -717,9 +836,26 @@ print(f"Built {len(TYPE_PAGES)} type pages.")
 # vercel.json rewrites /sitemap.xml → /sitemap_data.txt transparently.
 lines = ['<?xml version="1.0" encoding="UTF-8"?>',
          '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+from datetime import date as _date
+_today = _date.today().isoformat()
 for u in sitemap_urls:
     safe_u = u.replace("&", "&amp;")
-    lines.append(f"  <url><loc>{safe_u}</loc></url>")
+    if u == BASE_URL + "/":
+        priority, changefreq = "1.0", "weekly"
+    elif u == BASE_URL + "/appeals":
+        priority, changefreq = "0.9", "yearly"
+    elif "/schools/" in u and u.count("/") >= 5:
+        priority, changefreq = "0.8", "monthly"
+    elif "/schools/" in u:
+        priority, changefreq = "0.7", "monthly"
+    else:
+        priority, changefreq = "0.5", "monthly"
+    lines.append(
+        f"  <url><loc>{safe_u}</loc>"
+        f"<lastmod>{_today}</lastmod>"
+        f"<changefreq>{changefreq}</changefreq>"
+        f"<priority>{priority}</priority></url>"
+    )
 lines.append("</urlset>")
 
 with open("sitemap_data.txt", "w", encoding="utf-8", newline="\n") as f:

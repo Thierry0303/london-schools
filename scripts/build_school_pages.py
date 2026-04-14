@@ -87,7 +87,12 @@ def safe(val, fallback="N/A"):
         return fallback
     if isinstance(val, float) and val == int(val):
         return str(int(val))
-    return str(val)
+    s = str(val).strip()
+    # Clean up common GIAS placeholder values
+    if s in ("Not applicable", "Does not apply", "Not required", 
+             "Not applicable (special school)", "nan", "N/A"):
+        return fallback
+    return s
 
 def format_phone(tel):
     if not tel or tel == "N/A":

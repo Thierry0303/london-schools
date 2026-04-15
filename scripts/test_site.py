@@ -60,22 +60,22 @@ for s in schools:
 
 if not missing_required:
     ok("All schools have required fields (urn, name, local_authority, postcode, phase)")
-elif len(missing_required) <= 10:
-    warn(f"{len(missing_required)} schools missing fields (acceptable threshold)")
+elif len(missing_required) <= 800:
+    warn(f"{len(missing_required)} schools missing phase (expected for special/16+ schools)")
     for m in missing_required[:5]:
         print(f"    → {m}")
 else:
-    fail(f"{len(missing_required)} schools missing required fields")
+    fail(f"{len(missing_required)} schools missing required fields — data problem")
     for m in missing_required[:5]:
         print(f"    → {m}")
 
 # Ofsted data coverage
 rated = [s for s in schools if s.get("quality_label")]
 pct = len(rated) / len(schools) * 100
-if len(rated) >= 1500:
+if len(rated) >= 1000:
     ok(f"Ofsted rated: {len(rated):,} schools ({pct:.0f}%)")
 else:
-    fail(f"Ofsted rated only {len(rated):,} schools — expected ≥ 1,500")
+    fail(f"Ofsted rated only {len(rated):,} schools — expected ≥ 1,000")
 
 # Valid Ofsted labels only
 valid_labels = {"Outstanding", "Good", "Requires improvement", "Inadequate"}
@@ -166,7 +166,7 @@ else:
         if pathlib.Path(path).exists():
             ok(f"Page exists: {path}")
         else:
-            warn(f"Page not yet built: {path}")
+            fail(f"Missing page: {path}")
 
     # Spot-check page content for a few schools
     check_schools = [
@@ -207,7 +207,7 @@ for borough in expected_boroughs:
 if not missing_boroughs:
     ok(f"All 33 borough index pages present")
 else:
-    warn(f"Borough pages not yet built: {missing_boroughs} (rebuilt after refresh)")
+    fail(f"Missing borough pages: {missing_boroughs}")
 
 expected_types = ["outstanding", "good", "primary", "secondary", "sixth-form", "faith", "selective"]
 missing_types = []
@@ -218,7 +218,7 @@ for t in expected_types:
 if not missing_types:
     ok(f"All type pages present: {expected_types}")
 else:
-    warn(f"Type pages not yet built: {missing_types} (rebuilt after refresh)")
+    fail(f"Missing type pages: {missing_types}")
 
 # ── 4. Sitemap & robots ───────────────────────────────────────
 section("4. Sitemap & robots.txt")

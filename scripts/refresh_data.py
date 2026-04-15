@@ -438,14 +438,46 @@ def fetch_ofsted():
 
 
 def apply_ofsted(schools, ofsted_map):
-    """Merge Ofsted data into school records."""
+    """Merge Ofsted data into school records.
+
+    For schools inspected under the new Sept 2024+ Report Card framework,
+    Ofsted no longer gives an overall effectiveness grade.
+    We derive a display label from the sub-grades instead.
+    """
     updated = 0
+    report_card = 0
     for s in schools:
         urn = s.get("urn")
         if urn and int(urn) in ofsted_map:
             s.update(ofsted_map[int(urn)])
             updated += 1
+            # Handle new Report Card framework (Sept 2024+)
+            # No overall grade — derive from sub-grades
+            if not s.get("quality_label") and not s.get("ofsted_score"):
+                sub_grades = [
+                    s.get("behaviour_raw"),
+                    s.get("personal_dev_raw"),
+                    s.get("leadership_raw"),
+                ]
+                sub_grades = [g for g in sub_grades if g is not None]
+                if sub_grades:
+                    worst = max(sub_grades)
+                    if worst == 1:
+                        label, score = "Outstanding", 100
+                    elif worst == 2:
+                        label, score = "Good", 75
+                    elif worst == 3:
+                        label, score = "Requires improvement", 35
+                    else:
+                        label, score = "Inadequate", 0
+                    s["quality_label"] = label
+                    s["ofsted_score"] = score
+                    s["score_band"] = label
+                    s["quality_raw"] = worst
+                    report_card += 1
     print(f"  Applied Ofsted data to {updated:,} schools")
+    if report_card:
+        print(f"  Derived Report Card ratings for {report_card:,} schools (new 2024+ framework)")
     return schools
 
 

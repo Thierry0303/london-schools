@@ -452,25 +452,29 @@ def build_school_page(school):
 
   <section class="card" style="background:linear-gradient(135deg,#fff 0%,#f0f7ff 100%);border-color:#dbeafe;">
     <h2 style="display:flex;align-items:center;gap:8px;">
-      <span style="font-size:20px;">👕</span> School uniform
+      <span style="font-size:20px;">👕</span> School uniform &amp; safety
     </h2>
-    <p style="font-size:14px;color:#555;margin-bottom:16px;line-height:1.6;">
-      Find school uniform for {name} from popular UK retailers.
-    </p>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
+      <a href="https://www.awin1.com/cread.php?awinmid=118941&awinaffid=2849515&ued=https%3A%2F%2Fwww.spotsafe.co.uk%2F" target="_blank" rel="noopener sponsored"
+         style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;background:#1e40af;color:white;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;">
+        🛡️ SpotSafe Child Safety
+      </a>
       <a href="https://www.marksandspencer.com/c/school-uniform?q={school_name_url}" target="_blank" rel="noopener"
          style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;background:#00543B;color:white;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;">
-        M&amp;S School Uniform
+        M&amp;S Uniform
       </a>
       <a href="https://www.next.co.uk/shop/gender-boys-gender-girls/school/all/ctype-uniform?searchterm={school_name_url}+uniform" target="_blank" rel="noopener"
          style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;background:#333;color:white;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;">
-        Next Schoolwear
+        Next
       </a>
       <a href="https://www.amazon.co.uk/s?k={school_name_url}+school+uniform" target="_blank" rel="noopener"
          style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;background:#FF9900;color:#111;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;">
         Amazon
       </a>
     </div>
+    <p style="font-size:11px;color:#999;margin-top:4px;">
+      🛡️ SpotSafe is a sponsored link — helps keep this site free.
+    </p>
   </section>
 
 </div>

@@ -194,7 +194,7 @@ def build_school_page(school):
     ofsted_link  = f'<a href="{ofsted_url}" target="_blank" rel="noopener">View Ofsted report</a>' if ofsted_url else ""
     phone_link   = f'<a href="tel:{telephone}">{telephone}</a>' if telephone else "N/A"
     maps_link    = f"https://www.google.com/maps/search/?api=1&query={lat},{lng}" if lat and lng else ""
-    school_name_url = name.replace(" ", "+").replace("&", "and") if name else ""
+    school_name_url = urllib.parse.quote_plus(name.replace("&", "and")) if name else ""
 
     # Rich meta description with actual data
     meta_parts = [f"{ofsted_label} {phase} school in {borough}, London"]
@@ -448,24 +448,6 @@ def build_school_page(school):
       {"<tr><td>Pupil deprivation</td><td><strong>" + fsm_label + "</strong></td></tr>" if fsm_label else ""}
       {"<tr><td>Crime level</td><td><strong>" + crime_label + "</strong></td></tr>" if crime_label else ""}
     </table>
-  </section>
-
-  <section class="card" style="background:linear-gradient(135deg,#fff 0%,#f0f7ff 100%);border-color:#dbeafe;">
-    <h2 style="display:flex;align-items:center;gap:8px;">
-      <span style="font-size:20px;">🛡️</span> Child safety
-    </h2>
-    <p style="font-size:14px;color:#555;margin-bottom:16px;line-height:1.6;">
-      Keep children safe online and in person. SpotSafe provides UK-based safeguarding tools trusted by schools and families.
-    </p>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;">
-      <a href="https://www.spotsafe.co.uk/?utm_source=londonschool&utm_medium=referral&utm_campaign=schoolpage" target="_blank" rel="noopener sponsored"
-         style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;background:#1e40af;color:white;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;">
-        🛡️ SpotSafe — Child Safety
-      </a>
-    </div>
-    <p style="font-size:11px;color:#999;margin-top:12px;">
-      Sponsored link — helps keep this site free.
-    </p>
   </section>
 
   <section class="card" style="background:linear-gradient(135deg,#fff 0%,#f0f7ff 100%);border-color:#dbeafe;">

@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://londonschool.directory/sitemap.xml
+Sitemap: https://london-schools.vercel.app/sitemap.xml

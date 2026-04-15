@@ -44,9 +44,12 @@ PRESERVE_FIELDS = [
     "total_applications", "apps_per_place", "first_pref_success_pct",
     # Crime — preserved when Police API is unavailable
     "crime_count", "crime_score", "crime_label",
-    # Ofsted sub-grades — preserved between inspections
+    # Ofsted ratings — preserved for schools not in monthly MI (independents + awaiting inspection)
+    # Fresh Ofsted data from MI always overwrites these — merge_existing only fills gaps
+    "quality_label", "quality_raw", "ofsted_score", "score_band",
     "behaviour_raw", "personal_dev_raw", "leadership_raw", "safeguarding",
     "inspection_date", "ungraded_outcome",
+    "rc_curriculum", "rc_achievement", "rc_attendance", "rc_leadership", "rc_safeguarding",
     # Deprivation
     "idaci_quintile", "fsm_label",
 ]

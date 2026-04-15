@@ -915,6 +915,11 @@ def apply_crime(schools):
             if consecutive_failures >= 20:
                 print(f"  Crime API failing consistently — stopping at {i} (fetched {fetched})")
                 break
+            # Early check: if first 100 schools with coords all return 0, date may be unavailable
+            if i == 100 and fetched == 0 and sum(1 for x in schools[:100] if x.get("lat")) > 20:
+                print(f"  Crime API returning no data after 100 schools — {crime_date} may be unavailable")
+                print(f"  Skipping crime fetch — preserved data will be used")
+                break
         # Rate limiting — Police API allows ~15 req/s
         if i % 10 == 0:
             time.sleep(0.5)

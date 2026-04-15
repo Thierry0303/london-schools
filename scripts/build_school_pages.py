@@ -457,7 +457,7 @@ def build_school_page(school):
     <p style="font-size:14px;color:#555;margin-bottom:16px;line-height:1.6;">
       Safeguarding tools for London families, trusted by schools across the UK.
     </p>
-    <a href="https://www.awin1.com/cread.php?awinmid=118941&amp;awinaffid=2849515&amp;ued=https%3A%2F%2Fwww.spotsafe.co.uk%2F" target="_blank" rel="noopener sponsored"
+    <a href="https://www.awin1.com/cread.php?awinmid=118941&awinaffid=2849515&ued=https%3A%2F%2Fwww.spotsafe.co.uk%2F" target="_blank" rel="noopener sponsored"
        style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:#1e40af;color:white;border-radius:8px;font-size:15px;font-weight:600;text-decoration:none;">
       🛡️ Explore SpotSafe
     </a>

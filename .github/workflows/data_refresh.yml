@@ -43,8 +43,8 @@ jobs:
       - name: Build static pages
         if: steps.post_test.outcome == 'success'
         run: |
-          rm -rf schools/
           python3 scripts/build_school_pages.py
+          echo "$(date -u)" > schools/.last_built
 
       # Step 5: Commit everything
       - name: Commit and push
@@ -52,7 +52,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add schools.json schools/ sitemap_data.txt robots.txt
+          git add -A schools.json schools/ sitemap_data.txt robots.txt
           git commit --allow-empty -m "chore: data refresh $(date +'%Y-%m')"
           git push
 

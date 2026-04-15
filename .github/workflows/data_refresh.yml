@@ -42,7 +42,9 @@ jobs:
       # Step 4: Build pages ONLY if post-refresh tests passed
       - name: Build static pages
         if: steps.post_test.outcome == 'success'
-        run: python3 scripts/build_school_pages.py
+        run: |
+          rm -rf schools/
+          python3 scripts/build_school_pages.py
 
       # Step 5: Commit everything
       - name: Commit and push

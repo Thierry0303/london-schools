@@ -1,4 +1,4 @@
-—import json, os, pathlib, re
+import json, os, pathlib, re
 
 # Always run from repo root regardless of where Vercel calls this from
 os.chdir(pathlib.Path(__file__).parent.parent)

@@ -1,4 +1,4 @@
-﻿import json, os, pathlib, re
+import json, os, pathlib, re
 
 # Always run from repo root regardless of where Vercel calls this from
 os.chdir(pathlib.Path(__file__).parent.parent)
@@ -682,8 +682,7 @@ def build_type_page(slug, title, meta_desc, intro, filter_fn):
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{title} | London Schools Explorer</title>
-  <meta name="description" content="{meta_desc}">
+fix: type page breadcrumb {name} to {title}  <meta name="description" content="{meta_desc}">
   <link rel="canonical" href="{url}">
   <script type="application/ld+json">{{
     "@context": "https://schema.org",
@@ -691,7 +690,7 @@ def build_type_page(slug, title, meta_desc, intro, filter_fn):
     "itemListElement": [
       {{"@type": "ListItem", "position": 1, "name": "London Schools Explorer", "item": "https://londonschool.directory/"}},
       {{"@type": "ListItem", "position": 2, "name": "{borough}", "item": "{BASE_URL}/schools/{borough_slug}"}},
-      {{"@type": "ListItem", "position": 3, "name": "{name}", "item": "{url}"}}
+      {{"@type": "ListItem", "position": 3, "name": "{title}", "item": "{url}"}}
     ]
   }}</script>
   <meta property="og:title" content="{title} | London Schools Explorer">

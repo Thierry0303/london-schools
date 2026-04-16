@@ -87,12 +87,7 @@ def safe(val, fallback="N/A"):
         return fallback
     if isinstance(val, float) and val == int(val):
         return str(int(val))
-    s = str(val).strip()
-    # Clean up common GIAS placeholder values
-    if s in ("Not applicable", "Does not apply", "Not required", 
-             "Not applicable (special school)", "nan", "N/A"):
-        return fallback
-    return s
+    return str(val)
 
 def format_phone(tel):
     if not tel or tel == "N/A":
@@ -149,14 +144,7 @@ def build_school_page(school):
     ofsted_label  = safe(school.get("quality_label") or school.get("score_band"), "Not yet rated")
     ofsted_url    = school.get("ofsted_url") or ""
     inspection    = safe(school.get("inspection_date"), "")
-    # Generate fsm_label from pct_fsm if not set
-    fsm_label = school.get("fsm_label") or ""
-    if not fsm_label and school.get("pct_fsm") is not None:
-        pct = float(school["pct_fsm"])
-        if pct >= 35:   fsm_label = "High deprivation"
-        elif pct >= 20: fsm_label = "Above average deprivation"
-        elif pct >= 10: fsm_label = "Average deprivation"
-        else:           fsm_label = "Below average deprivation"
+    fsm_label     = safe(school.get("fsm_label"), "")
     crime_label   = safe(school.get("crime_label"), "")
     lat           = school.get("lat", "")
     lng           = school.get("lng", "")
@@ -194,7 +182,7 @@ def build_school_page(school):
     ofsted_link  = f'<a href="{ofsted_url}" target="_blank" rel="noopener">View Ofsted report</a>' if ofsted_url else ""
     phone_link   = f'<a href="tel:{telephone}">{telephone}</a>' if telephone else "N/A"
     maps_link    = f"https://www.google.com/maps/search/?api=1&query={lat},{lng}" if lat and lng else ""
-    school_name_url = urllib.parse.quote_plus(name.replace("&", "and")) if name else ""
+    school_name_url = name.replace(" ", "+").replace("&", "and") if name else ""
 
     # Rich meta description with actual data
     meta_parts = [f"{ofsted_label} {phase} school in {borough}, London"]
@@ -426,7 +414,6 @@ def build_school_page(school):
     <table>
       <tr><td>Overall rating</td><td><span class="badge" style="background:{ofsted_bg_color};color:{ofsted_text_color}">{ofsted_label}</span></td></tr>
       {"<tr><td>Last inspected</td><td><strong>" + inspection + "</strong></td></tr>" if inspection else ""}
-      {"<tr><td>Monitoring outcome</td><td><strong>" + safe(school.get("ungraded_outcome")) + "</strong></td></tr>" if school.get("ungraded_outcome") else ""}
       {"<tr><td>Report</td><td>" + ofsted_link + "</td></tr>" if ofsted_link else ""}
     </table>
   </section>
@@ -455,22 +442,26 @@ def build_school_page(school):
       <span style="font-size:20px;">👕</span> School uniform
     </h2>
     <p style="font-size:14px;color:#555;margin-bottom:16px;line-height:1.6;">
-      Find school uniform for {name} from popular UK retailers.
+      Find school uniform for {name} from trusted UK retailers.
+      M&amp;S is the UK's most popular school uniform retailer — available online and in store across London.
     </p>
     <div style="display:flex;gap:10px;flex-wrap:wrap;">
-      <a href="https://www.marksandspencer.com/c/school-uniform?q={school_name_url}" target="_blank" rel="noopener"
+      <a href="https://www.marksandspencer.com/c/school-uniform?q={school_name_url}" target="_blank" rel="noopener sponsored"
          style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;background:#00543B;color:white;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;">
-        M&amp;S School Uniform
+        🛒 M&amp;S School Uniform
       </a>
-      <a href="https://www.next.co.uk/shop/gender-boys-gender-girls/school/all/ctype-uniform?searchterm={school_name_url}+uniform" target="_blank" rel="noopener"
+      <a href="https://www.next.co.uk/shop/gender-boys-gender-girls/school/all/ctype-uniform?searchterm={school_name_url}+uniform" target="_blank" rel="noopener sponsored"
          style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;background:#333;color:white;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;">
-        Next Schoolwear
+        🛒 Next Schoolwear
       </a>
-      <a href="https://www.amazon.co.uk/s?k={school_name_url}+school+uniform" target="_blank" rel="noopener"
+      <a href="https://www.amazon.co.uk/s?k={school_name_url}+school+uniform" target="_blank" rel="noopener sponsored"
          style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;background:#FF9900;color:#111;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;">
-        Amazon
+        🛒 Amazon
       </a>
     </div>
+    <p style="font-size:11px;color:#999;margin-top:12px;">
+      Links above may earn a small commission at no extra cost to you, which helps keep this site free.
+    </p>
   </section>
 
 </div>
@@ -707,7 +698,8 @@ def build_type_page(slug, title, meta_desc, intro, filter_fn):
     "@type": "BreadcrumbList",
     "itemListElement": [
       {{"@type": "ListItem", "position": 1, "name": "London Schools Explorer", "item": "https://londonschool.directory/"}},
-      {{"@type": "ListItem", "position": 2, "name": "{title}", "item": "{url}"}}
+      {{"@type": "ListItem", "position": 2, "name": "{borough}", "item": "{BASE_URL}/schools/{borough_slug}"}},
+      {{"@type": "ListItem", "position": 3, "name": "{name}", "item": "{url}"}}
     ]
   }}</script>
   <meta property="og:title" content="{title} | London Schools Explorer">

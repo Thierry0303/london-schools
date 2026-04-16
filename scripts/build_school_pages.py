@@ -1,4 +1,4 @@
-import json, os, pathlib, re
+﻿import json, os, pathlib, re
 
 # Always run from repo root regardless of where Vercel calls this from
 os.chdir(pathlib.Path(__file__).parent.parent)
@@ -125,21 +125,21 @@ def build_school_page(school):
     gender        = safe(school.get("gender"))
     age_from      = safe(school.get("age_from", ""), "")
     age_to        = safe(school.get("age_to", ""), "")
-    age_range     = f"{age_from}–{age_to}" if age_from and age_to else "N/A"
+    age_range     = f"{age_from}â€“{age_to}" if age_from and age_to else "N/A"
     sixth_form    = safe(school.get("sixth_form"))
     admissions    = safe(school.get("admissions"))
     pupils        = safe(school.get("pupils"))
     capacity      = safe(school.get("capacity"))
     religion      = safe(school.get("religious_character"))
     head_name     = safe(school.get("head_name"))
-    # Ensure spaces between title prefix and name parts (e.g. "MrSmith" → "Mr Smith")
+    # Ensure spaces between title prefix and name parts (e.g. "MrSmith" â†’ "Mr Smith")
     if head_name:
         import re as _re
         head_name = _re.sub(r'\b(Mr|Mrs|Ms|Miss|Dr|Prof|Rev|Sir)([A-Z])', r'\1 \2', head_name)
     head_title    = safe(school.get("head_job_title", "Headteacher"))
     website       = school.get("website") or ""
     telephone     = format_phone(school.get("telephone"))
-    # Only use verified snobe_url from schools.json — set by check_snobe_slugs.py
+    # Only use verified snobe_url from schools.json â€” set by check_snobe_slugs.py
     # Never generate slugs from name: Snobe uses -0/-1/-2 suffixes for duplicates
     # and different naming conventions to GIAS. Unverified links cause 404s.
     snobe_url = school.get("snobe_url") or ""
@@ -189,7 +189,7 @@ def build_school_page(school):
     # Rich meta description with actual data
     meta_parts = [f"{ofsted_label} {phase} school in {borough}, London"]
     if school.get("apps_per_place"):
-        meta_parts.append(f"{school['apps_per_place']}× oversubscribed")
+        meta_parts.append(f"{school['apps_per_place']}Ã- oversubscribed")
     if ks4_att8:
         meta_parts.append(f"Attainment 8: {ks4_att8}")
     elif ks2_expected:
@@ -234,7 +234,7 @@ def build_school_page(school):
     if school.get("gender") and school["gender"] != "Mixed":
         schema["gender"] = school["gender"]
 
-    # FAQ schema — answers common questions parents search for
+    # FAQ schema â€” answers common questions parents search for
     faq_items = []
     if school.get("apps_per_place"):
         r = school["apps_per_place"]
@@ -375,13 +375,13 @@ def build_school_page(school):
     <div>
       <span class="badge" style="background:{ofsted_bg_color};color:{ofsted_text_color}">{ofsted_label}</span>
       <h1>{name}</h1>
-      <p class="meta">{street}, {borough}, {postcode}{"&ensp;·&ensp;" + phase if phase != "N/A" else ""}{"&ensp;·&ensp;" + school_type if school_type != "N/A" else ""}</p>
+      <p class="meta">{street}, {borough}, {postcode}{"&ensp;Â·&ensp;" + phase if phase != "N/A" else ""}{"&ensp;Â·&ensp;" + school_type if school_type != "N/A" else ""}</p>
     </div>
     <div class="actions">
       {"<a class='btn btn-primary' href='" + ofsted_url + "' target='_blank' rel='noopener'>View Ofsted report</a>" if ofsted_url else ""}
-      {"<a class='btn' href='" + maps_link + "' target='_blank' rel='noopener'>📍 View on map</a>" if maps_link else ""}
-      {"<a class='btn' href='https://www.google.com/maps/dir/?api=1&destination=" + str(lat) + "," + str(lng) + "&travelmode=walking' target='_blank' rel='noopener' style='background:#E8F5E9;color:#27AE60;border-color:#A5D6A7'>🚶 Walking route</a>" if lat and lng else ""}
-      {"<a class='btn' href='https://www.google.com/maps/dir/?api=1&destination=" + str(lat) + "," + str(lng) + "&travelmode=transit' target='_blank' rel='noopener' style='background:#E3F2FD;color:#1565C0;border-color:#90CAF9'>🚌 Bus / Tube route</a>" if lat and lng else ""}
+      {"<a class='btn' href='" + maps_link + "' target='_blank' rel='noopener'>ðŸ“ View on map</a>" if maps_link else ""}
+      {"<a class='btn' href='https://www.google.com/maps/dir/?api=1&destination=" + str(lat) + "," + str(lng) + "&travelmode=walking' target='_blank' rel='noopener' style='background:#E8F5E9;color:#27AE60;border-color:#A5D6A7'>ðŸš¶ Walking route</a>" if lat and lng else ""}
+      {"<a class='btn' href='https://www.google.com/maps/dir/?api=1&destination=" + str(lat) + "," + str(lng) + "&travelmode=transit' target='_blank' rel='noopener' style='background:#E3F2FD;color:#1565C0;border-color:#90CAF9'>ðŸšŒ Bus / Tube route</a>" if lat and lng else ""}
       {"<a class='btn' href='" + snobe_url + "' target='_blank' rel='noopener' style='background:#7B2FBE;color:white;border-color:#7B2FBE'>View on Snobe</a>" if snobe_url else "<a class='btn' href='https://snobe.co.uk/find-schools?search=" + school_name_url + "' target='_blank' rel='noopener' style='background:#7B2FBE;color:white;border-color:#7B2FBE'>Search on Snobe</a>"}
       <a class="btn" href="/schools/{borough_slug}">More schools in {borough}</a>
       <a class="btn" href="/">All London schools</a>
@@ -441,7 +441,7 @@ def build_school_page(school):
 
   <section class="card" style="background:linear-gradient(135deg,#f0f7ff 0%,#fff 100%);border-color:#dbeafe;">
     <h2 style="display:flex;align-items:center;gap:8px;">
-      <span style="font-size:20px;">🛡️</span> Child safety
+      <span style="font-size:20px;">ðŸ›¡ï¸</span> Child safety
     </h2>
     <p style="font-size:14px;color:#555;margin-bottom:16px;line-height:1.6;">
       Safeguarding tools for London families, trusted by schools across the UK.
@@ -449,9 +449,9 @@ def build_school_page(school):
     <a href="https://www.awin1.com/cread.php?awinmid=118941&awinaffid=2849515&ued=https%3A%2F%2Fwww.spotsafe.co.uk%2F"
        target="_blank" rel="noopener sponsored"
        style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:#1e40af;color:white;border-radius:8px;font-size:15px;font-weight:600;text-decoration:none;">
-      🛡️ Explore SpotSafe
+      ðŸ›¡ï¸ Explore SpotSafe
     </a>
-    <p style="font-size:11px;color:#aaa;margin-top:12px;">Sponsored — helps keep this site free.</p>
+    <p style="font-size:11px;color:#aaa;margin-top:12px;">Sponsored â€” helps keep this site free.</p>
   </section>
 
   
@@ -472,7 +472,7 @@ def build_school_page(school):
     return borough_slug, school_slug, html
 
 
-# ── Build all pages ──────────────────────────────────────────────────────────
+# â”€â”€ Build all pages â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 print(f"Building {len(schools)} school pages...")
 out_root = pathlib.Path("schools")
 sitemap_urls = [BASE_URL + "/"]
@@ -492,7 +492,7 @@ for school in schools:
 print(f"Built {built} pages successfully.")
 
 
-# ── Borough index pages ───────────────────────────────────────────────────────
+# â”€â”€ Borough index pages â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 from collections import defaultdict
 
 BOROUGH_DESCRIPTIONS = {
@@ -512,14 +512,14 @@ BOROUGH_DESCRIPTIONS = {
     "Harrow": "Harrow is a north-west London borough with a diverse and high-performing school system. The borough is home to the renowned independent Harrow School as well as a strong state sector. Many schools serve large South Asian communities and have a strong ethos around academic achievement. Harrow-on-the-Hill and Pinner are particularly popular areas for families.",
     "Havering": "Havering is the easternmost London borough, bordering Essex, and has a strong tradition of selective education with grammar schools including Royal Liberty and Coopers' Company and Coborn. The borough has a largely suburban character with lower house prices than inner London, making it attractive to families seeking larger homes and strong school options.",
     "Hillingdon": "Hillingdon in west London includes areas ranging from urban Hayes and Southall through to the greener suburbs of Ruislip, Northwood and Uxbridge. The borough has a wide range of school types and several schools rated Outstanding. Proximity to Heathrow and good Crossrail links make it popular with commuting families.",
-    "Hounslow": "Hounslow is a diverse west London borough with a strong primary school sector and improving secondary provision. The borough spans from Chiswick in the east — with some of west London's most sought-after schools — to Feltham and Hanworth in the west. Many schools serve large South Asian and Eastern European communities.",
+    "Hounslow": "Hounslow is a diverse west London borough with a strong primary school sector and improving secondary provision. The borough spans from Chiswick in the east â€” with some of west London's most sought-after schools â€” to Feltham and Hanworth in the west. Many schools serve large South Asian and Eastern European communities.",
     "Islington": "Islington is an inner-London borough with a highly competitive school landscape and some of the most oversubscribed schools in the capital. The borough borders Camden and Hackney and is popular with young professional families. Highbury Fields School, Elizabeth Garrett Anderson and Highgate Wood School are among the most popular secondaries. Primary catchments can be extremely tight.",
     "Kensington and Chelsea": "Kensington and Chelsea is one of London's wealthiest boroughs and home to a concentration of prestigious independent schools as well as strong state provision. Holland Park School is one of the most celebrated state secondaries in the capital. The borough has some of the most competitive primary catchments in London, particularly around South Kensington and Chelsea.",
     "Kingston upon Thames": "Kingston upon Thames is a prosperous south-west London borough with consistently high-performing schools across both primary and secondary phases. The borough benefits from a strong local economy and high levels of parental engagement. Schools in areas such as Surbiton, New Malden and Kingston town centre are popular with families relocating from central London.",
     "Lambeth": "Lambeth is a vibrant south London borough stretching from the South Bank to Streatham, with a diverse and improving school landscape. The borough includes highly regarded schools such as Dunraven School and La Retraite RC Girls' School. Brixton, Clapham and Streatham are popular with young families drawn by relatively affordable housing and good transport links.",
     "Lewisham": "Lewisham is a south-east London borough with a strong community feel and an improving school landscape. The borough has invested significantly in education over the past decade and several schools are now rated Outstanding. Areas such as Blackheath, Forest Hill and Lee are particularly popular with families. Prendergast schools and Haberdashers' Boys' School are among the most sought-after secondaries.",
     "Merton": "Merton is a south London borough with a strong reputation for education, particularly in the Wimbledon and Raynes Park areas. The borough has several Outstanding-rated schools and benefits from good transport links via the District line and Thameslink. Rutlish School and Wimbledon College are popular secondary choices.",
-    "Newham": "Newham in east London has undergone remarkable educational improvement over the past two decades and now has one of the highest proportions of Good and Outstanding schools among inner-London boroughs. The borough benefited significantly from Olympic investment and regeneration. Schools such as Brampton Manor Academy — which sends more students to Oxbridge than most independent schools — have national reputations.",
+    "Newham": "Newham in east London has undergone remarkable educational improvement over the past two decades and now has one of the highest proportions of Good and Outstanding schools among inner-London boroughs. The borough benefited significantly from Olympic investment and regeneration. Schools such as Brampton Manor Academy â€” which sends more students to Oxbridge than most independent schools â€” have national reputations.",
     "Redbridge": "Redbridge is a north-east London borough with a highly competitive school system and a large number of selective and faith school options. The borough has one of the highest proportions of grammar school places in London. Ilford County High and Woodford County High are among the most academically selective schools in the country. The borough borders Essex and has a large South Asian community.",
     "Richmond upon Thames": "Richmond upon Thames is consistently rated as one of the best boroughs in London for education and quality of life. The borough has an exceptionally high proportion of Outstanding-rated schools and benefits from low crime, extensive green space and strong community networks. Schools in Richmond, Twickenham and Ham are highly sought after and catchments can be very tight.",
     "Southwark": "Southwark is an inner-south London borough with a rapidly improving school landscape. The borough spans from London Bridge and Bermondsey through to Peckham, Dulwich and Forest Hill. Dulwich in particular is home to several prestigious independent schools. State secondaries such as Notre Dame RC Girls' School and Harris Academy Peckham are well regarded.",
@@ -656,7 +656,7 @@ for borough, borough_schools in by_borough.items():
 print(f"Built {len(by_borough)} borough pages.")
 
 
-# ── School type landing pages ─────────────────────────────────────────────────
+# â”€â”€ School type landing pages â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 def build_type_page(slug, title, meta_desc, intro, filter_fn):
     matched = [s for s in schools if filter_fn(s)]
     matched.sort(key=lambda s: (s.get("ofsted_score") or 0), reverse=True)
@@ -673,7 +673,7 @@ def build_type_page(slug, title, meta_desc, intro, filter_fn):
           <td>{safe(s.get('local_authority'))}</td>
           <td>{safe(s.get('phase'))}</td>
           <td><span style="background:{bc};color:{tc};padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">{label}</span></td>
-          <td style="font-weight:700;color:#1a1a1a">{int(score) if score else '—'}</td>
+          <td style="font-weight:700;color:#1a1a1a">{int(score) if score else 'â€”'}</td>
         </tr>"""
 
     url  = f"{BASE_URL}/schools/{slug}"
@@ -770,7 +770,7 @@ TYPE_PAGES = [
         "good",
         "Good Schools in London",
         "Browse all Good-rated schools in London by Ofsted. Compare results, admissions and borough across all 32 London boroughs.",
-        "Good is the second-highest Ofsted rating and represents a school that is performing well and meeting the needs of its pupils. The majority of London schools are rated Good. This page lists every Good-rated school in London, ranked by composite score. A Good school is an excellent choice for most families — many Good schools outperform Outstanding schools on exam results and have less oversubscribed admissions.",
+        "Good is the second-highest Ofsted rating and represents a school that is performing well and meeting the needs of its pupils. The majority of London schools are rated Good. This page lists every Good-rated school in London, ranked by composite score. A Good school is an excellent choice for most families â€” many Good schools outperform Outstanding schools on exam results and have less oversubscribed admissions.",
         lambda s: (s.get("quality_label") or s.get("score_band")) == "Good"
     ),
     (
@@ -784,7 +784,7 @@ TYPE_PAGES = [
         "grammar",
         "Grammar Schools in London",
         "All grammar schools in London. Compare Ofsted ratings, exam results, admissions and borough location for every London grammar school.",
-        "Grammar schools are state-funded secondary schools that select pupils by academic ability. London has significantly fewer grammar schools than surrounding counties — most are concentrated in Barnet, Bexley, Kingston, Redbridge and Sutton. Entry is typically via the 11-plus exam taken in Year 6. Places at London grammar schools are highly competitive, with many schools receiving ten or more applications per place. This page lists every grammar school in London ranked by Ofsted composite score.",
+        "Grammar schools are state-funded secondary schools that select pupils by academic ability. London has significantly fewer grammar schools than surrounding counties â€” most are concentrated in Barnet, Bexley, Kingston, Redbridge and Sutton. Entry is typically via the 11-plus exam taken in Year 6. Places at London grammar schools are highly competitive, with many schools receiving ten or more applications per place. This page lists every grammar school in London ranked by Ofsted composite score.",
         lambda s: "grammar" in s.get("school_type", "").lower()
     ),
     (
@@ -805,14 +805,14 @@ TYPE_PAGES = [
         "secondary",
         "Secondary Schools in London",
         "Browse all secondary schools in London. Compare Ofsted ratings, GCSE results, sixth form provision and admissions data across all 32 boroughs.",
-        "London has over 500 secondary schools offering education to pupils aged 11 to 16 or 18. Secondary school choice in London is complex, with a mix of comprehensives, academies, selective grammar schools, faith schools and independent schools. GCSE results vary widely — from schools where nearly every pupil achieves grade 5 or above in English and Maths, to schools with significant challenges. This page lists all secondary schools in London ranked by Ofsted composite score, with GCSE Attainment 8 scores where available.",
+        "London has over 500 secondary schools offering education to pupils aged 11 to 16 or 18. Secondary school choice in London is complex, with a mix of comprehensives, academies, selective grammar schools, faith schools and independent schools. GCSE results vary widely â€” from schools where nearly every pupil achieves grade 5 or above in English and Maths, to schools with significant challenges. This page lists all secondary schools in London ranked by Ofsted composite score, with GCSE Attainment 8 scores where available.",
         lambda s: s.get("phase") in ("Secondary", "Middle deemed secondary")
     ),
     (
         "sixth-form",
         "Schools with Sixth Forms in London",
         "All London schools and colleges with sixth forms. Compare A-level provision, Ofsted ratings and admissions across all 32 boroughs.",
-        "Having a sixth form means a school offers post-16 education, typically A-levels or BTECs, allowing students to continue their studies through Years 12 and 13 without changing schools. Not all London secondary schools have sixth forms — many pupils transfer to sixth form colleges or further education colleges at 16. This page lists every school in London that has a sixth form, ranked by Ofsted composite score.",
+        "Having a sixth form means a school offers post-16 education, typically A-levels or BTECs, allowing students to continue their studies through Years 12 and 13 without changing schools. Not all London secondary schools have sixth forms â€” many pupils transfer to sixth form colleges or further education colleges at 16. This page lists every school in London that has a sixth form, ranked by Ofsted composite score.",
         lambda s: s.get("sixth_form") == "Has a sixth form"
     ),
 ]
@@ -825,7 +825,7 @@ print(f"Built {len(TYPE_PAGES)} type pages.")
 
 
 # Written as .txt so Vercel doesn't treat it as a binary asset.
-# vercel.json rewrites /sitemap.xml → /sitemap_data.txt transparently.
+# vercel.json rewrites /sitemap.xml â†’ /sitemap_data.txt transparently.
 lines = ['<?xml version="1.0" encoding="UTF-8"?>',
          '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
 from datetime import date as _date
@@ -855,9 +855,10 @@ with open("sitemap_data.txt", "w", encoding="utf-8", newline="\n") as f:
 print(f"Sitemap written with {len(sitemap_urls)} URLs.")
 
 
-# ── robots.txt ────────────────────────────────────────────────────────────────
+# â”€â”€ robots.txt â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 robots = f"User-agent: *\nAllow: /\nSitemap: {BASE_URL}/sitemap.xml\n"
 pathlib.Path("robots.txt").write_text(robots, encoding="utf-8")
 print("robots.txt written.")
 
 print("\nDone! Deploy to Vercel and submit sitemap.xml to Google Search Console.")
+

@@ -303,7 +303,7 @@ def build_school_page(school):
     "itemListElement": [
       {{"@type": "ListItem", "position": 1, "name": "London Schools Explorer", "item": "https://londonschool.directory/"}},
       {{"@type": "ListItem", "position": 2, "name": "{borough}", "item": "{BASE_URL}/schools/{borough_slug}"}},
-      {{"@type": "ListItem", "position": 3, "name": "{name}", "item": "{url}"}}
+      {{"@type": "ListItem", "position": 3, "name": "{title}", "item": "{url}"}}
     ]
   }}</script>
   <meta property="og:title" content="{name} | London Schools Explorer">

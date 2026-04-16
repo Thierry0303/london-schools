@@ -1,4 +1,4 @@
-import json, os, pathlib, re
+—import json, os, pathlib, re
 
 # Always run from repo root regardless of where Vercel calls this from
 os.chdir(pathlib.Path(__file__).parent.parent)
@@ -115,6 +115,7 @@ def build_school_page(school):
     url           = f"{BASE_URL}/schools/{borough_slug}/{school_slug}"
 
     name          = safe(school.get("name"))
+    title         = name
     borough       = safe(school.get("local_authority"))
     postcode      = safe(school.get("postcode"))
     street        = safe(school.get("street"))

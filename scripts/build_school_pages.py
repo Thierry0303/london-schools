@@ -682,7 +682,8 @@ def build_type_page(slug, title, meta_desc, intro, filter_fn):
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-fix: type page breadcrumb {name} to {title}  <meta name="description" content="{meta_desc}">
+  <title>{title} | London Schools Explorer</title>
+  <meta name="description" content="{meta_desc}">
   <link rel="canonical" href="{url}">
   <script type="application/ld+json">{{
     "@context": "https://schema.org",

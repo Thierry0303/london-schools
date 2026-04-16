@@ -437,6 +437,21 @@ def build_school_page(school):
     </table>
   </section>
 
+  <section class="card" style="background:linear-gradient(135deg,#f0f7ff 0%,#fff 100%);border-color:#dbeafe;">
+    <h2 style="display:flex;align-items:center;gap:8px;">
+      <span style="font-size:20px;">🛡️</span> Child safety
+    </h2>
+    <p style="font-size:14px;color:#555;margin-bottom:16px;line-height:1.6;">
+      Safeguarding tools for London families, trusted by schools across the UK.
+    </p>
+    <a href="https://www.awin1.com/cread.php?awinmid=118941&awinaffid=2849515&ued=https%3A%2F%2Fwww.spotsafe.co.uk%2F"
+       target="_blank" rel="noopener sponsored"
+       style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:#1e40af;color:white;border-radius:8px;font-size:15px;font-weight:600;text-decoration:none;">
+      🛡️ Explore SpotSafe
+    </a>
+    <p style="font-size:11px;color:#aaa;margin-top:12px;">Sponsored — helps keep this site free.</p>
+  </section>
+
   
 
 </div>

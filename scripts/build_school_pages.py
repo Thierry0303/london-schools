@@ -116,6 +116,7 @@ def build_school_page(school):
 
     name          = safe(school.get("name"))
     title         = name
+    title         = name
     borough       = safe(school.get("local_authority"))
     postcode      = safe(school.get("postcode"))
     street        = safe(school.get("street"))

@@ -987,7 +987,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const PAGE_SIZE = 24;
-  const [filters, setFilters] = useState({ q:'', phase:'', local_authority:'', score_band:'' });
+  const [filters, setFilters] = useState({ q:'', phases:[], local_authority:'', score_bands:[], faith:false, selective:false, grammar:false, independent:false });
 
   useEffect(() => {
     async function load() {
@@ -1003,17 +1003,37 @@ function App() {
   const filtered = useMemo(() => {
     let r = schools;
     if (filters.q) r = r.filter(s => s.name.toLowerCase().includes(filters.q.toLowerCase()) || (s.postcode||'').toLowerCase().includes(filters.q.toLowerCase()));
-    if (filters.phase) r = r.filter(s => s.phase === filters.phase);
     if (filters.local_authority) r = r.filter(s => s.local_authority === filters.local_authority);
-    if (filters.score_band) r = r.filter(s => (s.score_band||s.quality_label) === filters.score_band);
+    if (filters.score_bands.length) r = r.filter(s => filters.score_bands.includes(s.score_band||s.quality_label));
+    if (filters.independent) {
+      r = r.filter(s => s.school_type === 'Other independent school' || s.school_type === 'Other independent special school');
+    } else if (filters.phases.length) {
+      r = r.filter(s => filters.phases.includes(s.phase));
+    }
+    if (filters.faith) r = r.filter(s => s.religious_character && s.religious_character !== 'Does not apply' && s.religious_character !== 'None');
+    if (filters.selective) r = r.filter(s => s.admissions === 'Selective');
+    if (filters.grammar) r = r.filter(s => s.admissions === 'Selective');
     return r.sort((a,b) => (b.ofsted_score??-1)-(a.ofsted_score??-1));
   }, [schools, filters]);
 
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
   const paged = filtered.slice((page-1)*PAGE_SIZE, page*PAGE_SIZE);
   const setFilter = useCallback((k,v) => { setFilters(f=>({...f,[k]:v})); setPage(1); }, []);
-  const clearFilters = () => { setFilters({q:'',phase:'',local_authority:'',score_band:''}); setPage(1); };
-  const hasFilters = filters.q || filters.phase || filters.local_authority || filters.score_band;
+  const toggleFilter = useCallback((k,v) => {
+    setFilters(f => {
+      if (k === 'phases') {
+        const arr = f[k] || [];
+        const next = arr.includes(v) ? arr.filter(x=>x!==v) : [...arr, v];
+        return {...f, [k]: next, independent: next.length > 0 ? false : f.independent};
+      }
+      const arr = f[k] || [];
+      const next = arr.includes(v) ? arr.filter(x=>x!==v) : [...arr, v];
+      return {...f, [k]: next};
+    });
+    setPage(1);
+  }, []);
+  const clearFilters = () => { setFilters({q:'',phases:[],local_authority:'',score_bands:[],faith:false,selective:false,grammar:false,independent:false}); setPage(1); };
+  const hasFilters = filters.q || filters.phases.length || filters.local_authority || filters.score_bands.length || filters.faith || filters.selective || filters.grammar || filters.independent;
   const stats = useMemo(() => {
     const rated = schools.filter(s=>s.ofsted_score!=null);
     return { total:schools.length, outstanding:schools.filter(s=>(s.score_band||s.quality_label)==='Outstanding').length, avg:rated.length?Math.round(rated.reduce((a,s)=>a+s.ofsted_score,0)/rated.length):0 };
@@ -1054,6 +1074,16 @@ function App() {
         </nav>
       </header>
 
+      {view === 'schools' && (
+        <FilterBar
+          filters={filters}
+          setFilter={setFilter}
+          toggleFilter={toggleFilter}
+          localAuthorities={localAuthorities}
+          hasFilters={!!hasFilters}
+          clearFilters={clearFilters}
+        />
+      )}
       <section className="hero">
         <div className="hero-eyebrow">Ofsted Data · 32 London Boroughs</div>
         <h1>Find the right school<br />in <em>London</em></h1>
@@ -1133,6 +1163,7 @@ function App() {
               <div className="filter-group"><span className="filter-label">Rating</span><select value={filters.score_band} onChange={e => setFilter('score_band', e.target.value)}><option value="">All ratings</option>{['Outstanding','Good','Requires improvement','Inadequate','Ungraded (monitoring)','Report card (2025+)'].map(b=><option key={b} value={b}>{b}</option>)}</select></div>
               {hasFilters && <button className="clear-btn" onClick={clearFilters}>✕ Clear</button>}
             </div>
+            <BoroughsGrid />
             <div className="results-header">
               <div style={{display:'flex',alignItems:'center',gap:12,flexWrap:'wrap'}}>
                 <div className="results-count">Showing <strong>{filtered.length}</strong> school{filtered.length!==1?'s':''}{schools.length!==filtered.length?` of ${schools.length}`:''}</div>
@@ -1197,7 +1228,6 @@ function App() {
                 <button className="page-btn" onClick={() => setPage(p=>p+1)} disabled={page===totalPages}>›</button>
               </div>
             )}
-            <BoroughsGrid />
           </>
         )}
       </main>

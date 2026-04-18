@@ -297,6 +297,21 @@
     .cmp-best { background:#E8F5E9; font-weight:600; color:#2E7D32; }
     .cmp-worst { background:#FFF3E0; }
     .cmp-bar { height:6px; border-radius:3px; margin-top:4px; }
+
+    .filter-bar{position:sticky;top:64px;z-index:900;background:var(--cream);border-bottom:2px solid var(--border);padding:10px 40px;display:flex;gap:8px;flex-wrap:nowrap;overflow-x:auto;align-items:center;scrollbar-width:none;box-shadow:0 2px 8px rgba(0,0,0,0.06);}
+    .filter-bar::-webkit-scrollbar{display:none;}
+    .filter-bar-label{font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#bbb;white-space:nowrap;flex-shrink:0;}
+    .filter-chip{display:inline-flex;align-items:center;gap:4px;padding:7px 14px;border-radius:20px;border:1.5px solid var(--border);background:white;color:var(--ink);font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.15s;user-select:none;min-height:36px;}
+    .filter-chip:hover{border-color:var(--gold);color:var(--gold);}
+    .filter-chip.chip-active{background:var(--ink);color:var(--cream);border-color:var(--ink);font-weight:600;}
+    .filter-chip.chip-o{background:#27AE60;border-color:#27AE60;color:white;}
+    .filter-chip.chip-g{background:#2980B9;border-color:#2980B9;color:white;}
+    .filter-chip-divider{width:1px;height:22px;background:var(--border);flex-shrink:0;margin:0 2px;}
+    .filter-borough-select{padding:7px 28px 7px 12px;border:1.5px solid var(--border);border-radius:20px;font-family:'DM Sans',sans-serif;font-size:0.82rem;background:white;color:var(--ink);cursor:pointer;appearance:none;min-height:36px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23888' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;outline:none;}
+    .filter-borough-select.has-value{border-color:var(--ink);background-color:var(--ink);color:var(--cream);}
+    .filter-bar-clear{padding:7px 12px;border-radius:20px;border:1.5px solid var(--border);background:transparent;color:#aaa;font-family:'DM Sans',sans-serif;font-size:0.78rem;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.15s;min-height:36px;}
+    .filter-bar-clear:hover{border-color:var(--red);color:var(--red);}
+    @media(max-width:768px){.filter-bar{padding:8px 12px;top:48px;gap:6px;}.filter-chip{padding:6px 11px;font-size:0.78rem;}}
   </style>
 </head>
 <body>
@@ -1137,17 +1152,6 @@ function App() {
         </nav>
       </header>
 
-      {view === 'schools' && (
-        <FilterBar
-          filters={filters}
-          setFilter={setFilter}
-          toggleFilter={toggleFilter}
-          localAuthorities={localAuthorities}
-          hasFilters={!!hasFilters}
-          clearFilters={clearFilters}
-        />
-      )}
-      {view === 'schools' && <FilterBar filters={filters} setFilter={setFilter} toggleFilter={toggleFilter} localAuthorities={localAuthorities} hasFilters={!!hasFilters} clearFilters={clearFilters} />}
       <section className="hero">
         <div className="hero-eyebrow">Ofsted Data · 32 London Boroughs</div>
         <h1>Find the right school<br />in <em>London</em></h1>
@@ -1220,6 +1224,7 @@ function App() {
           </>
         ) : (
           <>
+            {view === 'schools' && <FilterBar filters={filters} setFilter={setFilter} toggleFilter={toggleFilter} localAuthorities={localAuthorities} hasFilters={!!hasFilters} clearFilters={clearFilters} />}
             <div className="controls">
               <div className="search-wrap"><span className="search-icon">🔍</span><input type="text" placeholder="Search by name or postcode..." value={filters.q} onChange={e => setFilter('q', e.target.value)} /></div>
               <div className="filter-group"><span className="filter-label">Phase</span><select value={filters.phase} onChange={e => setFilter('phase', e.target.value)}><option value="">All phases</option>{phases.map(p=><option key={p} value={p}>{p}</option>)}</select></div>

@@ -352,41 +352,104 @@ const BOROUGHS = [
   "Tower Hamlets","Waltham Forest","Wandsworth","Westminster"
 ];
 
-function BoroughsGrid() {
-  const typePages = [
-    { label: "Outstanding schools", slug: "outstanding", color: "#1B5E20", bg: "#E8F5E9" },
-    { label: "Good schools",        slug: "good",        color: "#0D47A1", bg: "#E3F2FD" },
-    { label: "Grammar schools",     slug: "grammar",     color: "#4A148C", bg: "#F3E5F5" },
-    { label: "Selective schools",   slug: "selective",   color: "#E65100", bg: "#FFF3E0" },
-    { label: "Faith schools",       slug: "faith",       color: "#1A237E", bg: "#E8EAF6" },
-    { label: "Primary schools",     slug: "primary",     color: "#006064", bg: "#E0F7FA" },
-    { label: "Secondary schools",   slug: "secondary",   color: "#33691E", bg: "#F1F8E9" },
-    { label: "Schools with sixth forms", slug: "sixth-form", color: "#880E4F", bg: "#FCE4EC" },
+function FilterBar({ filters, setFilter, toggleFilter, localAuthorities, hasFilters, clearFilters }) {
+  const ratings = [
+    { label: 'Outstanding', value: 'Outstanding', cls: 'chip-o' },
+    { label: 'Good', value: 'Good', cls: 'chip-g' },
   ];
+  const types = [
+    { label: 'Primary', value: 'Primary' },
+    { label: 'Secondary', value: 'Secondary' },
+    { label: 'Nursery', value: 'Nursery' },
+    { label: 'All-through', value: 'All-through' },
+  ];
+  const specials = [
+    { label: 'Faith', key: 'faith' },
+    { label: 'Selective', key: 'selective' },
+    { label: 'Grammar', key: 'grammar' },
+    { label: 'Independent', key: 'independent' },
+  ];
+  const activeCount = (filters.score_bands||[]).length + (filters.phases||[]).length + (filters.local_authority?1:0) + ['faith','selective','grammar','independent'].filter(k=>filters[k]).length;
   return (
-    <div style={{marginTop: '2.5rem'}}>
-      <h2 style={{fontFamily:"'Playfair Display',serif", fontSize:'1.3rem', fontWeight:700, marginBottom:'16px', color:'var(--ink)'}}>Browse by school type</h2>
-      <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(200px, 1fr))', gap:'8px', marginBottom:'2rem'}}>
-        {typePages.map(t => (
-          <a key={t.slug} href={`/schools/${t.slug}`}
-            style={{display:'block', padding:'10px 14px', background:t.bg, border:`1px solid ${t.color}44`, borderRadius:'6px', fontSize:'0.85rem', fontWeight:600, color:t.color, textDecoration:'none', transition:'all 0.15s'}}>
-            {t.label}
-          </a>
-        ))}
+    <div className="filter-bar">
+      <span className="filter-bar-label">Rating</span>
+      {ratings.map(r => {
+        const on = (filters.score_bands||[]).includes(r.value);
+        return <button key={r.value} className={'filter-chip ' + (on ? r.cls : '')} onClick={() => toggleFilter('score_bands', r.value)}>{on ? '✓ ' : ''}{r.label}</button>;
+      })}
+      <div className="filter-chip-divider" />
+      <span className="filter-bar-label">Type</span>
+      {types.map(t => {
+        const on = (filters.phases||[]).includes(t.value);
+        return <button key={t.value} className={'filter-chip ' + (on ? 'chip-active' : '')} onClick={() => toggleFilter('phases', t.value)}>{on ? '✓ ' : ''}{t.label}</button>;
+      })}
+      <div className="filter-chip-divider" />
+      <span className="filter-bar-label">More</span>
+      {specials.map(s => <button key={s.key} className={'filter-chip ' + (filters[s.key] ? 'chip-active' : '')} onClick={() => setFilter(s.key, !filters[s.key])}>{filters[s.key] ? '✓ ' : ''}{s.label}</button>)}
+      <div className="filter-chip-divider" />
+      <select className={'filter-borough-select ' + (filters.local_authority ? 'has-value' : '')} value={filters.local_authority} onChange={e => setFilter('local_authority', e.target.value)}>
+        <option value="">All boroughs</option>
+        {localAuthorities.map(la => <option key={la} value={la}>{la}</option>)}
+      </select>
+      {hasFilters && <button className="filter-bar-clear" onClick={clearFilters}>✕ Clear{activeCount > 0 ? ' (' + activeCount + ')' : ''}</button>}
+    </div>
+  );
+}
+function BoroughsGrid() {
+  const isMobile = window.innerWidth < 768;
+  const [typeOpen, setTypeOpen] = React.useState(!isMobile);
+  const [boroughOpen, setBoroughOpen] = React.useState(!isMobile);
+  const typePages = [
+    { label: "Outstanding", slug: "outstanding", color: "#1B5E20", bg: "#E8F5E9" },
+    { label: "Good", slug: "good", color: "#0D47A1", bg: "#E3F2FD" },
+    { label: "Grammar", slug: "grammar", color: "#4A148C", bg: "#F3E5F5" },
+    { label: "Selective", slug: "selective", color: "#E65100", bg: "#FFF3E0" },
+    { label: "Faith", slug: "faith", color: "#1A237E", bg: "#E8EAF6" },
+    { label: "Primary", slug: "primary", color: "#006064", bg: "#E0F7FA" },
+    { label: "Secondary", slug: "secondary", color: "#33691E", bg: "#F1F8E9" },
+    { label: "Sixth Form", slug: "sixth-form", color: "#880E4F", bg: "#FCE4EC" },
+    { label: "Independent", slug: "independent", color: "#5D4037", bg: "#EFEBE9" },
+  ];
+  const secSty = {borderRadius:'8px',border:'1px solid var(--border)',overflow:'hidden',marginBottom:'10px'};
+  const hdSty = {display:'flex',justifyContent:'space-between',alignItems:'center',padding:'12px 16px',background:'white',cursor:'pointer',userSelect:'none',fontFamily:"'Playfair Display',serif",fontWeight:700,fontSize:'0.95rem',color:'var(--ink)'};
+  const arSty = (o) => ({transition:'transform 0.2s',transform:o?'rotate(180deg)':'none',color:'#aaa',fontSize:'0.8rem'});
+  const bdSty = (o) => ({display:o?'block':'none',padding:'14px 16px',background:'var(--card-bg)',borderTop:'1px solid var(--border)'});
+  return (
+    <div style={{marginBottom:'16px'}}>
+      <div style={secSty}>
+        <div style={hdSty} onClick={() => setTypeOpen(o => !o)}>
+          <span>Browse by school type</span><span style={arSty(typeOpen)}>&#9660;</span>
+        </div>
+        <div style={bdSty(typeOpen)}>
+          <div style={{display:'flex',flexWrap:'wrap',gap:'8px'}}>
+            {typePages.map(t => (
+              <a key={t.slug} href={'/schools/' + t.slug}
+                style={{display:'inline-flex',alignItems:'center',padding:'7px 14px',background:t.bg,border:'1px solid ' + t.color + '44',borderRadius:'6px',fontSize:'0.83rem',fontWeight:600,color:t.color,textDecoration:'none'}}>
+                {t.label}
+              </a>
+            ))}
+          </div>
+        </div>
       </div>
-      <h2 style={{fontFamily:"'Playfair Display',serif", fontSize:'1.3rem', fontWeight:700, marginBottom:'16px', color:'var(--ink)'}}>Browse by borough</h2>
-      <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(140px, 1fr))', gap:'8px'}}>
-        {BOROUGHS.map(b => {
-          const slug = b.toLowerCase().replace(/[''']/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
-          return (
-            <a key={b} href={`/schools/${slug}`}
-              style={{display:'block', padding:'12px 14px', background:'var(--card-bg)', border:'1px solid var(--border)', borderRadius:'6px', fontSize:'0.85rem', fontWeight:500, color:'var(--ink)', textDecoration:'none', transition:'all 0.15s', minHeight:'44px', display:'flex', alignItems:'center'}}
-              onMouseOver={e=>{e.currentTarget.style.borderColor='var(--gold)';e.currentTarget.style.color='var(--gold)';}}
-              onMouseOut={e=>{e.currentTarget.style.borderColor='var(--border)';e.currentTarget.style.color='var(--ink)';}}>
-              {b}
-            </a>
-          );
-        })}
+      <div style={secSty}>
+        <div style={hdSty} onClick={() => setBoroughOpen(o => !o)}>
+          <span>Browse by borough</span><span style={arSty(boroughOpen)}>&#9660;</span>
+        </div>
+        <div style={bdSty(boroughOpen)}>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill, minmax(130px,1fr))',gap:'6px'}}>
+            {BOROUGHS.map(b => {
+              const slug = b.toLowerCase().replace(/[‘’']/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+              return (
+                <a key={b} href={'/schools/' + slug}
+                  style={{display:'flex',alignItems:'center',padding:'8px 12px',background:'white',border:'1px solid var(--border)',borderRadius:'6px',fontSize:'0.82rem',color:'var(--ink)',textDecoration:'none',minHeight:'36px'}}
+                  onMouseOver={e=>{e.currentTarget.style.borderColor='var(--gold)';e.currentTarget.style.color='var(--gold)';}}
+                  onMouseOut={e=>{e.currentTarget.style.borderColor='var(--border)';e.currentTarget.style.color='var(--ink)';}}>
+                  {b}
+                </a>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -1084,6 +1147,7 @@ function App() {
           clearFilters={clearFilters}
         />
       )}
+      {view === 'schools' && <FilterBar filters={filters} setFilter={setFilter} toggleFilter={toggleFilter} localAuthorities={localAuthorities} hasFilters={!!hasFilters} clearFilters={clearFilters} />}
       <section className="hero">
         <div className="hero-eyebrow">Ofsted Data · 32 London Boroughs</div>
         <h1>Find the right school<br />in <em>London</em></h1>

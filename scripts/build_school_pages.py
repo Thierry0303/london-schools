@@ -125,7 +125,7 @@ def build_school_page(school):
     gender        = safe(school.get("gender"))
     age_from      = safe(school.get("age_from", ""), "")
     age_to        = safe(school.get("age_to", ""), "")
-    age_range     = f"{age_from}â€“{age_to}" if age_from and age_to else "N/A"
+    age_range     = f"{age_from}–{age_to}" if age_from and age_to else "N/A"
     sixth_form    = safe(school.get("sixth_form"))
     admissions    = safe(school.get("admissions"))
     pupils        = safe(school.get("pupils"))

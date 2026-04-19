@@ -375,7 +375,7 @@ def build_school_page(school):
     <div>
       <span class="badge" style="background:{ofsted_bg_color};color:{ofsted_text_color}">{ofsted_label}</span>
       <h1>{name}</h1>
-      <p class="meta">{street}, {borough}, {postcode}{"&ensp;•·&ensp;" + phase if phase != "N/A" else ""}{"&ensp;•·&ensp;" + school_type if school_type != "N/A" else ""}</p>
+      <p class="meta">{street}, {borough}, {postcode}{"&ensp;•&ensp;" + phase if phase != "N/A" else ""}{"&ensp;•&ensp;" + school_type if school_type != "N/A" else ""}</p>
     </div>
     <div class="actions">
       {"<a class='btn btn-primary' href='" + ofsted_url + "' target='_blank' rel='noopener'>View Ofsted report</a>" if ofsted_url else ""}

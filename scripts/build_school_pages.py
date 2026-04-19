@@ -471,7 +471,7 @@ def build_school_page(school):
       Great children's books at low prices from Scholastic. Every purchase helps your child's school get free books too!
     </p>
     
-    <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&campaign=PBBR_PhonicsFairy&ued=https%3A%2F%2Fshop.scholastic.co.uk%2F" 
+    <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&campaign=PBBR+Starter+Packs+Reading+Roots" 
        target="_blank" rel="noopener sponsored"
        style="display:inline-flex;align-items:center;gap:10px;padding:14px 28px;background:#d97706;color:white;border-radius:10px;font-size:16px;font-weight:700;text-decoration:none;box-shadow:0 4px 12px rgba(217,119,6,0.3);">
       📚 Shop Books at Scholastic
@@ -795,7 +795,7 @@ def build_type_page(slug, title, meta_desc, intro, filter_fn):
       <p style="font-size:0.82rem;color:#555;margin-bottom:12px;line-height:1.5;">
         Great children's books at low prices from Scholastic. Every purchase helps your child's school get free books too!
       </p>
-      <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&ued=https%3A%2F%2Fshop.scholastic.co.uk%2F"
+      <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&campaign=PBBR+Starter+Packs+Reading+Roots"
         target="_blank" rel="noopener sponsored"
         style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:#d97706;color:white;border-radius:8px;font-size:0.85rem;font-weight:700;text-decoration:none;">
         &#128218; Shop Books at Scholastic

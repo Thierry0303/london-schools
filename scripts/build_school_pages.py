@@ -770,6 +770,40 @@ def build_type_page(slug, title, meta_desc, intro, filter_fn):
   <h1>{title}</h1>
   <span class="count-badge">{len(matched)} schools</span>
   <div class="intro">{intro}</div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin:20px 0;">
+
+    <div style="background:linear-gradient(135deg,#fdf8ff 0%,#f3e8ff 100%);border:1px solid #d8b4fe;border-radius:10px;padding:18px 20px;">
+      <h3 style="font-family:inherit;font-size:0.95rem;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px;">
+        <span>&#127891;</span> 11+ &amp; Exam Preparation
+      </h3>
+      <p style="font-size:0.82rem;color:#555;margin-bottom:12px;line-height:1.5;">
+        High-quality 11+, 13+, Pre-Tests, SATs and GCSE resources from PiAcademy.
+        Use code <strong>THIERR25</strong> for 25% off.
+      </p>
+      <a href="https://piacademy.co.uk/?aff=2849515" target="_blank" rel="noopener sponsored"
+        style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:#7e22ce;color:white;border-radius:8px;font-size:0.85rem;font-weight:700;text-decoration:none;">
+        &#127891; Visit PiAcademy &mdash; 25% OFF
+      </a>
+      <p style="font-size:0.72rem;color:#aaa;margin-top:10px;">Sponsored &mdash; helps keep this site free.</p>
+    </div>
+
+    <div style="background:linear-gradient(135deg,#fffbf0 0%,#fef3c7 100%);border:1px solid #fcd34d;border-radius:10px;padding:18px 20px;">
+      <h3 style="font-family:inherit;font-size:0.95rem;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px;">
+        <span>&#128218;</span> Children's Books
+      </h3>
+      <p style="font-size:0.82rem;color:#555;margin-bottom:12px;line-height:1.5;">
+        Great children's books at low prices from Scholastic. Every purchase helps your child's school get free books too!
+      </p>
+      <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&ued=https%3A%2F%2Fshop.scholastic.co.uk%2F"
+        target="_blank" rel="noopener sponsored"
+        style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:#d97706;color:white;border-radius:8px;font-size:0.85rem;font-weight:700;text-decoration:none;">
+        &#128218; Shop Books at Scholastic
+      </a>
+      <p style="font-size:0.72rem;color:#aaa;margin-top:10px;">Sponsored &mdash; helps keep this site free.</p>
+    </div>
+
+  </div>
   <table>
     <thead><tr><th>School</th><th>Borough</th><th>Phase</th><th>Ofsted</th><th>Score</th></tr></thead>
     <tbody>{rows}</tbody>

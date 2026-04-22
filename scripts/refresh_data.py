@@ -540,6 +540,8 @@ def apply_ofsted(schools, ofsted_map):
     updated = 0
     report_card = 0
 
+    report_card_candidates = []
+    
     for s in schools:
         urn = s.get("urn")
 
@@ -552,6 +554,16 @@ def apply_ofsted(schools, ofsted_map):
         # If school has category ratings but NO overall grade, derive composite
         has_sub_grades = any(s.get(f) for f in ["behaviour_raw", "personal_dev_raw", "leadership_raw", "early_years_raw"])
         has_overall = s.get("quality_label") or s.get("ofsted_score")
+        
+        # Debug: collect candidates for logging
+        if has_sub_grades and not has_overall:
+            report_card_candidates.append({
+                "name": s.get("name"),
+                "urn": urn,
+                "behaviour": s.get("behaviour_raw"),
+                "personal": s.get("personal_dev_raw"),
+                "leadership": s.get("leadership_raw"),
+            })
         
         if has_sub_grades and not has_overall:
             # Collect all available sub-grades
@@ -591,6 +603,12 @@ def apply_ofsted(schools, ofsted_map):
     print(f"  Applied Ofsted data to {updated:,} schools")
     if report_card:
         print(f"  └─ Derived Report Card composite ratings for {report_card:,} schools (Sept 2024+ framework)")
+    
+    # Debug: show which schools were candidates but didn't get converted
+    if report_card_candidates:
+        print(f"  DEBUG: Found {len(report_card_candidates)} Report Card candidates:")
+        for cand in report_card_candidates[:5]:  # Show first 5
+            print(f"    - {cand['name']} (URN {cand['urn']}): behaviour={cand['behaviour']}, personal={cand['personal']}, leadership={cand['leadership']}")
 
     return schools
 

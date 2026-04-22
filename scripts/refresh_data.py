@@ -799,7 +799,7 @@ def apply_exam_results(schools, ks2_map, ks4_map):
 
 # ── Step 4: Admissions data from EES ─────────────────────────────────────────
 
-EES_API_BASE       = "https://api.education.gov.uk/statistics"
+EES_API_BASE       = "https://api.education.gov.uk/statistics/v1"
 EES_CONTENT_API    = "https://content.explore-education-statistics.service.gov.uk/api"
 
 # DfE publishes primary + secondary admissions in ONE combined publication.

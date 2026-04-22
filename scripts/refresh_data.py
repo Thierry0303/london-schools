@@ -505,6 +505,116 @@ EES_FSM_URL  = "https://content.explore-education-statistics.service.gov.uk/api/
 KS2_CSV_URL = "https://content.explore-education-statistics.service.gov.uk/api/releases/latest/files/key-stage-2-attainment-national-and-local-authority-and-school-level/school-level-ks2.csv"
 KS4_CSV_URL = "https://content.explore-education-statistics.service.gov.uk/api/releases/latest/files/key-stage-4-performance-revised/school-level-ks4.csv"
 
+def _ees_content_api_download(pub_slug, file_keyword, label):
+    """
+    Generic helper: use EES content API to download the latest release file for a publication.
+    Picks the largest file whose name contains file_keyword (or any file if keyword is None).
+    Returns raw bytes or None.
+    """
+    api = "https://content.explore-education-statistics.service.gov.uk/api"
+    pub_r = requests.get(f"{api}/publications/{pub_slug}", timeout=30)
+    if not pub_r.ok:
+        return None
+    latest_slug = pub_r.json().get("latestReleaseSlug", "")
+    if not latest_slug:
+        return None
+    rel_r = requests.get(f"{api}/publications/{pub_slug}/releases/{latest_slug}", timeout=30)
+    if not rel_r.ok:
+        return None
+    dl_files = rel_r.json().get("downloadFiles", [])
+    if not dl_files:
+        return None
+
+    # Pick best matching file
+    candidates = []
+    for f in dl_files:
+        name = f.get("name", "").lower()
+        url  = f.get("url", "")
+        size = f.get("size", 0) or 0
+        if not url:
+            continue
+        if file_keyword and file_keyword not in name:
+            continue
+        candidates.append((size, name, url))
+
+    if not candidates and file_keyword:
+        # Fall back: no keyword match — try all files
+        candidates = [(f.get("size", 0) or 0, f.get("name", "").lower(), f.get("url", ""))
+                      for f in dl_files if f.get("url")]
+
+    if not candidates:
+        return None
+
+    # Prefer largest file (most likely school-level data)
+    candidates.sort(reverse=True)
+    for _, name, url in candidates:
+        try:
+            r = requests.get(url, timeout=120)
+            if r.ok and len(r.content) > 1000:
+                print(f"  {label}: downloaded '{name}' ({len(r.content)//1024} KB) via content API")
+                return r.content
+        except Exception:
+            continue
+    return None
+
+
+def _ees_stats_api_download(search_term, file_keyword, label):
+    """
+    Generic helper: use EES statistics API to find a publication and download its latest school-level file.
+    Returns raw bytes or None.
+    """
+    base = "https://api.education.gov.uk/statistics"
+    pub_r = requests.get(f"{base}/publications?search={requests.utils.quote(search_term)}&pageSize=5", timeout=30)
+    if not pub_r.ok:
+        return None
+    pubs = pub_r.json().get("results", [])
+    if not pubs:
+        return None
+
+    pub_id = pubs[0]["id"]
+    rel_r = requests.get(f"{base}/releases?publicationId={pub_id}&pageSize=1", timeout=30)
+    if not rel_r.ok:
+        return None
+    releases = rel_r.json().get("results", [])
+    if not releases:
+        return None
+
+    release_id = releases[0]["id"]
+    files_r = requests.get(f"{base}/releases/{release_id}/files", timeout=30)
+    if not files_r.ok:
+        return None
+
+    all_files = files_r.json().get("results", [])
+    candidates = []
+    for f in all_files:
+        name = f.get("name", "").lower()
+        fid  = f.get("id", "")
+        size = f.get("size", 0) or 0
+        if not fid:
+            continue
+        if file_keyword and file_keyword not in name:
+            continue
+        candidates.append((size, name, fid))
+
+    if not candidates and file_keyword:
+        candidates = [(f.get("size", 0) or 0, f.get("name", "").lower(), f.get("id", ""))
+                      for f in all_files if f.get("id")]
+
+    if not candidates:
+        return None
+
+    candidates.sort(reverse=True)
+    for _, name, fid in candidates:
+        try:
+            dl = requests.get(f"{base}/releases/{release_id}/files/{fid}/download", timeout=120)
+            if dl.ok and len(dl.content) > 1000:
+                print(f"  {label}: downloaded '{name}' ({len(dl.content)//1024} KB) via statistics API")
+                return dl.content
+        except Exception:
+            continue
+    return None
+
+
 def fetch_ks2_results():
     """
     Fetch KS2 SATs results from EES.
@@ -514,62 +624,21 @@ def fetch_ks2_results():
 
     # Approach 1: EES content API — discovers latest release automatically
     try:
-        api = "https://content.explore-education-statistics.service.gov.uk/api"
-        pub = requests.get(f"{api}/publications/key-stage-2-attainment", timeout=30)
-        if pub.ok:
-            latest_slug = pub.json().get("latestReleaseSlug", "")
-            if latest_slug:
-                rel = requests.get(f"{api}/publications/key-stage-2-attainment/releases/{latest_slug}", timeout=30)
-                if rel.ok:
-                    data_sets = rel.json().get("downloadFiles", [])
-                    for ds in data_sets:
-                        name = ds.get("name", "").lower()
-                        if "school" in name and ("level" in name or "underlying" in name):
-                            dl_url = ds.get("url", "")
-                            if dl_url:
-                                r = requests.get(dl_url, timeout=120)
-                                if r.ok:
-                                    result = parse_ks2_csv(r.content)
-                                    if result:
-                                        print(f"  KS2 fetched via EES content API")
-                                        return result
+        content = _ees_content_api_download("key-stage-2-attainment", "school", "KS2")
+        if content:
+            result = parse_ks2_csv(content)
+            if result:
+                return result
     except Exception as e:
         print(f"  KS2 content API failed: {e}")
 
     # Approach 2: EES statistics API — search for publication then download
     try:
-        pub_url = "https://api.education.gov.uk/statistics/publications?search=key+stage+2+attainment&pageSize=5"
-        r = requests.get(pub_url, timeout=30)
-        if r.ok:
-            pubs = r.json().get("results", [])
-            for pub in pubs:
-                if "key stage 2" in pub.get("title", "").lower() and "attainment" in pub.get("title", "").lower():
-                    pub_id = pub.get("id")
-                    rel_r = requests.get(
-                        f"https://api.education.gov.uk/statistics/releases?publicationId={pub_id}&pageSize=1",
-                        timeout=30
-                    )
-                    if rel_r.ok:
-                        releases = rel_r.json().get("results", [])
-                        if releases:
-                            release_id = releases[0]["id"]
-                            files_r = requests.get(
-                                f"https://api.education.gov.uk/statistics/releases/{release_id}/files",
-                                timeout=30
-                            )
-                            if files_r.ok:
-                                for f in files_r.json().get("results", []):
-                                    name = f.get("name", "").lower()
-                                    if "school" in name and ("level" in name or "underlying" in name):
-                                        dl = requests.get(
-                                            f"https://api.education.gov.uk/statistics/releases/{release_id}/files/{f['id']}/download",
-                                            timeout=120
-                                        )
-                                        if dl.ok:
-                                            result = parse_ks2_csv(dl.content)
-                                            if result:
-                                                print(f"  KS2 fetched via statistics API")
-                                                return result
+        content = _ees_stats_api_download("key stage 2 attainment", "school", "KS2")
+        if content:
+            result = parse_ks2_csv(content)
+            if result:
+                return result
     except Exception as e:
         print(f"  KS2 statistics API failed: {e}")
 
@@ -621,25 +690,26 @@ def fetch_ks4_results():
     Returns URN → {ks4_att8, ks4_grade5_em, ks4_grade4_em, ks4_pupils} mapping.
     """
     print("Step 3b: Fetching KS4 GCSE results from EES...")
+
+    # Approach 1: EES content API
     try:
-        page = requests.get(
-            "https://explore-education-statistics.service.gov.uk/find-statistics/key-stage-4-performance-revised",
-            timeout=30
-        )
-        csv_links = re.findall(r'href="([^"]+school[^"]*\.csv[^"]*)"', page.text, re.IGNORECASE)
-        for link in csv_links[:3]:
-            if not link.startswith("http"):
-                link = "https://explore-education-statistics.service.gov.uk" + link
-            try:
-                r = requests.get(link, timeout=90)
-                if r.ok:
-                    result = parse_ks4_csv(r.content)
-                    if result:
-                        return result
-            except Exception:
-                continue
+        content = _ees_content_api_download("key-stage-4-performance-revised", "school", "KS4")
+        if content:
+            result = parse_ks4_csv(content)
+            if result:
+                return result
     except Exception as e:
-        print(f"  KS4 fetch failed: {e}")
+        print(f"  KS4 content API failed: {e}")
+
+    # Approach 2: EES statistics API
+    try:
+        content = _ees_stats_api_download("key stage 4 performance", "school", "KS4")
+        if content:
+            result = parse_ks4_csv(content)
+            if result:
+                return result
+    except Exception as e:
+        print(f"  KS4 statistics API failed: {e}")
 
     print("  KS4 data unavailable — skipping")
     return {}
@@ -871,66 +941,127 @@ def _parse_admissions_df(df, source_label):
     return mapping
 
 
-def _download_admissions_for_type_by_release(release_id, label="Admissions"):
-    """Download and parse admissions data for a given EES release ID."""
-    try:
-        r2 = requests.get(f"{EES_API_BASE}/releases/{release_id}/files", timeout=30)
-        r2.raise_for_status()
-        files = r2.json().get("results", [])
-
-        # Pick the school-level file (largest CSV in the release)
-        target = None
-        for f in files:
-            name = f.get("name", "").lower()
-            if "school" in name:
-                target = f
-                break
-        if not target and files:
-            target = sorted(files, key=lambda x: x.get("size", 0), reverse=True)[0]
-        if not target:
-            return {}
-
-        dl_url = f"{EES_API_BASE}/releases/{release_id}/files/{target['id']}/download"
-        r3 = requests.get(dl_url, timeout=120)
-        r3.raise_for_status()
-        content = r3.content
-
-        if content[:2] == b"PK":
-            with zipfile.ZipFile(io.BytesIO(content)) as z:
-                csv_names = [n for n in z.namelist() if n.endswith(".csv")]
-                csv_names.sort(key=lambda n: z.getinfo(n).file_size, reverse=True)
-                with z.open(csv_names[0]) as f:
-                    df = pd.read_csv(f, low_memory=False)
-        else:
-            df = pd.read_csv(io.BytesIO(content), low_memory=False)
-
-        result = _parse_admissions_df(df, label)
-        print(f"  [{label}] admissions: {len(result):,} schools")
-        return result
-
-    except Exception as e:
-        print(f"  [{label}] admissions fetch failed: {e}")
-        return {}
+def _load_df_from_content(content):
+    """Parse bytes into a DataFrame, handling zip or raw CSV."""
+    if content[:2] == b"PK":
+        with zipfile.ZipFile(io.BytesIO(content)) as z:
+            csv_names = [n for n in z.namelist() if n.endswith(".csv")]
+            csv_names.sort(key=lambda n: z.getinfo(n).file_size, reverse=True)
+            with z.open(csv_names[0]) as f:
+                return pd.read_csv(f, low_memory=False, encoding="latin-1")
+    return pd.read_csv(io.BytesIO(content), low_memory=False, encoding="latin-1")
 
 
 def fetch_admissions():
     """
     Fetch combined primary + secondary school admissions from EES.
-    The DfE publishes both in a single 'Primary and secondary school
-    applications and offers' dataset — no separate primary/secondary needed.
-    Returns URN → {places, first_pref_applications, total_applications,
-                    first_pref_offers, apps_per_place, first_pref_success_pct}
+    The DfE publishes both phases in ONE publication:
+    'Primary and secondary school applications and offers'
+
+    Two strategies tried in order — each uses ONE API consistently:
+      A) EES content API: publication slug → latestReleaseSlug → downloadFiles → direct URL
+      B) EES statistics API: keyword search → pub_id → release_id → file download
     """
     print("Step 4: Fetching admissions data from EES (combined primary + secondary)...")
 
-    release_id = _find_admissions_release_id()
-    if not release_id:
-        print("  Could not discover admissions release — preserved data will be used")
-        return {}
+    # ── Strategy A: Content API (slug → downloadFiles → direct URL) ──────────
+    for slug in ADM_PUB_SLUGS:
+        try:
+            pub_r = requests.get(
+                f"{EES_CONTENT_API}/publications/{slug}", timeout=30
+            )
+            if not pub_r.ok:
+                continue
+            latest_slug = pub_r.json().get("latestReleaseSlug", "")
+            if not latest_slug:
+                continue
 
-    result = _download_admissions_for_type_by_release(release_id, "Combined")
-    print(f"  Admissions data: {len(result):,} schools total")
-    return result
+            rel_r = requests.get(
+                f"{EES_CONTENT_API}/publications/{slug}/releases/{latest_slug}",
+                timeout=30,
+            )
+            if not rel_r.ok:
+                continue
+
+            dl_files = rel_r.json().get("downloadFiles", [])
+            print(f"  [Content API/{slug}] {len(dl_files)} download files available")
+
+            # Sort largest first — school-level file is usually the biggest
+            for ds in sorted(dl_files, key=lambda x: x.get("size", 0), reverse=True):
+                name = ds.get("name", "").lower()
+                url  = ds.get("url", "")
+                if not url:
+                    continue
+                # Skip clearly non-school files (LA-level, national, metadata)
+                if any(skip in name for skip in ("national", "metadata", "glossary")):
+                    continue
+                try:
+                    r3 = requests.get(url, timeout=120)
+                    if not r3.ok:
+                        continue
+                    df = _load_df_from_content(r3.content)
+                    result = _parse_admissions_df(df, f"ContentAPI/{slug}")
+                    if result:
+                        print(f"  Admissions data: {len(result):,} schools")
+                        return result
+                except Exception:
+                    continue
+
+        except Exception as e:
+            print(f"  Content API slug '{slug}' failed: {e}")
+            continue
+
+    # ── Strategy B: Statistics API (search → pub_id → release_id → download) ─
+    # IMPORTANT: use EES_API_BASE for ALL steps — never mix with content API IDs
+    for term in ADM_SEARCH_TERMS:
+        try:
+            r = requests.get(
+                f"{EES_API_BASE}/publications?search={requests.utils.quote(term)}&pageSize=5",
+                timeout=30,
+            )
+            if not r.ok:
+                continue
+            for pub in r.json().get("results", []):
+                title = pub.get("title", "").lower()
+                if "application" not in title or "offer" not in title:
+                    continue
+                pub_id = pub.get("id")
+                rel_r = requests.get(
+                    f"{EES_API_BASE}/releases?publicationId={pub_id}&pageSize=1",
+                    timeout=30,
+                )
+                if not rel_r.ok:
+                    continue
+                releases = rel_r.json().get("results", [])
+                if not releases:
+                    continue
+                # Statistics API release_id — ONLY use with EES_API_BASE
+                stats_release_id = releases[0]["id"]
+                files_r = requests.get(
+                    f"{EES_API_BASE}/releases/{stats_release_id}/files", timeout=30
+                )
+                if not files_r.ok:
+                    continue
+                files = files_r.json().get("results", [])
+                target = next(
+                    (f for f in files if "school" in f.get("name", "").lower()), None
+                ) or (sorted(files, key=lambda x: x.get("size", 0), reverse=True)[0] if files else None)
+                if not target:
+                    continue
+                dl_url = f"{EES_API_BASE}/releases/{stats_release_id}/files/{target['id']}/download"
+                r3 = requests.get(dl_url, timeout=120)
+                if not r3.ok:
+                    continue
+                df = _load_df_from_content(r3.content)
+                result = _parse_admissions_df(df, f"StatsAPI/{pub.get('title','')[:30]}")
+                if result:
+                    print(f"  Admissions data: {len(result):,} schools")
+                    return result
+        except Exception:
+            continue
+
+    print("  Could not fetch admissions data — preserved data will be used")
+    return {}
 
 
 def apply_admissions(schools, adm_map):
@@ -953,18 +1084,45 @@ def get_crime_date():
     """
     Get the most recent available month from the Police API.
     The API publishes data ~2 months in arrears.
+    Validates the date actually has data before returning it.
     """
+    candidate = None
     try:
         r = requests.get("https://data.police.uk/api/crime-last-updated", timeout=10)
         if r.ok:
             date_str = r.json().get("date", "")
             if date_str:
-                return date_str[:7]  # YYYY-MM
+                candidate = date_str[:7]  # YYYY-MM
     except Exception:
         pass
-    # Fallback: 2 months ago
+
+    # Try candidate date then fall back month by month (up to 3 months back)
+    # Validate with a test call to a known London coordinate
+    test_poly = "51.515,-0.120:51.515,-0.118:51.513,-0.118:51.513,-0.120"
+    for months_back in range(4):
+        if months_back == 0 and candidate:
+            date = candidate
+        else:
+            d = datetime.now()
+            for _ in range(months_back + (2 if not candidate else months_back)):
+                d = (d.replace(day=1) - timedelta(days=1))
+            date = d.strftime("%Y-%m")
+
+        try:
+            test_r = requests.get(
+                "https://data.police.uk/api/crimes-street/all-crime",
+                params={"poly": test_poly, "date": date},
+                timeout=15
+            )
+            if test_r.ok and test_r.content:
+                print(f"  Crime date validated: {date}")
+                return date
+        except Exception:
+            pass
+
+    # Final fallback: 3 months ago
     d = datetime.now()
-    for _ in range(2):
+    for _ in range(3):
         d = (d.replace(day=1) - timedelta(days=1))
     return d.strftime("%Y-%m")
 
@@ -1087,6 +1245,52 @@ def apply_crime(schools):
 
 # ── Step 6: FSM data + deprivation scoring ───────────────────────────────────
 
+def _parse_fsm_content(content):
+    """
+    Parse raw bytes (CSV or ZIP) looking for FSM% by URN.
+    Returns URN → pct_fsm mapping, or empty dict if not parseable.
+    """
+    try:
+        df = _load_df_from_content(content)
+    except Exception as e:
+        print(f"  FSM CSV parse failed: {e}")
+        return {}
+
+    df.columns = df.columns.str.strip().str.lower()
+    urn_col = next((c for c in df.columns if c == "urn"), None)
+    if not urn_col:
+        return {}
+
+    # FSM percentage column — column name varies between releases
+    fsm_col = (
+        next((c for c in df.columns if "fsm" in c and "pct" in c), None)
+        or next((c for c in df.columns if "fsm" in c and "percent" in c), None)
+        or next((c for c in df.columns if "free_school_meal" in c and "percent" in c), None)
+        or next((c for c in df.columns if "free school meal" in c and "percent" in c), None)
+        or next((c for c in df.columns if "fsm" in c and ("eligible" in c or "proportion" in c)), None)
+        or next((c for c in df.columns if "fsm" in c), None)
+        or next((c for c in df.columns if "free_school_meal" in c), None)
+    )
+
+    if not fsm_col:
+        print(f"  FSM: could not find FSM column in {list(df.columns[:10])}")
+        return {}
+
+    print(f"  FSM column found: '{fsm_col}'")
+    mapping = {}
+    for _, row in df.iterrows():
+        try:
+            urn = int(float(str(row[urn_col])))
+        except (ValueError, TypeError):
+            continue
+        pct = _safe_float(row.get(fsm_col))
+        if pct is not None:
+            mapping[urn] = pct
+
+    print(f"  FSM data: {len(mapping):,} schools")
+    return mapping
+
+
 def fetch_fsm():
     """
     Fetch free school meals (FSM) percentages from EES.
@@ -1094,109 +1298,37 @@ def fetch_fsm():
     Returns URN → pct_fsm (float, e.g. 12.5 means 12.5%).
     """
     print("Step 6a: Fetching FSM/deprivation data from EES...")
+
+    # Approach 1: EES content API
+    fsm_pub_slugs = [
+        "schools-pupils-and-their-characteristics",
+        "school-pupils-and-their-characteristics",
+    ]
+    for slug in fsm_pub_slugs:
+        try:
+            content = _ees_content_api_download(slug, "school", "FSM")
+            if content:
+                result = _parse_fsm_content(content)
+                if result:
+                    return result
+        except Exception as e:
+            print(f"  FSM content API ({slug}) failed: {e}")
+
+    # Approach 2: EES statistics API — search for publication then download
     search_terms = [
         "schools pupils their characteristics",
-        "pupil characteristics school level",
+        "pupil characteristics",
         "schools pupils characteristics",
     ]
     for term in search_terms:
         try:
-            r = requests.get(
-                f"{EES_API_BASE}/publications?search={requests.utils.quote(term)}&pageSize=5",
-                timeout=30
-            )
-            if not r.ok:
-                continue
-            for pub in r.json().get("results", []):
-                title = pub.get("title", "").lower()
-                if "pupil" in title and "characteristic" in title:
-                    pub_id = pub.get("id")
-                    rel_r = requests.get(
-                        f"{EES_API_BASE}/releases?publicationId={pub_id}&pageSize=1",
-                        timeout=30
-                    )
-                    if not rel_r.ok:
-                        continue
-                    releases = rel_r.json().get("results", [])
-                    if not releases:
-                        continue
-                    release_id = releases[0]["id"]
-
-                    files_r = requests.get(
-                        f"{EES_API_BASE}/releases/{release_id}/files",
-                        timeout=30
-                    )
-                    if not files_r.ok:
-                        continue
-                    files = files_r.json().get("results", [])
-
-                    # Find school-level underlying data file
-                    target = None
-                    for f in files:
-                        name = f.get("name", "").lower()
-                        if "school" in name and ("level" in name or "underlying" in name):
-                            target = f
-                            break
-                    if not target:
-                        # Largest file as fallback
-                        if files:
-                            target = sorted(files, key=lambda x: x.get("size", 0), reverse=True)[0]
-                    if not target:
-                        continue
-
-                    dl_url = f"{EES_API_BASE}/releases/{release_id}/files/{target['id']}/download"
-                    r3 = requests.get(dl_url, timeout=120)
-                    if not r3.ok:
-                        continue
-                    content = r3.content
-
-                    try:
-                        if content[:2] == b"PK":
-                            with zipfile.ZipFile(io.BytesIO(content)) as z:
-                                csv_names = [n for n in z.namelist() if n.endswith(".csv")]
-                                csv_names.sort(key=lambda n: z.getinfo(n).file_size, reverse=True)
-                                with z.open(csv_names[0]) as f:
-                                    df = pd.read_csv(f, low_memory=False, encoding="latin-1")
-                        else:
-                            df = pd.read_csv(io.BytesIO(content), low_memory=False, encoding="latin-1")
-                    except Exception as e:
-                        print(f"  FSM CSV parse failed: {e}")
-                        continue
-
-                    df.columns = df.columns.str.strip().str.lower()
-
-                    urn_col = next((c for c in df.columns if c == "urn"), None)
-                    # FSM percentage column — varies between releases
-                    fsm_col = (
-                        next((c for c in df.columns if "fsm" in c and "pct" in c), None)
-                        or next((c for c in df.columns if "fsm" in c and "percent" in c), None)
-                        or next((c for c in df.columns if "free_school_meal" in c and "percent" in c), None)
-                        or next((c for c in df.columns if "free school meal" in c and "percent" in c), None)
-                        or next((c for c in df.columns if "fsm" in c and ("eligible" in c or "proportion" in c)), None)
-                        or next((c for c in df.columns if "free_school_meal" in c), None)
-                    )
-
-                    if not urn_col or not fsm_col:
-                        print(f"  FSM: could not find URN ({urn_col}) or FSM col ({fsm_col}) — skipping")
-                        continue
-
-                    print(f"  FSM column found: {fsm_col}")
-                    mapping = {}
-                    for _, row in df.iterrows():
-                        try:
-                            urn = int(float(str(row[urn_col])))
-                        except (ValueError, TypeError):
-                            continue
-                        pct = _safe_float(row.get(fsm_col))
-                        if pct is not None:
-                            mapping[urn] = pct
-
-                    print(f"  FSM data: {len(mapping):,} schools")
-                    return mapping
-
+            content = _ees_stats_api_download(term, "school", "FSM")
+            if content:
+                result = _parse_fsm_content(content)
+                if result:
+                    return result
         except Exception as e:
-            print(f"  FSM search failed for '{term}': {e}")
-            continue
+            print(f"  FSM stats API ('{term}') failed: {e}")
 
     print("  FSM data unavailable — preserved deprivation labels will be used")
     return {}

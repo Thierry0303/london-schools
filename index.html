@@ -79,6 +79,14 @@
     .pill-u { background: #F5F5F5; color: #757575; }
     .card-meta { display: flex; gap: 14px; font-size: 0.78rem; color: #aaa; border-top: 1px solid var(--border); padding-top: 10px; }
 
+    /* ── Quick Browse Bar ── */
+    .quick-browse { background: var(--ink); border-bottom: 1px solid rgba(255,255,255,0.08); padding: 10px 16px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .quick-browse::-webkit-scrollbar { display: none; }
+    .quick-browse-inner { display: flex; gap: 8px; white-space: nowrap; align-items: center; min-width: max-content; }
+    .quick-browse-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.35); margin-right: 4px; flex-shrink: 0; }
+    .qb-chip { display: inline-flex; align-items: center; padding: 5px 12px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; text-decoration: none; border: 1px solid transparent; transition: all 0.15s; flex-shrink: 0; }
+    .qb-chip:hover { opacity: 0.85; transform: translateY(-1px); }
+    .qb-divider { width: 1px; height: 20px; background: rgba(255,255,255,0.12); flex-shrink: 0; margin: 0 4px; }
     .school-table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); font-size: 0.865rem; }
     .school-table th { background: var(--ink); color: var(--cream); padding: 11px 14px; text-align: left; font-weight: 600; font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap; }
     .school-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
@@ -297,21 +305,6 @@
     .cmp-best { background:#E8F5E9; font-weight:600; color:#2E7D32; }
     .cmp-worst { background:#FFF3E0; }
     .cmp-bar { height:6px; border-radius:3px; margin-top:4px; }
-
-    .filter-bar{position:sticky;top:64px;z-index:900;background:var(--cream);border-bottom:2px solid var(--border);padding:10px 40px;display:flex;gap:8px;flex-wrap:nowrap;overflow-x:auto;align-items:center;scrollbar-width:none;box-shadow:0 2px 8px rgba(0,0,0,0.06);}
-    .filter-bar::-webkit-scrollbar{display:none;}
-    .filter-bar-label{font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#bbb;white-space:nowrap;flex-shrink:0;}
-    .filter-chip{display:inline-flex;align-items:center;gap:4px;padding:7px 14px;border-radius:20px;border:1.5px solid var(--border);background:white;color:var(--ink);font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.15s;user-select:none;min-height:36px;}
-    .filter-chip:hover{border-color:var(--gold);color:var(--gold);}
-    .filter-chip.chip-active{background:var(--ink);color:var(--cream);border-color:var(--ink);font-weight:600;}
-    .filter-chip.chip-o{background:#27AE60;border-color:#27AE60;color:white;}
-    .filter-chip.chip-g{background:#2980B9;border-color:#2980B9;color:white;}
-    .filter-chip-divider{width:1px;height:22px;background:var(--border);flex-shrink:0;margin:0 2px;}
-    .filter-borough-select{padding:7px 28px 7px 12px;border:1.5px solid var(--border);border-radius:20px;font-family:'DM Sans',sans-serif;font-size:0.82rem;background:white;color:var(--ink);cursor:pointer;appearance:none;min-height:36px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23888' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;outline:none;}
-    .filter-borough-select.has-value{border-color:var(--ink);background-color:var(--ink);color:var(--cream);}
-    .filter-bar-clear{padding:7px 12px;border-radius:20px;border:1.5px solid var(--border);background:transparent;color:#aaa;font-family:'DM Sans',sans-serif;font-size:0.78rem;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.15s;min-height:36px;}
-    .filter-bar-clear:hover{border-color:var(--red);color:var(--red);}
-    @media(max-width:768px){.filter-bar{padding:8px 12px;top:48px;gap:6px;}.filter-chip{padding:6px 11px;font-size:0.78rem;}}
   </style>
 </head>
 <body>
@@ -367,104 +360,83 @@ const BOROUGHS = [
   "Tower Hamlets","Waltham Forest","Wandsworth","Westminster"
 ];
 
-function FilterBar({ filters, setFilter, toggleFilter, localAuthorities, hasFilters, clearFilters }) {
-  const ratings = [
-    { label: 'Outstanding', value: 'Outstanding', cls: 'chip-o' },
-    { label: 'Good', value: 'Good', cls: 'chip-g' },
-  ];
+function QuickBrowse() {
   const types = [
-    { label: 'Primary', value: 'Primary' },
-    { label: 'Secondary', value: 'Secondary' },
-    { label: 'Nursery', value: 'Nursery' },
-    { label: 'All-through', value: 'All-through' },
+    { label: "⭐ Outstanding", slug: "outstanding", color: "#1B5E20", bg: "#E8F5E9" },
+    { label: "✅ Good",        slug: "good",        color: "#0D47A1", bg: "#E3F2FD" },
+    { label: "🎓 Grammar",    slug: "grammar",     color: "#4A148C", bg: "#F3E5F5" },
+    { label: "📚 Primary",    slug: "primary",     color: "#006064", bg: "#E0F7FA" },
+    { label: "🏫 Secondary",  slug: "secondary",   color: "#33691E", bg: "#F1F8E9" },
+    { label: "✏️ Selective",  slug: "selective",   color: "#E65100", bg: "#FFF3E0" },
+    { label: "🕌 Faith",      slug: "faith",       color: "#1A237E", bg: "#E8EAF6" },
+    { label: "🎒 Sixth Form", slug: "sixth-form",  color: "#880E4F", bg: "#FCE4EC" },
   ];
-  const specials = [
-    { label: 'Faith', key: 'faith' },
-    { label: 'Selective', key: 'selective' },
-    { label: 'Grammar', key: 'grammar' },
-    { label: 'Independent', key: 'independent' },
+  const topBoroughs = [
+    "Camden","Islington","Hackney","Southwark","Wandsworth",
+    "Lambeth","Barnet","Richmond upon Thames","Kensington and Chelsea","Westminster",
+    "Hammersmith and Fulham","Tower Hamlets","Ealing","Sutton","Kingston upon Thames"
   ];
-  const activeCount = (filters.score_bands||[]).length + (filters.phases||[]).length + (filters.local_authority?1:0) + ['faith','selective','grammar','independent'].filter(k=>filters[k]).length;
   return (
-    <div className="filter-bar">
-      <span className="filter-bar-label">Rating</span>
-      {ratings.map(r => {
-        const on = (filters.score_bands||[]).includes(r.value);
-        return <button key={r.value} className={'filter-chip ' + (on ? r.cls : '')} onClick={() => toggleFilter('score_bands', r.value)}>{on ? '✓ ' : ''}{r.label}</button>;
-      })}
-      <div className="filter-chip-divider" />
-      <span className="filter-bar-label">Type</span>
-      {types.map(t => {
-        const on = (filters.phases||[]).includes(t.value);
-        return <button key={t.value} className={'filter-chip ' + (on ? 'chip-active' : '')} onClick={() => toggleFilter('phases', t.value)}>{on ? '✓ ' : ''}{t.label}</button>;
-      })}
-      <div className="filter-chip-divider" />
-      <span className="filter-bar-label">More</span>
-      {specials.map(s => <button key={s.key} className={'filter-chip ' + (filters[s.key] ? 'chip-active' : '')} onClick={() => setFilter(s.key, !filters[s.key])}>{filters[s.key] ? '✓ ' : ''}{s.label}</button>)}
-      <div className="filter-chip-divider" />
-      <select className={'filter-borough-select ' + (filters.local_authority ? 'has-value' : '')} value={filters.local_authority} onChange={e => setFilter('local_authority', e.target.value)}>
-        <option value="">All boroughs</option>
-        {localAuthorities.map(la => <option key={la} value={la}>{la}</option>)}
-      </select>
-      {hasFilters && <button className="filter-bar-clear" onClick={clearFilters}>✕ Clear{activeCount > 0 ? ' (' + activeCount + ')' : ''}</button>}
+    <div className="quick-browse">
+      <div className="quick-browse-inner">
+        <span className="quick-browse-label">Browse</span>
+        {types.map(t => (
+          <a key={t.slug} href={`/schools/${t.slug}`} className="qb-chip"
+            style={{background: t.bg, color: t.color, borderColor: t.color + '44'}}>
+            {t.label}
+          </a>
+        ))}
+        <div className="qb-divider" />
+        <span className="quick-browse-label">Borough</span>
+        {topBoroughs.map(b => {
+          const slug = b.toLowerCase().replace(/[''']/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+          return (
+            <a key={b} href={`/schools/${slug}`} className="qb-chip"
+              style={{background:'rgba(255,255,255,0.07)', color:'rgba(255,255,255,0.8)', borderColor:'rgba(255,255,255,0.15)'}}>
+              {b}
+            </a>
+          );
+        })}
+      </div>
     </div>
   );
 }
+
 function BoroughsGrid() {
-  const isMobile = window.innerWidth < 768;
-  const [typeOpen, setTypeOpen] = React.useState(!isMobile);
-  const [boroughOpen, setBoroughOpen] = React.useState(!isMobile);
   const typePages = [
-    { label: "Outstanding", slug: "outstanding", color: "#1B5E20", bg: "#E8F5E9" },
-    { label: "Good", slug: "good", color: "#0D47A1", bg: "#E3F2FD" },
-    { label: "Grammar", slug: "grammar", color: "#4A148C", bg: "#F3E5F5" },
-    { label: "Selective", slug: "selective", color: "#E65100", bg: "#FFF3E0" },
-    { label: "Faith", slug: "faith", color: "#1A237E", bg: "#E8EAF6" },
-    { label: "Primary", slug: "primary", color: "#006064", bg: "#E0F7FA" },
-    { label: "Secondary", slug: "secondary", color: "#33691E", bg: "#F1F8E9" },
-    { label: "Sixth Form", slug: "sixth-form", color: "#880E4F", bg: "#FCE4EC" },
-    { label: "Independent", slug: "independent", color: "#5D4037", bg: "#EFEBE9" },
+    { label: "Outstanding schools", slug: "outstanding", color: "#1B5E20", bg: "#E8F5E9" },
+    { label: "Good schools",        slug: "good",        color: "#0D47A1", bg: "#E3F2FD" },
+    { label: "Grammar schools",     slug: "grammar",     color: "#4A148C", bg: "#F3E5F5" },
+    { label: "Selective schools",   slug: "selective",   color: "#E65100", bg: "#FFF3E0" },
+    { label: "Faith schools",       slug: "faith",       color: "#1A237E", bg: "#E8EAF6" },
+    { label: "Primary schools",     slug: "primary",     color: "#006064", bg: "#E0F7FA" },
+    { label: "Secondary schools",   slug: "secondary",   color: "#33691E", bg: "#F1F8E9" },
+    { label: "Schools with sixth forms", slug: "sixth-form", color: "#880E4F", bg: "#FCE4EC" },
   ];
-  const secSty = {borderRadius:'8px',border:'1px solid var(--border)',overflow:'hidden',marginBottom:'10px'};
-  const hdSty = {display:'flex',justifyContent:'space-between',alignItems:'center',padding:'12px 16px',background:'white',cursor:'pointer',userSelect:'none',fontFamily:"'Playfair Display',serif",fontWeight:700,fontSize:'0.95rem',color:'var(--ink)'};
-  const arSty = (o) => ({transition:'transform 0.2s',transform:o?'rotate(180deg)':'none',color:'#aaa',fontSize:'0.8rem'});
-  const bdSty = (o) => ({display:o?'block':'none',padding:'14px 16px',background:'var(--card-bg)',borderTop:'1px solid var(--border)'});
   return (
-    <div style={{marginBottom:'16px'}}>
-      <div style={secSty}>
-        <div style={hdSty} onClick={() => setTypeOpen(o => !o)}>
-          <span>Browse by school type</span><span style={arSty(typeOpen)}>&#9660;</span>
-        </div>
-        <div style={bdSty(typeOpen)}>
-          <div style={{display:'flex',flexWrap:'wrap',gap:'8px'}}>
-            {typePages.map(t => (
-              <a key={t.slug} href={'/schools/' + t.slug}
-                style={{display:'inline-flex',alignItems:'center',padding:'7px 14px',background:t.bg,border:'1px solid ' + t.color + '44',borderRadius:'6px',fontSize:'0.83rem',fontWeight:600,color:t.color,textDecoration:'none'}}>
-                {t.label}
-              </a>
-            ))}
-          </div>
-        </div>
+    <div style={{marginTop: '2.5rem'}}>
+      <h2 style={{fontFamily:"'Playfair Display',serif", fontSize:'1.3rem', fontWeight:700, marginBottom:'16px', color:'var(--ink)'}}>Browse by school type</h2>
+      <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(200px, 1fr))', gap:'8px', marginBottom:'2rem'}}>
+        {typePages.map(t => (
+          <a key={t.slug} href={`/schools/${t.slug}`}
+            style={{display:'block', padding:'10px 14px', background:t.bg, border:`1px solid ${t.color}44`, borderRadius:'6px', fontSize:'0.85rem', fontWeight:600, color:t.color, textDecoration:'none', transition:'all 0.15s'}}>
+            {t.label}
+          </a>
+        ))}
       </div>
-      <div style={secSty}>
-        <div style={hdSty} onClick={() => setBoroughOpen(o => !o)}>
-          <span>Browse by borough</span><span style={arSty(boroughOpen)}>&#9660;</span>
-        </div>
-        <div style={bdSty(boroughOpen)}>
-          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill, minmax(130px,1fr))',gap:'6px'}}>
-            {BOROUGHS.map(b => {
-              const slug = b.toLowerCase().replace(/[‘’']/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
-              return (
-                <a key={b} href={'/schools/' + slug}
-                  style={{display:'flex',alignItems:'center',padding:'8px 12px',background:'white',border:'1px solid var(--border)',borderRadius:'6px',fontSize:'0.82rem',color:'var(--ink)',textDecoration:'none',minHeight:'36px'}}
-                  onMouseOver={e=>{e.currentTarget.style.borderColor='var(--gold)';e.currentTarget.style.color='var(--gold)';}}
-                  onMouseOut={e=>{e.currentTarget.style.borderColor='var(--border)';e.currentTarget.style.color='var(--ink)';}}>
-                  {b}
-                </a>
-              );
-            })}
-          </div>
-        </div>
+      <h2 style={{fontFamily:"'Playfair Display',serif", fontSize:'1.3rem', fontWeight:700, marginBottom:'16px', color:'var(--ink)'}}>Browse by borough</h2>
+      <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(140px, 1fr))', gap:'8px'}}>
+        {BOROUGHS.map(b => {
+          const slug = b.toLowerCase().replace(/[''']/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+          return (
+            <a key={b} href={`/schools/${slug}`}
+              style={{display:'block', padding:'12px 14px', background:'var(--card-bg)', border:'1px solid var(--border)', borderRadius:'6px', fontSize:'0.85rem', fontWeight:500, color:'var(--ink)', textDecoration:'none', transition:'all 0.15s', minHeight:'44px', display:'flex', alignItems:'center'}}
+              onMouseOver={e=>{e.currentTarget.style.borderColor='var(--gold)';e.currentTarget.style.color='var(--gold)';}}
+              onMouseOut={e=>{e.currentTarget.style.borderColor='var(--border)';e.currentTarget.style.color='var(--ink)';}}>
+              {b}
+            </a>
+          );
+        })}
       </div>
     </div>
   );
@@ -1065,7 +1037,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const PAGE_SIZE = 24;
-  const [filters, setFilters] = useState({ q:'', phases:[], local_authority:'', score_bands:[], faith:false, selective:false, grammar:false, independent:false });
+  const [filters, setFilters] = useState({ q:'', phase:'', local_authority:'', score_band:'' });
 
   useEffect(() => {
     async function load() {
@@ -1081,37 +1053,17 @@ function App() {
   const filtered = useMemo(() => {
     let r = schools;
     if (filters.q) r = r.filter(s => s.name.toLowerCase().includes(filters.q.toLowerCase()) || (s.postcode||'').toLowerCase().includes(filters.q.toLowerCase()));
+    if (filters.phase) r = r.filter(s => s.phase === filters.phase);
     if (filters.local_authority) r = r.filter(s => s.local_authority === filters.local_authority);
-    if (filters.score_bands.length) r = r.filter(s => filters.score_bands.includes(s.score_band||s.quality_label));
-    if (filters.independent) {
-      r = r.filter(s => s.school_type === 'Other independent school' || s.school_type === 'Other independent special school');
-    } else if (filters.phases.length) {
-      r = r.filter(s => filters.phases.includes(s.phase));
-    }
-    if (filters.faith) r = r.filter(s => s.religious_character && s.religious_character !== 'Does not apply' && s.religious_character !== 'None');
-    if (filters.selective) r = r.filter(s => s.admissions === 'Selective');
-    if (filters.grammar) r = r.filter(s => s.admissions === 'Selective');
+    if (filters.score_band) r = r.filter(s => (s.score_band||s.quality_label) === filters.score_band);
     return r.sort((a,b) => (b.ofsted_score??-1)-(a.ofsted_score??-1));
   }, [schools, filters]);
 
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
   const paged = filtered.slice((page-1)*PAGE_SIZE, page*PAGE_SIZE);
   const setFilter = useCallback((k,v) => { setFilters(f=>({...f,[k]:v})); setPage(1); }, []);
-  const toggleFilter = useCallback((k,v) => {
-    setFilters(f => {
-      if (k === 'phases') {
-        const arr = f[k] || [];
-        const next = arr.includes(v) ? arr.filter(x=>x!==v) : [...arr, v];
-        return {...f, [k]: next, independent: next.length > 0 ? false : f.independent};
-      }
-      const arr = f[k] || [];
-      const next = arr.includes(v) ? arr.filter(x=>x!==v) : [...arr, v];
-      return {...f, [k]: next};
-    });
-    setPage(1);
-  }, []);
-  const clearFilters = () => { setFilters({q:'',phases:[],local_authority:'',score_bands:[],faith:false,selective:false,grammar:false,independent:false}); setPage(1); };
-  const hasFilters = filters.q || filters.phases.length || filters.local_authority || filters.score_bands.length || filters.faith || filters.selective || filters.grammar || filters.independent;
+  const clearFilters = () => { setFilters({q:'',phase:'',local_authority:'',score_band:''}); setPage(1); };
+  const hasFilters = filters.q || filters.phase || filters.local_authority || filters.score_band;
   const stats = useMemo(() => {
     const rated = schools.filter(s=>s.ofsted_score!=null);
     return { total:schools.length, outstanding:schools.filter(s=>(s.score_band||s.quality_label)==='Outstanding').length, avg:rated.length?Math.round(rated.reduce((a,s)=>a+s.ofsted_score,0)/rated.length):0 };
@@ -1200,6 +1152,8 @@ function App() {
         </div>
       </section>
 
+      <QuickBrowse />
+
       <main className="main">
         {loading ? (
           <div className="loading"><div className="spinner" /> Loading schools...</div>
@@ -1224,7 +1178,6 @@ function App() {
           </>
         ) : (
           <>
-            {view === 'schools' && <FilterBar filters={filters} setFilter={setFilter} toggleFilter={toggleFilter} localAuthorities={localAuthorities} hasFilters={!!hasFilters} clearFilters={clearFilters} />}
             <div className="controls">
               <div className="search-wrap"><span className="search-icon">🔍</span><input type="text" placeholder="Search by name or postcode..." value={filters.q} onChange={e => setFilter('q', e.target.value)} /></div>
               <div className="filter-group"><span className="filter-label">Phase</span><select value={filters.phase} onChange={e => setFilter('phase', e.target.value)}><option value="">All phases</option>{phases.map(p=><option key={p} value={p}>{p}</option>)}</select></div>
@@ -1232,7 +1185,6 @@ function App() {
               <div className="filter-group"><span className="filter-label">Rating</span><select value={filters.score_band} onChange={e => setFilter('score_band', e.target.value)}><option value="">All ratings</option>{['Outstanding','Good','Requires improvement','Inadequate','Ungraded (monitoring)','Report card (2025+)'].map(b=><option key={b} value={b}>{b}</option>)}</select></div>
               {hasFilters && <button className="clear-btn" onClick={clearFilters}>✕ Clear</button>}
             </div>
-            <BoroughsGrid />
             <div className="results-header">
               <div style={{display:'flex',alignItems:'center',gap:12,flexWrap:'wrap'}}>
                 <div className="results-count">Showing <strong>{filtered.length}</strong> school{filtered.length!==1?'s':''}{schools.length!==filtered.length?` of ${schools.length}`:''}</div>
@@ -1297,6 +1249,7 @@ function App() {
                 <button className="page-btn" onClick={() => setPage(p=>p+1)} disabled={page===totalPages}>›</button>
               </div>
             )}
+            <BoroughsGrid />
           </>
         )}
       </main>
@@ -1365,13 +1318,18 @@ function App() {
         ];
 
         // Filter rows: always show 'always' rows, show secondary/primary rows based on what's being compared
-        const rows = allRows.filter(r =>
-          r.always ||
-          (r.secondary && hasSecondary) ||
-          (r.primary && hasPrimary) ||
-          (r.secondary && !hasSecondary && !hasPrimary) ||
-          (r.primary && !hasPrimary && !hasSecondary)
-        );
+        const rows = allRows.filter(r => {
+          const typeMatch = r.always ||
+            (r.secondary && hasSecondary) ||
+            (r.primary && hasPrimary) ||
+            (r.secondary && !hasSecondary && !hasPrimary) ||
+            (r.primary && !hasPrimary && !hasSecondary);
+          if (!typeMatch) return false;
+          // Hide rows where every school shows '—' (no data available)
+          const vals = compareList.map(s => r.fn(s));
+          const allEmpty = vals.every(v => v === '—' || v === null || v === undefined);
+          return !allEmpty;
+        });
         const cols=compareList.length;
         const gridCols=`170px repeat(${cols},1fr)`;
         return(

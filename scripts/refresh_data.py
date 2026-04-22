@@ -140,6 +140,12 @@ def fetch_gias():
         df = df[~df[type_col].isin(EXCLUDE_TYPES)]
 
     print(f"  London open schools: {len(df):,}")
+    # Diagnostic: check coordinate columns
+    coord_cols = [c for c in df.columns if any(k in c.lower() for k in ("lat", "lon", "lng", "geo"))]
+    if coord_cols:
+        print(f"  Coordinate columns found: {coord_cols[:6]}")
+    else:
+        print("  WARNING: No coordinate columns found in GIAS data!")
     return df
 
 
@@ -512,16 +518,26 @@ def _ees_content_api_download(pub_slug, file_keyword, label):
     Returns raw bytes or None.
     """
     api = "https://content.explore-education-statistics.service.gov.uk/api"
-    pub_r = requests.get(f"{api}/publications/{pub_slug}", timeout=30)
+    try:
+        pub_r = requests.get(f"{api}/publications/{pub_slug}", timeout=30)
+    except Exception as e:
+        print(f"  [{label}] Content API connection error: {e}")
+        return None
     if not pub_r.ok:
+        print(f"  [{label}] Content API /publications/{pub_slug} → HTTP {pub_r.status_code}")
         return None
     latest_slug = pub_r.json().get("latestReleaseSlug", "")
     if not latest_slug:
+        print(f"  [{label}] Content API: no latestReleaseSlug in response")
         return None
     rel_r = requests.get(f"{api}/publications/{pub_slug}/releases/{latest_slug}", timeout=30)
     if not rel_r.ok:
+        print(f"  [{label}] Content API release/{latest_slug} → HTTP {rel_r.status_code}")
         return None
     dl_files = rel_r.json().get("downloadFiles", [])
+    print(f"  [{label}] Content API: {len(dl_files)} download files in release '{latest_slug}'")
+    if dl_files:
+        print(f"    File names: {[f.get('name','?') for f in dl_files[:5]]}")
     if not dl_files:
         return None
 
@@ -564,12 +580,19 @@ def _ees_stats_api_download(search_term, file_keyword, label):
     Returns raw bytes or None.
     """
     base = "https://api.education.gov.uk/statistics"
-    pub_r = requests.get(f"{base}/publications?search={requests.utils.quote(search_term)}&pageSize=5", timeout=30)
+    try:
+        pub_r = requests.get(f"{base}/publications?search={requests.utils.quote(search_term)}&pageSize=5", timeout=30)
+    except Exception as e:
+        print(f"  [{label}] Stats API connection error: {e}")
+        return None
     if not pub_r.ok:
+        print(f"  [{label}] Stats API search '{search_term}' → HTTP {pub_r.status_code}")
         return None
     pubs = pub_r.json().get("results", [])
     if not pubs:
+        print(f"  [{label}] Stats API search '{search_term}' → 0 results")
         return None
+    print(f"  [{label}] Stats API found: {[p.get('title','?') for p in pubs[:3]]}")
 
     pub_id = pubs[0]["id"]
     rel_r = requests.get(f"{base}/releases?publicationId={pub_id}&pageSize=1", timeout=30)
@@ -971,6 +994,7 @@ def fetch_admissions():
                 f"{EES_CONTENT_API}/publications/{slug}", timeout=30
             )
             if not pub_r.ok:
+                print(f"  [Admissions] Content API slug '{slug}' → HTTP {pub_r.status_code}")
                 continue
             latest_slug = pub_r.json().get("latestReleaseSlug", "")
             if not latest_slug:
@@ -1020,8 +1044,11 @@ def fetch_admissions():
                 timeout=30,
             )
             if not r.ok:
+                print(f"  [Admissions] Stats API search '{term}' → HTTP {r.status_code}")
                 continue
-            for pub in r.json().get("results", []):
+            results = r.json().get("results", [])
+            print(f"  [Admissions] Stats API '{term}' → {len(results)} results: {[p.get('title','?')[:40] for p in results[:3]]}")
+            for pub in results:
                 title = pub.get("title", "").lower()
                 if "application" not in title or "offer" not in title:
                     continue
@@ -1197,6 +1224,13 @@ def apply_crime(schools):
 
     crime_date = get_crime_date()
     print(f"  Using crime data month: {crime_date}")
+
+    # Diagnostic: check how many schools have valid coordinates
+    schools_with_coords = sum(1 for s in schools if s.get("lat") and s.get("lng"))
+    print(f"  Schools with lat/lng: {schools_with_coords:,} / {len(schools):,}")
+    if schools_with_coords == 0:
+        print("  No schools have coordinates — skipping crime fetch (check GIAS lat/lng columns)")
+        return
 
     counts = []
     school_indices = []

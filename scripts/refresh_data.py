@@ -374,6 +374,10 @@ def fetch_ofsted():
     date_col      = next((c for c in df.columns if "inspection" in c.lower() and "date" in c.lower()), None)
     url_col       = next((c for c in df.columns if "web" in c.lower() or "url" in c.lower() or "link" in c.lower()), None)
     pupils_col    = next((c for c in df.columns if "pupil" in c.lower() and ("number" in c.lower() or "roll" in c.lower())), None)
+    # "Category of concern" — populated for schools in Special Measures, Serious Weaknesses etc.
+    category_col  = next((c for c in df.columns if "category" in c.lower() and "concern" in c.lower()), None)
+    # Monitoring outcome — for schools with monitoring inspections after RI/Inadequate
+    monitoring_col = next((c for c in df.columns if "monitoring" in c.lower() and "outcome" in c.lower()), None)
 
     if not urn_col:
         print("  Could not find URN column in Ofsted data")
@@ -419,6 +423,15 @@ def fetch_ofsted():
                 return GRADE_MAP[g][1]
             return None
 
+        # Build ungraded_outcome from category of concern and/or monitoring outcome
+        category   = get_grade(category_col)
+        monitoring = get_grade(monitoring_col)
+        ungraded   = None
+        if monitoring and monitoring.lower() not in ("", "n/a", "not applicable"):
+            ungraded = monitoring
+        elif category and category.lower() not in ("", "n/a", "not applicable", "none"):
+            ungraded = category
+
         mapping[urn] = {
             "quality_label":    label,
             "quality_raw":      raw,
@@ -431,6 +444,7 @@ def fetch_ofsted():
             "inspection_date":  get_grade(date_col),
             "ofsted_url":       get_grade(url_col),
             "ofsted_pupils":    row.get(pupils_col) if pupils_col else None,
+            "ungraded_outcome": ungraded,
         }
 
     print(f"  Ofsted ratings mapped: {len(mapping):,}")
@@ -693,11 +707,25 @@ def apply_exam_results(schools, ks2_map, ks4_map):
 # ── Step 4: Admissions data from EES ─────────────────────────────────────────
 
 EES_API_BASE = "https://api.education.gov.uk/statistics"
-ADM_SEARCH_TERMS = ["secondary school applications", "applications offers", "admissions"]
 
-def _find_admissions_release_id():
-    """Auto-discover the latest admissions release ID — never hardcodes a publication ID."""
-    for term in ADM_SEARCH_TERMS:
+# Search terms for primary and secondary admissions publications (tried in order)
+ADM_SEARCH_TERMS = {
+    "secondary": [
+        "secondary school applications",
+        "secondary applications offers",
+        "applications offers secondary",
+    ],
+    "primary": [
+        "primary school applications",
+        "applications offers admissions primary",
+        "primary applications offers",
+    ],
+}
+
+def _find_admissions_release_id(school_type="secondary"):
+    """Auto-discover the latest admissions release ID for primary or secondary."""
+    terms = ADM_SEARCH_TERMS.get(school_type, ADM_SEARCH_TERMS["secondary"])
+    for term in terms:
         try:
             r = requests.get(
                 f"{EES_API_BASE}/publications?search={requests.utils.quote(term)}&pageSize=5",
@@ -708,6 +736,11 @@ def _find_admissions_release_id():
             for pub in r.json().get("results", []):
                 title = pub.get("title", "").lower()
                 if "application" in title and ("offer" in title or "admission" in title):
+                    # Skip if looking for primary but found secondary-only publication and vice versa
+                    if school_type == "primary" and "secondary" in title and "primary" not in title:
+                        continue
+                    if school_type == "secondary" and "primary" in title and "secondary" not in title:
+                        continue
                     pub_id = pub.get("id")
                     r2 = requests.get(
                         f"{EES_API_BASE}/releases?publicationId={pub_id}&pageSize=1",
@@ -721,28 +754,117 @@ def _find_admissions_release_id():
             continue
     return None
 
-def fetch_admissions():
-    """
-    Fetch secondary school applications & offers from EES.
-    Auto-discovers the latest release — no hardcoded publication IDs.
-    Returns URN → {places, first_pref_applications, total_applications,
-                    first_pref_offers, apps_per_place, first_pref_success_pct}
-    """
-    print("Step 4: Fetching admissions data from EES...")
-    try:
-        release_id = _find_admissions_release_id()
-        if not release_id:
-            print("  Could not discover admissions release — preserved data will be used")
-            return {}
 
+def _parse_admissions_df(df, source_label):
+    """
+    Parse a DfE admissions DataFrame into a URN → metrics mapping.
+    Handles varying column names across releases.
+    """
+    df.columns = df.columns.str.strip().str.lower()
+
+    # Filter to London
+    la_col = next((c for c in df.columns if "la" in c and "name" in c), None)
+    if la_col:
+        df[la_col] = df[la_col].astype(str).str.strip()
+        df = df[df[la_col].isin({la.lower() for la in LONDON_LAS})]
+
+    urn_col = next((c for c in df.columns if c == "urn"), None)
+    if not urn_col:
+        print(f"  [{source_label}] Could not find URN column — skipping")
+        return {}
+
+    # 1st-preference applications (first-choice apps received)
+    app_col = (
+        next((c for c in df.columns if "1st" in c and "preference" in c and "applic" in c), None)
+        or next((c for c in df.columns if "times_put_as_1st" in c), None)
+        or next((c for c in df.columns if "1st_preference" in c and "times" in c), None)
+        or next((c for c in df.columns if "first_preference" in c and ("applic" in c or "express" in c)), None)
+        or next((c for c in df.columns if "preference_1" in c and ("applic" in c or "express" in c)), None)
+    )
+
+    # Published Admission Number (PAN) — the school's annual intake limit
+    # Try exact name first, then progressively looser patterns
+    # IMPORTANT: exclude "offer" columns — offers made ≠ PAN for oversubscribed schools
+    pan_col = (
+        next((c for c in df.columns if c == "pan"), None)
+        or next((c for c in df.columns if c in ("planned_admission_number", "published_admission_number")), None)
+        or next((c for c in df.columns if "planned_admission" in c), None)
+        or next((c for c in df.columns if "published_admission" in c), None)
+        or next((c for c in df.columns if "admission_number" in c and "offer" not in c), None)
+        or next((c for c in df.columns if "places" in c and "pan" in c), None)
+        or next((c for c in df.columns if "places" in c and "number" in c
+                 and "offer" not in c and "total" not in c and "applic" not in c), None)
+        # Last resort: places_offered (approximately equal to PAN for oversubscribed schools)
+        or next((c for c in df.columns if "places" in c and "offer" in c), None)
+    )
+
+    # 1st-preference offers made
+    off_col = next((c for c in df.columns if "1st" in c and "offer" in c), None) or \
+              next((c for c in df.columns if "first_preference" in c and "offer" in c), None)
+
+    # Total applications (any preference)
+    tot_col = (
+        next((c for c in df.columns if "total" in c and "applic" in c), None)
+        or next((c for c in df.columns if "times_put_as_any" in c), None)
+        or next((c for c in df.columns if "any_preferred" in c and "times" in c), None)
+        or next((c for c in df.columns if "total_preference" in c), None)
+    )
+
+    print(f"  [{source_label}] Columns found — app:{app_col} | pan:{pan_col} | off:{off_col} | tot:{tot_col}")
+
+    mapping = {}
+    for _, row in df.iterrows():
+        try:
+            urn = int(float(str(row[urn_col])))
+        except (ValueError, TypeError):
+            continue
+
+        apps   = _safe_int(row.get(app_col))
+        places = _safe_int(row.get(pan_col))
+        offers = _safe_int(row.get(off_col))
+        total  = _safe_int(row.get(tot_col))
+
+        apps_per_place = None
+        success_pct    = None
+        if apps and places and places > 0:
+            apps_per_place = round(apps / places, 1)
+        if offers and apps and apps > 0:
+            success_pct = round(offers / apps * 100, 1)
+
+        # Do not overwrite an existing entry with a worse one
+        # (some schools appear twice — e.g. different preference rounds)
+        if urn in mapping and mapping[urn].get("apps_per_place") is not None and apps_per_place is None:
+            continue
+
+        mapping[urn] = {
+            "places":                  places,
+            "first_pref_applications": apps,
+            "total_applications":      total,
+            "first_pref_offers":       offers,
+            "apps_per_place":          apps_per_place,
+            "first_pref_success_pct":  success_pct,
+        }
+
+    return mapping
+
+
+def _download_admissions_for_type(school_type):
+    """Download and parse admissions data for 'primary' or 'secondary'."""
+    release_id = _find_admissions_release_id(school_type)
+    if not release_id:
+        print(f"  Could not find {school_type} admissions release")
+        return {}
+
+    try:
         r2 = requests.get(f"{EES_API_BASE}/releases/{release_id}/files", timeout=30)
         r2.raise_for_status()
         files = r2.json().get("results", [])
 
-        # Pick the school-level file
+        # Pick the school-level file (largest CSV in the release)
         target = None
         for f in files:
-            if "school" in f.get("name", "").lower():
+            name = f.get("name", "").lower()
+            if "school" in name:
                 target = f
                 break
         if not target and files:
@@ -764,64 +886,37 @@ def fetch_admissions():
         else:
             df = pd.read_csv(io.BytesIO(content), low_memory=False)
 
-        df.columns = df.columns.str.strip().str.lower()
-
-        # Filter London
-        la_col = next((c for c in df.columns if "la" in c and "name" in c), None)
-        if la_col:
-            df[la_col] = df[la_col].astype(str).str.strip()
-            df = df[df[la_col].isin({la.lower() for la in LONDON_LAS})]
-
-        urn_col  = next((c for c in df.columns if c == "urn"), None)
-        # 1st-preference applications — column name changed across DfE releases
-        app_col  = (next((c for c in df.columns if "1st" in c and "preference" in c and "applic" in c), None)
-                    or next((c for c in df.columns if "times_put_as_1st" in c), None)
-                    or next((c for c in df.columns if "1st_preference" in c and "times" in c), None))
-        pan_col  = next((c for c in df.columns if "places" in c and ("offer" in c or "pan" in c or "number" in c)), None)
-        off_col  = next((c for c in df.columns if "1st" in c and "offer" in c), None)
-        # Total applications — column name changed across DfE releases
-        tot_col  = (next((c for c in df.columns if "total" in c and "applic" in c), None)
-                    or next((c for c in df.columns if "times_put_as_any" in c), None)
-                    or next((c for c in df.columns if "any_preferred" in c and "times" in c), None))
-
-        if not urn_col:
-            print("  Could not find URN in admissions data")
-            return {}
-
-        mapping = {}
-        for _, row in df.iterrows():
-            try:
-                urn = int(float(str(row[urn_col])))
-            except (ValueError, TypeError):
-                continue
-
-            apps   = _safe_int(row.get(app_col))
-            places = _safe_int(row.get(pan_col))
-            offers = _safe_int(row.get(off_col))
-            total  = _safe_int(row.get(tot_col))
-
-            apps_per_place = None
-            success_pct    = None
-            if apps and places and places > 0:
-                apps_per_place = round(apps / places, 1)
-            if offers and apps and apps > 0:
-                success_pct = round(offers / apps * 100, 1)
-
-            mapping[urn] = {
-                "places":                    places,
-                "first_pref_applications":   apps,
-                "total_applications":         total,
-                "first_pref_offers":         offers,
-                "apps_per_place":            apps_per_place,
-                "first_pref_success_pct":    success_pct,
-            }
-
-        print(f"  Admissions data: {len(mapping):,} schools")
-        return mapping
+        result = _parse_admissions_df(df, school_type.capitalize())
+        print(f"  [{school_type.capitalize()}] admissions: {len(result):,} schools")
+        return result
 
     except Exception as e:
-        print(f"  Admissions fetch failed: {e}")
+        print(f"  {school_type.capitalize()} admissions fetch failed: {e}")
         return {}
+
+
+def fetch_admissions():
+    """
+    Fetch PRIMARY and SECONDARY school admissions from EES.
+    Returns URN → {places, first_pref_applications, total_applications,
+                    first_pref_offers, apps_per_place, first_pref_success_pct}
+    """
+    print("Step 4: Fetching admissions data from EES (primary + secondary)...")
+    mapping = {}
+
+    # Fetch secondary first (larger dataset, well-established columns)
+    secondary = _download_admissions_for_type("secondary")
+    mapping.update(secondary)
+
+    # Fetch primary — adds primary schools not in secondary data
+    # Also overwrites secondary entries for primary schools if primary data is available
+    primary = _download_admissions_for_type("primary")
+    for urn, data in primary.items():
+        if urn not in mapping or mapping[urn].get("apps_per_place") is None:
+            mapping[urn] = data
+
+    print(f"  Total admissions data: {len(mapping):,} schools combined")
+    return mapping
 
 
 def apply_admissions(schools, adm_map):
@@ -976,7 +1071,134 @@ def apply_crime(schools):
     return schools
 
 
-# ── Step 6: FSM deprivation scoring ──────────────────────────────────────────
+# ── Step 6: FSM data + deprivation scoring ───────────────────────────────────
+
+def fetch_fsm():
+    """
+    Fetch free school meals (FSM) percentages from EES.
+    Uses 'Schools, pupils and their characteristics' publication.
+    Returns URN → pct_fsm (float, e.g. 12.5 means 12.5%).
+    """
+    print("Step 6a: Fetching FSM/deprivation data from EES...")
+    search_terms = [
+        "schools pupils their characteristics",
+        "pupil characteristics school level",
+        "schools pupils characteristics",
+    ]
+    for term in search_terms:
+        try:
+            r = requests.get(
+                f"{EES_API_BASE}/publications?search={requests.utils.quote(term)}&pageSize=5",
+                timeout=30
+            )
+            if not r.ok:
+                continue
+            for pub in r.json().get("results", []):
+                title = pub.get("title", "").lower()
+                if "pupil" in title and "characteristic" in title:
+                    pub_id = pub.get("id")
+                    rel_r = requests.get(
+                        f"{EES_API_BASE}/releases?publicationId={pub_id}&pageSize=1",
+                        timeout=30
+                    )
+                    if not rel_r.ok:
+                        continue
+                    releases = rel_r.json().get("results", [])
+                    if not releases:
+                        continue
+                    release_id = releases[0]["id"]
+
+                    files_r = requests.get(
+                        f"{EES_API_BASE}/releases/{release_id}/files",
+                        timeout=30
+                    )
+                    if not files_r.ok:
+                        continue
+                    files = files_r.json().get("results", [])
+
+                    # Find school-level underlying data file
+                    target = None
+                    for f in files:
+                        name = f.get("name", "").lower()
+                        if "school" in name and ("level" in name or "underlying" in name):
+                            target = f
+                            break
+                    if not target:
+                        # Largest file as fallback
+                        if files:
+                            target = sorted(files, key=lambda x: x.get("size", 0), reverse=True)[0]
+                    if not target:
+                        continue
+
+                    dl_url = f"{EES_API_BASE}/releases/{release_id}/files/{target['id']}/download"
+                    r3 = requests.get(dl_url, timeout=120)
+                    if not r3.ok:
+                        continue
+                    content = r3.content
+
+                    try:
+                        if content[:2] == b"PK":
+                            with zipfile.ZipFile(io.BytesIO(content)) as z:
+                                csv_names = [n for n in z.namelist() if n.endswith(".csv")]
+                                csv_names.sort(key=lambda n: z.getinfo(n).file_size, reverse=True)
+                                with z.open(csv_names[0]) as f:
+                                    df = pd.read_csv(f, low_memory=False, encoding="latin-1")
+                        else:
+                            df = pd.read_csv(io.BytesIO(content), low_memory=False, encoding="latin-1")
+                    except Exception as e:
+                        print(f"  FSM CSV parse failed: {e}")
+                        continue
+
+                    df.columns = df.columns.str.strip().str.lower()
+
+                    urn_col = next((c for c in df.columns if c == "urn"), None)
+                    # FSM percentage column — varies between releases
+                    fsm_col = (
+                        next((c for c in df.columns if "fsm" in c and "pct" in c), None)
+                        or next((c for c in df.columns if "fsm" in c and "percent" in c), None)
+                        or next((c for c in df.columns if "free_school_meal" in c and "percent" in c), None)
+                        or next((c for c in df.columns if "free school meal" in c and "percent" in c), None)
+                        or next((c for c in df.columns if "fsm" in c and ("eligible" in c or "proportion" in c)), None)
+                        or next((c for c in df.columns if "free_school_meal" in c), None)
+                    )
+
+                    if not urn_col or not fsm_col:
+                        print(f"  FSM: could not find URN ({urn_col}) or FSM col ({fsm_col}) — skipping")
+                        continue
+
+                    print(f"  FSM column found: {fsm_col}")
+                    mapping = {}
+                    for _, row in df.iterrows():
+                        try:
+                            urn = int(float(str(row[urn_col])))
+                        except (ValueError, TypeError):
+                            continue
+                        pct = _safe_float(row.get(fsm_col))
+                        if pct is not None:
+                            mapping[urn] = pct
+
+                    print(f"  FSM data: {len(mapping):,} schools")
+                    return mapping
+
+        except Exception as e:
+            print(f"  FSM search failed for '{term}': {e}")
+            continue
+
+    print("  FSM data unavailable — preserved deprivation labels will be used")
+    return {}
+
+
+def apply_fsm_pct(schools, fsm_map):
+    """Merge pct_fsm values from EES into school records."""
+    updated = 0
+    for s in schools:
+        urn = s.get("urn")
+        if urn and int(urn) in fsm_map:
+            s["pct_fsm"] = fsm_map[int(urn)]
+            updated += 1
+    print(f"  Applied FSM % to {updated:,} schools")
+    return schools
+
 
 def apply_fsm_deprivation(schools):
     """
@@ -1137,8 +1359,12 @@ def main():
     apply_crime(schools)
     print()
 
-    # 6. FSM deprivation
+    # 6. FSM deprivation (fetch + score)
+    fsm_map = fetch_fsm()
+    if fsm_map:
+        schools = apply_fsm_pct(schools, fsm_map)
     apply_fsm_deprivation(schools)
+    print()
 
     # 7. Preserve fields from existing schools.json
     print("\nMerging preserved fields from existing data...")

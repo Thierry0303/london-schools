@@ -10,6 +10,9 @@ Rebuilds schools.json from scratch every month using four official sources:
 
 Run manually or via GitHub Actions on the 15th of each month.
 
+UPGRADE: Enhanced Ofsted handling for both old format (pre-Sept 2024, overall grade)
+and new format (Sept 2024+, Report Card with individual category ratings).
+
 Requirements: pip install requests pandas numpy pyyaml
 """
 
@@ -47,7 +50,7 @@ PRESERVE_FIELDS = [
     # Ofsted ratings — preserved for schools not in monthly MI (independents + awaiting inspection)
     # Fresh Ofsted data from MI always overwrites these — merge_existing only fills gaps
     "quality_label", "quality_raw", "ofsted_score", "score_band",
-    "behaviour_raw", "personal_dev_raw", "leadership_raw", "safeguarding",
+    "behaviour_raw", "personal_dev_raw", "leadership_raw", "early_years_raw", "safeguarding",
     "inspection_date", "ungraded_outcome",
     "rc_curriculum", "rc_achievement", "rc_attendance", "rc_leadership", "rc_safeguarding",
     # Deprivation
@@ -213,6 +216,7 @@ def parse_gias(df):
             "behaviour_raw":     None,
             "personal_dev_raw":  None,
             "leadership_raw":    None,
+            "early_years_raw":   None,
             "safeguarding":      None,
             "inspection_date":   None,
             "ofsted_url":        None,
@@ -269,6 +273,7 @@ def parse_gias(df):
                 school[coord] = float(school[coord]) if school[coord] is not None else None
             except (ValueError, TypeError):
                 school[coord] = None
+
         # Generate Snobe URL — matches Snobe slug format
         # Snobe uses /nursery/ prefix for nurseries, /schools/ for everything else
         # Stop words are removed from slugs
@@ -285,7 +290,10 @@ def parse_gias(df):
         snobe_prefix = "nursery" if is_nursery else "schools"
 
         if name_val:
-            words = str(name_val).lower()                .replace("’", "").replace("‘", "").replace("'", "")                .replace(",", "").replace(".", "").replace("(", "").replace(")", "")                .strip().split()
+            words = str(name_val).lower() \
+                .replace("'", "").replace("'", "").replace("'", "") \
+                .replace(",", "").replace(".", "").replace("(", "").replace(")", "") \
+                .strip().split()
             filtered = [w for w in words if w not in SNOBE_STOP_WORDS]
             snobe_slug = "-".join(filtered)
             snobe_slug = re.sub(r"-+", "-", snobe_slug).strip("-")
@@ -300,7 +308,7 @@ def parse_gias(df):
     return schools
 
 
-# ── Step 2: Ofsted monthly management information ─────────────────────────────
+# ── Step 2: Ofsted monthly management information (UPGRADED) ──────────────────
 
 OFSTED_MI_PAGE = (
     "https://www.gov.uk/government/statistical-data-sets/"
@@ -322,10 +330,18 @@ FSM_QUINTILE_MAP = {
     5: ("High pupil deprivation",   "#B71C1C", "#FFEBEE"),
 }
 
+
 def fetch_ofsted():
     """
-    Download Ofsted monthly management information and return
-    URN → dict of Ofsted fields.
+    Download Ofsted monthly management information.
+    
+    HANDLES BOTH:
+    - Old format (pre-Sept 2024): Single "Overall effectiveness" grade (1-4)
+    - New format (Sept 2024+): Individual category ratings (Quality, Behaviour, Personal Development, Leadership, Early Years)
+    
+    Returns: URN → dict of Ofsted fields
+    
+    NEW: More flexible column detection, captures all sub-grades, derives composite for new format
     """
     print("Step 2: Fetching Ofsted monthly management information...")
 
@@ -363,121 +379,216 @@ def fetch_ofsted():
     print(f"  Ofsted rows: {len(df):,}")
     df.columns = df.columns.str.strip()
 
-    # Find column names — they vary between releases
-    urn_col       = next((c for c in df.columns if c.strip().lower() in ("urn", "school urn")), None)
-    overall_col   = next((c for c in df.columns if "overall" in c.lower() and "effectiveness" in c.lower()), None)
-    quality_col   = next((c for c in df.columns if "quality" in c.lower() and "education" in c.lower()), None)
-    behaviour_col = next((c for c in df.columns if "behaviour" in c.lower()), None)
-    personal_col  = next((c for c in df.columns if "personal" in c.lower() and "development" in c.lower()), None)
-    leadership_col= next((c for c in df.columns if "leadership" in c.lower() and "management" in c.lower()), None)
-    safeguard_col = next((c for c in df.columns if "safeguard" in c.lower()), None)
-    date_col      = next((c for c in df.columns if "inspection" in c.lower() and "date" in c.lower()), None)
-    url_col       = next((c for c in df.columns if "web" in c.lower() or "url" in c.lower() or "link" in c.lower()), None)
-    pupils_col    = next((c for c in df.columns if "pupil" in c.lower() and ("number" in c.lower() or "roll" in c.lower())), None)
+    # ═══ FLEXIBLE COLUMN DETECTION ═══
+    # Ofsted changes column names between releases. This approach matches patterns.
+    def find_col(patterns):
+        """Find a column matching any of the given patterns (case-insensitive).
+        Normalizes by removing spaces and parentheses for robust matching.
+        """
+        for col in df.columns:
+            col_normalized = col.lower().replace(" ", "").replace("(", "").replace(")", "")
+            for pattern in patterns:
+                if pattern.lower().replace(" ", "") in col_normalized:
+                    return col
+        return None
+
+    # Identify key columns with flexible pattern matching
+    urn_col = find_col(["urn", "school urn", "unique reference number"])
+
+    # OLD FORMAT: Single overall effectiveness grade
+    overall_col = find_col(["overall", "effectiveness"])
+
+    # NEW FORMAT: Individual category ratings
+    quality_col = find_col(["quality", "education"])  # "Quality of education"
+    behaviour_col = find_col(["behaviour", "attitudes", "behavior"])  # "Behaviour and attitudes"
+    personal_col = find_col(["personal", "development"])  # "Personal development"
+    leadership_col = find_col(["leadership", "management"])  # "Leadership and management"
+    early_col = find_col(["early", "years"])  # "Early years provision"
+
+    # Supporting fields (both formats)
+    safeguard_col = find_col(["safeguard", "protection"])
+    date_col = find_col(["inspection", "date", "inspected"])
+    url_col = find_col(["web", "url", "link", "href", "report"])
+    pupils_col = find_col(["pupil", "number", "roll", "enrol"])
 
     if not urn_col:
         print("  Could not find URN column in Ofsted data")
         return {}
 
     mapping = {}
+
     for _, row in df.iterrows():
         try:
             urn = int(float(str(row[urn_col]).strip()))
         except (ValueError, TypeError):
             continue
 
-        def get_grade(col):
-            if not col:
+        def safe_grade(col):
+            """Extract grade value, return None if missing/empty."""
+            if not col or col not in row.index:
                 return None
-            val = str(row.get(col, "")).strip()
-            if val in ("", "nan", "N/A"):
+            val = str(row[col]).strip()
+            if val in ("", "nan", "N/A", "n/a", "None"):
                 return None
             return val
 
-        overall   = get_grade(overall_col)
-        quality   = get_grade(quality_col)
-        behaviour = get_grade(behaviour_col)
-        personal  = get_grade(personal_col)
-        leadership= get_grade(leadership_col)
+        # Helper: Convert text or numeric grade to integer 1-4
+        def text_to_numeric(grade):
+            """Convert grade label ('Outstanding') or number ('1') to numeric 1-4."""
+            if not grade:
+                return None
 
-        # Map numeric grade to label
-        label, raw, score = None, None, None
-        if overall and overall in GRADE_MAP:
-            label, raw, score = GRADE_MAP[overall]
-        elif overall:
-            # Try text match
-            for text in ("Outstanding", "Good", "Requires improvement", "Inadequate"):
-                if text.lower() in overall.lower():
-                    label = text
-                    raw = list(GRADE_MAP.keys())[[v[0] for v in GRADE_MAP.values()].index(text)]
-                    _, raw_int, score = GRADE_MAP[raw]
-                    raw = raw_int
-                    break
+            grade_str = str(grade).strip()
 
-        def grade_to_int(g):
-            if g and g in GRADE_MAP:
-                return GRADE_MAP[g][1]
+            # Try to match text labels
+            for num_str, (label, _, _) in GRADE_MAP.items():
+                if label.lower() == grade_str.lower():
+                    return int(num_str)
+
+            # Try numeric input (e.g., "1", "2", "1.0")
+            try:
+                num = int(float(grade_str))
+                if 1 <= num <= 4:
+                    return num
+            except (ValueError, TypeError):
+                pass
+
             return None
 
+        # Retrieve grades from row
+        overall = safe_grade(overall_col)
+        quality = safe_grade(quality_col)
+        behaviour = safe_grade(behaviour_col)
+        personal = safe_grade(personal_col)
+        leadership = safe_grade(leadership_col)
+        early = safe_grade(early_col)
+
+        # ═══ DERIVE OVERALL GRADE ═══
+        label, raw, score = None, None, None
+
+        # CASE 1: Has overall grade (old format, pre-Sept 2024)
+        if overall:
+            grade_num = text_to_numeric(overall)
+            if grade_num and str(grade_num) in GRADE_MAP:
+                label, raw, score = GRADE_MAP[str(grade_num)]
+
+        # CASE 2: No overall but has category ratings (new format, Sept 2024+)
+        # Derive composite from worst category rating
+        if not label:
+            sub_grades = []
+
+            # Collect numeric values for all categories
+            for sub_col in [quality, behaviour, personal, leadership, early]:
+                g = text_to_numeric(sub_col)
+                if g:
+                    sub_grades.append(g)
+
+            # If we have at least one sub-grade, use the worst (highest number) as overall
+            if sub_grades:
+                worst = max(sub_grades)  # 4=worst, 1=best, so max is worst
+                if str(worst) in GRADE_MAP:
+                    label, raw, score = GRADE_MAP[str(worst)]
+
+        # Convert all sub-grades to numeric for storage
+        behaviour_raw = text_to_numeric(behaviour)
+        personal_dev_raw = text_to_numeric(personal)
+        leadership_raw = text_to_numeric(leadership)
+        early_years_raw = text_to_numeric(early)
+
         mapping[urn] = {
-            "quality_label":    label,
-            "quality_raw":      raw,
-            "ofsted_score":     score,
-            "score_band":       label,
-            "behaviour_raw":    grade_to_int(behaviour),
-            "personal_dev_raw": grade_to_int(personal),
-            "leadership_raw":   grade_to_int(leadership),
-            "safeguarding":     get_grade(safeguard_col),
-            "inspection_date":  get_grade(date_col),
-            "ofsted_url":       get_grade(url_col),
-            "ofsted_pupils":    row.get(pupils_col) if pupils_col else None,
+            "quality_label": label,
+            "quality_raw": raw,
+            "ofsted_score": score,
+            "score_band": label,
+            # Sub-grades (used for Report Card format display)
+            "behaviour_raw": behaviour_raw,
+            "personal_dev_raw": personal_dev_raw,
+            "leadership_raw": leadership_raw,
+            "early_years_raw": early_years_raw,
+            # Supporting fields
+            "safeguarding": safe_grade(safeguard_col),
+            "inspection_date": safe_grade(date_col),
+            "ofsted_url": safe_grade(url_col),
+            "ofsted_pupils": row.get(pupils_col) if pupils_col else None,
         }
 
     print(f"  Ofsted ratings mapped: {len(mapping):,}")
+
+    # Log breakdown: old format vs new format
+    old_format_count = sum(1 for m in mapping.values() if m.get("quality_label"))
+    new_format_count = sum(
+        1 for m in mapping.values()
+        if not m.get("quality_label") and any(
+            m.get(f) for f in ["behaviour_raw", "personal_dev_raw", "leadership_raw"]
+        )
+    )
+
+    if old_format_count > 0 or new_format_count > 0:
+        print(f"  └─ {old_format_count:,} old format (overall grade), {new_format_count:,} new Report Card format (Sept 2024+)")
+
     return mapping
 
 
 def apply_ofsted(schools, ofsted_map):
-    """Merge Ofsted data into school records.
+    """
+    Merge Ofsted data into school records.
 
-    For schools inspected under the new Sept 2024+ Report Card framework,
-    Ofsted no longer gives an overall effectiveness grade.
-    We derive a display label from the sub-grades instead.
+    Handles BOTH old and new formats:
+    - Old: Uses overall effectiveness grade directly
+    - New: Derives composite rating from sub-grades when no overall grade exists
     """
     updated = 0
     report_card = 0
+
     for s in schools:
         urn = s.get("urn")
+
+        # Apply Ofsted data if available
         if urn and int(urn) in ofsted_map:
             s.update(ofsted_map[int(urn)])
             updated += 1
-            # Handle new Report Card framework (Sept 2024+)
-            # No overall grade — derive from sub-grades
-            if not s.get("quality_label") and not s.get("ofsted_score"):
-                sub_grades = [
-                    s.get("behaviour_raw"),
-                    s.get("personal_dev_raw"),
-                    s.get("leadership_raw"),
-                ]
-                sub_grades = [g for g in sub_grades if g is not None]
-                if sub_grades:
-                    worst = max(sub_grades)
-                    if worst == 1:
-                        label, score = "Outstanding", 100
-                    elif worst == 2:
-                        label, score = "Good", 75
-                    elif worst == 3:
-                        label, score = "Requires improvement", 35
-                    else:
-                        label, score = "Inadequate", 0
+
+        # ═══ HANDLE NEW REPORT CARD FORMAT (Sept 2024+) ═══
+        # If school has category ratings but NO overall grade, derive composite
+        if not s.get("quality_label") and not s.get("ofsted_score"):
+            # Collect all available sub-grades
+            sub_grades = [
+                s.get("behaviour_raw"),
+                s.get("personal_dev_raw"),
+                s.get("leadership_raw"),
+                s.get("early_years_raw"),
+            ]
+            # Filter out None values
+            sub_grades = [g for g in sub_grades if g is not None]
+
+            # Derive composite from worst grade
+            if sub_grades:
+                worst = max(sub_grades)  # 4=worst, 1=best
+
+                # Map worst grade to overall label
+                if worst == 1:
+                    label, score = "Outstanding", 100
+                elif worst == 2:
+                    label, score = "Good", 80
+                elif worst == 3:
+                    label, score = "Requires improvement", 40
+                elif worst == 4:
+                    label, score = "Inadequate", 0
+                else:
+                    label, score = None, None
+
+                # Store derived composite rating
+                if label:
                     s["quality_label"] = label
                     s["ofsted_score"] = score
                     s["score_band"] = label
                     s["quality_raw"] = worst
                     report_card += 1
+
     print(f"  Applied Ofsted data to {updated:,} schools")
     if report_card:
-        print(f"  Derived Report Card ratings for {report_card:,} schools (new 2024+ framework)")
+        print(f"  └─ Derived Report Card composite ratings for {report_card:,} schools (Sept 2024+ framework)")
+
     return schools
 
 
@@ -911,7 +1022,7 @@ def apply_crime(schools):
     Batches requests to avoid rate limiting. Skips if API is unavailable.
     """
     print("Step 5: Fetching crime data from Police API...")
-    
+
     # First check if Police API is reachable at all
     try:
         test = requests.get("https://data.police.uk/api/crime-last-updated", timeout=10)

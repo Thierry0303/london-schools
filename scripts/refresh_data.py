@@ -550,7 +550,10 @@ def apply_ofsted(schools, ofsted_map):
 
         # ═══ HANDLE NEW REPORT CARD FORMAT (Sept 2024+) ═══
         # If school has category ratings but NO overall grade, derive composite
-        if not s.get("quality_label") and not s.get("ofsted_score"):
+        has_sub_grades = any(s.get(f) for f in ["behaviour_raw", "personal_dev_raw", "leadership_raw", "early_years_raw"])
+        has_overall = s.get("quality_label") or s.get("ofsted_score")
+        
+        if has_sub_grades and not has_overall:
             # Collect all available sub-grades
             sub_grades = [
                 s.get("behaviour_raw"),
@@ -577,7 +580,7 @@ def apply_ofsted(schools, ofsted_map):
                 else:
                     label, score = None, None
 
-                # Store derived composite rating
+                # Store derived composite rating - OVERRIDE any preserved values
                 if label:
                     s["quality_label"] = label
                     s["ofsted_score"] = score

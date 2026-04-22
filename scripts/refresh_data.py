@@ -563,21 +563,25 @@ def _ees_content_api_download(pub_slug, file_keyword, label):
 
     if not candidates and file_keyword:
         # Fall back: no keyword match — try all files
+        print(f"  [{label}] No files matched keyword '{file_keyword}' — trying all {len(dl_files)} files")
         candidates = [(f.get("size", 0) or 0, f.get("name", "").lower(), f.get("url", ""))
                       for f in dl_files if f.get("url")]
 
     if not candidates:
+        print(f"  [{label}] No downloadable files found")
         return None
 
     # Prefer largest file (most likely school-level data)
     candidates.sort(reverse=True)
     for _, name, url in candidates:
         try:
-            r = requests.get(url, timeout=120)
+            r = requests.get(url, timeout=120, allow_redirects=True)
+            print(f"  [{label}] Download '{name}' → HTTP {r.status_code}, {len(r.content)} bytes")
             if r.ok and len(r.content) > 1000:
                 print(f"  {label}: downloaded '{name}' ({len(r.content)//1024} KB) via content API")
                 return r.content
-        except Exception:
+        except Exception as e:
+            print(f"  [{label}] Download '{name}' → Exception: {e}")
             continue
     return None
 
@@ -1004,8 +1008,16 @@ def fetch_admissions():
             if not pub_r.ok:
                 print(f"  [Admissions] Content API slug '{slug}' → HTTP {pub_r.status_code}")
                 continue
-            latest_slug = pub_r.json().get("latestReleaseSlug", "")
+            pub_data = pub_r.json()
+            # Handle both old and new EES content API field names for latest release
+            latest_slug = (
+                pub_data.get("latestReleaseSlug")
+                or pub_data.get("latestRelease", {}).get("slug")
+                or (pub_data.get("releases") or [{}])[0].get("slug", "")
+            )
+            print(f"  [Admissions] Slug '{slug}' OK, latest release: '{latest_slug}'")
             if not latest_slug:
+                print(f"  [Admissions] Could not find release slug in: {list(pub_data.keys())}")
                 continue
 
             rel_r = requests.get(
@@ -1013,10 +1025,11 @@ def fetch_admissions():
                 timeout=30,
             )
             if not rel_r.ok:
+                print(f"  [Admissions] Release request → HTTP {rel_r.status_code}")
                 continue
 
             dl_files = rel_r.json().get("downloadFiles", [])
-            print(f"  [Content API/{slug}] {len(dl_files)} download files available")
+            print(f"  [Admissions] {len(dl_files)} download files; names: {[f.get('name','?') for f in dl_files[:5]]}")
 
             # Sort largest first — school-level file is usually the biggest
             for ds in sorted(dl_files, key=lambda x: x.get("size", 0), reverse=True):
@@ -1028,7 +1041,9 @@ def fetch_admissions():
                 if any(skip in name for skip in ("national", "metadata", "glossary")):
                     continue
                 try:
-                    r3 = requests.get(url, timeout=120)
+                    print(f"  [Admissions] Trying download: '{ds.get('name','?')}' url={url[:80]}")
+                    r3 = requests.get(url, timeout=120, allow_redirects=True)
+                    print(f"    → HTTP {r3.status_code}, {len(r3.content)} bytes")
                     if not r3.ok:
                         continue
                     df = _load_df_from_content(r3.content)
@@ -1036,7 +1051,8 @@ def fetch_admissions():
                     if result:
                         print(f"  Admissions data: {len(result):,} schools")
                         return result
-                except Exception:
+                except Exception as exc:
+                    print(f"    → Exception: {exc}")
                     continue
 
         except Exception as e:
@@ -1510,6 +1526,49 @@ def merge_existing(schools, existing_map):
     return schools
 
 
+def _fill_coords_from_postcodes(schools):
+    """
+    Look up decimal lat/lng for schools that have no coordinates.
+    Uses postcodes.io batch API (free, no auth required, up to 100 per request).
+    """
+    POSTCODES_IO = "https://api.postcodes.io/postcodes"
+    # Build postcode → [school indices] map
+    pc_map = {}
+    for i, s in enumerate(schools):
+        pc = (s.get("postcode") or "").strip().replace(" ", "").upper()
+        if pc:
+            pc_map.setdefault(pc, []).append(i)
+
+    if not pc_map:
+        return
+
+    # Batch in groups of 100
+    postcodes = list(pc_map.keys())
+    found = 0
+    for batch_start in range(0, len(postcodes), 100):
+        batch = postcodes[batch_start:batch_start + 100]
+        try:
+            resp = requests.post(POSTCODES_IO, json={"postcodes": batch}, timeout=30)
+            if not resp.ok:
+                continue
+            for item in resp.json().get("result", []):
+                if not item or not item.get("result"):
+                    continue
+                pc = (item.get("query") or "").replace(" ", "").upper()
+                r  = item["result"]
+                lat, lng = r.get("latitude"), r.get("longitude")
+                if lat and lng and pc in pc_map:
+                    for idx in pc_map[pc]:
+                        schools[idx]["lat"] = lat
+                        schools[idx]["lng"] = lng
+                        found += 1
+        except Exception as e:
+            print(f"    postcodes.io batch error: {e}")
+            continue
+
+    print(f"  Found coordinates for {found} schools via postcodes.io")
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main():
@@ -1528,8 +1587,8 @@ def main():
     print(f"Base school list: {len(schools):,} schools\n")
 
     # 1b. Pre-seed lat/lng from existing schools.json
-    # GIAS CSV doesn't always include decimal coordinates — preserve from last run
-    # so that the crime API step (Step 5) can use them.
+    # GIAS CSV uses Easting/Northing (OS grid refs), not decimal lat/lng.
+    # Carry over decimal coordinates from the previous run for schools we already know.
     existing_coords = load_existing()
     coords_seeded = 0
     for s in schools:
@@ -1541,7 +1600,14 @@ def main():
                 s["lng"] = old["lng"]
                 coords_seeded += 1
     if coords_seeded:
-        print(f"  Pre-seeded lat/lng for {coords_seeded:,} schools from previous data\n")
+        print(f"  Pre-seeded lat/lng for {coords_seeded:,} schools from previous data")
+
+    # 1c. For any remaining schools without coordinates, look up via postcodes.io
+    missing_coords = [s for s in schools if not s.get("lat") or not s.get("lng")]
+    if missing_coords:
+        print(f"  Looking up coordinates for {len(missing_coords)} schools via postcodes.io...")
+        _fill_coords_from_postcodes(missing_coords)
+    print()
 
     # 2. Ofsted ratings
     ofsted_map = fetch_ofsted()

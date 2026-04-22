@@ -1119,7 +1119,25 @@ def _parse_admissions_df(df, source_label):
         or next((c for c in df.columns if "total_preference" in c), None)
     )
 
-    print(f"  [{source_label}] Columns found — app:{app_col} | pan:{pan_col} | off:{off_col} | tot:{tot_col}")
+    # Pre-calculated oversubscription ratio: 1st-pref apps / 1st-pref offers
+    # DfE column: proportion_1stprefs_v_1stprefoffers (value >= 1 means oversubscribed)
+    # This IS our apps_per_place metric — use it directly instead of computing from raw counts
+    apps_per_place_col = (
+        next((c for c in df.columns if c == "proportion_1stprefs_v_1stprefoffers"), None)
+        or next((c for c in df.columns if "proportion" in c and "1stpref" in c and "1stprefoffers" in c), None)
+        or next((c for c in df.columns if "proportion" in c and "1stpref" in c and "offer" in c
+                 and "total" not in c), None)
+        or next((c for c in df.columns if "ratio" in c and ("applic" in c or "1st" in c)), None)
+        or next((c for c in df.columns if "apps_per" in c or "applic_per" in c), None)
+    )
+
+    # success_rate_col: not separately available in this file — computed from off_col/app_col below
+    success_rate_col = None
+
+    # Log all columns so we can debug PAN/proportion detection if needed
+    places_cols = [c for c in df.columns if any(k in c for k in ("place", "pan", "admission", "capacity", "proportion", "ratio"))]
+    print(f"  [{source_label}] Places/proportion columns: {places_cols}")
+    print(f"  [{source_label}] Columns found — app:{app_col} | pan:{pan_col} | off:{off_col} | tot:{tot_col} | success_rate:{success_rate_col} | apps_per_place:{apps_per_place_col}")
 
     mapping = {}
     for _, row in df.iterrows():
@@ -1133,11 +1151,23 @@ def _parse_admissions_df(df, source_label):
         offers = _safe_int(row.get(off_col))
         total  = _safe_int(row.get(tot_col))
 
+        # Use DfE's pre-calculated oversubscription ratio directly
+        # proportion_1stprefs_v_1stprefoffers = 1st_pref_apps / 1st_pref_offers
+        # A value > 1 means oversubscribed; exactly 1 means all 1st-pref applicants got in
         apps_per_place = None
-        success_pct    = None
-        if apps and places and places > 0:
+        if apps_per_place_col:
+            apps_per_place = _safe_float(row.get(apps_per_place_col))
+        # Fallback: compute from raw counts (less accurate — uses total offers, not PAN)
+        if apps_per_place is None and apps and places and places > 0:
             apps_per_place = round(apps / places, 1)
-        if offers and apps and apps > 0:
+
+        success_pct = None
+        if success_rate_col:
+            raw = _safe_float(row.get(success_rate_col), decimals=4)
+            if raw is not None:
+                # DfE stores as decimal (0–1); convert to percentage
+                success_pct = round(raw * 100, 1) if raw <= 1.0 else round(raw, 1)
+        if success_pct is None and offers and apps and apps > 0:
             success_pct = round(offers / apps * 100, 1)
 
         # Do not overwrite an existing entry with a worse one

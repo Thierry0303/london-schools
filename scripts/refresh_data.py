@@ -848,15 +848,20 @@ def fetch_ks4_results():
     except Exception as e:
         print(f"  KS4 content API failed: {e}")
 
-    # Approach 2: EES statistics API
-    try:
-        content = _ees_stats_api_download("key stage 4 performance", "school", "KS4")
-        if content:
-            result = parse_ks4_csv(content)
-            if result:
-                return result
-    except Exception as e:
-        print(f"  KS4 statistics API failed: {e}")
+    # Approach 2: EES statistics API — try keywords most likely to have school-level att8
+    for ks4_kw in ("performance tables", "attainment 8", "school performance", "school"):
+        try:
+            content = _ees_stats_api_download("key stage 4 performance", ks4_kw, "KS4")
+            if content:
+                result = parse_ks4_csv(content)
+                if result and any(s.get("ks4_att8") for s in [{"ks4_att8": v} for v in result.values()]):
+                    return result
+                elif result:
+                    # Got schools but att8=None — keep trying other keywords
+                    print(f"  KS4 stats API ({ks4_kw}): {len(result)} schools but att8=None, trying next keyword")
+                    continue
+        except Exception as e:
+            print(f"  KS4 statistics API ({ks4_kw}) failed: {e}")
 
     print("  KS4 data unavailable — skipping")
     return {}
@@ -890,22 +895,29 @@ def parse_ks4_csv(content):
     att8_col   = (
         next((c for c in df.columns if "att8" in c or "attainment_8" in c or "attainment8" in c), None)
         or next((c for c in df.columns if "average_attainment" in c), None)
+        or next((c for c in df.columns if "a8" in c and ("score" in c or "avg" in c or "mean" in c)), None)
     )
     grade5_col = (
         next((c for c in df.columns if ("grade_5" in c or "grade5" in c or "l2basics_5" in c) and "english" in c), None)
         or next((c for c in df.columns if "grade_5" in c or "grade5" in c or "l2basics_5" in c), None)
         or next((c for c in df.columns if "5_or_above" in c and "english" in c), None)
+        or next((c for c in df.columns if "5_or_above" in c), None)
+        or next((c for c in df.columns if "basics_94" in c or "strong_pass" in c), None)
     )
     grade4_col = (
         next((c for c in df.columns if ("grade_4" in c or "grade4" in c or "l2basics_4" in c) and "english" in c), None)
         or next((c for c in df.columns if "grade_4" in c or "grade4" in c or "l2basics_4" in c), None)
         or next((c for c in df.columns if "4_or_above" in c and "english" in c), None)
+        or next((c for c in df.columns if "4_or_above" in c), None)
+        or next((c for c in df.columns if "basics_93" in c or "standard_pass" in c), None)
     )
     pupils_col = (
         next((c for c in df.columns if "pupil" in c and ("number" in c or "count" in c or "total" in c)), None)
-        or next((c for c in df.columns if "number_of_pupils" in c or "total_pupils" in c), None)
+        or next((c for c in df.columns if "number_of_pupils" in c or "total_pupils" in c or "cohort_size" in c), None)
     )
     print(f"  KS4 parse: urn={urn_col} att8={att8_col} g5={grade5_col} g4={grade4_col} rows={len(df)}")
+    # Always log columns so we can tune detection if needed
+    print(f"  KS4 columns sample: {list(df.columns[:30])}")
 
     mapping = {}
     for _, row in df.iterrows():
@@ -1024,11 +1036,10 @@ def _parse_admissions_df(df, source_label):
     """
     df.columns = df.columns.str.strip().str.lower()
 
-    # Filter to London
+    # Filter to London — case-insensitive comparison
     la_col = next((c for c in df.columns if "la" in c and "name" in c), None)
     if la_col:
-        df[la_col] = df[la_col].astype(str).str.strip()
-        df = df[df[la_col].isin({la.lower() for la in LONDON_LAS})]
+        df = df[df[la_col].astype(str).str.strip().str.lower().isin({la.lower() for la in LONDON_LAS})]
 
     urn_col = _find_urn_col(df.columns.tolist())
     if not urn_col:
@@ -1528,26 +1539,29 @@ def fetch_fsm():
     """
     print("Step 6a: Fetching FSM/deprivation data from EES...")
 
-    # Approach 1: EES content API
+    # Approach 1: EES content API — "school-pupils-and-their-characteristics" publication
+    # Use "underlying" keyword to target "school level underlying data 2025" file
+    # NOT "school arranged alternative provision" which also matches "school"
     fsm_pub_slugs = [
-        "schools-pupils-and-their-characteristics",
         "school-pupils-and-their-characteristics",
+        "schools-pupils-and-their-characteristics",
     ]
     for slug in fsm_pub_slugs:
-        try:
-            content = _ees_content_api_download(slug, "school", "FSM")
-            if content:
-                result = _parse_fsm_content(content)
-                if result:
-                    return result
-        except Exception as e:
-            print(f"  FSM content API ({slug}) failed: {e}")
+        for kw in ("underlying", "school level", "school"):
+            try:
+                content = _ees_content_api_download(slug, kw, "FSM")
+                if content:
+                    result = _parse_fsm_content(content)
+                    if result:
+                        return result
+            except Exception as e:
+                print(f"  FSM content API ({slug}, kw={kw}) failed: {e}")
 
-    # Approach 2: EES statistics API — search for publication then download
+    # Approach 2: EES statistics API
     search_terms = [
-        "schools pupils their characteristics",
-        "pupil characteristics",
+        "free school meals",
         "schools pupils characteristics",
+        "pupil characteristics school level",
     ]
     for term in search_terms:
         try:

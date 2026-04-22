@@ -1260,8 +1260,16 @@ def apply_crime(schools):
     school_indices = []
     consecutive_failures = 0
     fetched = 0
+    # Hard cap: crime step must finish within 8 minutes to avoid job cancellation
+    CRIME_MAX_SECONDS = 480
+    crime_start = time.time()
 
     for i, s in enumerate(schools):
+        # Time-box the entire crime step
+        if time.time() - crime_start > CRIME_MAX_SECONDS:
+            print(f"  Crime step time limit reached ({CRIME_MAX_SECONDS}s) — stopping at school {i} (fetched {fetched})")
+            break
+
         lat, lng = s.get("lat"), s.get("lng")
         if lat and lng:
             count = fetch_crime_for_school(lat, lng, crime_date)
@@ -1283,11 +1291,12 @@ def apply_crime(schools):
                 print(f"  Crime API returning no data after 100 schools — {crime_date} may be unavailable")
                 print(f"  Skipping crime fetch — preserved data will be used")
                 break
-        # Rate limiting — Police API allows ~15 req/s
-        if i % 10 == 0:
-            time.sleep(0.5)
+        # Rate limiting — 1 req/s sustained is safe and keeps total time under 1 hour
+        # With 8-min cap this processes ~450 schools max per run
+        time.sleep(0.1)
         if i % 100 == 0 and i > 0:
-            print(f"  Crime data: {i}/{len(schools)} schools processed...")
+            elapsed = int(time.time() - crime_start)
+            print(f"  Crime data: {i}/{len(schools)} schools processed ({elapsed}s elapsed)...")
 
     # Score all schools relative to each other
     for i, s in enumerate(schools):

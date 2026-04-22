@@ -529,6 +529,55 @@ def fetch_ofsted():
     return mapping
 
 
+def fetch_report_card_ratings(school):
+    """
+    For schools inspected Sept 2024+ without overall ratings, 
+    fetch the individual category ratings from their Ofsted report page.
+    
+    Returns: {behaviour_raw, personal_dev_raw, leadership_raw, early_years_raw} or None
+    """
+    ofsted_url = school.get("ofsted_url")
+    if not ofsted_url:
+        return None
+    
+    try:
+        r = requests.get(ofsted_url, timeout=10)
+        if not r.ok:
+            return None
+        
+        html = r.text
+        
+        # Parse the report HTML for category ratings
+        grades = {}
+        
+        # Map of patterns to field names
+        patterns = {
+            "behaviour_raw": ["Behaviour and attitudes", "Behaviour & attitudes"],
+            "personal_dev_raw": ["Personal development"],
+            "leadership_raw": ["Leadership and management"],
+            "early_years_raw": ["Early years provision"],
+        }
+        
+        for field, labels in patterns.items():
+            for label in labels:
+                # Look for the grade after the label
+                for grade_text, grade_num in [
+                    ("Outstanding", 1),
+                    ("Good", 2),
+                    ("Requires improvement", 3),
+                    ("Inadequate", 4),
+                ]:
+                    pattern = f"{label}.*?{grade_text}"
+                    if re.search(pattern, html, re.IGNORECASE | re.DOTALL):
+                        grades[field] = grade_num
+                        break
+        
+        return grades if grades else None
+    
+    except Exception as e:
+        return None
+
+
 def apply_ofsted(schools, ofsted_map):
     """
     Merge Ofsted data into school records.
@@ -536,11 +585,13 @@ def apply_ofsted(schools, ofsted_map):
     Handles BOTH old and new formats:
     - Old: Uses overall effectiveness grade directly
     - New: Derives composite rating from sub-grades when no overall grade exists
+    - Sept 2024+: Fetches ratings from report pages if needed
     """
     updated = 0
     report_card = 0
 
     report_card_candidates = []
+    fetched_from_report = 0
     
     for s in schools:
         urn = s.get("urn")
@@ -551,6 +602,17 @@ def apply_ofsted(schools, ofsted_map):
             updated += 1
 
         # ═══ HANDLE NEW REPORT CARD FORMAT (Sept 2024+) ═══
+        # If school has NO overall grade but HAS an inspection date, try to fetch from report page
+        has_no_overall = not s.get("quality_label") and not s.get("ofsted_score")
+        has_recent_inspection = s.get("inspection_date")  # Sept 2024 onwards
+        
+        if has_no_overall and has_recent_inspection and s.get("ofsted_url"):
+            # Try to fetch ratings from the Ofsted report page
+            fetched_grades = fetch_report_card_ratings(s)
+            if fetched_grades:
+                s.update(fetched_grades)
+                fetched_from_report += 1
+        
         # If school has category ratings but NO overall grade, derive composite
         has_sub_grades = any(s.get(f) for f in ["behaviour_raw", "personal_dev_raw", "leadership_raw", "early_years_raw"])
         has_overall = s.get("quality_label") or s.get("ofsted_score")
@@ -601,14 +663,10 @@ def apply_ofsted(schools, ofsted_map):
                     report_card += 1
 
     print(f"  Applied Ofsted data to {updated:,} schools")
+    if fetched_from_report:
+        print(f"  └─ Fetched Report Card ratings from {fetched_from_report:,} Ofsted report pages (Sept 2024+ framework)")
     if report_card:
-        print(f"  └─ Derived Report Card composite ratings for {report_card:,} schools (Sept 2024+ framework)")
-    
-    # Debug: show which schools were candidates but didn't get converted
-    if report_card_candidates:
-        print(f"  DEBUG: Found {len(report_card_candidates)} Report Card candidates:")
-        for cand in report_card_candidates[:5]:  # Show first 5
-            print(f"    - {cand['name']} (URN {cand['urn']}): behaviour={cand['behaviour']}, personal={cand['personal']}, leadership={cand['leadership']}")
+        print(f"  └─ Derived composite ratings for {report_card:,} schools from category grades")
 
     return schools
 

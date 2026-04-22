@@ -173,12 +173,33 @@ def build_school_page(school):
     if ks4_grade4 is not None:
         results_rows += f"<tr><td>Grade 4+ English &amp; Maths</td><td><strong>{ks4_grade4}%</strong></td></tr>"
 
+    # Build data note for results section
+    results_note = ""
+    if ks4_att8 or ks4_grade5:
+        results_note = "<p style=\"font-size:12px;color:#888;margin-top:12px;line-height:1.5;\">KS4 data from DfE 2024/25 school performance tables. Attainment 8 measures average grade across 8 GCSE subjects (national average: 46.4). Grade 5+ is a strong pass in both English and Maths. Figures may occasionally exceed 100% due to mid-year cohort changes in DfE reporting.</p>"
+    elif ks2_expected or ks2_higher:
+        results_note = "<p style=\"font-size:12px;color:#888;margin-top:12px;line-height:1.5;\">KS2 data from DfE 2024/25 performance tables. Figures show the percentage of pupils meeting the expected or higher standard in reading, writing and maths combined.</p>"
+
+    # Admissions demand row — shown in School details card if data available
+    apps_per_place = school.get("apps_per_place")
+    if apps_per_place:
+        apps_row = f'<tr><td>Applications per place</td><td><strong>{apps_per_place}</strong></td></tr>'
+        apps_note = ('<p style="font-size:12px;color:#888;margin-top:12px;line-height:1.5;">'
+                     'Applications per place = number of first-choice applications received per available place '
+                     'in the 2024/25 admissions round (DfE data). A figure above 1.0 means the school was '
+                     'oversubscribed. For example, 2.0 means twice as many families listed this school as their '
+                     'first choice as there were places available.</p>')
+    else:
+        apps_row = ""
+        apps_note = ""
+
     results_section = ""
     if results_rows:
         results_section = f"""
     <section class="card">
       <h2>Exam results</h2>
       <table>{results_rows}</table>
+      {results_note}
     </section>"""
 
     website_link = f'<a href="{"https://" + website if not website.startswith("http") else website}" target="_blank" rel="noopener">{website}</a>' if website else "N/A"
@@ -190,7 +211,7 @@ def build_school_page(school):
     # Rich meta description with actual data
     meta_parts = [f"{ofsted_label} {phase} school in {borough}, London"]
     if school.get("apps_per_place"):
-        meta_parts.append(f"{school['apps_per_place']}Ã- oversubscribed")
+        meta_parts.append(f"{school['apps_per_place']}x oversubscribed")
     if ks4_att8:
         meta_parts.append(f"Attainment 8: {ks4_att8}")
     elif ks2_expected:
@@ -409,7 +430,9 @@ def build_school_page(school):
       <tr><td>Sixth form</td><td><strong>{sixth_form}</strong></td></tr>
       <tr><td>Admissions</td><td><strong>{admissions}</strong></td></tr>
       <tr><td>Religious character</td><td><strong>{religion}</strong></td></tr>
+      {apps_row}
     </table>
+    {apps_note}
   </section>
 
   <section class="card">
@@ -973,4 +996,3 @@ pathlib.Path("robots.txt").write_text(robots, encoding="utf-8")
 print("robots.txt written.")
 
 print("\nDone! Deploy to Vercel and submit sitemap.xml to Google Search Console.")
-

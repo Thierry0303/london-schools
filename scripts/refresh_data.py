@@ -551,62 +551,125 @@ def _ees_content_api_download(pub_slug, file_keyword, label):
     if not dl_files:
         return None
 
-    # EES content API no longer includes a direct `url` in downloadFiles.
-    # Construct the download URL from release_id + file_id instead.
-    def _build_dl_url(f):
-        direct = f.get("url") or f.get("href") or f.get("downloadUrl") or ""
-        if direct:
-            return direct
-        fid = f.get("id", "")
-        if release_id and fid:
-            return f"{api}/releases/{release_id}/files/{fid}/download"
-        return ""
+    # Log first file's structure to understand available fields
+    if dl_files:
+        first = dl_files[0]
+        print(f"  [{label}] File object keys: {list(first.keys())}")
 
-    # Pick best matching file
+    # Log first file's full structure to understand available fields
+    if dl_files:
+        first = dl_files[0]
+        print(f"  [{label}] File[0] keys: {list(first.keys())}")
+        print(f"  [{label}] File[0] sample: id={str(first.get('id',''))[:16]} name={first.get('name','')} size={first.get('size',0)}")
+
+    # Build a prioritised list of download URL candidates for a given file object.
+    # Priority based on empirical evidence: releases/{releaseId}/files/{fileId} (no /download)
+    # is a live EES Content API endpoint (seen in Google-indexed URLs).
+    def _build_dl_urls(f):
+        urls = []
+        fid = str(f.get("id", ""))
+        # 1) Direct URL fields (populated in some API versions)
+        for field in ("url", "href", "downloadUrl", "path"):
+            val = f.get(field, "")
+            if val and val.startswith("http"):
+                urls.append(val)
+        if fid:
+            # 2) Release-ID-based WITHOUT /download — confirmed live URL format
+            if release_id:
+                urls.append(f"{api}/releases/{release_id}/files/{fid}")
+            # 3) Slug-based (alternative format)
+            urls.append(f"{api}/publications/{pub_slug}/releases/{latest_slug}/files/{fid}")
+            # 4) Variants with /download suffix
+            if release_id:
+                urls.append(f"{api}/releases/{release_id}/files/{fid}/download")
+            urls.append(f"{api}/publications/{pub_slug}/releases/{latest_slug}/files/{fid}/download")
+        return urls
+
+    def _fetch_file_content(url, name, label):
+        """
+        Fetch a URL and return binary content.
+        Handles two cases:
+          a) Direct binary response (CSV or ZIP) → returned as-is
+          b) JSON response with a 'url'/'href' field → follow that URL for the actual file
+        """
+        url_short = url.split("/api/")[-1]
+        r = requests.get(url, timeout=120, allow_redirects=True)
+        ct = r.headers.get("Content-Type", "")
+        print(f"  [{label}] '{name}' [{url_short}] → HTTP {r.status_code}, {len(r.content):,} bytes, ct={ct[:40]}")
+        if not r.ok:
+            return None
+        # If small JSON response — try to extract a download URL from it
+        if len(r.content) < 5000 and "json" in ct.lower():
+            try:
+                jdata = r.json()
+                for key in ("url", "href", "downloadUrl", "path", "fileUrl"):
+                    redirect = jdata.get(key, "")
+                    if redirect and redirect.startswith("http"):
+                        print(f"  [{label}] JSON redirect → {redirect[:80]}")
+                        r2 = requests.get(redirect, timeout=120, allow_redirects=True)
+                        print(f"  [{label}] Redirect → HTTP {r2.status_code}, {len(r2.content):,} bytes")
+                        if r2.ok and len(r2.content) > 1000:
+                            return r2.content
+                print(f"  [{label}] JSON keys: {list(jdata.keys())}")
+            except Exception:
+                pass
+            return None
+        if len(r.content) > 1000:
+            return r.content
+        return None
+
+    # Pick best matching file(s) by keyword
     candidates = []
     for f in dl_files:
         name = f.get("name", "").lower()
-        url  = _build_dl_url(f)
         size = f.get("size", 0) or 0
-        if not url:
+        urls = _build_dl_urls(f)
+        if not urls:
             continue
         if file_keyword and file_keyword not in name:
             continue
-        candidates.append((size, name, url))
+        candidates.append((size, name, f, urls))
 
     if not candidates and file_keyword:
         # Fall back: no keyword match — try all files
         print(f"  [{label}] No files matched keyword '{file_keyword}' — trying all {len(dl_files)} files")
-        candidates = [(_f.get("size", 0) or 0, _f.get("name", "").lower(), _build_dl_url(_f))
-                      for _f in dl_files if _build_dl_url(_f)]
+        candidates = [
+            (_f.get("size", 0) or 0, _f.get("name", "").lower(), _f, _build_dl_urls(_f))
+            for _f in dl_files if _build_dl_urls(_f)
+        ]
 
     if not candidates:
-        print(f"  [{label}] No downloadable files found (release_id={release_id[:8] if release_id else 'MISSING'})")
+        print(f"  [{label}] No downloadable files found")
         return None
 
     # Prefer largest file (most likely school-level data)
     candidates.sort(reverse=True)
-    for _, name, url in candidates:
-        try:
-            r = requests.get(url, timeout=120, allow_redirects=True)
-            print(f"  [{label}] Download '{name}' → HTTP {r.status_code}, {len(r.content):,} bytes")
-            if r.ok and len(r.content) > 1000:
-                print(f"  {label}: downloaded '{name}' ({len(r.content)//1024} KB) via content API")
-                return r.content
-        except Exception as e:
-            print(f"  [{label}] Download '{name}' → Exception: {e}")
-            continue
+    for _, name, f, urls in candidates:
+        for url in urls:
+            try:
+                content = _fetch_file_content(url, name, label)
+                if content:
+                    print(f"  {label}: downloaded '{name}' ({len(content)//1024} KB) via content API")
+                    return content
+            except Exception as e:
+                url_short = url.split("/api/")[-1]
+                print(f"  [{label}] '{name}' [{url_short}] → Exception: {e}")
+                continue
     return None
 
 
 def _ees_stats_api_download(search_term, file_keyword, label):
     """
-    Generic helper: use EES statistics API to find a publication and download its latest school-level file.
+    Use EES statistics API v1 to find a publication, list its data sets, and download a CSV.
+    v1 API path: /publications → /publications/{id}/data-sets → /data-sets/{id}/file
     Returns raw bytes or None.
     """
-    base = EES_API_BASE  # uses the /v1 URL defined at module level
+    base = EES_API_BASE  # https://api.education.gov.uk/statistics/v1
     try:
-        pub_r = requests.get(f"{base}/publications?search={requests.utils.quote(search_term)}&pageSize=5", timeout=30)
+        pub_r = requests.get(
+            f"{base}/publications?search={requests.utils.quote(search_term)}&pageSize=5",
+            timeout=30
+        )
     except Exception as e:
         print(f"  [{label}] Stats API connection error: {e}")
         return None
@@ -619,47 +682,45 @@ def _ees_stats_api_download(search_term, file_keyword, label):
         return None
     print(f"  [{label}] Stats API found: {[p.get('title','?') for p in pubs[:3]]}")
 
+    # v1 API: list data sets for the publication (v1 doesn't have a /releases endpoint)
     pub_id = pubs[0]["id"]
-    rel_r = requests.get(f"{base}/releases?publicationId={pub_id}&pageSize=1", timeout=30)
-    if not rel_r.ok:
+    ds_r = requests.get(f"{base}/publications/{pub_id}/data-sets?pageSize=20", timeout=30)
+    if not ds_r.ok:
+        print(f"  [{label}] /data-sets endpoint → HTTP {ds_r.status_code}")
         return None
-    releases = rel_r.json().get("results", [])
-    if not releases:
+    data_sets = ds_r.json().get("results", [])
+    if not data_sets:
+        print(f"  [{label}] No data sets found for publication")
         return None
+    print(f"  [{label}] Data sets: {[d.get('title','?') for d in data_sets[:4]]}")
 
-    release_id = releases[0]["id"]
-    files_r = requests.get(f"{base}/releases/{release_id}/files", timeout=30)
-    if not files_r.ok:
-        return None
-
-    all_files = files_r.json().get("results", [])
-    candidates = []
-    for f in all_files:
-        name = f.get("name", "").lower()
-        fid  = f.get("id", "")
-        size = f.get("size", 0) or 0
-        if not fid:
+    # Rank: prefer data sets with keyword in title, then by result count (largest = most granular)
+    ranked = []
+    for ds in data_sets:
+        title  = ds.get("title", "").lower()
+        dsid   = ds.get("id", "")
+        total  = (ds.get("latestVersion") or {}).get("totalResults", 0) or 0
+        if not dsid:
             continue
-        if file_keyword and file_keyword not in name:
-            continue
-        candidates.append((size, name, fid))
+        score  = 1 if (file_keyword and file_keyword in title) else 0
+        ranked.append((-score, -total, title, dsid))
+    ranked.sort()
 
-    if not candidates and file_keyword:
-        candidates = [(f.get("size", 0) or 0, f.get("name", "").lower(), f.get("id", ""))
-                      for f in all_files if f.get("id")]
-
-    if not candidates:
-        return None
-
-    candidates.sort(reverse=True)
-    for _, name, fid in candidates:
-        try:
-            dl = requests.get(f"{base}/releases/{release_id}/files/{fid}/download", timeout=120)
-            if dl.ok and len(dl.content) > 1000:
-                print(f"  {label}: downloaded '{name}' ({len(dl.content)//1024} KB) via statistics API")
-                return dl.content
-        except Exception:
-            continue
+    for _, _, title, dsid in ranked:
+        # Try several possible download endpoint patterns for the v1 data-sets API
+        for dl_path in [
+            f"{base}/data-sets/{dsid}/file",
+            f"{base}/data-sets/{dsid}/versions/latest/file",
+            f"{base}/data-sets/{dsid}/csv",
+        ]:
+            try:
+                dl = requests.get(dl_path, timeout=120, allow_redirects=True)
+                print(f"  [{label}] {'/'.join(dl_path.split('/')[-2:])} → HTTP {dl.status_code}, {len(dl.content):,} bytes")
+                if dl.ok and len(dl.content) > 1000:
+                    print(f"  {label}: downloaded '{title}' ({len(dl.content)//1024} KB) via v1 data-sets API")
+                    return dl.content
+            except Exception as e:
+                print(f"  [{label}] {dl_path.split('/')[-1]}: {e}")
     return None
 
 
@@ -1046,38 +1107,50 @@ def fetch_admissions():
             dl_files   = rel_data.get("downloadFiles", [])
             print(f"  [Admissions] {len(dl_files)} download files (release id={adm_rel_id[:8]}...); names: {[f.get('name','?') for f in dl_files[:5]]}")
 
-            def _adm_dl_url(f):
-                direct = f.get("url") or f.get("href") or f.get("downloadUrl") or ""
-                if direct:
-                    return direct
+            def _adm_dl_urls(f):
+                """Return list of download URLs to try, in priority order."""
+                urls = []
+                for field in ("url", "href", "downloadUrl", "path"):
+                    val = f.get(field, "")
+                    if val and val.startswith("http"):
+                        urls.append(val)
                 fid = f.get("id", "")
-                if adm_rel_id and fid:
-                    return f"{EES_CONTENT_API}/releases/{adm_rel_id}/files/{fid}/download"
-                return ""
+                if fid:
+                    # Slug-based (most reliable in current EES API)
+                    urls.append(f"{EES_CONTENT_API}/publications/{slug}/releases/{latest_slug}/files/{fid}")
+                    urls.append(f"{EES_CONTENT_API}/publications/{slug}/releases/{latest_slug}/files/{fid}/download")
+                    # ID-based fallbacks
+                    if adm_rel_id:
+                        urls.append(f"{EES_CONTENT_API}/releases/{adm_rel_id}/files/{fid}")
+                        urls.append(f"{EES_CONTENT_API}/releases/{adm_rel_id}/files/{fid}/download")
+                return urls
 
             # Sort largest first — school-level file is usually the biggest
             for ds in sorted(dl_files, key=lambda x: x.get("size", 0), reverse=True):
                 name = ds.get("name", "").lower()
-                url  = _adm_dl_url(ds)
-                if not url:
+                urls = _adm_dl_urls(ds)
+                if not urls:
                     continue
                 # Skip clearly non-school files (LA-level, national, metadata)
                 if any(skip in name for skip in ("national", "metadata", "glossary")):
                     continue
-                try:
-                    print(f"  [Admissions] Trying: '{ds.get('name','?')}' → {url[:80]}")
-                    r3 = requests.get(url, timeout=120, allow_redirects=True)
-                    print(f"    → HTTP {r3.status_code}, {len(r3.content):,} bytes")
-                    if not r3.ok:
+                for url in urls:
+                    url_short = url.split("/api/")[-1]
+                    try:
+                        print(f"  [Admissions] '{ds.get('name','?')}' [{url_short}] → ", end="", flush=True)
+                        r3 = requests.get(url, timeout=120, allow_redirects=True)
+                        print(f"HTTP {r3.status_code}, {len(r3.content):,} bytes")
+                        if not r3.ok:
+                            continue
+                        df = _load_df_from_content(r3.content)
+                        result = _parse_admissions_df(df, f"ContentAPI/{slug}")
+                        if result:
+                            print(f"  Admissions data: {len(result):,} schools")
+                            return result
+                        break  # parsed but no results — move to next file
+                    except Exception as exc:
+                        print(f"Exception: {exc}")
                         continue
-                    df = _load_df_from_content(r3.content)
-                    result = _parse_admissions_df(df, f"ContentAPI/{slug}")
-                    if result:
-                        print(f"  Admissions data: {len(result):,} schools")
-                        return result
-                except Exception as exc:
-                    print(f"    → Exception: {exc}")
-                    continue
 
         except Exception as e:
             print(f"  Content API slug '{slug}' failed: {e}")

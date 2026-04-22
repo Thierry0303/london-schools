@@ -43,7 +43,7 @@ PRESERVE_FIELDS = [
     "places", "first_pref_applications", "first_pref_offers",
     "total_applications", "apps_per_place", "first_pref_success_pct",
     # Crime — preserved when Police API is unavailable
-    "crime_count", "crime_score", "crime_label",
+    "crime_count", "crime_score", "crime_label", "crime_fetched_date",
     # Ofsted ratings — preserved for schools not in monthly MI (independents + awaiting inspection)
     # Fresh Ofsted data from MI always overwrites these — merge_existing only fills gaps
     "quality_label", "quality_raw", "ofsted_score", "score_band",
@@ -342,30 +342,33 @@ def fetch_ofsted():
         html = r.text
     except Exception as e:
         print(f"  Could not fetch Ofsted MI page: {e}")
-        return {}
+        return {}, {}
 
-    # Find the most recent CSV download link
+    # Find CSV download links — page has both "latest_inspections" and "all_inspections" files
     csv_links = re.findall(r'href="(https://[^"]+\.csv[^"]*)"', html)
     if not csv_links:
-        # Try without https requirement
         csv_links = re.findall(r'href="([^"]+\.csv[^"]*)"', html)
 
     if not csv_links:
         print("  No CSV link found on Ofsted MI page")
-        return {}
+        return {}, {}
 
-    csv_url = csv_links[0]
-    if csv_url.startswith("/"):
-        csv_url = "https://www.gov.uk" + csv_url
+    def _abs(url):
+        return ("https://www.gov.uk" + url) if url.startswith("/") else url
 
-    print(f"  Downloading: {csv_url}")
+    # Prefer the "latest_inspections" URL for the primary graded-outcomes file
+    latest_url = next((u for u in csv_links if "latest_inspection" in u.lower()), None)
+    all_url    = next((u for u in csv_links if "all_inspection"    in u.lower()), None)
+    csv_url    = _abs(latest_url or csv_links[0])
+
+    print(f"  Downloading (latest inspections): {csv_url}")
     try:
         r2 = requests.get(csv_url, timeout=90)
         r2.raise_for_status()
         df = pd.read_csv(io.BytesIO(r2.content), encoding="latin-1", low_memory=False)
     except Exception as e:
         print(f"  Could not download Ofsted CSV: {e}")
-        return {}
+        return {}, {}
 
     print(f"  Ofsted rows: {len(df):,}")
     df.columns = df.columns.str.strip()
@@ -388,7 +391,7 @@ def fetch_ofsted():
 
     if not urn_col:
         print("  Could not find URN column in Ofsted data")
-        return {}
+        return {}, {}
 
     # Find school name + LA columns for fallback name-based matching
     name_col_ofsted = next((c for c in df.columns if "school" in c.lower() and "name" in c.lower()), None)
@@ -474,6 +477,59 @@ def fetch_ofsted():
                 name_la_map[name_key] = data
 
     print(f"  Ofsted ratings mapped: {len(mapping):,} by URN, {len(name_la_map):,} by name+LA")
+
+    # ── Overlay most-recent inspection dates from "all inspections" file ──────
+    # The "latest inspections" file only records the last GRADED inspection.
+    # Outstanding schools exempt from routine inspection before 2021 may have had
+    # ungraded monitoring visits since — those dates appear only in "all_inspections".
+    def _to_iso(date_str):
+        """Convert DD/MM/YYYY → YYYY-MM-DD for sortable comparison. Returns '' on failure."""
+        s = str(date_str).strip()
+        for fmt in ("%d/%m/%Y", "%Y-%m-%d", "%d-%m-%Y"):
+            try:
+                return datetime.strptime(s, fmt).strftime("%Y-%m-%d")
+            except ValueError:
+                pass
+        return ""
+
+    if all_url:
+        all_url = _abs(all_url)
+        print(f"  Downloading (all inspections — for recent visit dates): {all_url}")
+        try:
+            r3 = requests.get(all_url, timeout=90)
+            r3.raise_for_status()
+            df_all = pd.read_csv(io.BytesIO(r3.content), encoding="latin-1", low_memory=False)
+            df_all.columns = df_all.columns.str.strip()
+
+            urn_col_a  = next((c for c in df_all.columns if c.strip().lower() in ("urn", "school urn")), None)
+            date_col_a = next((c for c in df_all.columns if "inspection" in c.lower() and "date" in c.lower()), None)
+
+            if urn_col_a and date_col_a:
+                # Build URN → most-recent inspection date (any type)
+                recent = {}
+                for _, row in df_all.iterrows():
+                    try:
+                        u = int(float(str(row[urn_col_a]).strip()))
+                    except (ValueError, TypeError):
+                        continue
+                    iso = _to_iso(row.get(date_col_a, ""))
+                    if iso and iso > recent.get(u, ""):
+                        recent[u] = iso
+
+                # Overlay: update inspection_date wherever "all inspections" is newer
+                updated_dates = 0
+                for urn, data in mapping.items():
+                    newer = recent.get(urn, "")
+                    existing = _to_iso(data.get("inspection_date") or "")
+                    if newer and newer > existing:
+                        data["inspection_date"] = datetime.strptime(newer, "%Y-%m-%d").strftime("%d/%m/%Y")
+                        updated_dates += 1
+                print(f"  Updated inspection dates for {updated_dates:,} schools from all-inspections file")
+        except Exception as e:
+            print(f"  Could not process all-inspections file: {e}")
+    else:
+        print("  No 'all inspections' file found on page — skipping date overlay")
+
     return mapping, name_la_map
 
 
@@ -1495,18 +1551,29 @@ def apply_crime(schools):
         print("  No schools have coordinates — skipping crime fetch (check GIAS lat/lng columns)")
         return
 
+    # Sort schools by staleness of crime data — most stale first.
+    # This ensures all ~3,130 schools get refreshed within 3–4 monthly runs
+    # rather than the same first 900 being refreshed every time.
+    stale_order = sorted(
+        range(len(schools)),
+        key=lambda i: schools[i].get("crime_fetched_date") or "2000-01"
+    )
+    already_stale = sum(1 for i in stale_order if not schools[i].get("crime_fetched_date"))
+    print(f"  {already_stale:,} schools have no crime data yet; processing stalest first")
+
     counts = []
-    school_indices = []
     consecutive_failures = 0
     fetched = 0
+    processed = 0
     # Hard cap: crime step must finish within 8 minutes to avoid job cancellation
     CRIME_MAX_SECONDS = 480
     crime_start = time.time()
 
-    for i, s in enumerate(schools):
+    for i in stale_order:
+        s = schools[i]
         # Time-box the entire crime step
         if time.time() - crime_start > CRIME_MAX_SECONDS:
-            print(f"  Crime step time limit reached ({CRIME_MAX_SECONDS}s) — stopping at school {i} (fetched {fetched})")
+            print(f"  Crime step time limit reached ({CRIME_MAX_SECONDS}s) — stopping after {processed} schools (fetched {fetched})")
             break
 
         lat, lng = s.get("lat"), s.get("lng")
@@ -1517,35 +1584,36 @@ def apply_crime(schools):
             else:
                 consecutive_failures = 0
                 fetched += 1
+                s["crime_fetched_date"] = crime_date   # stamp when this school was last fetched
             s["crime_count"] = count
             if count is not None:
                 counts.append(count)
-                school_indices.append(i)
             # Bail out after 20 consecutive failures — API is down
             if consecutive_failures >= 20:
-                print(f"  Crime API failing consistently — stopping at {i} (fetched {fetched})")
+                print(f"  Crime API failing consistently — stopping (fetched {fetched})")
                 break
             # Early check: if first 100 schools with coords all return 0, date may be unavailable
-            if i == 100 and fetched == 0 and sum(1 for x in schools[:100] if x.get("lat")) > 20:
+            if processed == 100 and fetched == 0 and sum(1 for j in stale_order[:100] if schools[j].get("lat")) > 20:
                 print(f"  Crime API returning no data after 100 schools — {crime_date} may be unavailable")
                 print(f"  Skipping crime fetch — preserved data will be used")
                 break
-        # Rate limiting — 1 req/s sustained is safe and keeps total time under 1 hour
-        # With 8-min cap this processes ~450 schools max per run
+        processed += 1
+        # Rate limiting — ~1 req/s sustained is safe
         time.sleep(0.1)
-        if i % 100 == 0 and i > 0:
+        if processed % 100 == 0:
             elapsed = int(time.time() - crime_start)
-            print(f"  Crime data: {i}/{len(schools)} schools processed ({elapsed}s elapsed)...")
+            print(f"  Crime data: {processed}/{len(schools)} schools processed ({elapsed}s elapsed)...")
 
-    # Score all schools relative to each other
-    for i, s in enumerate(schools):
+    # Score all schools that have a crime count (fresh or preserved)
+    all_counts = [s["crime_count"] for s in schools if s.get("crime_count") is not None]
+    for s in schools:
         count = s.get("crime_count")
         if count is not None:
-            score, label = score_crime(count, counts)
+            score, label = score_crime(count, all_counts)
             s["crime_score"] = score
             s["crime_label"] = label
 
-    print(f"  Crime data fetched for {len(counts):,} schools")
+    print(f"  Crime data fetched for {fetched:,} schools this run ({len(all_counts):,} total with data)")
     return schools
 
 

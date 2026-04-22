@@ -706,26 +706,50 @@ def apply_exam_results(schools, ks2_map, ks4_map):
 
 # ── Step 4: Admissions data from EES ─────────────────────────────────────────
 
-EES_API_BASE = "https://api.education.gov.uk/statistics"
+EES_API_BASE       = "https://api.education.gov.uk/statistics"
+EES_CONTENT_API    = "https://content.explore-education-statistics.service.gov.uk/api"
 
-# Search terms for primary and secondary admissions publications (tried in order)
-ADM_SEARCH_TERMS = {
-    "secondary": [
-        "secondary school applications",
-        "secondary applications offers",
-        "applications offers secondary",
-    ],
-    "primary": [
-        "primary school applications",
-        "applications offers admissions primary",
-        "primary applications offers",
-    ],
-}
+# DfE publishes primary + secondary admissions in ONE combined publication.
+# The publication slug changed name between releases — try both variants.
+ADM_PUB_SLUGS = [
+    "primary-and-secondary-school-applications-and-offers",
+    "secondary-and-primary-school-applications-and-offers",
+]
 
-def _find_admissions_release_id(school_type="secondary"):
-    """Auto-discover the latest admissions release ID for primary or secondary."""
-    terms = ADM_SEARCH_TERMS.get(school_type, ADM_SEARCH_TERMS["secondary"])
-    for term in terms:
+# Fallback search terms for the EES statistics API
+ADM_SEARCH_TERMS = [
+    "primary and secondary school applications and offers",
+    "secondary and primary school applications",
+    "applications and offers primary secondary",
+    "school applications offers admissions",
+]
+
+
+def _find_admissions_release_id():
+    """
+    Auto-discover the latest combined primary+secondary admissions release ID.
+
+    Strategy:
+    1. Try stable EES content API with known publication slugs (fastest, most reliable)
+    2. Fall back to EES statistics API keyword search
+    """
+    # Method 1: Direct content API using stable publication slugs
+    for slug in ADM_PUB_SLUGS:
+        try:
+            r = requests.get(
+                f"{EES_CONTENT_API}/publications/{slug}/releases/latest",
+                timeout=30
+            )
+            if r.ok:
+                release_id = r.json().get("id")
+                if release_id:
+                    print(f"  Found admissions release via slug '{slug}'")
+                    return release_id
+        except Exception:
+            continue
+
+    # Method 2: Keyword search via statistics API
+    for term in ADM_SEARCH_TERMS:
         try:
             r = requests.get(
                 f"{EES_API_BASE}/publications?search={requests.utils.quote(term)}&pageSize=5",
@@ -735,12 +759,9 @@ def _find_admissions_release_id(school_type="secondary"):
                 continue
             for pub in r.json().get("results", []):
                 title = pub.get("title", "").lower()
-                if "application" in title and ("offer" in title or "admission" in title):
-                    # Skip if looking for primary but found secondary-only publication and vice versa
-                    if school_type == "primary" and "secondary" in title and "primary" not in title:
-                        continue
-                    if school_type == "secondary" and "primary" in title and "secondary" not in title:
-                        continue
+                if "application" in title and "offer" in title and (
+                    "primary" in title or "secondary" in title
+                ):
                     pub_id = pub.get("id")
                     r2 = requests.get(
                         f"{EES_API_BASE}/releases?publicationId={pub_id}&pageSize=1",
@@ -749,9 +770,11 @@ def _find_admissions_release_id(school_type="secondary"):
                     if r2.ok:
                         results = r2.json().get("results", [])
                         if results:
+                            print(f"  Found admissions release via search: '{pub.get('title')}'")
                             return results[0]["id"]
         except Exception:
             continue
+
     return None
 
 
@@ -848,13 +871,8 @@ def _parse_admissions_df(df, source_label):
     return mapping
 
 
-def _download_admissions_for_type(school_type):
-    """Download and parse admissions data for 'primary' or 'secondary'."""
-    release_id = _find_admissions_release_id(school_type)
-    if not release_id:
-        print(f"  Could not find {school_type} admissions release")
-        return {}
-
+def _download_admissions_for_type_by_release(release_id, label="Admissions"):
+    """Download and parse admissions data for a given EES release ID."""
     try:
         r2 = requests.get(f"{EES_API_BASE}/releases/{release_id}/files", timeout=30)
         r2.raise_for_status()
@@ -886,37 +904,33 @@ def _download_admissions_for_type(school_type):
         else:
             df = pd.read_csv(io.BytesIO(content), low_memory=False)
 
-        result = _parse_admissions_df(df, school_type.capitalize())
-        print(f"  [{school_type.capitalize()}] admissions: {len(result):,} schools")
+        result = _parse_admissions_df(df, label)
+        print(f"  [{label}] admissions: {len(result):,} schools")
         return result
 
     except Exception as e:
-        print(f"  {school_type.capitalize()} admissions fetch failed: {e}")
+        print(f"  [{label}] admissions fetch failed: {e}")
         return {}
 
 
 def fetch_admissions():
     """
-    Fetch PRIMARY and SECONDARY school admissions from EES.
+    Fetch combined primary + secondary school admissions from EES.
+    The DfE publishes both in a single 'Primary and secondary school
+    applications and offers' dataset — no separate primary/secondary needed.
     Returns URN → {places, first_pref_applications, total_applications,
                     first_pref_offers, apps_per_place, first_pref_success_pct}
     """
-    print("Step 4: Fetching admissions data from EES (primary + secondary)...")
-    mapping = {}
+    print("Step 4: Fetching admissions data from EES (combined primary + secondary)...")
 
-    # Fetch secondary first (larger dataset, well-established columns)
-    secondary = _download_admissions_for_type("secondary")
-    mapping.update(secondary)
+    release_id = _find_admissions_release_id()
+    if not release_id:
+        print("  Could not discover admissions release — preserved data will be used")
+        return {}
 
-    # Fetch primary — adds primary schools not in secondary data
-    # Also overwrites secondary entries for primary schools if primary data is available
-    primary = _download_admissions_for_type("primary")
-    for urn, data in primary.items():
-        if urn not in mapping or mapping[urn].get("apps_per_place") is None:
-            mapping[urn] = data
-
-    print(f"  Total admissions data: {len(mapping):,} schools combined")
-    return mapping
+    result = _download_admissions_for_type_by_release(release_id, "Combined")
+    print(f"  Admissions data: {len(result):,} schools total")
+    return result
 
 
 def apply_admissions(schools, adm_map):

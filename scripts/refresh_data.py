@@ -141,11 +141,12 @@ def fetch_gias():
 
     print(f"  London open schools: {len(df):,}")
     # Diagnostic: check coordinate columns
-    coord_cols = [c for c in df.columns if any(k in c.lower() for k in ("lat", "lon", "lng", "geo"))]
+    coord_cols = [c for c in df.columns if any(k in c.lower() for k in ("lat", "lon", "lng", "geo", "east", "north", "coord", "point", "x_", "y_", "_x", "_y"))]
     if coord_cols:
-        print(f"  Coordinate columns found: {coord_cols[:6]}")
+        print(f"  Coordinate columns found: {coord_cols[:8]}")
     else:
-        print("  WARNING: No coordinate columns found in GIAS data!")
+        print(f"  WARNING: No coordinate columns found in GIAS data!")
+        print(f"  All GIAS columns (first 60): {list(df.columns[:60])}")
     return df
 
 
@@ -504,7 +505,7 @@ def apply_ofsted(schools, ofsted_map):
 # ── Step 3: EES — Exam results and FSM data ───────────────────────────────────
 
 EES_KS2_URL  = "https://content.explore-education-statistics.service.gov.uk/api/releases/latest/data-sets/key-stage-2-attainment-school-level"
-EES_KS4_URL  = "https://content.explore-education-statistics.service.gov.uk/api/releases/latest/data-sets/key-stage-4-performance-revised"
+EES_KS4_URL  = "https://content.explore-education-statistics.service.gov.uk/api/releases/latest/data-sets/key-stage-4-performance"
 EES_FSM_URL  = "https://content.explore-education-statistics.service.gov.uk/api/releases/latest/data-sets/school-level-underlying-data"
 
 # Direct CSV download URLs (stable)
@@ -526,9 +527,16 @@ def _ees_content_api_download(pub_slug, file_keyword, label):
     if not pub_r.ok:
         print(f"  [{label}] Content API /publications/{pub_slug} → HTTP {pub_r.status_code}")
         return None
-    latest_slug = pub_r.json().get("latestReleaseSlug", "")
+    pub_data = pub_r.json()
+    # Handle different field names for the latest release slug across API versions
+    latest_slug = (
+        pub_data.get("latestReleaseSlug")
+        or pub_data.get("latestRelease", {}).get("slug")
+        or (pub_data.get("releases") or [{}])[0].get("slug", "")
+    )
+    print(f"  [{label}] Content API pub keys: {list(pub_data.keys())[:10]}")
     if not latest_slug:
-        print(f"  [{label}] Content API: no latestReleaseSlug in response")
+        print(f"  [{label}] Content API: could not determine latestReleaseSlug from response")
         return None
     rel_r = requests.get(f"{api}/publications/{pub_slug}/releases/{latest_slug}", timeout=30)
     if not rel_r.ok:
@@ -716,7 +724,7 @@ def fetch_ks4_results():
 
     # Approach 1: EES content API
     try:
-        content = _ees_content_api_download("key-stage-4-performance-revised", "school", "KS4")
+        content = _ees_content_api_download("key-stage-4-performance", "school", "KS4")
         if content:
             result = parse_ks4_csv(content)
             if result:
@@ -1518,6 +1526,22 @@ def main():
         return
     schools = parse_gias(gias_df)
     print(f"Base school list: {len(schools):,} schools\n")
+
+    # 1b. Pre-seed lat/lng from existing schools.json
+    # GIAS CSV doesn't always include decimal coordinates — preserve from last run
+    # so that the crime API step (Step 5) can use them.
+    existing_coords = load_existing()
+    coords_seeded = 0
+    for s in schools:
+        if not s.get("lat") or not s.get("lng"):
+            urn = str(s.get("urn", ""))
+            old = existing_coords.get(urn, {})
+            if old.get("lat") and old.get("lng"):
+                s["lat"] = old["lat"]
+                s["lng"] = old["lng"]
+                coords_seeded += 1
+    if coords_seeded:
+        print(f"  Pre-seeded lat/lng for {coords_seeded:,} schools from previous data\n")
 
     # 2. Ofsted ratings
     ofsted_map = fetch_ofsted()

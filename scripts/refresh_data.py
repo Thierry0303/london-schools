@@ -390,7 +390,17 @@ def fetch_ofsted():
         print("  Could not find URN column in Ofsted data")
         return {}
 
-    mapping = {}
+    # Find school name + LA columns for fallback name-based matching
+    name_col_ofsted = next((c for c in df.columns if "school" in c.lower() and "name" in c.lower()), None)
+    la_col_ofsted   = next((c for c in df.columns if "la" in c.lower() and "name" in c.lower()), None)
+
+    def _norm(s):
+        """Normalise a string for fuzzy matching: lowercase, alphanumeric only."""
+        return re.sub(r'[^a-z0-9]', '', str(s).lower().strip())
+
+    mapping      = {}   # URN (int) → data dict
+    name_la_map  = {}   # normalised(name+la) → data dict  (fallback for URN mismatches)
+
     for _, row in df.iterrows():
         try:
             urn = int(float(str(row[urn_col]).strip()))
@@ -439,7 +449,7 @@ def fetch_ofsted():
         elif category and category.lower() not in ("", "n/a", "not applicable", "none"):
             ungraded = category
 
-        mapping[urn] = {
+        data = {
             "quality_label":    label,
             "quality_raw":      raw,
             "ofsted_score":     score,
@@ -454,23 +464,51 @@ def fetch_ofsted():
             "ungraded_outcome": ungraded,
         }
 
-    print(f"  Ofsted ratings mapped: {len(mapping):,}")
-    return mapping
+        mapping[urn] = data
+
+        # Build secondary name+LA index for schools whose URN differs from GIAS
+        # (academy conversions, mergers, renames — very common cause of stale Ofsted data)
+        if name_col_ofsted and la_col_ofsted:
+            name_key = _norm(str(row.get(name_col_ofsted, "")) + str(row.get(la_col_ofsted, "")))
+            if name_key:
+                name_la_map[name_key] = data
+
+    print(f"  Ofsted ratings mapped: {len(mapping):,} by URN, {len(name_la_map):,} by name+LA")
+    return mapping, name_la_map
 
 
-def apply_ofsted(schools, ofsted_map):
+def apply_ofsted(schools, ofsted_map, name_la_map=None):
     """Merge Ofsted data into school records.
+
+    Tries URN match first (fast, exact). Falls back to name+LA match for
+    schools whose URN in the Ofsted MI file differs from GIAS (academy
+    conversions, mergers, renames, etc.).
 
     For schools inspected under the new Sept 2024+ Report Card framework,
     Ofsted no longer gives an overall effectiveness grade.
     We derive a display label from the sub-grades instead.
     """
+    def _norm(s):
+        return re.sub(r'[^a-z0-9]', '', str(s).lower().strip())
+
     updated = 0
+    name_matched = 0
     report_card = 0
+    name_la_map = name_la_map or {}
+
     for s in schools:
         urn = s.get("urn")
+        data = None
         if urn and int(urn) in ofsted_map:
-            s.update(ofsted_map[int(urn)])
+            data = ofsted_map[int(urn)]
+        elif name_la_map:
+            # Fallback: match by school name + LA (handles URN mismatches)
+            key = _norm(str(s.get("name", "")) + str(s.get("local_authority", "")))
+            if key in name_la_map:
+                data = name_la_map[key]
+                name_matched += 1
+        if data:
+            s.update(data)
             updated += 1
             # Handle new Report Card framework (Sept 2024+)
             # No overall grade — derive from sub-grades
@@ -496,7 +534,7 @@ def apply_ofsted(schools, ofsted_map):
                     s["score_band"] = label
                     s["quality_raw"] = worst
                     report_card += 1
-    print(f"  Applied Ofsted data to {updated:,} schools")
+    print(f"  Applied Ofsted data to {updated:,} schools ({name_matched} via name+LA fallback)")
     if report_card:
         print(f"  Derived Report Card ratings for {report_card:,} schools (new 2024+ framework)")
     return schools
@@ -1827,8 +1865,8 @@ def main():
     print()
 
     # 2. Ofsted ratings
-    ofsted_map = fetch_ofsted()
-    schools = apply_ofsted(schools, ofsted_map)
+    ofsted_map, ofsted_name_la_map = fetch_ofsted()
+    schools = apply_ofsted(schools, ofsted_map, ofsted_name_la_map)
     print()
 
     # 3. Exam results

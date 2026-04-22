@@ -371,11 +371,6 @@ function QuickBrowse() {
     { label: "🕌 Faith",      slug: "faith",       color: "#1A237E", bg: "#E8EAF6" },
     { label: "🎒 Sixth Form", slug: "sixth-form",  color: "#880E4F", bg: "#FCE4EC" },
   ];
-  const topBoroughs = [
-    "Camden","Islington","Hackney","Southwark","Wandsworth",
-    "Lambeth","Barnet","Richmond upon Thames","Kensington and Chelsea","Westminster",
-    "Hammersmith and Fulham","Tower Hamlets","Ealing","Sutton","Kingston upon Thames"
-  ];
   return (
     <div className="quick-browse">
       <div className="quick-browse-inner">
@@ -386,17 +381,6 @@ function QuickBrowse() {
             {t.label}
           </a>
         ))}
-        <div className="qb-divider" />
-        <span className="quick-browse-label">Borough</span>
-        {topBoroughs.map(b => {
-          const slug = b.toLowerCase().replace(/[''']/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
-          return (
-            <a key={b} href={`/schools/${slug}`} className="qb-chip"
-              style={{background:'rgba(255,255,255,0.07)', color:'rgba(255,255,255,0.8)', borderColor:'rgba(255,255,255,0.15)'}}>
-              {b}
-            </a>
-          );
-        })}
       </div>
     </div>
   );

@@ -512,6 +512,29 @@ EES_FSM_URL  = "https://content.explore-education-statistics.service.gov.uk/api/
 KS2_CSV_URL = "https://content.explore-education-statistics.service.gov.uk/api/releases/latest/files/key-stage-2-attainment-national-and-local-authority-and-school-level/school-level-ks2.csv"
 KS4_CSV_URL = "https://content.explore-education-statistics.service.gov.uk/api/releases/latest/files/key-stage-4-performance-revised/school-level-ks4.csv"
 
+
+def _find_urn_col(columns):
+    """
+    Find the URN column in a DataFrame column list, trying multiple name variants.
+    EES content API files use 'urn'; EES stats API flat-format files use 'institution_id'
+    or 'school_urn'. Returns the column name or None.
+    """
+    cols_lower = [c.lower().strip() for c in columns]
+    # Exact matches first
+    for exact in ("urn", "institution_id", "school_urn", "new_urn", "urn_number"):
+        if exact in cols_lower:
+            return columns[cols_lower.index(exact)]
+    # Substring: column whose name IS just "urn" after stripping common prefixes
+    for c in columns:
+        cl = c.lower().strip()
+        if cl.endswith("_urn") or cl.startswith("urn_"):
+            return c
+    # Broadest fallback: any column containing "urn"
+    for c in columns:
+        if "urn" in c.lower():
+            return c
+    return None
+
 def _ees_content_api_download(pub_slug, file_keyword, label):
     """
     Generic helper: use EES content API to download the latest release file for a publication.
@@ -551,16 +574,11 @@ def _ees_content_api_download(pub_slug, file_keyword, label):
     if not dl_files:
         return None
 
-    # Log first file's structure to understand available fields
-    if dl_files:
-        first = dl_files[0]
-        print(f"  [{label}] File object keys: {list(first.keys())}")
-
-    # Log first file's full structure to understand available fields
+    # Log first file object's full structure so we know what fields the API returns
     if dl_files:
         first = dl_files[0]
         print(f"  [{label}] File[0] keys: {list(first.keys())}")
-        print(f"  [{label}] File[0] sample: id={str(first.get('id',''))[:16]} name={first.get('name','')} size={first.get('size',0)}")
+        print(f"  [{label}] File[0] sample: id={str(first.get('id',''))[:24]} name={first.get('name','')} size={first.get('size',0)}")
 
     # Build a prioritised list of download URL candidates for a given file object.
     # Priority based on empirical evidence: releases/{releaseId}/files/{fileId} (no /download)
@@ -771,18 +789,38 @@ def parse_ks2_csv(content):
 
     df.columns = df.columns.str.strip().str.lower()
 
-    urn_col      = next((c for c in df.columns if c == "urn"), None)
-    expected_col = next((c for c in df.columns if "expected" in c and ("reading" in c or "rw" in c or "rwm" in c)), None)
-    higher_col   = next((c for c in df.columns if "higher" in c and ("reading" in c or "rw" in c or "rwm" in c)), None)
+    # Filter to institution-level rows only (EES flat format has multiple geographic levels)
+    if "geographic_level" in df.columns:
+        df = df[df["geographic_level"].str.lower().isin({"institution", "school"})]
 
+    urn_col = _find_urn_col(df.columns.tolist())
     if not urn_col:
+        print(f"  KS2 parse: no URN column found. Columns: {list(df.columns[:20])}")
         return {}
+
+    expected_col = (
+        next((c for c in df.columns if "expected" in c and "rwm" in c), None)
+        or next((c for c in df.columns if "expected" in c and "rw" in c), None)
+        or next((c for c in df.columns if "expected" in c and "reading" in c), None)
+        or next((c for c in df.columns if "expected" in c and "standard" in c), None)
+        or next((c for c in df.columns if "pt_met_expected" in c or "pct_expected" in c), None)
+    )
+    higher_col = (
+        next((c for c in df.columns if "higher" in c and "rwm" in c), None)
+        or next((c for c in df.columns if "higher" in c and "rw" in c), None)
+        or next((c for c in df.columns if "higher" in c and "reading" in c), None)
+        or next((c for c in df.columns if "higher" in c and "standard" in c), None)
+        or next((c for c in df.columns if "pt_achieved_higher" in c or "pct_higher" in c), None)
+    )
+    print(f"  KS2 parse: urn={urn_col} expected={expected_col} higher={higher_col} rows={len(df)}")
 
     mapping = {}
     for _, row in df.iterrows():
         try:
             urn = int(float(str(row[urn_col])))
         except (ValueError, TypeError):
+            continue
+        if urn <= 0:
             continue
         mapping[urn] = {
             "ks2_expected_pct": _safe_float(row.get(expected_col)),
@@ -840,20 +878,42 @@ def parse_ks4_csv(content):
 
     df.columns = df.columns.str.strip().str.lower()
 
-    urn_col    = next((c for c in df.columns if c == "urn"), None)
-    att8_col   = next((c for c in df.columns if "att8" in c or "attainment8" in c or "attainment_8" in c), None)
-    grade5_col = next((c for c in df.columns if "grade5" in c or "grade_5" in c or "5+" in c), None)
-    grade4_col = next((c for c in df.columns if "grade4" in c or "grade_4" in c or "4+" in c), None)
-    pupils_col = next((c for c in df.columns if "pupil" in c and ("number" in c or "count" in c or "total" in c)), None)
+    # Filter to institution-level rows only (EES flat format has multiple geographic levels)
+    if "geographic_level" in df.columns:
+        df = df[df["geographic_level"].str.lower().isin({"institution", "school"})]
 
+    urn_col    = _find_urn_col(df.columns.tolist())
     if not urn_col:
+        print(f"  KS4 parse: no URN column found. Columns: {list(df.columns[:20])}")
         return {}
+
+    att8_col   = (
+        next((c for c in df.columns if "att8" in c or "attainment_8" in c or "attainment8" in c), None)
+        or next((c for c in df.columns if "average_attainment" in c), None)
+    )
+    grade5_col = (
+        next((c for c in df.columns if ("grade_5" in c or "grade5" in c or "l2basics_5" in c) and "english" in c), None)
+        or next((c for c in df.columns if "grade_5" in c or "grade5" in c or "l2basics_5" in c), None)
+        or next((c for c in df.columns if "5_or_above" in c and "english" in c), None)
+    )
+    grade4_col = (
+        next((c for c in df.columns if ("grade_4" in c or "grade4" in c or "l2basics_4" in c) and "english" in c), None)
+        or next((c for c in df.columns if "grade_4" in c or "grade4" in c or "l2basics_4" in c), None)
+        or next((c for c in df.columns if "4_or_above" in c and "english" in c), None)
+    )
+    pupils_col = (
+        next((c for c in df.columns if "pupil" in c and ("number" in c or "count" in c or "total" in c)), None)
+        or next((c for c in df.columns if "number_of_pupils" in c or "total_pupils" in c), None)
+    )
+    print(f"  KS4 parse: urn={urn_col} att8={att8_col} g5={grade5_col} g4={grade4_col} rows={len(df)}")
 
     mapping = {}
     for _, row in df.iterrows():
         try:
             urn = int(float(str(row[urn_col])))
         except (ValueError, TypeError):
+            continue
+        if urn <= 0:
             continue
         mapping[urn] = {
             "ks4_att8":       _safe_float(row.get(att8_col)),
@@ -970,10 +1030,11 @@ def _parse_admissions_df(df, source_label):
         df[la_col] = df[la_col].astype(str).str.strip()
         df = df[df[la_col].isin({la.lower() for la in LONDON_LAS})]
 
-    urn_col = next((c for c in df.columns if c == "urn"), None)
+    urn_col = _find_urn_col(df.columns.tolist())
     if not urn_col:
-        print(f"  [{source_label}] Could not find URN column — skipping")
+        print(f"  [{source_label}] No URN column found. Columns: {list(df.columns[:25])}")
         return {}
+    print(f"  [{source_label}] Using URN column: '{urn_col}' | rows: {len(df)}")
 
     # 1st-preference applications (first-choice apps received)
     app_col = (
@@ -1421,8 +1482,12 @@ def _parse_fsm_content(content):
         return {}
 
     df.columns = df.columns.str.strip().str.lower()
-    urn_col = next((c for c in df.columns if c == "urn"), None)
+    # Filter to institution-level rows if EES flat format
+    if "geographic_level" in df.columns:
+        df = df[df["geographic_level"].str.lower().isin({"institution", "school"})]
+    urn_col = _find_urn_col(df.columns.tolist())
     if not urn_col:
+        print(f"  FSM parse: no URN column. Columns: {list(df.columns[:20])}")
         return {}
 
     # FSM percentage column — column name varies between releases

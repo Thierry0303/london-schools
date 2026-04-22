@@ -1067,6 +1067,10 @@ def _parse_admissions_df(df, source_label):
     """
     df.columns = df.columns.str.strip().str.lower()
 
+    # Filter to institution-level rows if EES flat format (stats API returns multi-level data)
+    if "geographic_level" in df.columns:
+        df = df[df["geographic_level"].str.lower().isin({"institution", "school"})]
+
     # Filter to London — case-insensitive comparison
     la_col = next((c for c in df.columns if "la" in c and "name" in c), None)
     if la_col:
@@ -1219,12 +1223,13 @@ def fetch_admissions():
                         urls.append(val)
                 fid = f.get("id", "")
                 if fid:
-                    # Slug-based (most reliable in current EES API)
-                    urls.append(f"{EES_CONTENT_API}/publications/{slug}/releases/{latest_slug}/files/{fid}")
-                    urls.append(f"{EES_CONTENT_API}/publications/{slug}/releases/{latest_slug}/files/{fid}/download")
-                    # ID-based fallbacks
+                    # Release-ID-based first — same pattern that returns 200 for KS2/KS4
                     if adm_rel_id:
                         urls.append(f"{EES_CONTENT_API}/releases/{adm_rel_id}/files/{fid}")
+                    # Slug-based alternatives
+                    urls.append(f"{EES_CONTENT_API}/publications/{slug}/releases/{latest_slug}/files/{fid}")
+                    urls.append(f"{EES_CONTENT_API}/publications/{slug}/releases/{latest_slug}/files/{fid}/download")
+                    if adm_rel_id:
                         urls.append(f"{EES_CONTENT_API}/releases/{adm_rel_id}/files/{fid}/download")
                 return urls
 
@@ -1259,57 +1264,23 @@ def fetch_admissions():
             print(f"  Content API slug '{slug}' failed: {e}")
             continue
 
-    # ── Strategy B: Statistics API (search → pub_id → release_id → download) ─
-    # IMPORTANT: use EES_API_BASE for ALL steps — never mix with content API IDs
+    # ── Strategy B: Statistics API (data-sets endpoint — same approach as KS2/KS4) ─
+    # Uses /publications/{pub_id}/data-sets → /data-sets/{dsid}/csv (proven working pattern)
     for term in ADM_SEARCH_TERMS:
-        try:
-            r = requests.get(
-                f"{EES_API_BASE}/publications?search={requests.utils.quote(term)}&pageSize=5",
-                timeout=30,
-            )
-            if not r.ok:
-                print(f"  [Admissions] Stats API search '{term}' → HTTP {r.status_code}")
-                continue
-            results = r.json().get("results", [])
-            print(f"  [Admissions] Stats API '{term}' → {len(results)} results: {[p.get('title','?')[:40] for p in results[:3]]}")
-            for pub in results:
-                title = pub.get("title", "").lower()
-                if "application" not in title or "offer" not in title:
-                    continue
-                pub_id = pub.get("id")
-                rel_r = requests.get(
-                    f"{EES_API_BASE}/releases?publicationId={pub_id}&pageSize=1",
-                    timeout=30,
-                )
-                if not rel_r.ok:
-                    continue
-                releases = rel_r.json().get("results", [])
-                if not releases:
-                    continue
-                # Statistics API release_id — ONLY use with EES_API_BASE
-                stats_release_id = releases[0]["id"]
-                files_r = requests.get(
-                    f"{EES_API_BASE}/releases/{stats_release_id}/files", timeout=30
-                )
-                if not files_r.ok:
-                    continue
-                files = files_r.json().get("results", [])
-                target = next(
-                    (f for f in files if "school" in f.get("name", "").lower()), None
-                ) or (sorted(files, key=lambda x: x.get("size", 0), reverse=True)[0] if files else None)
-                if not target:
-                    continue
-                dl_url = f"{EES_API_BASE}/releases/{stats_release_id}/files/{target['id']}/download"
-                r3 = requests.get(dl_url, timeout=120)
-                if not r3.ok:
-                    continue
-                df = _load_df_from_content(r3.content)
-                result = _parse_admissions_df(df, f"StatsAPI/{pub.get('title','')[:30]}")
-                if result:
-                    print(f"  Admissions data: {len(result):,} schools")
-                    return result
-        except Exception:
-            continue
+        for kw in ("school level", "school"):
+            try:
+                content = _ees_stats_api_download(term, kw, "Admissions")
+                if content:
+                    try:
+                        df = _load_df_from_content(content)
+                        result = _parse_admissions_df(df, f"StatsAPI/{term[:30]}")
+                        if result:
+                            print(f"  Admissions data: {len(result):,} schools")
+                            return result
+                    except Exception as e:
+                        print(f"  [Admissions] Stats API parse failed: {e}")
+            except Exception as e:
+                print(f"  [Admissions] Stats API ({term[:30]}) failed: {e}")
 
     print("  Could not fetch admissions data — preserved data will be used")
     return {}

@@ -381,16 +381,30 @@ def fetch_ofsted():
 
     # ═══ FLEXIBLE COLUMN DETECTION ═══
     # Ofsted changes column names between releases. This approach matches patterns.
-    def find_col(patterns):
+    def find_col(patterns, prefer_latest_oeif=False):
         """Find a column matching any of the given patterns (case-insensitive).
         Normalizes by removing spaces and parentheses for robust matching.
+        If prefer_latest_oeif=True, prioritizes 'Latest OEIF' columns (new format Sept 2024+).
         """
+        matches = []
+        
         for col in df.columns:
             col_normalized = col.lower().replace(" ", "").replace("(", "").replace(")", "")
             for pattern in patterns:
                 if pattern.lower().replace(" ", "") in col_normalized:
-                    return col
-        return None
+                    matches.append(col)
+                    break
+        
+        if not matches:
+            return None
+        
+        # If prefer_latest_oeif, prioritize columns starting with "Latest OEIF"
+        if prefer_latest_oeif:
+            oeif_matches = [m for m in matches if m.startswith("Latest OEIF")]
+            if oeif_matches:
+                return oeif_matches[0]
+        
+        return matches[0]  # Return first match
 
     # Identify key columns with flexible pattern matching
     urn_col = find_col(["urn", "school urn", "unique reference number"])
@@ -398,12 +412,12 @@ def fetch_ofsted():
     # OLD FORMAT: Single overall effectiveness grade
     overall_col = find_col(["overall", "effectiveness"])
 
-    # NEW FORMAT: Individual category ratings
-    quality_col = find_col(["quality", "education"])  # "Quality of education"
-    behaviour_col = find_col(["behaviour", "attitudes", "behavior"])  # "Behaviour and attitudes"
-    personal_col = find_col(["personal", "development"])  # "Personal development"
-    leadership_col = find_col(["leadership", "management"])  # "Leadership and management"
-    early_col = find_col(["early", "years"])  # "Early years provision"
+    # NEW FORMAT: Individual category ratings (PRIORITIZE Latest OEIF columns)
+    quality_col = find_col(["quality", "education"], prefer_latest_oeif=True)
+    behaviour_col = find_col(["behaviour", "attitudes", "behavior"], prefer_latest_oeif=True)
+    personal_col = find_col(["personal", "development"], prefer_latest_oeif=True)
+    leadership_col = find_col(["leadership", "management"], prefer_latest_oeif=True)
+    early_col = find_col(["early", "years"], prefer_latest_oeif=True)
 
     # Supporting fields (both formats)
     safeguard_col = find_col(["safeguard", "protection"])
@@ -576,6 +590,55 @@ def fetch_report_card_ratings(school):
     
     except Exception as e:
         return None
+
+
+def derive_report_card_composite(schools):
+    """
+    After all data merges, derive Report Card composite ratings from sub-grades.
+    This runs AFTER merge_existing() so preserved sub-grades are available.
+    """
+    derived = 0
+    
+    for s in schools:
+        # Skip if already has overall rating
+        if s.get("quality_label") or s.get("ofsted_score"):
+            continue
+        
+        # Check for sub-grades from preserved data or fresh data
+        sub_grades = [
+            s.get("behaviour_raw"),
+            s.get("personal_dev_raw"),
+            s.get("leadership_raw"),
+            s.get("early_years_raw"),
+        ]
+        sub_grades = [g for g in sub_grades if g is not None]
+        
+        # If we have sub-grades but no overall, derive composite
+        if sub_grades:
+            worst = max(sub_grades)  # 4=worst, 1=best
+            
+            if worst == 1:
+                label, score = "Outstanding", 100
+            elif worst == 2:
+                label, score = "Good", 80
+            elif worst == 3:
+                label, score = "Requires improvement", 40
+            elif worst == 4:
+                label, score = "Inadequate", 0
+            else:
+                label, score = None, None
+            
+            if label:
+                s["quality_label"] = label
+                s["ofsted_score"] = score
+                s["score_band"] = label
+                s["quality_raw"] = worst
+                derived += 1
+    
+    if derived:
+        print(f"  └─ Derived Report Card composite ratings for {derived:,} schools (Sept 2024+ framework)")
+    
+    return schools
 
 
 def apply_ofsted(schools, ofsted_map):
@@ -1328,6 +1391,10 @@ def main():
     print("\nMerging preserved fields from existing data...")
     existing_map = load_existing()
     schools = merge_existing(schools, existing_map)
+
+    # 7b. Derive Report Card composite ratings (Sept 2024+) from preserved sub-grades
+    print("Deriving Report Card composite ratings...")
+    schools = derive_report_card_composite(schools)
 
     # 8. Final clean and save
     schools = [clean_school(s) for s in schools]

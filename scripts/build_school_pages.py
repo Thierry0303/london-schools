@@ -109,6 +109,70 @@ def ofsted_badge_color(label):
     }
     return colors.get(label, ("#424242", "#F5F5F5"))
 
+def build_ks2_disclaimer():
+    return """
+<section class="card">
+  <h3 style="margin-top:0;margin-bottom:16px;font-size:14px;font-weight:600">About KS2 results</h3>
+  <div style="font-size:13px;line-height:1.6;color:#555">
+    <p style="margin-bottom:10px"><strong>Expected standard:</strong> Percentage of pupils achieving the expected standard in reading, writing, and maths combined.</p>
+    <p style="margin-bottom:10px"><strong>Higher standard:</strong> Percentage of pupils achieving above the expected standard (greater depth of knowledge).</p>
+    <div style="background:#f8f9fa;border-left:3px solid #d4a843;padding:12px;border-radius:4px;margin:12px 0">
+      <p style="margin-bottom:8px;font-weight:600;font-size:12px">Important context:</p>
+      <ul style="margin:8px 0 0 1.5rem;padding:0;font-size:12px;color:#666">
+        <li style="margin-bottom:6px">Exam results are influenced by many factors including pupil characteristics, prior attainment, school location, and socioeconomic factors</li>
+        <li style="margin-bottom:6px">Schools with similar results may achieve them through different approaches and strengths</li>
+        <li style="margin-bottom:6px">Results reflect one snapshot in time and don't capture wider school quality (e.g., wellbeing, enrichment, pastoral care)</li>
+        <li style="margin-bottom:6px">Year-on-year variations are normal and may reflect cohort differences rather than changes in school quality</li>
+        <li>Consider visiting the school and speaking to staff, pupils, and parents for a fuller picture</li>
+      </ul>
+    </div>
+    <p style="font-size:11px;color:#999;margin-top:10px;margin-bottom:0">Data source: Department for Education. For national performance data, visit <a href="https://www.gov.uk/school-performance-tables" target="_blank" style="color:#1565C0">gov.uk/school-performance-tables</a></p>
+  </div>
+</section>"""
+
+def build_ks4_disclaimer():
+    return """
+<section class="card">
+  <h3 style="margin-top:0;margin-bottom:16px;font-size:14px;font-weight:600">About KS4 results</h3>
+  <div style="font-size:13px;line-height:1.6;color:#555">
+    <p style="margin-bottom:10px"><strong>Attainment 8 score:</strong> Average score across 8 GCSEs, measuring overall pupil achievement (higher is better).</p>
+    <p style="margin-bottom:10px"><strong>Grade 5+ English & Maths:</strong> Percentage of pupils achieving grades 5-9 (standard pass) in both English and Maths GCSEs.</p>
+    <p style="margin-bottom:10px"><strong>Grade 4+ English & Maths:</strong> Percentage of pupils achieving grades 4-9 (the previous 'standard pass' threshold).</p>
+    <div style="background:#f8f9fa;border-left:3px solid #d4a843;padding:12px;border-radius:4px;margin:12px 0">
+      <p style="margin-bottom:8px;font-weight:600;font-size:12px">Important context:</p>
+      <ul style="margin:8px 0 0 1.5rem;padding:0;font-size:12px;color:#666">
+        <li style="margin-bottom:6px">Exam results are influenced by many factors including pupil characteristics, prior attainment, school location, and socioeconomic factors</li>
+        <li style="margin-bottom:6px">Schools with similar results may achieve them through different approaches and strengths</li>
+        <li style="margin-bottom:6px">Results reflect one snapshot in time and don't capture wider school quality (e.g., wellbeing, enrichment, pastoral care)</li>
+        <li style="margin-bottom:6px">Year-on-year variations are normal and may reflect cohort differences rather than changes in school quality</li>
+        <li>Consider visiting the school and speaking to staff, pupils, and parents for a fuller picture</li>
+      </ul>
+    </div>
+    <p style="font-size:11px;color:#999;margin-top:10px;margin-bottom:0">Data source: Department for Education. For national performance data, visit <a href="https://www.gov.uk/school-performance-tables" target="_blank" style="color:#1565C0">gov.uk/school-performance-tables</a></p>
+  </div>
+</section>"""
+
+def build_admissions_disclaimer(demand_ratio):
+    if demand_ratio is None:
+        return ""
+    return f"""
+<section class="card">
+  <h3 style="margin-top:0;margin-bottom:16px;font-size:14px;font-weight:600">Understanding application demand</h3>
+  <div style="font-size:13px;line-height:1.6;color:#555">
+    <p style="margin-bottom:12px">The <strong>application demand ratio</strong> shows the relationship between the number of 1st preference applications and the total offers made. It indicates how competitive the school is.</p>
+    <div style="background:#f8f9fa;border-left:3px solid #d4a843;padding:12px;border-radius:4px;margin:12px 0">
+      <p style="margin-bottom:8px;font-weight:600;font-size:12px">How to interpret:</p>
+      <div style="font-size:12px">
+        <p style="margin-bottom:6px"><strong style="display:inline-block;padding:3px 8px;background:#e8f5e9;border-radius:4px;margin-right:8px">1.5×</strong> More 1st choice applications than places (highly oversubscribed)</p>
+        <p style="margin-bottom:6px"><strong style="display:inline-block;padding:3px 8px;background:#e3f2fd;border-radius:4px;margin-right:8px">1.0×</strong> Offers match 1st choice applications (balanced)</p>
+        <p style="margin-bottom:0"><strong style="display:inline-block;padding:3px 8px;background:#fff3e0;border-radius:4px;margin-right:8px">0.7×</strong> More places than 1st choice applications (undersubscribed)</p>
+      </div>
+    </div>
+    <p style="font-size:12px;margin:12px 0 0 0">For current availability and admission timelines, contact the school or your local authority's school admissions team. Data source: Department for Education, School Applications and Offers 2025.</p>
+    <p style="font-size:11px;color:#999;margin:8px 0 0 0">The demand ratio reflects overall application patterns but individual outcomes depend on when you apply and preferences listed.</p>
+  </div>
+</section>"""
+
 def build_school_page(school):
     borough_slug  = slugify(school.get("local_authority", "unknown"))
     school_slug   = slugify(school.get("name", "unknown"))
@@ -150,6 +214,7 @@ def build_school_page(school):
     crime_label   = safe(school.get("crime_label"), "")
     lat           = school.get("lat", "")
     lng           = school.get("lng", "")
+    demand_ratio  = school.get("demand_ratio")
 
     ofsted_text_color, ofsted_bg_color = ofsted_badge_color(ofsted_label)
 
@@ -173,12 +238,20 @@ def build_school_page(school):
         results_rows += f"<tr><td>Grade 4+ English &amp; Maths</td><td><strong>{ks4_grade4}%</strong></td></tr>"
 
     results_section = ""
+    ks2_disclaimer = ""
+    ks4_disclaimer = ""
     if results_rows:
         results_section = f"""
     <section class="card">
       <h2>Exam results</h2>
       <table>{results_rows}</table>
     </section>"""
+        if ks2_expected is not None or ks2_higher is not None:
+            ks2_disclaimer = build_ks2_disclaimer()
+        if ks4_att8 is not None or ks4_grade5 is not None or ks4_grade4 is not None:
+            ks4_disclaimer = build_ks4_disclaimer()
+
+    admissions_disclaimer = build_admissions_disclaimer(demand_ratio)
 
     website_link = f'<a href="{"https://" + website if not website.startswith("http") else website}" target="_blank" rel="noopener">{website}</a>' if website else "N/A"
     ofsted_link  = f'<a href="{ofsted_url}" target="_blank" rel="noopener">View Ofsted report</a>' if ofsted_url else ""
@@ -188,8 +261,10 @@ def build_school_page(school):
 
     # Rich meta description with actual data
     meta_parts = [f"{ofsted_label} {phase} school in {borough}, London"]
-    if school.get("apps_per_place"):
-        meta_parts.append(f"{school['apps_per_place']}Ã- oversubscribed")
+    if demand_ratio:
+        meta_parts.append(f"{demand_ratio}× demand ratio")
+    elif school.get("apps_per_place"):
+        meta_parts.append(f"{school['apps_per_place']}× oversubscribed")
     if ks4_att8:
         meta_parts.append(f"Attainment 8: {ks4_att8}")
     elif ks2_expected:
@@ -236,7 +311,16 @@ def build_school_page(school):
 
     # FAQ schema â€” answers common questions parents search for
     faq_items = []
-    if school.get("apps_per_place"):
+    if demand_ratio:
+        faq_items.append({
+            "@type": "Question",
+            "name": f"How oversubscribed is {name}?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": f"{name} has a demand ratio of {demand_ratio}×, indicating the ratio of 1st preference applications to available places in recent admissions."
+            }
+        })
+    elif school.get("apps_per_place"):
         r = school["apps_per_place"]
         faq_items.append({
             "@type": "Question",
@@ -421,6 +505,9 @@ def build_school_page(school):
   </section>
 
   {results_section}
+  {ks2_disclaimer}
+  {ks4_disclaimer}
+  {admissions_disclaimer}
 
   <section class="card">
     <h2>Contact & leadership</h2>
@@ -946,4 +1033,3 @@ pathlib.Path("robots.txt").write_text(robots, encoding="utf-8")
 print("robots.txt written.")
 
 print("\nDone! Deploy to Vercel and submit sitemap.xml to Google Search Console.")
-

@@ -887,32 +887,63 @@ def parse_ks4_csv(content):
     if "geographic_level" in df.columns:
         df = df[df["geographic_level"].str.lower().isin({"institution", "school"})]
 
+    # Filter to the overall "All pupils" row per school — EES data has multiple rows per school
+    # (breakdowns by sex, disadvantage, prior attainment, etc.).  We only want the whole-cohort row.
+    if "breakdown" in df.columns:
+        all_pupils = df[df["breakdown"].str.lower().isin({"all pupils", "total", "all", "overall"})]
+        if len(all_pupils) > 0:
+            df = all_pupils
+            print(f"  KS4: filtered to 'All pupils' breakdown rows — {len(df):,} rows remain")
+    # Fallback: if breakdown column absent but sex/disadvantage are present, pick Total rows
+    elif "sex" in df.columns and "disadvantage_status" in df.columns:
+        mask = (
+            df["sex"].str.lower().isin({"total", "all", ""}) &
+            df["disadvantage_status"].str.lower().isin({"total", "all", ""})
+        )
+        if mask.sum() > 0:
+            df = df[mask]
+            print(f"  KS4: filtered to sex=Total / disadvantage=Total rows — {len(df):,} rows remain")
+
     urn_col    = _find_urn_col(df.columns.tolist())
     if not urn_col:
         print(f"  KS4 parse: no URN column found. Columns: {list(df.columns[:20])}")
         return {}
 
+    # att8: prefer _average over _sum (sum is a cohort total, not a per-pupil score)
     att8_col   = (
-        next((c for c in df.columns if "att8" in c or "attainment_8" in c or "attainment8" in c), None)
+        next((c for c in df.columns if c == "attainment8_average"), None)
+        or next((c for c in df.columns if "attainment8_average" in c or "attainment_8_average" in c), None)
+        or next((c for c in df.columns if "att8_average" in c or "a8_average" in c), None)
         or next((c for c in df.columns if "average_attainment" in c), None)
+        or next((c for c in df.columns if "att8" in c or "attainment_8" in c or "attainment8" in c), None)
         or next((c for c in df.columns if "a8" in c and ("score" in c or "avg" in c or "mean" in c)), None)
     )
+    # grade5 = strong pass (grade 5+) in English & Maths — EES column: engmath_95_percent
     grade5_col = (
-        next((c for c in df.columns if ("grade_5" in c or "grade5" in c or "l2basics_5" in c) and "english" in c), None)
+        next((c for c in df.columns if c == "engmath_95_percent"), None)
+        or next((c for c in df.columns if "engmath" in c and "95" in c and "percent" in c), None)
+        or next((c for c in df.columns if "engmath_95" in c), None)
+        or next((c for c in df.columns if ("grade_5" in c or "grade5" in c or "l2basics_5" in c) and "english" in c), None)
         or next((c for c in df.columns if "grade_5" in c or "grade5" in c or "l2basics_5" in c), None)
         or next((c for c in df.columns if "5_or_above" in c and "english" in c), None)
         or next((c for c in df.columns if "5_or_above" in c), None)
         or next((c for c in df.columns if "basics_94" in c or "strong_pass" in c), None)
     )
+    # grade4 = standard pass (grade 4+) in English & Maths — EES column: engmath_94_percent
     grade4_col = (
-        next((c for c in df.columns if ("grade_4" in c or "grade4" in c or "l2basics_4" in c) and "english" in c), None)
+        next((c for c in df.columns if c == "engmath_94_percent"), None)
+        or next((c for c in df.columns if "engmath" in c and "94" in c and "percent" in c), None)
+        or next((c for c in df.columns if "engmath_94" in c), None)
+        or next((c for c in df.columns if ("grade_4" in c or "grade4" in c or "l2basics_4" in c) and "english" in c), None)
         or next((c for c in df.columns if "grade_4" in c or "grade4" in c or "l2basics_4" in c), None)
         or next((c for c in df.columns if "4_or_above" in c and "english" in c), None)
         or next((c for c in df.columns if "4_or_above" in c), None)
         or next((c for c in df.columns if "basics_93" in c or "standard_pass" in c), None)
     )
     pupils_col = (
-        next((c for c in df.columns if "pupil" in c and ("number" in c or "count" in c or "total" in c)), None)
+        next((c for c in df.columns if c == "pupil_count"), None)
+        or next((c for c in df.columns if "pupil_count" in c or "pupil_number" in c), None)
+        or next((c for c in df.columns if "pupil" in c and ("number" in c or "count" in c or "total" in c)), None)
         or next((c for c in df.columns if "number_of_pupils" in c or "total_pupils" in c or "cohort_size" in c), None)
     )
     print(f"  KS4 parse: urn={urn_col} att8={att8_col} g5={grade5_col} g4={grade4_col} rows={len(df)}")

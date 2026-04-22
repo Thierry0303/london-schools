@@ -542,18 +542,31 @@ def _ees_content_api_download(pub_slug, file_keyword, label):
     if not rel_r.ok:
         print(f"  [{label}] Content API release/{latest_slug} → HTTP {rel_r.status_code}")
         return None
-    dl_files = rel_r.json().get("downloadFiles", [])
-    print(f"  [{label}] Content API: {len(dl_files)} download files in release '{latest_slug}'")
+    rel_data  = rel_r.json()
+    release_id = rel_data.get("id", "")
+    dl_files  = rel_data.get("downloadFiles", [])
+    print(f"  [{label}] Content API: {len(dl_files)} download files in release '{latest_slug}' (id={release_id[:8]}...)")
     if dl_files:
         print(f"    File names: {[f.get('name','?') for f in dl_files[:5]]}")
     if not dl_files:
         return None
 
+    # EES content API no longer includes a direct `url` in downloadFiles.
+    # Construct the download URL from release_id + file_id instead.
+    def _build_dl_url(f):
+        direct = f.get("url") or f.get("href") or f.get("downloadUrl") or ""
+        if direct:
+            return direct
+        fid = f.get("id", "")
+        if release_id and fid:
+            return f"{api}/releases/{release_id}/files/{fid}/download"
+        return ""
+
     # Pick best matching file
     candidates = []
     for f in dl_files:
         name = f.get("name", "").lower()
-        url  = f.get("url", "")
+        url  = _build_dl_url(f)
         size = f.get("size", 0) or 0
         if not url:
             continue
@@ -564,11 +577,11 @@ def _ees_content_api_download(pub_slug, file_keyword, label):
     if not candidates and file_keyword:
         # Fall back: no keyword match — try all files
         print(f"  [{label}] No files matched keyword '{file_keyword}' — trying all {len(dl_files)} files")
-        candidates = [(f.get("size", 0) or 0, f.get("name", "").lower(), f.get("url", ""))
-                      for f in dl_files if f.get("url")]
+        candidates = [(_f.get("size", 0) or 0, _f.get("name", "").lower(), _build_dl_url(_f))
+                      for _f in dl_files if _build_dl_url(_f)]
 
     if not candidates:
-        print(f"  [{label}] No downloadable files found")
+        print(f"  [{label}] No downloadable files found (release_id={release_id[:8] if release_id else 'MISSING'})")
         return None
 
     # Prefer largest file (most likely school-level data)
@@ -576,7 +589,7 @@ def _ees_content_api_download(pub_slug, file_keyword, label):
     for _, name, url in candidates:
         try:
             r = requests.get(url, timeout=120, allow_redirects=True)
-            print(f"  [{label}] Download '{name}' → HTTP {r.status_code}, {len(r.content)} bytes")
+            print(f"  [{label}] Download '{name}' → HTTP {r.status_code}, {len(r.content):,} bytes")
             if r.ok and len(r.content) > 1000:
                 print(f"  {label}: downloaded '{name}' ({len(r.content)//1024} KB) via content API")
                 return r.content
@@ -591,7 +604,7 @@ def _ees_stats_api_download(search_term, file_keyword, label):
     Generic helper: use EES statistics API to find a publication and download its latest school-level file.
     Returns raw bytes or None.
     """
-    base = "https://api.education.gov.uk/statistics"
+    base = EES_API_BASE  # uses the /v1 URL defined at module level
     try:
         pub_r = requests.get(f"{base}/publications?search={requests.utils.quote(search_term)}&pageSize=5", timeout=30)
     except Exception as e:
@@ -1028,22 +1041,33 @@ def fetch_admissions():
                 print(f"  [Admissions] Release request → HTTP {rel_r.status_code}")
                 continue
 
-            dl_files = rel_r.json().get("downloadFiles", [])
-            print(f"  [Admissions] {len(dl_files)} download files; names: {[f.get('name','?') for f in dl_files[:5]]}")
+            rel_data   = rel_r.json()
+            adm_rel_id = rel_data.get("id", "")
+            dl_files   = rel_data.get("downloadFiles", [])
+            print(f"  [Admissions] {len(dl_files)} download files (release id={adm_rel_id[:8]}...); names: {[f.get('name','?') for f in dl_files[:5]]}")
+
+            def _adm_dl_url(f):
+                direct = f.get("url") or f.get("href") or f.get("downloadUrl") or ""
+                if direct:
+                    return direct
+                fid = f.get("id", "")
+                if adm_rel_id and fid:
+                    return f"{EES_CONTENT_API}/releases/{adm_rel_id}/files/{fid}/download"
+                return ""
 
             # Sort largest first — school-level file is usually the biggest
             for ds in sorted(dl_files, key=lambda x: x.get("size", 0), reverse=True):
                 name = ds.get("name", "").lower()
-                url  = ds.get("url", "")
+                url  = _adm_dl_url(ds)
                 if not url:
                     continue
                 # Skip clearly non-school files (LA-level, national, metadata)
                 if any(skip in name for skip in ("national", "metadata", "glossary")):
                     continue
                 try:
-                    print(f"  [Admissions] Trying download: '{ds.get('name','?')}' url={url[:80]}")
+                    print(f"  [Admissions] Trying: '{ds.get('name','?')}' → {url[:80]}")
                     r3 = requests.get(url, timeout=120, allow_redirects=True)
-                    print(f"    → HTTP {r3.status_code}, {len(r3.content)} bytes")
+                    print(f"    → HTTP {r3.status_code}, {len(r3.content):,} bytes")
                     if not r3.ok:
                         continue
                     df = _load_df_from_content(r3.content)

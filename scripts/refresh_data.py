@@ -330,6 +330,9 @@ OFSTED_HISTORICAL_ANNUAL_URLS = [
     # 2022-23 academic year (Sept 2022 – Aug 2023)
     "https://assets.publishing.service.gov.uk/media/654e19575d60950011bec907/"
     "State_funded_schools_inspections_and_outcomes_between_1_September_2022_and_31_August_2023.csv",
+    # 2021-22 academic year (Sept 2021 – Aug 2022) — needed for schools like Tiffin (May 2022)
+    "https://assets.publishing.service.gov.uk/media/6384c015d3bf7f7eb32a9f06/"
+    "State_funded_schools_inspections_and_outcomes_between_1_September_2021_and_31_August_2022.csv",
 ]
 
 GRADE_MAP = {
@@ -587,7 +590,7 @@ def fetch_ofsted():
             return {}
 
     # Build a composite "most recent across all historical files" map
-    print("  Overlaying historical annual inspection files (2022-23, 2023-24, 2024-25)...")
+    print("  Overlaying historical annual inspection files (2021-22, 2022-23, 2023-24, 2024-25)...")
     hist_recent = {}  # URN → most-recent ISO date across all historical files
     for hist_url in OFSTED_HISTORICAL_ANNUAL_URLS:
         label = hist_url.split("/")[-1][:70]

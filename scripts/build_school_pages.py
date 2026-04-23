@@ -1,7 +1,14 @@
 import json, os, pathlib, re
+from datetime import datetime
 
 # Always run from repo root regardless of where Vercel calls this from
 os.chdir(pathlib.Path(__file__).parent.parent)
+
+# ── Data vintage ───────────────────────────────────────────────────────────────
+# Update DATA_YEAR when DfE releases new annual performance tables (typically Oct/Nov).
+# This appears on every school page so parents can see exactly how recent the figures are.
+DATA_YEAR = "2024/25"
+BUILT_DATE = datetime.utcnow().strftime("%-d %B %Y")   # e.g. "23 April 2026"
 
 BASE_URL = "https://londonschool.directory"
 
@@ -176,9 +183,9 @@ def build_school_page(school):
     # Build data note for results section
     results_note = ""
     if ks4_att8 or ks4_grade5:
-        results_note = "<p style=\"font-size:12px;color:#888;margin-top:12px;line-height:1.5;\">KS4 data from DfE 2024/25 school performance tables. Attainment 8 measures average grade across 8 GCSE subjects (national average: 46.4). Grade 5+ is a strong pass in both English and Maths. Figures may occasionally exceed 100% due to mid-year cohort changes in DfE reporting.</p>"
+        results_note = f"<p style=\"font-size:12px;color:#888;margin-top:12px;line-height:1.5;\">KS4 data from DfE {DATA_YEAR} school performance tables. Attainment 8 measures average grade across 8 GCSE subjects (national average: 46.4). Grade 5+ is a strong pass in both English and Maths. Figures may occasionally exceed 100% due to mid-year cohort changes in DfE reporting.</p>"
     elif ks2_expected or ks2_higher:
-        results_note = "<p style=\"font-size:12px;color:#888;margin-top:12px;line-height:1.5;\">KS2 data from DfE 2024/25 performance tables. Figures show the percentage of pupils meeting the expected or higher standard in reading, writing and maths combined.</p>"
+        results_note = f"<p style=\"font-size:12px;color:#888;margin-top:12px;line-height:1.5;\">KS2 data from DfE {DATA_YEAR} performance tables. Figures show the percentage of pupils meeting the expected or higher standard in reading, writing and maths combined.</p>"
 
     # Admissions demand row — shown in School details card if data available
     apps_per_place = school.get("apps_per_place")
@@ -186,7 +193,7 @@ def build_school_page(school):
         apps_row = f'<tr><td>Applications per place</td><td><strong>{apps_per_place}</strong></td></tr>'
         apps_note = ('<p style="font-size:12px;color:#888;margin-top:12px;line-height:1.5;">'
                      'Applications per place = number of first-choice applications received per available place '
-                     'in the 2024/25 admissions round (DfE data). A figure above 1.0 means the school was '
+                     f'in the {DATA_YEAR} admissions round (DfE data). A figure above 1.0 means the school was '
                      'oversubscribed. For example, 2.0 means twice as many families listed this school as their '
                      'first choice as there were places available.</p>')
     else:
@@ -265,7 +272,7 @@ def build_school_page(school):
             "name": f"How oversubscribed is {name}?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": f"{name} received {r} first-choice applications per available place in the 2025 admissions round."
+                "text": f"{name} received {r} first-choice applications per available place in the {DATA_YEAR} admissions round."
             }
         })
     if ofsted_label and ofsted_label != "Not yet rated":
@@ -283,7 +290,7 @@ def build_school_page(school):
             "name": f"What are {name}\'s GCSE results?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": f"{name} achieved an Attainment 8 score of {ks4_att8} in 2024/25. The national average is 46.4."
+                "text": f"{name} achieved an Attainment 8 score of {ks4_att8} in {DATA_YEAR}. The national average is 46.4."
             }
         })
     elif ks2_expected:
@@ -292,7 +299,7 @@ def build_school_page(school):
             "name": f"What are {name}\'s KS2 results?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": f"At {name}, {ks2_expected}% of pupils met the expected standard in reading, writing and maths at KS2 in 2024/25."
+                "text": f"At {name}, {ks2_expected}% of pupils met the expected standard in reading, writing and maths at KS2 in {DATA_YEAR}."
             }
         })
     if school.get("crime_label"):
@@ -508,7 +515,7 @@ def build_school_page(school):
 </div>
 
 <footer>
-  Data sourced from Ofsted and the Department for Education. Last updated 2025.<br>
+  Data sourced from Ofsted and the Department for Education. Last updated {BUILT_DATE}.<br>
   <a href="/">London Schools Explorer</a> &mdash; helping families find the right school.
 </footer>
 

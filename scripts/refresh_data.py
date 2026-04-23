@@ -314,6 +314,24 @@ OFSTED_MI_PAGE = (
     "monthly-management-information-ofsteds-school-inspections-outcomes"
 )
 
+# Historical annual "all inspections" CSV files published by Ofsted at each academic year end.
+# These cover inspection visits (including ungraded) that fall outside the current academic year's
+# year-to-date MI file. They let us update inspection dates for schools like those that were
+# Outstanding-exempt pre-2021 and only received ungraded monitoring visits since.
+# Column: "Inspection start date" (vs MI files which use "Inspection date").
+# Add each new academic year's URL here when Ofsted publishes it (typically November after Aug 31).
+OFSTED_HISTORICAL_ANNUAL_URLS = [
+    # 2024-25 academic year (Sept 2024 – Aug 2025)
+    "https://assets.publishing.service.gov.uk/media/691ee0610107ccaa765f7113/"
+    "State-funded_schools_inspections_and_outcomes_between_1_September_2024_and_31_August_2025.csv",
+    # 2023-24 academic year (Sept 2023 – Aug 2024)
+    "https://assets.publishing.service.gov.uk/media/673f1b742ff787d4e01b09ac/"
+    "State_funded_schools_inspections_and_outcomes_between_1_September_2023_and_31_August_2024.csv",
+    # 2022-23 academic year (Sept 2022 – Aug 2023)
+    "https://assets.publishing.service.gov.uk/media/654e19575d60950011bec907/"
+    "State_funded_schools_inspections_and_outcomes_between_1_September_2022_and_31_August_2023.csv",
+]
+
 GRADE_MAP = {
     "1": ("Outstanding",            1, 100),
     "2": ("Good",                   2, 80),
@@ -529,6 +547,65 @@ def fetch_ofsted():
             print(f"  Could not process all-inspections file: {e}")
     else:
         print("  No 'all inspections' file found on page — skipping date overlay")
+
+    # ── Overlay dates from historical academic-year "all inspections" files ──────
+    # The MI page's year-to-date file only covers the current academic year (Sept→now).
+    # Schools inspected in previous years (e.g. Outstanding schools that received their
+    # first monitoring visit in 2022-23 or 2023-24) need dates from these annual files.
+    # We only update inspection_date when the historical file has a MORE RECENT date.
+    def _build_recent_from_annual(csv_url):
+        """Download one annual Ofsted 'between' CSV and return URN→most-recent-date map."""
+        try:
+            r_hist = requests.get(csv_url, timeout=120)
+            r_hist.raise_for_status()
+            df_hist = pd.read_csv(io.BytesIO(r_hist.content), encoding="latin-1", low_memory=False)
+            df_hist.columns = df_hist.columns.str.strip()
+
+            # These files use "Inspection start date" (not "Inspection date" like MI files)
+            urn_col_h  = next((c for c in df_hist.columns if c.strip().lower() in ("urn", "school urn")), None)
+            date_col_h = next((
+                c for c in df_hist.columns
+                if "inspection" in c.lower() and ("start" in c.lower() or "date" in c.lower())
+            ), None)
+
+            if not urn_col_h or not date_col_h:
+                print(f"    Could not find URN/date columns in {csv_url.split('/')[-1][:60]}")
+                return {}
+
+            recent_h = {}
+            for _, row in df_hist.iterrows():
+                try:
+                    u = int(float(str(row[urn_col_h]).strip()))
+                except (ValueError, TypeError):
+                    continue
+                iso = _to_iso(row.get(date_col_h, ""))
+                if iso and iso > recent_h.get(u, ""):
+                    recent_h[u] = iso
+            return recent_h
+        except Exception as e:
+            print(f"    Could not process {csv_url.split('/')[-1][:60]}: {e}")
+            return {}
+
+    # Build a composite "most recent across all historical files" map
+    print("  Overlaying historical annual inspection files (2022-23, 2023-24, 2024-25)...")
+    hist_recent = {}  # URN → most-recent ISO date across all historical files
+    for hist_url in OFSTED_HISTORICAL_ANNUAL_URLS:
+        label = hist_url.split("/")[-1][:70]
+        print(f"    Fetching: {label}")
+        partial = _build_recent_from_annual(hist_url)
+        for u, iso in partial.items():
+            if iso > hist_recent.get(u, ""):
+                hist_recent[u] = iso
+    print(f"    Historical date map built for {len(hist_recent):,} schools")
+
+    hist_updated = 0
+    for urn, data in mapping.items():
+        newer = hist_recent.get(urn, "")
+        existing = _to_iso(data.get("inspection_date") or "")
+        if newer and newer > existing:
+            data["inspection_date"] = datetime.strptime(newer, "%Y-%m-%d").strftime("%d/%m/%Y")
+            hist_updated += 1
+    print(f"  Updated inspection dates for {hist_updated:,} schools from historical annual files")
 
     return mapping, name_la_map
 

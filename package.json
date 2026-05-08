@@ -1,0 +1,15 @@
+{
+  "name": "london-schools",
+  "version": "1.0.0",
+  "description": "London Schools Explorer - A comprehensive directory of schools in London",
+  "type": "module",
+  "scripts": {
+    "build": "./build.sh"
+  },
+  "keywords": ["london", "schools", "education"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@vercel/speed-insights": "^1.0.12"
+  }
+}

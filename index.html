@@ -306,12 +306,22 @@
     .cmp-worst { background:#FFF3E0; }
     .cmp-bar { height:6px; border-radius:3px; margin-top:4px; }
   </style>
+  
+  <!-- Vercel Web Analytics -->
   <script>
     window.va = window.va || function () { 
       (window.vaq = window.vaq || []).push(arguments); 
     };
   </script>
   <script defer src="/_vercel/insights/script.js"></script>
+
+  <!-- Vercel Speed Insights -->
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+
+</head>
+<body>
+  <div id="root"></div>
+  ...
 </head>
 <body>
 <div id="root"></div>

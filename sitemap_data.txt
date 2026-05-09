@@ -989,7 +989,7 @@
   <url><loc>https://londonschool.directory/schools/ealing/the-japanese-school</loc><lastmod>2026-05-09</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/haringey/greek-secondary-school-of-london</loc><lastmod>2026-05-09</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/ealing/avenue-house-school</loc><lastmod>2026-05-09</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://londonschool.directory/schools/hillingdon/the-eden-school</loc><lastmod>2026-05-09</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://londonschool.directory/schools/hounslow/eden-park-academy</loc><lastmod>2026-05-09</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/ealing/belvue-school</loc><lastmod>2026-05-09</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/ealing/castlebar-school</loc><lastmod>2026-05-09</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/ealing/mandeville-school</loc><lastmod>2026-05-09</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
@@ -1289,7 +1289,6 @@
   <url><loc>https://londonschool.directory/schools/kingston-upon-thames/surbiton-high-school</loc><lastmod>2026-05-09</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/kingston-upon-thames/rokeby-school</loc><lastmod>2026-05-09</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/kingston-upon-thames/marymount-international-school</loc><lastmod>2026-05-09</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://londonschool.directory/schools/kingston-upon-thames/park-hill-school</loc><lastmod>2026-05-09</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/kingston-upon-thames/westbury-house-school</loc><lastmod>2026-05-09</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/kingston-upon-thames/kingston-grammar-school</loc><lastmod>2026-05-09</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/kingston-upon-thames/canbury-school</loc><lastmod>2026-05-09</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
@@ -3154,10 +3153,10 @@
   <url><loc>https://londonschool.directory/schools/bromley</loc><lastmod>2026-05-09</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://londonschool.directory/schools/croydon</loc><lastmod>2026-05-09</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://londonschool.directory/schools/haringey</loc><lastmod>2026-05-09</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://londonschool.directory/schools/hillingdon</loc><lastmod>2026-05-09</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://londonschool.directory/schools/hounslow</loc><lastmod>2026-05-09</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://londonschool.directory/schools/enfield</loc><lastmod>2026-05-09</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://londonschool.directory/schools/havering</loc><lastmod>2026-05-09</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://londonschool.directory/schools/hounslow</loc><lastmod>2026-05-09</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://londonschool.directory/schools/hillingdon</loc><lastmod>2026-05-09</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://londonschool.directory/schools/kingston-upon-thames</loc><lastmod>2026-05-09</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://londonschool.directory/schools/newham</loc><lastmod>2026-05-09</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://londonschool.directory/schools/redbridge</loc><lastmod>2026-05-09</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>

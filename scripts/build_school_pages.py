@@ -1,14 +1,7 @@
 import json, os, pathlib, re
-from datetime import datetime
 
 # Always run from repo root regardless of where Vercel calls this from
 os.chdir(pathlib.Path(__file__).parent.parent)
-
-# ── Data vintage ───────────────────────────────────────────────────────────────
-# Update DATA_YEAR when DfE releases new annual performance tables (typically Oct/Nov).
-# This appears on every school page so parents can see exactly how recent the figures are.
-DATA_YEAR = "2024/25"
-BUILT_DATE = datetime.utcnow().strftime("%-d %B %Y")   # e.g. "23 April 2026"
 
 BASE_URL = "https://londonschool.directory"
 
@@ -139,14 +132,14 @@ def build_school_page(school):
     capacity      = safe(school.get("capacity"))
     religion      = safe(school.get("religious_character"))
     head_name     = safe(school.get("head_name"))
-    # Ensure spaces between title prefix and name parts (e.g. "MrSmith" â†' "Mr Smith")
+    # Ensure spaces between title prefix and name parts (e.g. "MrSmith" â†’ "Mr Smith")
     if head_name:
         import re as _re
         head_name = _re.sub(r'\b(Mr|Mrs|Ms|Miss|Dr|Prof|Rev|Sir)([A-Z])', r'\1 \2', head_name)
     head_title    = safe(school.get("head_job_title", "Headteacher"))
     website       = school.get("website") or ""
     telephone     = format_phone(school.get("telephone"))
-    # Only use verified snobe_url from schools.json – set by check_snobe_slugs.py
+    # Only use verified snobe_url from schools.json â€” set by check_snobe_slugs.py
     # Never generate slugs from name: Snobe uses -0/-1/-2 suffixes for duplicates
     # and different naming conventions to GIAS. Unverified links cause 404s.
     snobe_url = school.get("snobe_url") or ""
@@ -175,30 +168,9 @@ def build_school_page(school):
     if ks4_att8 is not None:
         results_rows += f"<tr><td>Attainment 8 score</td><td><strong>{ks4_att8}</strong></td></tr>"
     if ks4_grade5 is not None:
-        ks4_grade5_display = min(ks4_grade5, 100.0)  # DfE data can exceed 100% due to cohort timing; cap for display
-        results_rows += f"<tr><td>Grade 5+ English &amp; Maths</td><td><strong>{ks4_grade5_display}%</strong></td></tr>"
+        results_rows += f"<tr><td>Grade 5+ English &amp; Maths</td><td><strong>{ks4_grade5}%</strong></td></tr>"
     if ks4_grade4 is not None:
         results_rows += f"<tr><td>Grade 4+ English &amp; Maths</td><td><strong>{ks4_grade4}%</strong></td></tr>"
-
-    # Build data note for results section
-    results_note = ""
-    if ks4_att8 or ks4_grade5:
-        results_note = f"<p style=\"font-size:12px;color:#888;margin-top:12px;line-height:1.5;\">KS4 data from DfE {DATA_YEAR} school performance tables. Attainment 8 measures average grade across 8 GCSE subjects (national average: 46.4). Grade 5+ is a strong pass in both English and Maths. Figures may occasionally exceed 100% due to mid-year cohort changes in DfE reporting.</p>"
-    elif ks2_expected or ks2_higher:
-        results_note = f"<p style=\"font-size:12px;color:#888;margin-top:12px;line-height:1.5;\">KS2 data from DfE {DATA_YEAR} performance tables. Figures show the percentage of pupils meeting the expected or higher standard in reading, writing and maths combined.</p>"
-
-    # Admissions demand row — shown in School details card if data available
-    apps_per_place = school.get("apps_per_place")
-    if apps_per_place:
-        apps_row = f'<tr><td>Applications per place</td><td><strong>{apps_per_place}</strong></td></tr>'
-        apps_note = ('<p style="font-size:12px;color:#888;margin-top:12px;line-height:1.5;">'
-                     'Applications per place = number of first-choice applications received per available place '
-                     f'in the {DATA_YEAR} admissions round (DfE data). A figure above 1.0 means the school was '
-                     'oversubscribed. For example, 2.0 means twice as many families listed this school as their '
-                     'first choice as there were places available.</p>')
-    else:
-        apps_row = ""
-        apps_note = ""
 
     results_section = ""
     if results_rows:
@@ -206,7 +178,6 @@ def build_school_page(school):
     <section class="card">
       <h2>Exam results</h2>
       <table>{results_rows}</table>
-      {results_note}
     </section>"""
 
     website_link = f'<a href="{"https://" + website if not website.startswith("http") else website}" target="_blank" rel="noopener">{website}</a>' if website else "N/A"
@@ -218,7 +189,7 @@ def build_school_page(school):
     # Rich meta description with actual data
     meta_parts = [f"{ofsted_label} {phase} school in {borough}, London"]
     if school.get("apps_per_place"):
-        meta_parts.append(f"{school['apps_per_place']}x oversubscribed")
+        meta_parts.append(f"{school['apps_per_place']}Ã- oversubscribed")
     if ks4_att8:
         meta_parts.append(f"Attainment 8: {ks4_att8}")
     elif ks2_expected:
@@ -263,7 +234,7 @@ def build_school_page(school):
     if school.get("gender") and school["gender"] != "Mixed":
         schema["gender"] = school["gender"]
 
-    # FAQ schema – answers common questions parents search for
+    # FAQ schema â€” answers common questions parents search for
     faq_items = []
     if school.get("apps_per_place"):
         r = school["apps_per_place"]
@@ -272,7 +243,7 @@ def build_school_page(school):
             "name": f"How oversubscribed is {name}?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": f"{name} received {r} first-choice applications per available place in the {DATA_YEAR} admissions round."
+                "text": f"{name} received {r} first-choice applications per available place in the 2025 admissions round."
             }
         })
     if ofsted_label and ofsted_label != "Not yet rated":
@@ -290,7 +261,7 @@ def build_school_page(school):
             "name": f"What are {name}\'s GCSE results?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": f"{name} achieved an Attainment 8 score of {ks4_att8} in {DATA_YEAR}. The national average is 46.4."
+                "text": f"{name} achieved an Attainment 8 score of {ks4_att8} in 2024/25. The national average is 46.4."
             }
         })
     elif ks2_expected:
@@ -299,7 +270,7 @@ def build_school_page(school):
             "name": f"What are {name}\'s KS2 results?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": f"At {name}, {ks2_expected}% of pupils met the expected standard in reading, writing and maths at KS2 in {DATA_YEAR}."
+                "text": f"At {name}, {ks2_expected}% of pupils met the expected standard in reading, writing and maths at KS2 in 2024/25."
             }
         })
     if school.get("crime_label"):
@@ -404,7 +375,7 @@ def build_school_page(school):
     <div>
       <span class="badge" style="background:{ofsted_bg_color};color:{ofsted_text_color}">{ofsted_label}</span>
       <h1>{name}</h1>
-      <p class="meta">{street}, {borough}, {postcode}{"&ensp;&middot;&ensp;" + phase if phase != "N/A" else ""}{"&ensp;&middot;&ensp;" + school_type if school_type != "N/A" else ""}</p>
+      <p class="meta">{street}, {borough}, {postcode}{"&ensp;•&ensp;" + phase if phase != "N/A" else ""}{"&ensp;•&ensp;" + school_type if school_type != "N/A" else ""}</p>
     </div>
     <div class="actions">
       {"<a class='btn btn-primary' href='" + ofsted_url + "' target='_blank' rel='noopener'>View Ofsted report</a>" if ofsted_url else ""}
@@ -437,9 +408,7 @@ def build_school_page(school):
       <tr><td>Sixth form</td><td><strong>{sixth_form}</strong></td></tr>
       <tr><td>Admissions</td><td><strong>{admissions}</strong></td></tr>
       <tr><td>Religious character</td><td><strong>{religion}</strong></td></tr>
-      {apps_row}
     </table>
-    {apps_note}
   </section>
 
   <section class="card">
@@ -470,27 +439,30 @@ def build_school_page(school):
     </table>
   </section>
 
+<!-- PiAcademy Section -->
 <section class="card" style="background:linear-gradient(135deg,#fff 0%,#f0f7ff 100%);border-color:#dbeafe;">
     <h2 style="display:flex;align-items:center;gap:8px;">
       <span style="font-size:20px;">🎓</span> 11+ Exam Preparation
     </h2>
     <p style="font-size:14px;color:#555;margin-bottom:16px;line-height:1.6;">
-      High-quality 11+, 13+, Pre-Tests, SATs and GCSE resources from PiAcademy. Use code <strong>THIERR25</strong> at checkout for 25% off.
+      High-quality 11+, 13+, Pre-Tests, SATs and GCSE resources from PiAcademy. 
+      Use code <strong>THIERR25</strong> at checkout for 25% off.
     </p>
     
-    <a href="https://piacademy.co.uk/?aff=28" 
+    <a href="https://piacademy.co.uk/?aff=2849515" 
        target="_blank" rel="noopener sponsored"
        style="display:inline-flex;align-items:center;gap:10px;padding:14px 28px;background:#7e22ce;color:white;border-radius:10px;font-size:16px;font-weight:700;text-decoration:none;box-shadow:0 4px 12px rgba(126,34,206,0.3);">
       🎓 Visit PiAcademy & Get 25% OFF
     </a>
     
     <p style="font-size:12px;color:#666;margin-top:12px;">
-      <strong>How to get the discount:</strong> Add any course or papers to your cart on PiAcademy, then enter coupon code <strong>THIERR25</strong> at the checkout.
+      <strong>How it works:</strong> Add courses or papers to cart, then enter <strong>THIERR25</strong> at checkout.
     </p>
     
     <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
   </section>
 
+<!-- Scholastic Books Section -->
 <section class="card" style="background:linear-gradient(135deg,#fff 0%,#f0f7ff 100%);border-color:#dbeafe;">
     <h2 style="display:flex;align-items:center;gap:8px;">
       <span style="font-size:20px;">📚</span> Children's Books
@@ -499,7 +471,7 @@ def build_school_page(school):
       Great children's books at low prices from Scholastic. Every purchase helps your child's school get free books too!
     </p>
     
-    <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&ued=https%3A%2F%2Fwww.scholastic.co.uk%2Fteachers" 
+    <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&campaign=PBBR+Starter+Packs+Reading+Roots" 
        target="_blank" rel="noopener sponsored"
        style="display:inline-flex;align-items:center;gap:10px;padding:14px 28px;background:#d97706;color:white;border-radius:10px;font-size:16px;font-weight:700;text-decoration:none;box-shadow:0 4px 12px rgba(217,119,6,0.3);">
       📚 Shop Books at Scholastic
@@ -512,10 +484,12 @@ def build_school_page(school):
     <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
   </section>
 
+  
+
 </div>
 
 <footer>
-  Data sourced from Ofsted and the Department for Education. Last updated {BUILT_DATE}.<br>
+  Data sourced from Ofsted and the Department for Education. Last updated 2025.<br>
   <a href="/">London Schools Explorer</a> &mdash; helping families find the right school.
 </footer>
 
@@ -528,7 +502,7 @@ def build_school_page(school):
     return borough_slug, school_slug, html
 
 
-# â"€â"€ Build all pages â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
+# â”€â”€ Build all pages â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 print(f"Building {len(schools)} school pages...")
 out_root = pathlib.Path("schools")
 sitemap_urls = [BASE_URL + "/"]
@@ -548,7 +522,7 @@ for school in schools:
 print(f"Built {built} pages successfully.")
 
 
-# â"€â"€ Borough index pages â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
+# â”€â”€ Borough index pages â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 from collections import defaultdict
 
 BOROUGH_DESCRIPTIONS = {
@@ -568,14 +542,14 @@ BOROUGH_DESCRIPTIONS = {
     "Harrow": "Harrow is a north-west London borough with a diverse and high-performing school system. The borough is home to the renowned independent Harrow School as well as a strong state sector. Many schools serve large South Asian communities and have a strong ethos around academic achievement. Harrow-on-the-Hill and Pinner are particularly popular areas for families.",
     "Havering": "Havering is the easternmost London borough, bordering Essex, and has a strong tradition of selective education with grammar schools including Royal Liberty and Coopers' Company and Coborn. The borough has a largely suburban character with lower house prices than inner London, making it attractive to families seeking larger homes and strong school options.",
     "Hillingdon": "Hillingdon in west London includes areas ranging from urban Hayes and Southall through to the greener suburbs of Ruislip, Northwood and Uxbridge. The borough has a wide range of school types and several schools rated Outstanding. Proximity to Heathrow and good Crossrail links make it popular with commuting families.",
-    "Hounslow": "Hounslow is a diverse west London borough with a strong primary school sector and improving secondary provision. The borough spans from Chiswick in the east – with some of west London's most sought-after schools – to Feltham and Hanworth in the west. Many schools serve large South Asian and Eastern European communities.",
+    "Hounslow": "Hounslow is a diverse west London borough with a strong primary school sector and improving secondary provision. The borough spans from Chiswick in the east â€” with some of west London's most sought-after schools â€” to Feltham and Hanworth in the west. Many schools serve large South Asian and Eastern European communities.",
     "Islington": "Islington is an inner-London borough with a highly competitive school landscape and some of the most oversubscribed schools in the capital. The borough borders Camden and Hackney and is popular with young professional families. Highbury Fields School, Elizabeth Garrett Anderson and Highgate Wood School are among the most popular secondaries. Primary catchments can be extremely tight.",
     "Kensington and Chelsea": "Kensington and Chelsea is one of London's wealthiest boroughs and home to a concentration of prestigious independent schools as well as strong state provision. Holland Park School is one of the most celebrated state secondaries in the capital. The borough has some of the most competitive primary catchments in London, particularly around South Kensington and Chelsea.",
     "Kingston upon Thames": "Kingston upon Thames is a prosperous south-west London borough with consistently high-performing schools across both primary and secondary phases. The borough benefits from a strong local economy and high levels of parental engagement. Schools in areas such as Surbiton, New Malden and Kingston town centre are popular with families relocating from central London.",
     "Lambeth": "Lambeth is a vibrant south London borough stretching from the South Bank to Streatham, with a diverse and improving school landscape. The borough includes highly regarded schools such as Dunraven School and La Retraite RC Girls' School. Brixton, Clapham and Streatham are popular with young families drawn by relatively affordable housing and good transport links.",
     "Lewisham": "Lewisham is a south-east London borough with a strong community feel and an improving school landscape. The borough has invested significantly in education over the past decade and several schools are now rated Outstanding. Areas such as Blackheath, Forest Hill and Lee are particularly popular with families. Prendergast schools and Haberdashers' Boys' School are among the most sought-after secondaries.",
     "Merton": "Merton is a south London borough with a strong reputation for education, particularly in the Wimbledon and Raynes Park areas. The borough has several Outstanding-rated schools and benefits from good transport links via the District line and Thameslink. Rutlish School and Wimbledon College are popular secondary choices.",
-    "Newham": "Newham in east London has undergone remarkable educational improvement over the past two decades and now has one of the highest proportions of Good and Outstanding schools among inner-London boroughs. The borough benefited significantly from Olympic investment and regeneration. Schools such as Brampton Manor Academy – which sends more students to Oxbridge than most independent schools – have national reputations.",
+    "Newham": "Newham in east London has undergone remarkable educational improvement over the past two decades and now has one of the highest proportions of Good and Outstanding schools among inner-London boroughs. The borough benefited significantly from Olympic investment and regeneration. Schools such as Brampton Manor Academy â€” which sends more students to Oxbridge than most independent schools â€” have national reputations.",
     "Redbridge": "Redbridge is a north-east London borough with a highly competitive school system and a large number of selective and faith school options. The borough has one of the highest proportions of grammar school places in London. Ilford County High and Woodford County High are among the most academically selective schools in the country. The borough borders Essex and has a large South Asian community.",
     "Richmond upon Thames": "Richmond upon Thames is consistently rated as one of the best boroughs in London for education and quality of life. The borough has an exceptionally high proportion of Outstanding-rated schools and benefits from low crime, extensive green space and strong community networks. Schools in Richmond, Twickenham and Ham are highly sought after and catchments can be very tight.",
     "Southwark": "Southwark is an inner-south London borough with a rapidly improving school landscape. The borough spans from London Bridge and Bermondsey through to Peckham, Dulwich and Forest Hill. Dulwich in particular is home to several prestigious independent schools. State secondaries such as Notre Dame RC Girls' School and Harris Academy Peckham are well regarded.",
@@ -585,72 +559,6 @@ BOROUGH_DESCRIPTIONS = {
     "Wandsworth": "Wandsworth is a south London borough with one of the strongest state school systems in the capital. The borough consistently produces some of the best primary and secondary results in London. Areas such as Battersea, Tooting, Balham and Putney are highly sought after for their school catchments. Ernest Bevin College and Burntwood School are among the most popular secondaries.",
     "Westminster": "Westminster is central London's most prominent borough and home to a mix of outstanding state schools and prestigious independent institutions. The borough is one of the most diverse in London and its schools reflect this. Several primaries are among the most oversubscribed in the capital. Secondary options include Grey Coat Hospital School and The Grey Coat Hospital.",
 }
-
-# ── Boroughs with grammar / selective schools (Pi Academy more prominent) ──
-GRAMMAR_BOROUGHS = {
-    "Barnet", "Bexley", "Bromley", "Kingston upon Thames",
-    "Redbridge", "Sutton", "Havering", "Enfield"
-}
-
-# ── Reusable affiliate HTML blocks ─────────────────────────────────────────
-def affiliate_block_html(prominent_pi=False, prominent_scholastic=False, compact=False):
-    """Return the HTML for the two affiliate cards.
-    prominent_pi          – show Pi Academy first and larger (grammar boroughs / selective pages)
-    prominent_scholastic  – show Scholastic first and larger (primary pages)
-    compact               – lighter padding for type pages
-    """
-    pad = "14px 20px" if not compact else "12px 16px"
-    pi_card = f"""
-<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fdf4ff 0%,#ede9fe 100%);
-     border:1px solid #d8b4fe;border-radius:12px;padding:{pad};">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-    <span style="font-size:22px;">🎓</span>
-    <strong style="font-size:15px;color:#5b21b6;">11+ &amp; 13+ Exam Prep</strong>
-  </div>
-  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
-    PiAcademy resources for grammar school entrance, SATs &amp; GCSE.
-    Use code <strong>THIERR25</strong> for 25% off.
-  </p>
-  <a href="https://piacademy.co.uk/?aff=28"
-     target="_blank" rel="noopener sponsored"
-     style="display:inline-block;padding:9px 18px;background:#7e22ce;color:#fff;
-            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
-    Get 25% OFF →
-  </a>
-  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
-</div>"""
-
-    scholastic_card = f"""
-<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%);
-     border:1px solid #fcd34d;border-radius:12px;padding:{pad};">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-    <span style="font-size:22px;">📚</span>
-    <strong style="font-size:15px;color:#92400e;">Children's Books</strong>
-  </div>
-  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
-    Great books at low prices. At checkout, choose your school — Scholastic donates
-    <strong>20p for every £1 spent</strong> back to the school in free books.
-  </p>
-  <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&ued=https%3A%2F%2Fwww.scholastic.co.uk%2Fteachers"
-     target="_blank" rel="noopener sponsored"
-     style="display:inline-block;padding:9px 18px;background:#d97706;color:#fff;
-            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
-    Shop at Scholastic →
-  </a>
-  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
-</div>"""
-
-    if prominent_pi:
-        cards = pi_card + scholastic_card
-    elif prominent_scholastic:
-        cards = scholastic_card + pi_card
-    else:
-        cards = pi_card + scholastic_card
-
-    return f"""
-<div style="display:flex;gap:16px;flex-wrap:wrap;margin:20px 0;">
-{cards}
-</div>"""
 
 by_borough = defaultdict(list)
 for school in schools:
@@ -761,9 +669,28 @@ for borough, borough_schools in by_borough.items():
 
   <div class="intro">{desc_intro}</div>
 
-  {affiliate_block_html(prominent_pi=(borough in GRAMMAR_BOROUGHS))}
+  <div style="display:flex;flex-wrap:wrap;gap:16px;margin:20px 0;">
+    <div style="flex:1;min-width:240px;background:linear-gradient(135deg,#fdf4ff,#f3e8ff);border:1px solid #d8b4fe;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:10px;">
+      <div style="font-size:1rem;font-weight:700;color:#1a1a2e;">&#127891; 11+ Exam Preparation</div>
+      <p style="font-size:0.84rem;color:#555;line-height:1.55;margin:0;">High-quality 11+, 13+, Pre-Tests, SATs &amp; GCSE resources from PiAcademy. Use code <strong>THIERR25</strong> at checkout for 25% off.</p>
+      <a href="https://piacademy.co.uk/?aff=2849515" target="_blank" rel="noopener sponsored" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 18px;background:#7e22ce;color:white;border-radius:8px;font-size:0.88rem;font-weight:700;text-decoration:none;box-shadow:0 4px 10px rgba(126,34,206,0.3);">
+        &#127891; Visit PiAcademy &mdash; 25% OFF
+      </a>
+      <p style="font-size:0.75rem;color:#888;margin:0;">Enter code <strong>THIERR25</strong> at checkout.</p>
+      <p style="font-size:0.68rem;color:#bbb;margin:0;">Sponsored &mdash; helps keep this site free.</p>
+    </div>
+    <div style="flex:1;min-width:240px;background:linear-gradient(135deg,#fffbeb,#fef3c7);border:1px solid #fcd34d;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:10px;">
+      <div style="font-size:1rem;font-weight:700;color:#1a1a2e;">&#128218; Children's Books</div>
+      <p style="font-size:0.84rem;color:#555;line-height:1.55;margin:0;">Great children's books from Scholastic. Every purchase helps your child's school get free books!</p>
+      <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&campaign=PBBR+Starter+Packs+Reading+Roots" target="_blank" rel="noopener sponsored" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:11px 18px;background:#d97706;color:white;border-radius:8px;font-size:0.88rem;font-weight:700;text-decoration:none;box-shadow:0 4px 10px rgba(217,119,6,0.3);">
+        &#128218; Shop Books at Scholastic
+      </a>
+      <p style="font-size:0.75rem;color:#888;margin:0;">Choose your school at checkout &mdash; Scholastic donates <strong>20p per &pound;1</strong> as free books.</p>
+      <p style="font-size:0.68rem;color:#bbb;margin:0;">Sponsored &mdash; helps keep this site free.</p>
+    </div>
+  </div>
 
-  <table>
+<table>
     <thead><tr><th>School</th><th>Phase</th><th>Ofsted</th><th>Pupils</th></tr></thead>
     <tbody>{rows}</tbody>
   </table>
@@ -780,8 +707,8 @@ for borough, borough_schools in by_borough.items():
 print(f"Built {len(by_borough)} borough pages.")
 
 
-# â"€â"€ School type landing pages â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
-def build_type_page(slug, title, meta_desc, intro, filter_fn, prominent_pi=False, prominent_scholastic=False):
+# â”€â”€ School type landing pages â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+def build_type_page(slug, title, meta_desc, intro, filter_fn):
     matched = [s for s in schools if filter_fn(s)]
     matched.sort(key=lambda s: (s.get("ofsted_score") or 0), reverse=True)
 
@@ -797,7 +724,7 @@ def build_type_page(slug, title, meta_desc, intro, filter_fn, prominent_pi=False
           <td>{safe(s.get('local_authority'))}</td>
           <td>{safe(s.get('phase'))}</td>
           <td><span style="background:{bc};color:{tc};padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">{label}</span></td>
-          <td style="font-weight:700;color:#1a1a1a">{int(score) if score else '–'}</td>
+          <td style="font-weight:700;color:#1a1a1a">{int(score) if score else 'â€”'}</td>
         </tr>"""
 
     url  = f"{BASE_URL}/schools/{slug}"
@@ -864,7 +791,40 @@ def build_type_page(slug, title, meta_desc, intro, filter_fn, prominent_pi=False
   <h1>{title}</h1>
   <span class="count-badge">{len(matched)} schools</span>
   <div class="intro">{intro}</div>
-  {affiliate_block_html(prominent_pi=prominent_pi, prominent_scholastic=prominent_scholastic, compact=True)}
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin:20px 0;">
+
+    <div style="background:linear-gradient(135deg,#fdf8ff 0%,#f3e8ff 100%);border:1px solid #d8b4fe;border-radius:10px;padding:18px 20px;">
+      <h3 style="font-family:inherit;font-size:0.95rem;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px;">
+        <span>&#127891;</span> 11+ &amp; Exam Preparation
+      </h3>
+      <p style="font-size:0.82rem;color:#555;margin-bottom:12px;line-height:1.5;">
+        High-quality 11+, 13+, Pre-Tests, SATs and GCSE resources from PiAcademy.
+        Use code <strong>THIERR25</strong> for 25% off.
+      </p>
+      <a href="https://piacademy.co.uk/?aff=2849515" target="_blank" rel="noopener sponsored"
+        style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:#7e22ce;color:white;border-radius:8px;font-size:0.85rem;font-weight:700;text-decoration:none;">
+        &#127891; Visit PiAcademy &mdash; 25% OFF
+      </a>
+      <p style="font-size:0.72rem;color:#aaa;margin-top:10px;">Sponsored &mdash; helps keep this site free.</p>
+    </div>
+
+    <div style="background:linear-gradient(135deg,#fffbf0 0%,#fef3c7 100%);border:1px solid #fcd34d;border-radius:10px;padding:18px 20px;">
+      <h3 style="font-family:inherit;font-size:0.95rem;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px;">
+        <span>&#128218;</span> Children's Books
+      </h3>
+      <p style="font-size:0.82rem;color:#555;margin-bottom:12px;line-height:1.5;">
+        Great children's books at low prices from Scholastic. Every purchase helps your child's school get free books too!
+      </p>
+      <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&campaign=PBBR+Starter+Packs+Reading+Roots"
+        target="_blank" rel="noopener sponsored"
+        style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:#d97706;color:white;border-radius:8px;font-size:0.85rem;font-weight:700;text-decoration:none;">
+        &#128218; Shop Books at Scholastic
+      </a>
+      <p style="font-size:0.72rem;color:#aaa;margin-top:10px;">Sponsored &mdash; helps keep this site free.</p>
+    </div>
+
+  </div>
   <table>
     <thead><tr><th>School</th><th>Borough</th><th>Phase</th><th>Ofsted</th><th>Score</th></tr></thead>
     <tbody>{rows}</tbody>
@@ -889,85 +849,68 @@ TYPE_PAGES = [
         "Outstanding Schools in London",
         "Full list of all Outstanding-rated schools in London ranked by Ofsted score. Compare exam results, admissions and pupil data across all 32 boroughs.",
         "Outstanding is the highest rating awarded by Ofsted inspectors and is given only to schools that are truly exceptional across all areas: quality of education, behaviour and attitudes, personal development, and leadership and management. Less than a quarter of London schools hold an Outstanding rating. This page lists every Outstanding-rated school in London, ranked by composite score, so you can compare them across boroughs, phases and school types.",
-        lambda s: (s.get("quality_label") or s.get("score_band")) == "Outstanding",
-        False, False  # prominent_pi, prominent_scholastic
+        lambda s: (s.get("quality_label") or s.get("score_band")) == "Outstanding"
     ),
     (
         "good",
         "Good Schools in London",
         "Browse all Good-rated schools in London by Ofsted. Compare results, admissions and borough across all 32 London boroughs.",
-        "Good is the second-highest Ofsted rating and represents a school that is performing well and meeting the needs of its pupils. The majority of London schools are rated Good. This page lists every Good-rated school in London, ranked by composite score. A Good school is an excellent choice for most families – many Good schools outperform Outstanding schools on exam results and have less oversubscribed admissions.",
-        lambda s: (s.get("quality_label") or s.get("score_band")) == "Good",
-        False, False
+        "Good is the second-highest Ofsted rating and represents a school that is performing well and meeting the needs of its pupils. The majority of London schools are rated Good. This page lists every Good-rated school in London, ranked by composite score. A Good school is an excellent choice for most families â€” many Good schools outperform Outstanding schools on exam results and have less oversubscribed admissions.",
+        lambda s: (s.get("quality_label") or s.get("score_band")) == "Good"
     ),
     (
         "selective",
         "Selective Schools in London",
         "All selective schools in London including grammar schools and academically selective independents. Compare Ofsted ratings, exam results and admissions data.",
         "Selective schools in London admit pupils based on academic ability, typically assessed through entrance exams taken in Year 5 or 6 for secondary entry. London has fewer grammar schools than areas like Kent or Buckinghamshire, but there are selective state schools and many academically selective independent schools. Selective schools are among the most oversubscribed in the capital. This page lists every school in London with a selective admissions policy, ranked by Ofsted score.",
-        lambda s: s.get("admissions") == "Selective",
-        True, False  # Pi Academy prominent — parents researching selective schools are the perfect audience
+        lambda s: s.get("admissions") == "Selective"
     ),
     (
         "grammar",
         "Grammar Schools in London",
         "All grammar schools in London. Compare Ofsted ratings, exam results, admissions and borough location for every London grammar school.",
-        "Grammar schools are state-funded secondary schools that select pupils by academic ability. London has significantly fewer grammar schools than surrounding counties – most are concentrated in Barnet, Bexley, Kingston, Redbridge and Sutton. Entry is typically via the 11-plus exam taken in Year 6. Places at London grammar schools are highly competitive, with many schools receiving ten or more applications per place. This page lists every grammar school in London ranked by Ofsted composite score.",
-        lambda s: (
-            s.get("admissions") == "Selective"
-            and s.get("phase") in ("Secondary", "Middle deemed secondary")
-            and s.get("school_type") in {
-                "Community school", "Foundation school",
-                "Voluntary aided school", "Voluntary controlled school",
-                "Academy converter", "Academy sponsor led"
-            }
-        ),
-        True, False  # Pi Academy prominent — 11+ prep is the #1 need for grammar school parents
+        "Grammar schools are state-funded secondary schools that select pupils by academic ability. London has significantly fewer grammar schools than surrounding counties â€” most are concentrated in Barnet, Bexley, Kingston, Redbridge and Sutton. Entry is typically via the 11-plus exam taken in Year 6. Places at London grammar schools are highly competitive, with many schools receiving ten or more applications per place. This page lists every grammar school in London ranked by Ofsted composite score.",
+        lambda s: "grammar" in s.get("school_type", "").lower()
     ),
     (
         "faith",
         "Faith Schools in London",
         "All faith schools in London including Church of England, Catholic, Jewish, Muslim and other religious schools. Compare Ofsted ratings and admissions data.",
         "London has one of the most diverse ranges of faith schools of any city in the world, reflecting its multicultural population. Church of England and Catholic schools make up the majority, but there are also Jewish, Muslim, Hindu, Sikh and other faith schools across the capital. Many faith schools are rated Outstanding or Good by Ofsted and are highly sought after. Admissions to faith schools often prioritise regular worshippers, so it is important to understand the admissions criteria carefully before applying.",
-        lambda s: s.get("religious_character") and s.get("religious_character") not in ("None", "Does not apply", "Not applicable", "N/A"),
-        False, True  # Scholastic prominent — faith school families are strong Scholastic audience
+        lambda s: s.get("religious_character") and s.get("religious_character") not in ("None", "Does not apply", "Not applicable", "N/A")
     ),
     (
         "primary",
         "Primary Schools in London",
         "Browse all primary schools in London. Compare Ofsted ratings, KS2 SATs results, admissions and pupil data across all 32 boroughs.",
         "London has over 2,000 primary schools spanning nursery, infant, junior and all-through primary phases, catering for children aged 3 to 11. Primary school places in inner London are among the most competitive in the country, with many schools receiving far more applications than they have places available. This page lists all primary schools in London ranked by Ofsted composite score. You can click any school to view its full profile including KS2 SATs results, admissions data and local area information.",
-        lambda s: s.get("phase") == "Primary",
-        False, True  # Scholastic prominent — primary parents are the core book-buying audience
+        lambda s: s.get("phase") == "Primary"
     ),
     (
         "secondary",
         "Secondary Schools in London",
         "Browse all secondary schools in London. Compare Ofsted ratings, GCSE results, sixth form provision and admissions data across all 32 boroughs.",
-        "London has over 500 secondary schools offering education to pupils aged 11 to 16 or 18. Secondary school choice in London is complex, with a mix of comprehensives, academies, selective grammar schools, faith schools and independent schools. GCSE results vary widely – from schools where nearly every pupil achieves grade 5 or above in English and Maths, to schools with significant challenges. This page lists all secondary schools in London ranked by Ofsted composite score, with GCSE Attainment 8 scores where available.",
-        lambda s: s.get("phase") in ("Secondary", "Middle deemed secondary"),
-        True, False  # Pi Academy prominent — GCSE and 13+ prep for secondary parents
+        "London has over 500 secondary schools offering education to pupils aged 11 to 16 or 18. Secondary school choice in London is complex, with a mix of comprehensives, academies, selective grammar schools, faith schools and independent schools. GCSE results vary widely â€” from schools where nearly every pupil achieves grade 5 or above in English and Maths, to schools with significant challenges. This page lists all secondary schools in London ranked by Ofsted composite score, with GCSE Attainment 8 scores where available.",
+        lambda s: s.get("phase") in ("Secondary", "Middle deemed secondary")
     ),
     (
         "sixth-form",
         "Schools with Sixth Forms in London",
         "All London schools and colleges with sixth forms. Compare A-level provision, Ofsted ratings and admissions across all 32 boroughs.",
-        "Having a sixth form means a school offers post-16 education, typically A-levels or BTECs, allowing students to continue their studies through Years 12 and 13 without changing schools. Not all London secondary schools have sixth forms – many pupils transfer to sixth form colleges or further education colleges at 16. This page lists every school in London that has a sixth form, ranked by Ofsted composite score.",
-        lambda s: s.get("sixth_form") == "Has a sixth form",
-        False, False
+        "Having a sixth form means a school offers post-16 education, typically A-levels or BTECs, allowing students to continue their studies through Years 12 and 13 without changing schools. Not all London secondary schools have sixth forms â€” many pupils transfer to sixth form colleges or further education colleges at 16. This page lists every school in London that has a sixth form, ranked by Ofsted composite score.",
+        lambda s: s.get("sixth_form") == "Has a sixth form"
     ),
 ]
 
 print("Building school type pages...")
-for slug, title, meta_desc, intro, filter_fn, prominent_pi, prominent_scholastic in TYPE_PAGES:
-    build_type_page(slug, title, meta_desc, intro, filter_fn,
-                    prominent_pi=prominent_pi, prominent_scholastic=prominent_scholastic)
+for args in TYPE_PAGES:
+    build_type_page(*args)
 print(f"Built {len(TYPE_PAGES)} type pages.")
 
 
 
 # Written as .txt so Vercel doesn't treat it as a binary asset.
-# vercel.json rewrites /sitemap.xml â†' /sitemap_data.txt transparently.
+# vercel.json rewrites /sitemap.xml â†’ /sitemap_data.txt transparently.
 lines = ['<?xml version="1.0" encoding="UTF-8"?>',
          '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
 from datetime import date as _date
@@ -997,9 +940,10 @@ with open("sitemap_data.txt", "w", encoding="utf-8", newline="\n") as f:
 print(f"Sitemap written with {len(sitemap_urls)} URLs.")
 
 
-# â"€â"€ robots.txt â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
+# â”€â”€ robots.txt â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 robots = f"User-agent: *\nAllow: /\nSitemap: {BASE_URL}/sitemap.xml\n"
 pathlib.Path("robots.txt").write_text(robots, encoding="utf-8")
 print("robots.txt written.")
 
 print("\nDone! Deploy to Vercel and submit sitemap.xml to Google Search Console.")
+

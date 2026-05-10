@@ -656,12 +656,31 @@ def affiliate_block_html(prominent_pi=False, prominent_scholastic=False, compact
   <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
 </div>"""
 
+    amazon_card = f"""
+<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fff8f0 0%,#fff3e0 100%);
+     border:1px solid #fed7aa;border-radius:12px;padding:{pad};">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+    <span style="font-size:22px;">🛒</span>
+    <strong style="font-size:15px;color:#92400e;">School Supplies</strong>
+  </div>
+  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
+    Stationery, bags, PE kit, lunchboxes and more — fast delivery from Amazon.
+  </p>
+  <a href="https://www.amazon.co.uk/s?k=school+supplies+stationery&tag=londonparents-21"
+     target="_blank" rel="noopener sponsored"
+     style="display:inline-block;padding:9px 18px;background:#FF9900;color:#111;
+            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
+    Shop on Amazon →
+  </a>
+  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
+</div>"""
+
     if prominent_pi:
-        cards = pi_card + scholastic_card
+        cards = pi_card + scholastic_card + amazon_card
     elif prominent_scholastic:
-        cards = scholastic_card + pi_card
+        cards = scholastic_card + amazon_card + pi_card
     else:
-        cards = pi_card + scholastic_card
+        cards = pi_card + scholastic_card + amazon_card
 
     return f"""
 <div style="display:flex;gap:16px;flex-wrap:wrap;margin:20px 0;">

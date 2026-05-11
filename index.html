@@ -1364,49 +1364,37 @@ function App() {
         });
         const cols=compareList.length;
         const gridCols=`170px repeat(${cols},1fr)`;
+
+        function buildShareLines(bold) {
+          var out = bold ? ['📊 *School comparison — London Schools Explorer*',''] : ['School comparison — London Schools Explorer',''];
+          compareList.forEach(function(s,i) {
+            out.push((i+1)+'. '+(bold?'*':'')+s.name+(bold?'*':'')+' ('+s.local_authority+')');
+            out.push('   Ofsted: '+(s.quality_label||'Not rated'));
+            if(s.ks4_att8!=null) out.push('   Attainment 8: '+s.ks4_att8);
+            if(s.ks2_expected_pct!=null) out.push('   KS2 expected: '+s.ks2_expected_pct+'%');
+            if(s.apps_per_place!=null) out.push('   Apps/place: '+s.apps_per_place+'x');
+            out.push('   https://londonschool.directory'+schoolUrl(s));
+            out.push('');
+          });
+          out.push('London Schools Explorer — https://londonschool.directory');
+          return out.join('\n');
+        }
+        function doShareWA() {
+          window.open('https://wa.me/?text='+encodeURIComponent(buildShareLines(true)),'_blank');
+        }
+        function doShareEmail() {
+          window.location.href='mailto:?subject='+encodeURIComponent('School comparison — London Schools Explorer')+'&body='+encodeURIComponent(buildShareLines(false));
+        }
+
         return(
           <div className="cmp-overlay" onClick={e=>{if(e.target.className==='cmp-overlay')setShowCompare(false)}}>
             <div className="cmp-modal">
               <div className="cmp-header">
                 <h2>Side-by-side comparison</h2>
                 <div style={{display:'flex',alignItems:'center',gap:8}}>
-                  <button
-                    onClick={()=>{
-                      const lines=['📊 *School comparison — London Schools Explorer*',''];
-                      compareList.forEach((s,i)=>{
-                        lines.push((i+1)+'. *'+s.name+'* ('+s.local_authority+')');
-                        lines.push('   ⭐ Ofsted: '+(s.quality_label||'Not rated'));
-                        if(s.ks4_att8!=null)lines.push('   📊 Attainment 8: '+s.ks4_att8);
-                        if(s.ks2_expected_pct!=null)lines.push('   📝 KS2 expected: '+s.ks2_expected_pct+'%');
-                        if(s.apps_per_place!=null)lines.push('   🎯 Apps/place: '+s.apps_per_place+'×');
-                        lines.push('   🔗 https://londonschool.directory'+schoolUrl(s));
-                        lines.push('');
-                      });
-                      lines.push('via London Schools Explorer — https://londonschool.directory');
-                      window.open('https://wa.me/?text='+encodeURIComponent(lines.join('\n')),'_blank');
-                    }}
-                    style={{padding:'6px 14px',background:'#25D366',color:'#fff',border:'none',borderRadius:6,fontSize:'0.82rem',fontWeight:700,cursor:'pointer',whiteSpace:'nowrap'}}>
-                    📱 Share
-                  </button>
-                  <button
-                    onClick={()=>{
-                      const lines=['School comparison — London Schools Explorer',''];
-                      compareList.forEach((s,i)=>{
-                        lines.push((i+1)+'. '+s.name+' ('+s.local_authority+')');
-                        lines.push('   Ofsted: '+(s.quality_label||'Not rated'));
-                        if(s.ks4_att8!=null)lines.push('   Attainment 8: '+s.ks4_att8);
-                        if(s.ks2_expected_pct!=null)lines.push('   KS2 expected: '+s.ks2_expected_pct+'%');
-                        if(s.apps_per_place!=null)lines.push('   Applications per place: '+s.apps_per_place+'×');
-                        lines.push('   https://londonschool.directory'+schoolUrl(s));
-                        lines.push('');
-                      });
-                      lines.push('London Schools Explorer — https://londonschool.directory');
-                      window.location.href='mailto:?subject='+encodeURIComponent('School comparison — London Schools Explorer')+'&body='+encodeURIComponent(lines.join('\n'));
-                    }}
-                    style={{padding:'6px 14px',background:'#1565C0',color:'#fff',border:'none',borderRadius:6,fontSize:'0.82rem',fontWeight:700,cursor:'pointer',whiteSpace:'nowrap'}}>
-                    ✉️ Email
-                  </button>
-                  <button className="cmp-close" onClick={()=>setShowCompare(false)}>×</button>
+                  <button onClick={doShareWA} style={{padding:'6px 14px',background:'#25D366',color:'#fff',border:'none',borderRadius:6,fontSize:'0.82rem',fontWeight:700,cursor:'pointer',whiteSpace:'nowrap'}}>Share WhatsApp</button>
+                  <button onClick={doShareEmail} style={{padding:'6px 14px',background:'#1565C0',color:'#fff',border:'none',borderRadius:6,fontSize:'0.82rem',fontWeight:700,cursor:'pointer',whiteSpace:'nowrap'}}>Share Email</button>
+                  <button className="cmp-close" onClick={()=>setShowCompare(false)}>&times;</button>
                 </div>
               </div>
               {/* Data availability note */}
@@ -1462,50 +1450,16 @@ function App() {
                       <button onClick={()=>setCompareList(p=>p.filter(x=>x.urn!==s.urn))} style={{padding:'6px',background:'transparent',border:'1px solid #ddd',borderRadius:5,fontSize:'0.75rem',cursor:'pointer',color:'#999'}}>Remove</button>
                     </div>
                   ))}
-                </div>{/* end grid */}
-              </div>{/* end overflowX:auto */}
-              {/* Share bar — sits outside the grid, directly inside cmp-modal */}
-              <div style={{borderTop:'2px solid #e0e0e0',padding:'14px 20px',display:'flex',alignItems:'center',gap:10,flexWrap:'wrap',background:'#f5f5f5',borderRadius:'0 0 12px 12px'}}>
-                <span style={{fontSize:'0.85rem',color:'#555',fontWeight:700,flexShrink:0}}>📤 Share:</span>
-                <button
-                  onClick={()=>{
-                    const lines=['📊 *School comparison — London Schools Explorer*',''];
-                    compareList.forEach((s,i)=>{
-                      lines.push((i+1)+'. *'+s.name+'* ('+s.local_authority+')');
-                      lines.push('   ⭐ Ofsted: '+(s.quality_label||'Not rated'));
-                      if(s.ks4_att8!=null)lines.push('   📊 Attainment 8: '+s.ks4_att8);
-                      if(s.ks2_expected_pct!=null)lines.push('   📝 KS2 expected: '+s.ks2_expected_pct+'%');
-                      if(s.apps_per_place!=null)lines.push('   🎯 Apps/place: '+s.apps_per_place+'×');
-                      lines.push('   🔗 https://londonschool.directory'+schoolUrl(s));
-                      lines.push('');
-                    });
-                    lines.push('via London Schools Explorer — https://londonschool.directory');
-                    window.open('https://wa.me/?text='+encodeURIComponent(lines.join('\n')),'_blank');
-                  }}
-                  style={{padding:'9px 20px',background:'#25D366',color:'#fff',border:'none',borderRadius:8,fontSize:'0.88rem',fontWeight:700,cursor:'pointer'}}>
-                  📱 WhatsApp
-                </button>
-                <button
-                  onClick={()=>{
-                    const lines=['School comparison — London Schools Explorer',''];
-                    compareList.forEach((s,i)=>{
-                      lines.push((i+1)+'. '+s.name+' ('+s.local_authority+')');
-                      lines.push('   Ofsted: '+(s.quality_label||'Not rated'));
-                      if(s.ks4_att8!=null)lines.push('   Attainment 8: '+s.ks4_att8);
-                      if(s.ks2_expected_pct!=null)lines.push('   KS2 expected: '+s.ks2_expected_pct+'%');
-                      if(s.apps_per_place!=null)lines.push('   Applications per place: '+s.apps_per_place+'×');
-                      lines.push('   https://londonschool.directory'+schoolUrl(s));
-                      lines.push('');
-                    });
-                    lines.push('London Schools Explorer — https://londonschool.directory');
-                    window.location.href='mailto:?subject='+encodeURIComponent('School comparison — London Schools Explorer')+'&body='+encodeURIComponent(lines.join('\n'));
-                  }}
-                  style={{padding:'9px 20px',background:'#1565C0',color:'#fff',border:'none',borderRadius:8,fontSize:'0.88rem',fontWeight:700,cursor:'pointer'}}>
-                  ✉️ Email
-                </button>
+                </div>
               </div>
-            </div>{/* end cmp-modal */}
-          </div>{/* end cmp-overlay */}
+              {/* Share bar */}
+              <div style={{borderTop:'2px solid #e0e0e0',padding:'12px 20px',display:'flex',alignItems:'center',gap:8,background:'#f5f5f5',borderRadius:'0 0 12px 12px'}}>
+                <span style={{fontSize:'0.82rem',color:'#555',fontWeight:700,marginRight:4}}>Share:</span>
+                <button onClick={doShareWA} style={{padding:'8px 18px',background:'#25D366',color:'#fff',border:'none',borderRadius:7,fontSize:'0.85rem',fontWeight:700,cursor:'pointer'}}>WhatsApp</button>
+                <button onClick={doShareEmail} style={{padding:'8px 18px',background:'#1565C0',color:'#fff',border:'none',borderRadius:7,fontSize:'0.85rem',fontWeight:700,cursor:'pointer'}}>Email</button>
+              </div>
+            </div>
+          </div>
         );
       })()}
     </>
@@ -1522,7 +1476,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);
   const SUPA_KEY = 'sb_publishable_488SMcDgCgQx14JB6ngw7A_qay_j9cd';
 
   const css = `
-    #fb-btn { position:fixed; bottom:24px; left:24px; z-index:9999; background:#1A1A2E; color:#D4A843; border:2px solid #D4A843; border-radius:24px; padding:10px 18px; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow:0 4px 16px rgba(0,0,0,0.25); transition:all 0.2s; }
+    #fb-btn { position:fixed; bottom:24px; left:24px; z-index:8998; background:#1A1A2E; color:#D4A843; border:2px solid #D4A843; border-radius:24px; padding:10px 18px; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow:0 4px 16px rgba(0,0,0,0.25); transition:all 0.2s; }
+    @media (max-width:600px) { #fb-btn { bottom:74px; } }
     #fb-btn:hover { background:#D4A843; color:#1A1A2E; }
     #fb-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:10000; display:none; align-items:flex-end; justify-content:flex-start; padding:0 0 80px 16px; }
     #fb-overlay.open { display:flex; }

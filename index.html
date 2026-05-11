@@ -1387,25 +1387,24 @@ function App() {
           var urns = compareList.map(function(s){return s.urn;}).join(',');
           return 'https://londonschool.directory/?compare='+urns;
         }
-        function buildShareLines(bold) {
+        function doShareWA() {
           var url = compareUrl();
-          var out = bold ? ['📊 *School comparison — London Schools Explorer*',''] : ['School comparison — London Schools Explorer',''];
+          var names = compareList.map(function(s){return '*'+s.name+'*';}).join(' vs ');
+          var text = '📊 Compare London schools: '+names+'\n\n'+url+'\n\nvia London Schools Explorer';
+          window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank');
+        }
+        function doShareEmail() {
+          var url = compareUrl();
+          var out = ['School comparison — London Schools Explorer','','View comparison: '+url,''];
           compareList.forEach(function(s,i) {
-            out.push((i+1)+'. '+(bold?'*':'')+s.name+(bold?'*':'')+' ('+s.local_authority+')');
+            out.push((i+1)+'. '+s.name+' ('+s.local_authority+')');
             out.push('   Ofsted: '+(s.quality_label||'Not rated'));
             if(s.ks4_att8!=null) out.push('   Attainment 8: '+s.ks4_att8);
             if(s.ks2_expected_pct!=null) out.push('   KS2 expected: '+s.ks2_expected_pct+'%');
             if(s.apps_per_place!=null) out.push('   Apps/place: '+s.apps_per_place+'x');
             out.push('');
           });
-          out.push('View full comparison: '+url);
-          return out.join('\n');
-        }
-        function doShareWA() {
-          window.open('https://wa.me/?text='+encodeURIComponent(buildShareLines(true)),'_blank');
-        }
-        function doShareEmail() {
-          window.location.href='mailto:?subject='+encodeURIComponent('School comparison — London Schools Explorer')+'&body='+encodeURIComponent(buildShareLines(false));
+          window.location.href='mailto:?subject='+encodeURIComponent('School comparison — London Schools Explorer')+'&body='+encodeURIComponent(out.join('\n'));
         }
         function doCopyLink(btn) {
           var url = compareUrl();

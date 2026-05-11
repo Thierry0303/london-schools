@@ -1083,6 +1083,20 @@ function App() {
     load();
   }, []);
 
+  // Pre-load comparison from URL ?compare=URN1,URN2,URN3
+  useEffect(() => {
+    if (!schools.length) return;
+    const params = new URLSearchParams(window.location.search);
+    const urnParam = params.get('compare');
+    if (!urnParam) return;
+    const urns = urnParam.split(',').map(u=>parseInt(u,10)).filter(Boolean).slice(0,3);
+    const matched = urns.map(u=>schools.find(s=>s.urn===u)).filter(Boolean);
+    if (matched.length >= 2) {
+      setCompareList(matched);
+      setShowCompare(true);
+    }
+  }, [schools]);
+
   const phases = useMemo(() => [...new Set(schools.map(s=>s.phase).filter(Boolean))].sort(), [schools]);
   const localAuthorities = useMemo(() => [...new Set(schools.map(s=>s.local_authority).filter(Boolean))].sort(), [schools]);
   const filtered = useMemo(() => {
@@ -1369,7 +1383,12 @@ function App() {
         const gridCols=`170px repeat(${cols},minmax(160px,1fr))`;
         const gridMinW=cols*160+170;
 
+        function compareUrl() {
+          var urns = compareList.map(function(s){return s.urn;}).join(',');
+          return 'https://londonschool.directory/?compare='+urns;
+        }
         function buildShareLines(bold) {
+          var url = compareUrl();
           var out = bold ? ['📊 *School comparison — London Schools Explorer*',''] : ['School comparison — London Schools Explorer',''];
           compareList.forEach(function(s,i) {
             out.push((i+1)+'. '+(bold?'*':'')+s.name+(bold?'*':'')+' ('+s.local_authority+')');
@@ -1377,10 +1396,9 @@ function App() {
             if(s.ks4_att8!=null) out.push('   Attainment 8: '+s.ks4_att8);
             if(s.ks2_expected_pct!=null) out.push('   KS2 expected: '+s.ks2_expected_pct+'%');
             if(s.apps_per_place!=null) out.push('   Apps/place: '+s.apps_per_place+'x');
-            out.push('   https://londonschool.directory'+schoolUrl(s));
             out.push('');
           });
-          out.push('London Schools Explorer — https://londonschool.directory');
+          out.push('View full comparison: '+url);
           return out.join('\n');
         }
         function doShareWA() {
@@ -1389,6 +1407,17 @@ function App() {
         function doShareEmail() {
           window.location.href='mailto:?subject='+encodeURIComponent('School comparison — London Schools Explorer')+'&body='+encodeURIComponent(buildShareLines(false));
         }
+        function doCopyLink(btn) {
+          var url = compareUrl();
+          if(navigator.clipboard) {
+            navigator.clipboard.writeText(url).then(function(){
+              btn.textContent='Copied!';
+              setTimeout(function(){btn.textContent='Copy link';},2000);
+            });
+          } else {
+            window.prompt('Copy this link:',url);
+          }
+        }
 
         return(
           <div className="cmp-overlay" onClick={e=>{if(e.target.className==='cmp-overlay')setShowCompare(false)}}>
@@ -1396,8 +1425,9 @@ function App() {
               <div className="cmp-header">
                 <h2>Side-by-side comparison</h2>
                 <div style={{display:'flex',alignItems:'center',gap:8}}>
-                  <button onClick={doShareWA} style={{padding:'6px 14px',background:'#25D366',color:'#fff',border:'none',borderRadius:6,fontSize:'0.82rem',fontWeight:700,cursor:'pointer',whiteSpace:'nowrap'}}>Share WhatsApp</button>
-                  <button onClick={doShareEmail} style={{padding:'6px 14px',background:'#1565C0',color:'#fff',border:'none',borderRadius:6,fontSize:'0.82rem',fontWeight:700,cursor:'pointer',whiteSpace:'nowrap'}}>Share Email</button>
+                  <button onClick={doShareWA} style={{padding:'6px 12px',background:'#25D366',color:'#fff',border:'none',borderRadius:6,fontSize:'0.8rem',fontWeight:700,cursor:'pointer',whiteSpace:'nowrap'}}>WhatsApp</button>
+                  <button onClick={doShareEmail} style={{padding:'6px 12px',background:'#1565C0',color:'#fff',border:'none',borderRadius:6,fontSize:'0.8rem',fontWeight:700,cursor:'pointer',whiteSpace:'nowrap'}}>Email</button>
+                  <button onClick={e=>doCopyLink(e.currentTarget)} style={{padding:'6px 12px',background:'#555',color:'#fff',border:'none',borderRadius:6,fontSize:'0.8rem',fontWeight:700,cursor:'pointer',whiteSpace:'nowrap'}}>Copy link</button>
                   <button className="cmp-close" onClick={()=>setShowCompare(false)}>&times;</button>
                 </div>
               </div>
@@ -1461,6 +1491,7 @@ function App() {
                 <span style={{fontSize:'0.82rem',color:'#555',fontWeight:700,marginRight:4}}>Share:</span>
                 <button onClick={doShareWA} style={{padding:'8px 18px',background:'#25D366',color:'#fff',border:'none',borderRadius:7,fontSize:'0.85rem',fontWeight:700,cursor:'pointer'}}>WhatsApp</button>
                 <button onClick={doShareEmail} style={{padding:'8px 18px',background:'#1565C0',color:'#fff',border:'none',borderRadius:7,fontSize:'0.85rem',fontWeight:700,cursor:'pointer'}}>Email</button>
+                <button onClick={e=>doCopyLink(e.currentTarget)} style={{padding:'8px 18px',background:'#555',color:'#fff',border:'none',borderRadius:7,fontSize:'0.85rem',fontWeight:700,cursor:'pointer'}}>Copy link</button>
               </div>
             </div>
           </div>

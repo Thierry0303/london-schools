@@ -317,17 +317,16 @@
     .cmp-modal { background:var(--cream); border-radius:12px; width:100%; max-width:1000px; margin:auto; overflow:hidden; }
     @media (max-width:600px) {
       .cmp-overlay { padding:0; align-items:flex-end; }
-      .cmp-modal { border-radius:16px 16px 0 0; max-height:92vh; display:flex; flex-direction:column; overflow:hidden; }
-      .cmp-modal-body { flex:1; overflow-y:auto; overflow-x:hidden; min-height:0; }
-      .cmp-cell { padding:8px 6px; font-size:0.76rem; overflow:hidden; }
-      .cmp-cell.label { font-size:0.6rem; padding:7px 5px; line-height:1.25; letter-spacing:0; text-transform:none; font-weight:600; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
-      .cmp-cell.school-header { padding:10px 6px; }
-      .cmp-school-name { font-size:0.76rem; word-break:break-word; }
-      .cmp-school-la { font-size:0.62rem; }
-      .cmp-header { padding:12px 14px; }
-      .cmp-header h2 { font-size:0.95rem; }
+      .cmp-modal { border-radius:16px 16px 0 0; max-height:92vh; overflow-y:auto; }
+      .cmp-cell { padding:10px 12px; font-size:0.82rem; }
+      .cmp-cell.label { font-size:0.72rem; padding:8px 10px; }
+      .cmp-cell.school-header { padding:12px 10px; }
+      .cmp-school-name { font-size:0.85rem; word-break:break-word; }
+      .cmp-school-la { font-size:0.68rem; }
+      .cmp-header { padding:14px 16px; }
+      .cmp-header h2 { font-size:1rem; }
     }
-    .cmp-header { background:var(--ink); color:var(--cream); padding:18px 24px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+    .cmp-header { background:var(--ink); color:var(--cream); padding:18px 24px; display:flex; align-items:center; justify-content:space-between; }
     .cmp-header h2 { font-family:'Playfair Display',serif; font-size:1.2rem; }
     .cmp-close { background:none; border:none; color:var(--cream); font-size:1.4rem; cursor:pointer; opacity:0.7; }
     .cmp-close:hover { opacity:1; }
@@ -1367,10 +1366,8 @@ function App() {
           return !allEmpty;
         });
         const cols=compareList.length;
-        const isMobile=window.innerWidth<=600;
-        const labelW=isMobile?'72px':'170px';
-        const gridCols=isMobile?`${labelW} repeat(${cols},minmax(0,1fr))`:`170px repeat(${cols},1fr)`;
-        const gridMinW=isMobile?0:480;
+        const gridCols=`170px repeat(${cols},minmax(160px,1fr))`;
+        const gridMinW=cols*160+170;
 
         function buildShareLines(bold) {
           var out = bold ? ['📊 *School comparison — London Schools Explorer*',''] : ['School comparison — London Schools Explorer',''];
@@ -1404,7 +1401,6 @@ function App() {
                   <button className="cmp-close" onClick={()=>setShowCompare(false)}>&times;</button>
                 </div>
               </div>
-              <div className="cmp-modal-body">
               {/* Data availability note */}
               {compareList.some(s=>s.ks2_higher_pct==null&&s.ks4_att8==null) && (
                 <div style={{background:'#FFF8E1',borderBottom:'1px solid #FFE082',padding:'10px 20px',fontSize:'0.8rem',color:'#7B5800',display:'flex',gap:8,alignItems:'flex-start'}}>
@@ -1465,7 +1461,6 @@ function App() {
                 <span style={{fontSize:'0.82rem',color:'#555',fontWeight:700,marginRight:4}}>Share:</span>
                 <button onClick={doShareWA} style={{padding:'8px 18px',background:'#25D366',color:'#fff',border:'none',borderRadius:7,fontSize:'0.85rem',fontWeight:700,cursor:'pointer'}}>WhatsApp</button>
                 <button onClick={doShareEmail} style={{padding:'8px 18px',background:'#1565C0',color:'#fff',border:'none',borderRadius:7,fontSize:'0.85rem',fontWeight:700,cursor:'pointer'}}>Email</button>
-              </div>
               </div>
             </div>
           </div>

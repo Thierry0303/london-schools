@@ -330,8 +330,8 @@
     .cmp-grid { display:grid; gap:0; overflow-x:auto; }
     .cmp-row { display:contents; }
     .cmp-cell { padding:12px 16px; border-bottom:1px solid var(--border); font-size:0.85rem; }
-    .cmp-cell.label { background:#F5F0E8; font-weight:500; font-size:0.78rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.05em; }
-    .cmp-cell.school-header { background:var(--ink); color:var(--cream); padding:16px; text-align:center; position:sticky; top:0; }
+    .cmp-cell.label { background:#F5F0E8; font-weight:500; font-size:0.78rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.05em; position:sticky; left:0; z-index:2; }
+    .cmp-cell.school-header { background:var(--ink); color:var(--cream); padding:16px; text-align:center; }
     .cmp-school-name { font-family:'Playfair Display',serif; font-size:0.95rem; font-weight:700; margin-bottom:4px; }
     .cmp-school-la { font-size:0.72rem; opacity:0.6; }
     .cmp-best { background:#E8F5E9; font-weight:600; color:#2E7D32; }
@@ -1363,7 +1363,11 @@ function App() {
           return !allEmpty;
         });
         const cols=compareList.length;
-        const gridCols=`170px repeat(${cols},1fr)`;
+        const isMobile=window.innerWidth<=600;
+        const labelW=isMobile?'110px':'170px';
+        const colW=isMobile?'160px':'1fr';
+        const gridCols=`${labelW} repeat(${cols},${colW})`;
+        const gridMinW=isMobile?(cols*160+110):480;
 
         function buildShareLines(bold) {
           var out = bold ? ['📊 *School comparison — London Schools Explorer*',''] : ['School comparison — London Schools Explorer',''];
@@ -1409,8 +1413,8 @@ function App() {
                 </div>
               )}
               <div style={{overflowX:'auto'}}>
-                <div style={{display:'grid',gridTemplateColumns:gridCols,minWidth:480}}>
-                  <div className="cmp-cell label" style={{background:'#1A1A2E'}}></div>
+                <div style={{display:'grid',gridTemplateColumns:gridCols,minWidth:gridMinW}}>
+                  <div className="cmp-cell label" style={{background:'#1A1A2E',zIndex:3}}></div>
                   {compareList.map(s=>{
                     const band=s.score_band||s.quality_label||'Unknown';
                     const col=BAND_COLORS[band]||'#95A5A6';

@@ -166,8 +166,20 @@
     .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 9099; opacity: 0; pointer-events: none; transition: opacity 0.28s; display: none; }
     .sidebar-section-title-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
     .sidebar-active-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); flex-shrink: 0; box-shadow: 0 0 0 2px rgba(212,168,67,0.25); }
-    .sidebar-borough-search { width: 100%; padding: 7px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.78rem; font-family: 'DM Sans', sans-serif; outline: none; color: var(--ink); margin-bottom: 8px; transition: border-color 0.2s; }
+    .sidebar-borough-search { width: 100%; padding: 7px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.78rem; font-family: 'DM Sans', sans-serif; outline: none; color: var(--ink); margin-bottom: 6px; transition: border-color 0.2s; box-sizing: border-box; }
     .sidebar-borough-search:focus { border-color: var(--gold); }
+    .sidebar-borough-list { max-height: 190px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+    .sidebar-borough-list::-webkit-scrollbar { width: 4px; }
+    .sidebar-borough-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    .borough-list-item { display: flex; align-items: center; gap: 8px; padding: 6px 8px; font-size: 0.79rem; color: var(--ink); cursor: pointer; border-radius: 5px; user-select: none; transition: background 0.12s; }
+    .borough-list-item:hover { background: #f5f0e8; }
+    .borough-list-item.checked { font-weight: 600; color: #7a5500; }
+    .borough-checkbox { width: 15px; height: 15px; border-radius: 3px; border: 1.5px solid #ccc; display: flex; align-items: center; justify-content: center; font-size: 0.62rem; flex-shrink: 0; transition: all 0.14s; color: transparent; }
+    .borough-checkbox.checked { background: var(--gold); border-color: var(--gold); color: var(--ink); }
+    .borough-selected-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 7px; }
+    .borough-tag { display: inline-flex; align-items: center; gap: 3px; padding: 2px 7px 2px 8px; background: rgba(212,168,67,0.13); border: 1px solid rgba(212,168,67,0.45); border-radius: 20px; font-size: 0.71rem; font-weight: 600; color: #7a5500; }
+    .borough-tag-remove { background: none; border: none; cursor: pointer; color: #7a5500; padding: 0; font-size: 0.68rem; line-height: 1; opacity: 0.65; margin-left: 1px; }
+    .borough-tag-remove:hover { opacity: 1; }
     .sidebar-chip-scroll { max-height: 150px; overflow-y: auto; display: flex; flex-wrap: wrap; gap: 4px; scrollbar-width: thin; scrollbar-color: var(--border) transparent; padding-bottom: 2px; }
     .sidebar-chip-scroll::-webkit-scrollbar { width: 4px; }
     .sidebar-chip-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
@@ -519,37 +531,49 @@ function QuickBrowse() {
   );
 }
 
-function SidebarBoroughPicker({ localAuthorities, value, onChange }) {
+function BoroughMultiSelect({ localAuthorities, value, onChange }) {
   const [q, setQ] = useState('');
   const shown = q.trim()
     ? localAuthorities.filter(function(la){ return la.toLowerCase().indexOf(q.toLowerCase()) !== -1; })
     : localAuthorities;
-  function handleChange(e) { setQ(e.target.value); }
-  function handleSelect(la) { onChange(value === la ? '' : la); }
+  function toggle(la) {
+    if (value.includes(la)) onChange(value.filter(function(x){ return x !== la; }));
+    else onChange(value.concat([la]));
+  }
+  function clearAll() { onChange([]); setQ(''); }
   return (
     <div>
-      {value ? (
-        <div className="sidebar-selected-borough">
-          <span>{value}</span>
-          <button className="sidebar-selected-clear" onClick={() => { onChange(''); setQ(''); }} title="Clear borough">✕</button>
+      {value.length > 0 && (
+        <div className="borough-selected-tags">
+          {value.map(function(la){
+            return (
+              <span key={la} className="borough-tag">
+                {la}
+                <button className="borough-tag-remove" onClick={function(){ toggle(la); }}>✕</button>
+              </span>
+            );
+          })}
+          <button onClick={clearAll} style={{background:'none',border:'none',cursor:'pointer',fontSize:'0.7rem',color:'#bbb',textDecoration:'underline',fontFamily:"'DM Sans',sans-serif",padding:'2px 4px'}}>Clear all</button>
         </div>
-      ) : null}
+      )}
       <input
         type="text"
         className="sidebar-borough-search"
-        placeholder={value ? 'Change borough…' : 'Search boroughs…'}
+        placeholder="Search boroughs…"
         value={q}
-        onChange={handleChange}
+        onChange={function(e){ setQ(e.target.value); }}
       />
-      <div className="sidebar-chip-scroll">
+      <div className="sidebar-borough-list">
         {shown.map(function(la){
+          var checked = value.includes(la);
           return (
-            <button key={la} className={value===la?'sidebar-chip active':'sidebar-chip'} onClick={() => handleSelect(la)}>
+            <div key={la} className={checked ? 'borough-list-item checked' : 'borough-list-item'} onClick={function(){ toggle(la); }}>
+              <span className={checked ? 'borough-checkbox checked' : 'borough-checkbox'}>{checked ? '✓' : ''}</span>
               {la}
-            </button>
+            </div>
           );
         })}
-        {shown.length === 0 && <span style={{fontSize:'0.76rem',color:'#aaa'}}>No match</span>}
+        {shown.length === 0 && <div style={{fontSize:'0.76rem',color:'#aaa',padding:'6px 8px'}}>No match</div>}
       </div>
     </div>
   );
@@ -1184,7 +1208,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const PAGE_SIZE = 24;
-  const [filters, setFilters] = useState({ q:'', phase:'', local_authority:'', score_band:'' });
+  const [filters, setFilters] = useState({ q:'', phase:'', local_authority:[], score_band:'' });
   const [sortBy, setSortBy] = useState('score');
 
   useEffect(() => {
@@ -1216,7 +1240,7 @@ function App() {
     let r = schools;
     if (filters.q) r = r.filter(s => s.name.toLowerCase().includes(filters.q.toLowerCase()) || (s.postcode||'').toLowerCase().includes(filters.q.toLowerCase()));
     if (filters.phase) r = r.filter(s => s.phase === filters.phase);
-    if (filters.local_authority) r = r.filter(s => s.local_authority === filters.local_authority);
+    if (filters.local_authority.length) r = r.filter(s => filters.local_authority.includes(s.local_authority));
     if (filters.score_band) r = r.filter(s => (s.score_band||s.quality_label) === filters.score_band);
     r = [...r];
     if (sortBy === 'score') r.sort((a,b) => (b.ofsted_score??-1)-(a.ofsted_score??-1));
@@ -1229,8 +1253,8 @@ function App() {
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
   const paged = filtered.slice((page-1)*PAGE_SIZE, page*PAGE_SIZE);
   const setFilter = useCallback((k,v) => { setFilters(f=>({...f,[k]:v})); setPage(1); }, []);
-  const clearFilters = () => { setFilters({q:'',phase:'',local_authority:'',score_band:''}); setPage(1); };
-  const hasFilters = filters.q || filters.phase || filters.local_authority || filters.score_band;
+  const clearFilters = () => { setFilters({q:'',phase:'',local_authority:[],score_band:''}); setPage(1); };
+  const hasFilters = filters.q || filters.phase || filters.local_authority.length || filters.score_band;
   const stats = useMemo(() => {
     const rated = schools.filter(s=>s.ofsted_score!=null);
     return { total:schools.length, outstanding:schools.filter(s=>(s.score_band||s.quality_label)==='Outstanding').length, avg:rated.length?Math.round(rated.reduce((a,s)=>a+s.ofsted_score,0)/rated.length):0 };
@@ -1357,7 +1381,8 @@ function App() {
         ) : view === 'stats' ? (
           <StatsPage schools={schools} onFilter={(f) => {
             if (!f) { clearFilters(); setView('schools'); return; }
-            setFilter(f.type, f.value);
+            var val = f.type === 'local_authority' ? [f.value] : f.value;
+            setFilter(f.type, val);
             setView('schools');
           }} />
         ) : view === 'map' ? (
@@ -1365,7 +1390,7 @@ function App() {
             <div className="controls" style={{marginBottom:16}}>
               <div className="search-wrap"><span className="search-icon">🔍</span><input type="text" placeholder="Filter map by name or postcode..." value={filters.q} onChange={e => setFilter('q', e.target.value)} /></div>
               <div className="filter-group"><span className="filter-label">Phase</span><select value={filters.phase} onChange={e => setFilter('phase', e.target.value)}><option value="">All phases</option>{phases.map(p=><option key={p} value={p}>{p}</option>)}</select></div>
-              <div className="filter-group"><span className="filter-label">Borough</span><select value={filters.local_authority} onChange={e => setFilter('local_authority', e.target.value)}><option value="">All boroughs</option>{localAuthorities.map(la=><option key={la} value={la}>{la}</option>)}</select></div>
+              <div className="filter-group"><span className="filter-label">Borough</span><select value={''} onChange={function(e){ var la=e.target.value; if(!la) return; setFilters(function(f){ var arr=f.local_authority.includes(la)?f.local_authority.filter(function(x){return x!==la;}):[...f.local_authority,la]; return {...f,local_authority:arr}; }); setPage(1); }}><option value="">{filters.local_authority.length?filters.local_authority.length+' borough'+(filters.local_authority.length>1?'s':''):' All boroughs'}</option>{localAuthorities.map(function(la){ return <option key={la} value={la}>{filters.local_authority.includes(la)?'✓ ':''}{la}</option>; })}</select></div>
               <div className="filter-group"><span className="filter-label">Rating</span><select value={filters.score_band} onChange={e => setFilter('score_band', e.target.value)}><option value="">All ratings</option>{['Outstanding','Good','Requires improvement','Inadequate','Ungraded (monitoring)','Report card (2025+)'].map(b=><option key={b} value={b}>{b}</option>)}</select></div>
               {hasFilters && <button className="clear-btn" onClick={clearFilters}>✕ Clear</button>}
             </div>
@@ -1381,7 +1406,7 @@ function App() {
                     <span className="sidebar-header-title">Filters</span>
                     {hasFilters && (
                       <span style={{fontSize:'0.67rem',color:'rgba(245,240,232,0.45)',letterSpacing:'0.04em'}}>
-                        {[filters.phase,filters.local_authority,filters.score_band].filter(Boolean).length} active
+                        {[filters.phase,filters.local_authority.length?'x':'',filters.score_band].filter(Boolean).length} active
                       </span>
                     )}
                   </div>
@@ -1404,12 +1429,12 @@ function App() {
                 <div className="sidebar-section">
                   <div className="sidebar-section-title-row">
                     <span className="sidebar-section-title">Borough</span>
-                    {filters.local_authority && <span className="sidebar-active-dot" />}
+                    {filters.local_authority.length > 0 && <span className="sidebar-active-dot" />}
                   </div>
-                  <SidebarBoroughPicker
+                  <BoroughMultiSelect
                     localAuthorities={localAuthorities}
                     value={filters.local_authority}
-                    onChange={function(la){ setFilter('local_authority', la); }}
+                    onChange={function(arr){ setFilter('local_authority', arr); }}
                   />
                 </div>
                 <div className="sidebar-section">
@@ -1434,7 +1459,7 @@ function App() {
                   <div className="search-wrap"><span className="search-icon">🔍</span><input type="text" placeholder="Search by name or postcode..." value={filters.q} onChange={e => setFilter('q', e.target.value)} /></div>
                   <button className="filters-toggle-btn" onClick={() => setSidebarOpen(true)}>
                     Filters
-                    {hasFilters && <span className="filter-badge">{[filters.phase,filters.local_authority,filters.score_band].filter(Boolean).length}</span>}
+                    {hasFilters && <span className="filter-badge">{[filters.phase,filters.local_authority.length?'x':'',filters.score_band].filter(Boolean).length}</span>}
                   </button>
                 </div>
                 <div className="results-header">

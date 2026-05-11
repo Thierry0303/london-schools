@@ -1369,7 +1369,44 @@ function App() {
             <div className="cmp-modal">
               <div className="cmp-header">
                 <h2>Side-by-side comparison</h2>
-                <button className="cmp-close" onClick={()=>setShowCompare(false)}>×</button>
+                <div style={{display:'flex',gap:8,alignItems:'center'}}>
+                  <button onClick={()=>{
+                    const lines=['📊 *School comparison — London Schools Explorer*',''];
+                    compareList.forEach((s,i)=>{
+                      const url='https://londonschool.directory'+schoolUrl(s);
+                      lines.push((i+1)+'. *'+s.name+'* ('+s.local_authority+')');
+                      lines.push('   ⭐ Ofsted: '+(s.quality_label||'Not rated'));
+                      if(s.ks4_att8!=null)lines.push('   📊 Attainment 8: '+s.ks4_att8);
+                      if(s.ks2_expected_pct!=null)lines.push('   📝 KS2 expected: '+s.ks2_expected_pct+'%');
+                      if(s.apps_per_place!=null)lines.push('   🎯 Apps/place: '+s.apps_per_place+'×');
+                      lines.push('   🔗 '+url);
+                      lines.push('');
+                    });
+                    lines.push('via London Schools Explorer — https://londonschool.directory');
+                    window.open('https://wa.me/?text='+encodeURIComponent(lines.join('\n')),'_blank');
+                  }} style={{padding:'7px 14px',background:'#25D366',color:'#fff',border:'none',borderRadius:7,fontFamily:'inherit',fontSize:'0.82rem',fontWeight:700,cursor:'pointer',whiteSpace:'nowrap'}}>
+                    📱 WhatsApp
+                  </button>
+                  <button onClick={()=>{
+                    const subj='School comparison — London Schools Explorer';
+                    const lines=['School comparison — London Schools Explorer',''];
+                    compareList.forEach((s,i)=>{
+                      const url='https://londonschool.directory'+schoolUrl(s);
+                      lines.push((i+1)+'. '+s.name+' ('+s.local_authority+')');
+                      lines.push('   Ofsted: '+(s.quality_label||'Not rated'));
+                      if(s.ks4_att8!=null)lines.push('   Attainment 8: '+s.ks4_att8);
+                      if(s.ks2_expected_pct!=null)lines.push('   KS2 expected: '+s.ks2_expected_pct+'%');
+                      if(s.apps_per_place!=null)lines.push('   Applications per place: '+s.apps_per_place+'x');
+                      lines.push('   '+url);
+                      lines.push('');
+                    });
+                    lines.push('London Schools Explorer — https://londonschool.directory');
+                    window.location.href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(lines.join('\n'));
+                  }} style={{padding:'7px 14px',background:'#1565C0',color:'#fff',border:'none',borderRadius:7,fontFamily:'inherit',fontSize:'0.82rem',fontWeight:700,cursor:'pointer',whiteSpace:'nowrap'}}>
+                    ✉️ Email
+                  </button>
+                  <button className="cmp-close" onClick={()=>setShowCompare(false)}>×</button>
+                </div>
               </div>
               {/* Data availability note */}
               {compareList.some(s=>s.ks2_higher_pct==null&&s.ks4_att8==null) && (

@@ -314,7 +314,7 @@
     }
     /* Modal */
     .cmp-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:9500; display:flex; align-items:flex-start; justify-content:center; padding:12px; overflow-y:auto; }
-    .cmp-modal { background:var(--cream); border-radius:12px; width:100%; max-width:1000px; margin:auto; overflow:hidden; }
+    .cmp-modal { background:var(--cream); border-radius:12px; width:100%; max-width:1000px; margin:auto; overflow:visible; }
     @media (max-width:600px) {
       .cmp-overlay { padding:0; align-items:flex-end; }
       .cmp-modal { border-radius:16px 16px 0 0; max-height:90vh; overflow-y:auto; }
@@ -1424,48 +1424,48 @@ function App() {
                       <button onClick={()=>setCompareList(p=>p.filter(x=>x.urn!==s.urn))} style={{padding:'6px',background:'transparent',border:'1px solid #ddd',borderRadius:5,fontSize:'0.75rem',cursor:'pointer',color:'#999'}}>Remove</button>
                     </div>
                   ))}
-                  {/* Share row — spans full width, always at the bottom of the grid */}
-                  <div style={{gridColumn:`1 / ${cols+2}`,borderTop:'2px solid #e0e0e0',padding:'16px 20px',display:'flex',alignItems:'center',gap:12,flexWrap:'wrap',background:'#f5f5f5'}}>
-                    <span style={{fontSize:'0.85rem',color:'#444',fontWeight:700,marginRight:4}}>📤 Share this comparison:</span>
-                    <button
-                      onClick={()=>{
-                        const lines=['📊 *School comparison — London Schools Explorer*',''];
-                        compareList.forEach((s,i)=>{
-                          lines.push((i+1)+'. *'+s.name+'* ('+s.local_authority+')');
-                          lines.push('   ⭐ Ofsted: '+(s.quality_label||'Not rated'));
-                          if(s.ks4_att8!=null)lines.push('   📊 Attainment 8: '+s.ks4_att8);
-                          if(s.ks2_expected_pct!=null)lines.push('   📝 KS2 expected: '+s.ks2_expected_pct+'%');
-                          if(s.apps_per_place!=null)lines.push('   🎯 Apps/place: '+s.apps_per_place+'×');
-                          lines.push('   🔗 https://londonschool.directory'+schoolUrl(s));
-                          lines.push('');
-                        });
-                        lines.push('via London Schools Explorer — https://londonschool.directory');
-                        window.open('https://wa.me/?text='+encodeURIComponent(lines.join('\n')),'_blank');
-                      }}
-                      style={{display:'flex',alignItems:'center',gap:6,padding:'10px 22px',background:'#25D366',color:'#fff',border:'none',borderRadius:8,fontSize:'0.9rem',fontWeight:700,cursor:'pointer'}}>
-                      📱 WhatsApp
-                    </button>
-                    <button
-                      onClick={()=>{
-                        const lines=['School comparison — London Schools Explorer',''];
-                        compareList.forEach((s,i)=>{
-                          lines.push((i+1)+'. '+s.name+' ('+s.local_authority+')');
-                          lines.push('   Ofsted: '+(s.quality_label||'Not rated'));
-                          if(s.ks4_att8!=null)lines.push('   Attainment 8: '+s.ks4_att8);
-                          if(s.ks2_expected_pct!=null)lines.push('   KS2 expected: '+s.ks2_expected_pct+'%');
-                          if(s.apps_per_place!=null)lines.push('   Applications per place: '+s.apps_per_place+'×');
-                          lines.push('   https://londonschool.directory'+schoolUrl(s));
-                          lines.push('');
-                        });
-                        lines.push('London Schools Explorer — https://londonschool.directory');
-                        window.location.href='mailto:?subject='+encodeURIComponent('School comparison — London Schools Explorer')+'&body='+encodeURIComponent(lines.join('\n'));
-                      }}
-                      style={{display:'flex',alignItems:'center',gap:6,padding:'10px 22px',background:'#1565C0',color:'#fff',border:'none',borderRadius:8,fontSize:'0.9rem',fontWeight:700,cursor:'pointer'}}>
-                      ✉️ Email
-                    </button>
-                  </div>
                 </div>{/* end grid */}
               </div>{/* end overflowX:auto */}
+              {/* Share bar — sits outside the grid, directly inside cmp-modal */}
+              <div style={{borderTop:'2px solid #e0e0e0',padding:'14px 20px',display:'flex',alignItems:'center',gap:10,flexWrap:'wrap',background:'#f5f5f5',borderRadius:'0 0 12px 12px'}}>
+                <span style={{fontSize:'0.85rem',color:'#555',fontWeight:700,flexShrink:0}}>📤 Share:</span>
+                <button
+                  onClick={()=>{
+                    const lines=['📊 *School comparison — London Schools Explorer*',''];
+                    compareList.forEach((s,i)=>{
+                      lines.push((i+1)+'. *'+s.name+'* ('+s.local_authority+')');
+                      lines.push('   ⭐ Ofsted: '+(s.quality_label||'Not rated'));
+                      if(s.ks4_att8!=null)lines.push('   📊 Attainment 8: '+s.ks4_att8);
+                      if(s.ks2_expected_pct!=null)lines.push('   📝 KS2 expected: '+s.ks2_expected_pct+'%');
+                      if(s.apps_per_place!=null)lines.push('   🎯 Apps/place: '+s.apps_per_place+'×');
+                      lines.push('   🔗 https://londonschool.directory'+schoolUrl(s));
+                      lines.push('');
+                    });
+                    lines.push('via London Schools Explorer — https://londonschool.directory');
+                    window.open('https://wa.me/?text='+encodeURIComponent(lines.join('\n')),'_blank');
+                  }}
+                  style={{padding:'9px 20px',background:'#25D366',color:'#fff',border:'none',borderRadius:8,fontSize:'0.88rem',fontWeight:700,cursor:'pointer'}}>
+                  📱 WhatsApp
+                </button>
+                <button
+                  onClick={()=>{
+                    const lines=['School comparison — London Schools Explorer',''];
+                    compareList.forEach((s,i)=>{
+                      lines.push((i+1)+'. '+s.name+' ('+s.local_authority+')');
+                      lines.push('   Ofsted: '+(s.quality_label||'Not rated'));
+                      if(s.ks4_att8!=null)lines.push('   Attainment 8: '+s.ks4_att8);
+                      if(s.ks2_expected_pct!=null)lines.push('   KS2 expected: '+s.ks2_expected_pct+'%');
+                      if(s.apps_per_place!=null)lines.push('   Applications per place: '+s.apps_per_place+'×');
+                      lines.push('   https://londonschool.directory'+schoolUrl(s));
+                      lines.push('');
+                    });
+                    lines.push('London Schools Explorer — https://londonschool.directory');
+                    window.location.href='mailto:?subject='+encodeURIComponent('School comparison — London Schools Explorer')+'&body='+encodeURIComponent(lines.join('\n'));
+                  }}
+                  style={{padding:'9px 20px',background:'#1565C0',color:'#fff',border:'none',borderRadius:8,fontSize:'0.88rem',fontWeight:700,cursor:'pointer'}}>
+                  ✉️ Email
+                </button>
+              </div>
             </div>{/* end cmp-modal */}
           </div>{/* end cmp-overlay */}
         );

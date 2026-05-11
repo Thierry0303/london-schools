@@ -414,9 +414,39 @@ def build_school_page(school):
       {"<a class='btn' href='" + snobe_url + "' target='_blank' rel='noopener' style='background:#7B2FBE;color:white;border-color:#7B2FBE'>View on Snobe</a>" if snobe_url else "<a class='btn' href='https://snobe.co.uk/find-schools?search=" + school_name_url + "' target='_blank' rel='noopener' style='background:#7B2FBE;color:white;border-color:#7B2FBE'>Search on Snobe</a>"}
       <a class="btn" href="/schools/{borough_slug}">More schools in {borough}</a>
       <a class="btn" href="/">All London schools</a>
+      <button class="btn" onclick="shareSchoolWhatsApp()" style="background:#25D366;color:#fff;border-color:#25D366;">📱 WhatsApp</button>
+      <button class="btn" onclick="shareSchoolEmail()" style="background:#1565C0;color:#fff;border-color:#1565C0;">✉️ Email</button>
     </div>
   </div>
 </div>
+<script>
+(function(){{
+  var d={{name:{json.dumps(name)},borough:{json.dumps(borough)},ofsted:{json.dumps(ofsted_label)},
+    att8:{json.dumps(str(school.get('ks4_att8','')) if school.get('ks4_att8') else '')},
+    ks2:{json.dumps(str(school.get('ks2_expected_pct','')) if school.get('ks2_expected_pct') else '')},
+    apps:{json.dumps(str(school.get('apps_per_place','')) if school.get('apps_per_place') else '')},
+    url:{json.dumps(url)}}};
+  window.shareSchoolWhatsApp=function(){{
+    var p=['🏫 *'+d.name+'*','📍 '+d.borough];
+    if(d.ofsted&&d.ofsted!=='Not yet rated')p.push('⭐ Ofsted: *'+d.ofsted+'*');
+    if(d.att8)p.push('📊 Attainment 8: '+d.att8);
+    if(d.ks2)p.push('📝 KS2 expected: '+d.ks2+'%');
+    if(d.apps&&d.apps!=='N/A')p.push('🎯 Applications per place: '+d.apps);
+    p.push('\\n🔗 '+d.url);
+    window.open('https://wa.me/?text='+encodeURIComponent(p.join('\\n')),'_blank');
+  }};
+  window.shareSchoolEmail=function(){{
+    var subj=d.name+' — London Schools Explorer';
+    var p=[d.name,'Borough: '+d.borough];
+    if(d.ofsted)p.push('Ofsted: '+d.ofsted);
+    if(d.att8)p.push('Attainment 8: '+d.att8);
+    if(d.ks2)p.push('KS2 expected standard: '+d.ks2+'%');
+    if(d.apps&&d.apps!=='N/A')p.push('Applications per place: '+d.apps);
+    p.push('','Full school profile: '+d.url);
+    window.location.href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(p.join('\\n'));
+  }};
+}})();
+</script>
 
 <div class="container">
 
@@ -707,7 +737,17 @@ for borough, borough_schools in by_borough.items():
         s_slug  = slugify(s.get("name","unknown"))
         label   = s.get("quality_label") or s.get("score_band") or "Not yet rated"
         tc, bc  = ofsted_badge_color(label)
+        s_url   = f"{BASE_URL}/schools/{borough_slug}/{s_slug}"
+        s_att8  = str(s.get("ks4_att8","")) if s.get("ks4_att8") else ""
+        s_ks2   = str(s.get("ks2_expected_pct","")) if s.get("ks2_expected_pct") else ""
         rows += f"""<tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="{safe(s.get('name')).replace('"','&quot;')}"
+            data-ofsted="{label}"
+            data-phase="{safe(s.get('phase'))}"
+            data-att8="{s_att8}"
+            data-ks2="{s_ks2}"
+            data-url="{s_url}"></td>
           <td><a href="/schools/{borough_slug}/{s_slug}">{safe(s.get('name'))}</a></td>
           <td>{safe(s.get('phase'))}</td>
           <td><span style="background:{bc};color:{tc};padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">{label}</span></td>
@@ -798,13 +838,94 @@ for borough, borough_schools in by_borough.items():
 
   {affiliate_block_html(prominent_pi=(borough in GRAMMAR_BOROUGHS))}
 
+  <!-- Borough share buttons -->
+  <div style="display:flex;gap:10px;margin:16px 0 8px;flex-wrap:wrap;align-items:center;">
+    <span style="font-size:13px;color:#555;font-weight:600;">Share {borough} schools:</span>
+    <button onclick="shareBoroughWhatsApp()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 WhatsApp</button>
+    <button onclick="shareBoroughEmail()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#1565C0;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Email</button>
+    <span style="font-size:12px;color:#999;margin-left:4px;">Or tick schools below to share a shortlist</span>
+  </div>
+
+  <!-- Sticky compare bar (appears when schools are ticked) -->
+  <div id="cmp-bar" style="display:none;position:sticky;top:0;z-index:100;background:#1A1A2E;color:#fff;padding:12px 16px;border-radius:10px;margin-bottom:12px;display:none;align-items:center;gap:10px;flex-wrap:wrap;">
+    <span id="cmp-count" style="font-weight:700;font-size:14px;">0 schools selected</span>
+    <button onclick="shareCompareWhatsApp()" style="padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 Share via WhatsApp</button>
+    <button onclick="shareCompareEmail()" style="padding:8px 16px;background:#fff;color:#1A1A2E;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Share via Email</button>
+    <button onclick="clearSelection()" style="padding:8px 12px;background:transparent;color:#aaa;border:1px solid #555;border-radius:8px;font-size:12px;cursor:pointer;">✕ Clear</button>
+  </div>
+
   <table>
-    <thead><tr><th>School</th><th>Phase</th><th>Ofsted</th><th>Pupils</th></tr></thead>
+    <thead><tr><th style="width:36px"></th><th>School</th><th>Phase</th><th>Ofsted</th><th>Pupils</th></tr></thead>
     <tbody>{rows}</tbody>
   </table>
 </div>
 <footer><a href="/">London Schools Explorer</a> &mdash; helping families find the right school in London.</footer>
 <script defer src="/_vercel/insights/script.js"></script>
+<script>
+(function(){{
+  var borough={json.dumps(borough)}, boroughUrl={json.dumps(BASE_URL+'/schools/'+borough_slug)};
+  var outstanding={outstanding}, total={len(borough_schools)};
+
+  // Borough-level share
+  window.shareBoroughWhatsApp=function(){{
+    var t='🏙️ *Schools in '+borough+', London*\\n'+
+        '📊 '+total+' schools · '+outstanding+' Outstanding\\n\\n'+
+        '🔗 '+boroughUrl;
+    window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank');
+  }};
+  window.shareBoroughEmail=function(){{
+    var s='Schools in '+borough+' — London Schools Explorer';
+    var b='Schools in '+borough+', London\\n'+
+        total+' schools, '+outstanding+' rated Outstanding by Ofsted\\n\\n'+
+        'Browse them here: '+boroughUrl;
+    window.location.href='mailto:?subject='+encodeURIComponent(s)+'&body='+encodeURIComponent(b);
+  }};
+
+  // Shortlist comparison share
+  function getSelected(){{
+    return Array.from(document.querySelectorAll('.sch-sel:checked')).map(function(cb){{
+      return {{name:cb.dataset.name,ofsted:cb.dataset.ofsted,phase:cb.dataset.phase,
+               att8:cb.dataset.att8,ks2:cb.dataset.ks2,url:cb.dataset.url}};
+    }});
+  }}
+  function updateBar(){{
+    var sel=getSelected();
+    var bar=document.getElementById('cmp-bar');
+    document.getElementById('cmp-count').textContent=sel.length+' school'+(sel.length===1?'':' s')+' selected';
+    bar.style.display=sel.length>0?'flex':'none';
+  }}
+  document.querySelectorAll('.sch-sel').forEach(function(cb){{ cb.onchange=updateBar; }});
+
+  function buildCompareText(sel,markdown){{
+    var lines=['📋 *My '+borough+' school shortlist*',''];
+    sel.forEach(function(s,i){{
+      lines.push((i+1)+'. '+(markdown?'*':'')+s.name+(markdown?'*':''));
+      lines.push('   ⭐ Ofsted: '+s.ofsted+(s.phase?' · '+s.phase:''));
+      if(s.att8)lines.push('   📊 Attainment 8: '+s.att8);
+      if(s.ks2)lines.push('   📝 KS2 expected: '+s.ks2+'%');
+      lines.push('   🔗 '+s.url);
+      lines.push('');
+    }});
+    lines.push('via London Schools Explorer — '+boroughUrl);
+    return lines.join('\\n');
+  }}
+  window.shareCompareWhatsApp=function(){{
+    var sel=getSelected();
+    if(!sel.length)return;
+    window.open('https://wa.me/?text='+encodeURIComponent(buildCompareText(sel,true)),'_blank');
+  }};
+  window.shareCompareEmail=function(){{
+    var sel=getSelected();
+    if(!sel.length)return;
+    var subj='My '+borough+' school shortlist — London Schools Explorer';
+    window.location.href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(buildCompareText(sel,false));
+  }};
+  window.clearSelection=function(){{
+    document.querySelectorAll('.sch-sel:checked').forEach(function(cb){{cb.checked=false;}});
+    updateBar();
+  }};
+}})();
+</script>
 </body>
 </html>"""
 

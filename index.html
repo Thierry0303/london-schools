@@ -53,20 +53,42 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; }
 
-    .header { background: var(--ink); color: var(--cream); padding: 0 40px; position: sticky; top: 0; z-index: 1000; border-bottom: 3px solid var(--gold); display: flex; align-items: center; justify-content: space-between; height: 64px; }
-    .header-logo { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
-    .header-logo span { color: var(--gold); }
-    .header-badge { background: var(--gold); color: var(--ink); font-size: 0.7rem; font-weight: 600; padding: 3px 8px; border-radius: 2px; letter-spacing: 0.08em; text-transform: uppercase; }
-    .header-nav { display: flex; gap: 6px; }
-    .nav-btn { background: transparent; border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.7); padding: 7px 16px; border-radius: 4px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; }
-    .nav-btn.active, .nav-btn:hover { background: var(--gold); color: var(--ink); border-color: var(--gold); font-weight: 600; }
+    .header { background: var(--ink); color: var(--cream); padding: 0 40px; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; height: 60px; }
+    .header-logo { font-family: 'Playfair Display', serif; font-size: 1.18rem; font-weight: 700; display: flex; align-items: center; gap: 10px; letter-spacing: -0.01em; text-decoration: none; color: var(--cream); }
+    .logo-mark { width: 28px; height: 28px; background: var(--gold); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700; color: var(--ink); flex-shrink: 0; font-family: 'Playfair Display', serif; }
+    .logo-text em { font-style: normal; color: var(--gold); }
+    .header-badge { display: none; }
+    .header-nav { display: flex; gap: 2px; }
+    .nav-btn { background: transparent; border: none; color: rgba(255,255,255,0.5); padding: 7px 13px; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.84rem; font-weight: 500; cursor: pointer; transition: all 0.15s; text-decoration: none; display: inline-flex; align-items: center; }
+    .nav-btn.active { color: var(--gold); background: rgba(212,168,67,0.13); font-weight: 600; }
+    .nav-btn:hover:not(.active) { color: rgba(255,255,255,0.88); background: rgba(255,255,255,0.07); }
 
-    .hero { background: var(--ink); color: var(--cream); padding: 56px 40px 44px; position: relative; overflow: hidden; }
-    .hero::before { content: ''; position: absolute; top: -80px; right: -80px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(212,168,67,0.15) 0%, transparent 70%); pointer-events: none; }
-    .hero-eyebrow { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
-    .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 900; line-height: 1.05; margin-bottom: 14px; max-width: 680px; }
+    .hero { background: var(--ink); color: var(--cream); padding: 64px 40px 52px; position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; top: -100px; right: -100px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(212,168,67,0.18) 0%, transparent 65%); pointer-events: none; }
+    .hero::after { content: ''; position: absolute; bottom: -80px; left: -60px; width: 380px; height: 380px; background: radial-gradient(circle, rgba(41,128,185,0.1) 0%, transparent 65%); pointer-events: none; }
+    .hero-bg-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.032) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.032) 1px, transparent 1px), linear-gradient(rgba(255,255,255,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.07) 1px, transparent 1px); background-size: 40px 40px, 40px 40px, 160px 160px, 160px 160px; pointer-events: none; }
+    .hero-inner { position: relative; display: flex; gap: 48px; align-items: flex-start; }
+    .hero-content { flex: 1; max-width: 600px; }
+    .hero-panel { flex-shrink: 0; width: 268px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 22px 24px; margin-top: 6px; }
+    .hero-panel-eyebrow { font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: rgba(245,240,232,0.35); margin-bottom: 16px; }
+    .hero-panel-stat { display: flex; align-items: baseline; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .hero-panel-stat:last-child { border-bottom: none; padding-bottom: 0; }
+    .hero-panel-stat:first-child { padding-top: 0; }
+    .hero-panel-num { font-family: 'Playfair Display', serif; font-size: 1.7rem; font-weight: 700; color: var(--gold); line-height: 1; flex-shrink: 0; }
+    .hero-panel-lbl { font-size: 0.76rem; color: rgba(245,240,232,0.55); line-height: 1.3; }
+    .hero-search { display: flex; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 8px 44px rgba(0,0,0,0.35); max-width: 520px; margin-bottom: 20px; }
+    .hero-search-input { flex: 1; padding: 14px 18px; border: none; font-family: 'DM Sans', sans-serif; font-size: 1rem; color: var(--ink); outline: none; min-width: 0; }
+    .hero-search-btn { padding: 14px 22px; background: var(--gold); color: var(--ink); border: none; font-family: 'Playfair Display', serif; font-weight: 700; font-size: 0.95rem; cursor: pointer; white-space: nowrap; transition: background 0.2s; }
+    .hero-search-btn:hover { background: #c09020; }
+    .hero-search-geo { padding: 14px 16px; background: rgba(0,0,0,0.06); border: none; border-left: 1px solid rgba(0,0,0,0.1); cursor: pointer; font-size: 1.1rem; transition: background 0.2s; }
+    .hero-search-geo:hover { background: rgba(0,0,0,0.12); }
+    .hero-features { display: flex; flex-wrap: wrap; gap: 10px 22px; }
+    .hero-feature { display: flex; align-items: center; gap: 7px; font-size: 0.82rem; color: rgba(245,240,232,0.6); }
+    .hero-feature-dot { width: 18px; height: 18px; border-radius: 50%; background: rgba(212,168,67,0.2); border: 1px solid rgba(212,168,67,0.35); display: flex; align-items: center; justify-content: center; font-size: 0.6rem; color: var(--gold); font-weight: 700; flex-shrink: 0; }
+    .hero-eyebrow { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; opacity: 0.85; }
+    .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 900; line-height: 1.05; margin-bottom: 14px; }
     .hero h1 em { font-style: italic; color: var(--gold); }
-    .hero-sub { font-size: 1rem; color: rgba(245,240,232,0.7); max-width: 500px; line-height: 1.6; margin-bottom: 36px; }
+    .hero-sub { font-size: 1rem; color: rgba(245,240,232,0.65); max-width: 460px; line-height: 1.6; margin-bottom: 26px; }
     .hero-stats { display: flex; gap: 40px; flex-wrap: wrap; }
     .hero-stat { display: flex; flex-direction: column; }
     .hero-stat-num { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; color: var(--gold); line-height: 1; }
@@ -94,31 +116,70 @@
     .view-btn.active { background: var(--ink); color: var(--cream); }
 
     .school-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; }
-    .school-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 22px; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; }
-    .school-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--band-color, var(--border)); }
-    .school-card:hover { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(26,26,46,0.14); border-color: var(--gold); }
-    .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-    .card-phase { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #999; background: rgba(0,0,0,0.05); padding: 3px 7px; border-radius: 3px; }
+    .school-card { background: white; border: 1px solid var(--border); border-radius: 14px; padding: 20px 20px 16px 24px; cursor: pointer; transition: all 0.22s; position: relative; overflow: hidden; }
+    .school-card::before { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 4px; background: var(--band-color, var(--border)); border-radius: 14px 0 0 14px; }
+    .school-card:hover { transform: translateY(-3px); box-shadow: 0 12px 44px rgba(26,26,46,0.13); border-color: rgba(212,168,67,0.55); }
+    .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 8px; }
+    .card-phase { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #aaa; flex-shrink: 0; }
+    .card-rating-pill { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; flex-shrink: 0; white-space: nowrap; }
     .score-badge { display: flex; flex-direction: column; align-items: center; background: var(--ink); color: var(--cream); border-radius: 5px; padding: 5px 10px; min-width: 50px; }
     .score-num { font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 700; line-height: 1; color: var(--gold); }
     .score-lbl { font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(245,240,232,0.55); }
-    .card-name { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; line-height: 1.3; margin-bottom: 5px; }
-    .card-la { font-size: 0.8rem; color: #999; margin-bottom: 12px; }
-    .card-pills { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px; }
+    .card-name { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; line-height: 1.3; margin-bottom: 4px; }
+    .card-la { font-size: 0.78rem; color: #aaa; margin-bottom: 0; }
+    .card-stats-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--border); border-radius: 8px; overflow: hidden; margin: 12px 0 10px; }
+    .card-stat-cell { background: white; padding: 10px 6px; text-align: center; }
+    .card-stat-num { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; color: var(--ink); line-height: 1; }
+    .card-stat-lbl { font-size: 0.6rem; color: #bbb; text-transform: uppercase; letter-spacing: 0.07em; margin-top: 3px; }
+    .card-pills { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
     .pill { font-size: 0.72rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
     .pill-o { background: #E8F5E9; color: #1B5E20; } .pill-g { background: #E3F2FD; color: #0D47A1; }
     .pill-r { background: #FFF3E0; color: #E65100; } .pill-i { background: #FFEBEE; color: #B71C1C; }
     .pill-u { background: #F5F5F5; color: #757575; }
     .card-meta { display: flex; gap: 14px; font-size: 0.78rem; color: #aaa; border-top: 1px solid var(--border); padding-top: 10px; }
+    /* Borough cards */
+    .borough-card { display: flex; align-items: center; justify-content: space-between; padding: 13px 14px; background: white; border: 1px solid var(--border); border-radius: 10px; font-size: 0.85rem; font-weight: 500; color: var(--ink); text-decoration: none; transition: all 0.18s; min-height: 44px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    .borough-card:hover { border-color: var(--gold); box-shadow: 0 4px 16px rgba(212,168,67,0.14); transform: translateY(-1px); }
+    .borough-card:hover .borough-arrow { color: var(--gold); }
+    .borough-arrow { font-size: 1rem; color: #ccc; transition: color 0.18s; line-height: 1; }
+
+    /* ── Filter sidebar ── */
+    .page-layout { display: flex; gap: 28px; align-items: flex-start; }
+    .filter-sidebar { width: 214px; flex-shrink: 0; position: sticky; top: 72px; background: white; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; max-height: calc(100vh - 84px); overflow-y: auto; }
+    .content-area { flex: 1; min-width: 0; }
+    .sidebar-header { background: var(--ink); color: var(--cream); padding: 13px 16px; display: flex; align-items: center; justify-content: space-between; }
+    .sidebar-header-title { font-family: 'Playfair Display', serif; font-size: 0.92rem; font-weight: 700; }
+    .sidebar-header-clear { background: none; border: none; color: rgba(255,255,255,0.4); font-size: 0.73rem; cursor: pointer; text-decoration: underline; font-family: 'DM Sans', sans-serif; transition: color 0.15s; }
+    .sidebar-header-clear:hover { color: rgba(255,255,255,0.8); }
+    .sidebar-mobile-close { background: none; border: none; color: rgba(255,255,255,0.45); font-size: 1.15rem; cursor: pointer; line-height: 1; padding: 0; }
+    .sidebar-mobile-close:hover { color: white; }
+    .sidebar-section { padding: 14px 16px; border-bottom: 1px solid var(--border); }
+    .sidebar-section:last-child { border-bottom: none; }
+    .sidebar-section-title { font-size: 0.67rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #bbb; margin-bottom: 10px; }
+    .sidebar-chip { display: inline-flex; align-items: center; padding: 5px 11px; border-radius: 20px; font-size: 0.76rem; font-weight: 500; border: 1px solid var(--border); background: var(--card-bg); color: var(--ink-soft); cursor: pointer; transition: all 0.14s; margin: 0 4px 5px 0; font-family: 'DM Sans', sans-serif; }
+    .sidebar-chip:hover { border-color: var(--gold); color: var(--gold); }
+    .sidebar-chip.active { border-color: var(--gold); background: rgba(212,168,67,0.1); color: #7a5500; font-weight: 600; }
+    .sidebar-rating-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 5px; flex-shrink: 0; }
+    .filters-toggle-btn { display: flex; align-items: center; gap: 7px; padding: 9px 14px; background: var(--ink); color: var(--cream); border: none; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.83rem; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .filter-badge { background: var(--gold); color: var(--ink); border-radius: 20px; padding: 1px 7px; font-size: 0.68rem; font-weight: 700; }
+    .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 9099; opacity: 0; pointer-events: none; transition: opacity 0.28s; display: none; }
+    @media (min-width: 769px) { .filters-toggle-btn { display: none; } }
+    @media (max-width: 768px) {
+      .page-layout { display: block; }
+      .filter-sidebar { position: fixed; top: 0; left: -292px; bottom: 0; width: 280px; border-radius: 0; max-height: 100vh; z-index: 9100; transition: left 0.28s ease; box-shadow: 4px 0 24px rgba(0,0,0,0.18); }
+      .filter-sidebar.sidebar-open { left: 0; }
+      .sidebar-overlay { display: block; }
+      .sidebar-overlay.visible { opacity: 1; pointer-events: all; }
+    }
 
     /* ── Quick Browse Bar ── */
-    .quick-browse { background: var(--ink); border-bottom: 1px solid rgba(255,255,255,0.08); padding: 10px 16px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .quick-browse { background: rgba(255,255,255,0.04); border-top: 1px solid rgba(255,255,255,0.07); border-bottom: 1px solid rgba(255,255,255,0.07); padding: 12px 40px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; background: #16162a; }
     .quick-browse::-webkit-scrollbar { display: none; }
     .quick-browse-inner { display: flex; gap: 8px; white-space: nowrap; align-items: center; min-width: max-content; }
-    .quick-browse-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.35); margin-right: 4px; flex-shrink: 0; }
-    .qb-chip { display: inline-flex; align-items: center; padding: 5px 12px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; text-decoration: none; border: 1px solid transparent; transition: all 0.15s; flex-shrink: 0; }
-    .qb-chip:hover { opacity: 0.85; transform: translateY(-1px); }
-    .qb-divider { width: 1px; height: 20px; background: rgba(255,255,255,0.12); flex-shrink: 0; margin: 0 4px; }
+    .quick-browse-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(255,255,255,0.28); margin-right: 6px; flex-shrink: 0; }
+    .qb-chip { display: inline-flex; align-items: center; padding: 6px 14px; border-radius: 22px; font-size: 0.79rem; font-weight: 600; text-decoration: none; border: 1px solid transparent; transition: all 0.18s; flex-shrink: 0; }
+    .qb-chip:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    .qb-divider { width: 1px; height: 22px; background: rgba(255,255,255,0.1); flex-shrink: 0; margin: 0 6px; }
     .school-table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); font-size: 0.865rem; }
     .school-table th { background: var(--ink); color: var(--cream); padding: 11px 14px; text-align: left; font-weight: 600; font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap; }
     .school-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
@@ -160,19 +221,25 @@
     @media (max-width: 768px) {
       .hide-mobile { display: none !important; }
       /* Header */
-      .header { padding: 10px 12px; height: auto; flex-direction: column; align-items: flex-start; gap: 8px; }
-      .header-logo { font-size: 1.1rem; }
-      .header-badge { display: none; }
-      .header-nav { width: 100%; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
-      .nav-btn { font-size: 0.75rem; padding: 8px 4px; text-align: center; }
-      .header-nav a.nav-btn { font-size: 0.75rem; padding: 8px 4px; text-align: center; justify-content: center; }
+      .header { padding: 10px 14px; height: auto; flex-direction: column; align-items: flex-start; gap: 8px; }
+      .header-logo { font-size: 1.05rem; }
+      .header-nav { width: 100%; display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; }
+      .nav-btn { font-size: 0.74rem; padding: 7px 4px; text-align: center; justify-content: center; border-radius: 5px; }
 
       /* Hero */
-      .hero { padding: 28px 16px 24px; }
+      .hero { padding: 32px 16px 28px; }
+      .hero-inner { flex-direction: column; gap: 0; }
       .hero h1 { font-size: clamp(1.6rem, 7vw, 2.4rem); }
-      .hero-sub { font-size: 0.9rem; margin-bottom: 24px; }
-      .hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px; }
+      .hero-sub { font-size: 0.9rem; margin-bottom: 20px; }
+      .hero-search { max-width: 100%; box-shadow: none; border: 1px solid rgba(255,255,255,0.15); }
+      .hero-search-input { font-size: 0.95rem; padding: 12px 14px; }
+      .hero-search-btn { padding: 12px 16px; font-size: 0.88rem; }
+      .hero-search-geo { padding: 12px 14px; }
+      .hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px; margin-top: 28px; }
       .hero-stat-num { font-size: 1.8rem; }
+
+      /* Quick browse */
+      .quick-browse { padding: 10px 12px; }
 
       /* Main content */
       .main { padding: 12px; }
@@ -189,7 +256,7 @@
 
       /* Grid */
       .school-grid { grid-template-columns: 1fr; gap: 12px; }
-      .school-card { padding: 16px; }
+      .school-card { padding: 16px 16px 12px 20px; }
       .card-meta { flex-wrap: wrap; gap: 6px; font-size: 0.72rem; }
 
       /* Table — hide less important columns */
@@ -226,10 +293,12 @@
       .hero h1 { font-size: 1.5rem; }
       .hero-stats { grid-template-columns: 1fr 1fr; gap: 12px; }
       .hero-stat-num { font-size: 1.5rem; }
-      .school-card { padding: 14px; }
+      .school-card { padding: 14px 14px 10px 18px; }
       .card-name { font-size: 0.95rem; }
       .stats-grid { grid-template-columns: 1fr; }
     }
+
+    @media (min-width: 769px) { .hide-desktop { display: none !important; } }
 
     /* ── Address Checker ── */
     .ac-wrap { max-width: 760px; margin: 0 auto; }
@@ -450,25 +519,14 @@ function BoroughsGrid() {
   ];
   return (
     <div style={{marginTop: '2.5rem'}}>
-      <h2 style={{fontFamily:"'Playfair Display',serif", fontSize:'1.3rem', fontWeight:700, marginBottom:'16px', color:'var(--ink)'}}>Browse by school type</h2>
-      <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(200px, 1fr))', gap:'8px', marginBottom:'2rem'}}>
-        {typePages.map(t => (
-          <a key={t.slug} href={`/schools/${t.slug}`}
-            style={{display:'block', padding:'10px 14px', background:t.bg, border:`1px solid ${t.color}44`, borderRadius:'6px', fontSize:'0.85rem', fontWeight:600, color:t.color, textDecoration:'none', transition:'all 0.15s'}}>
-            {t.label}
-          </a>
-        ))}
-      </div>
       <h2 style={{fontFamily:"'Playfair Display',serif", fontSize:'1.3rem', fontWeight:700, marginBottom:'16px', color:'var(--ink)'}}>Browse by borough</h2>
-      <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(140px, 1fr))', gap:'8px'}}>
+      <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(150px, 1fr))', gap:'8px'}}>
         {BOROUGHS.map(b => {
           const slug = b.toLowerCase().replace(/[''']/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
           return (
-            <a key={b} href={`/schools/${slug}`}
-              style={{display:'block', padding:'12px 14px', background:'var(--card-bg)', border:'1px solid var(--border)', borderRadius:'6px', fontSize:'0.85rem', fontWeight:500, color:'var(--ink)', textDecoration:'none', transition:'all 0.15s', minHeight:'44px', display:'flex', alignItems:'center'}}
-              onMouseOver={e=>{e.currentTarget.style.borderColor='var(--gold)';e.currentTarget.style.color='var(--gold)';}}
-              onMouseOut={e=>{e.currentTarget.style.borderColor='var(--border)';e.currentTarget.style.color='var(--ink)';}}>
-              {b}
+            <a key={b} href={`/schools/${slug}`} className="borough-card">
+              <span>{b}</span>
+              <span className="borough-arrow">›</span>
             </a>
           );
         })}
@@ -659,78 +717,83 @@ function ScoreCard({ school, compareList, toggleCompare }) {
   const band = school.score_band || school.quality_label || 'Unknown';
   const color = BAND_COLORS[band] || '#ccc';
   const admissions = school.admissions;
-  const showAdmissions = admissions && admissions !== 'Not applicable';
-  const admissionsStyle = admissions === 'Selective'
-    ? { background:'#FFF8E1', color:'#E65100', border:'1px solid #FFE082' }
-    : { background:'#F3F4F6', color:'#374151', border:'1px solid #D1D5DB' };
   const score = school.ofsted_score;
+  const isSelected = compareList && compareList.find(function(s){return s.urn===school.urn;});
 
-  // ── Navigate to pre-rendered static page ──
+  // Apps/place colour
+  var appsColor = '#aaa';
+  if (school.apps_per_place != null) {
+    var r = school.apps_per_place;
+    appsColor = r > 3 ? '#C0392B' : r > 1.5 ? '#E67E22' : r > 1 ? '#F39C12' : '#27AE60';
+  }
+
+  // 3rd stat: secondary → att8, primary → ks2 expected %, fallback → pupils
+  var stat3num = school.pupils != null ? school.pupils : '—';
+  var stat3lbl = 'Pupils';
+  var stat3color = 'var(--ink)';
+  if (school.ks4_att8 != null) {
+    stat3num = school.ks4_att8;
+    stat3lbl = 'Att 8';
+    stat3color = school.ks4_att8 >= ENG_ATT8_AVG ? '#27AE60' : '#E67E22';
+  } else if (school.ks2_expected_pct != null) {
+    stat3num = school.ks2_expected_pct + '%';
+    stat3lbl = 'KS2 exp';
+    stat3color = school.ks2_expected_pct >= ENG_KS2_EXP_AVG ? '#27AE60' : '#E67E22';
+  }
+
   function handleClick() {
     window.location.href = schoolUrl(school);
+  }
+  function handleCompare(e) {
+    e.stopPropagation();
+    if (toggleCompare) toggleCompare(school, e);
   }
 
   return (
     <div className="school-card" style={{'--band-color': color}} onClick={handleClick}>
       <div className="card-top">
         <span className="card-phase">{school.phase}</span>
-        {showAdmissions && (
-          <span className="pill" style={admissionsStyle}>
-            {admissions === 'Selective' ? '🎓 Selective' : admissions}
-          </span>
-        )}
-      </div>
-      <div className="card-name">{school.name}</div>
-      <div className="card-la">📍 {school.local_authority} · {school.postcode}</div>
-      <div style={{display:'flex', alignItems:'center', gap:10, margin:'10px 0 12px'}}>
-        <div className="score-badge" style={{background: score != null ? 'var(--ink)' : '#555', marginRight:2, flexShrink:0}}>
-          <span className="score-num" style={{color: score != null ? 'var(--gold)' : '#aaa', fontSize: score != null ? '1.25rem' : '0.85rem'}}>
-            {score != null ? score : '—'}
-          </span>
-          <span className="score-lbl">{score != null ? 'Score' : 'Unrated'}</span>
-        </div>
-        <div style={{flex:1, background:'#EDE8DF', borderRadius:4, height:6, overflow:'hidden'}}>
-          <div style={{width:`${score??0}%`, height:'100%', background:color, borderRadius:4, transition:'width 0.4s'}} />
-        </div>
-        <span style={{fontSize:'0.78rem', fontWeight:700, color, minWidth:90, textAlign:'right'}}>
+        <span className="card-rating-pill" style={{background: color + '1a', color: color, border: '1px solid ' + color + '55'}}>
+          <span style={{width:7,height:7,borderRadius:'50%',background:color,display:'inline-block',flexShrink:0}} />
           {band}
         </span>
       </div>
+      <div className="card-name">{school.name}</div>
+      <div className="card-la">📍 {school.local_authority} · {school.postcode}</div>
+      <div className="card-stats-grid">
+        <div className="card-stat-cell">
+          <div className="card-stat-num" style={{color: score != null ? 'var(--ink)' : '#ccc'}}>{score != null ? score : '—'}</div>
+          <div className="card-stat-lbl">Score</div>
+        </div>
+        <div className="card-stat-cell">
+          <div className="card-stat-num" style={{color: appsColor}}>{school.apps_per_place != null ? school.apps_per_place + '×' : '—'}</div>
+          <div className="card-stat-lbl">Apps/place</div>
+        </div>
+        <div className="card-stat-cell">
+          <div className="card-stat-num" style={{color: stat3color}}>{stat3num}</div>
+          <div className="card-stat-lbl">{stat3lbl}</div>
+        </div>
+      </div>
       {school.ungraded_outcome && (
-        <div style={{fontSize:'0.72rem', color:'#888', marginTop:'-4px', marginBottom:'6px', fontStyle:'italic'}}>
+        <div style={{fontSize:'0.72rem',color:'#888',marginBottom:'8px',fontStyle:'italic'}}>
           {school.ungraded_outcome}
         </div>
       )}
       <div className="card-pills">
+        {admissions === 'Selective' && <span className="pill" style={{background:'#FFF8E1',color:'#E65100',border:'1px solid #FFE082'}}>🎓 Selective</span>}
         {school.sixth_form === 'Has a sixth form' && <span className="pill" style={{background:'#EDE7F6',color:'#4527A0'}}>Sixth Form</span>}
         {school.gender && school.gender !== 'Mixed' && <span className="pill" style={{background:'#FCE4EC',color:'#880E4F'}}>{school.gender}</span>}
         {school.religious_character && school.religious_character !== 'Does not apply' && school.religious_character !== 'None' && (
           <span className="pill" style={{background:'#E8F5E9',color:'#2E7D32'}}>⛪ {school.religious_character}</span>
         )}
       </div>
-      <div className="card-meta">
-        <span>👥 {school.pupils??'—'} pupils</span>
-        {school.apps_per_place != null && (() => {
-          const r = school.apps_per_place;
-          const c = r > 3 ? '#C0392B' : r > 1.5 ? '#E67E22' : r > 1 ? '#F39C12' : '#27AE60';
-          return <span style={{color:c,fontWeight:600}} title="First-choice applications per place (2024)">🎯 {r}× oversubscribed</span>;
-        })()}
-        {school.crime_label && (() => {
-          const c = school.crime_score >= 80 ? '#27AE60' : school.crime_score >= 60 ? '#2980B9' : school.crime_score >= 40 ? '#F57F17' : '#E67E22';
-          return <span style={{color:c,fontSize:'0.76rem',fontWeight:500}} title="Crime within 500m">🔒 {school.crime_label}</span>;
-        })()}
-        {school.apps_per_place == null && !school.crime_label && school.inspection_date && <span>📅 {school.inspection_date}</span>}
-        {school.ks4_att8 != null && <span style={{color: school.ks4_att8 >= ENG_ATT8_AVG ? '#27AE60' : '#E67E22', fontWeight:500, fontSize:'0.76rem'}} title="Attainment 8 score (2024)">📚 Att8: {school.ks4_att8}</span>}
-        {school.ks2_higher_pct != null && !school.ks4_att8 && <span style={{color: school.ks2_higher_pct >= ENG_KS2_HIGHER_AVG ? '#27AE60' : '#E67E22', fontWeight:500, fontSize:'0.76rem'}} title="% achieving higher standard KS2 (2024)">📚 Higher std: {school.ks2_higher_pct}%</span>}
-      </div>
-      {/* Compare button — full width strip at bottom of card */}
       {toggleCompare && (
         <button
-          className={`compare-btn ${compareList&&compareList.find(s=>s.urn===school.urn)?'selected':''}`}
-          onClick={e=>{e.stopPropagation();toggleCompare&&toggleCompare(school,e);}}
+          className={isSelected ? 'compare-btn selected' : 'compare-btn'}
+          onClick={handleCompare}
         >
-          <span className="compare-check">{compareList&&compareList.find(s=>s.urn===school.urn)?'✓':'+'}</span>
-          {compareList&&compareList.find(s=>s.urn===school.urn)?'Added to comparison':'Compare this school'}
+          <span className="compare-check">{isSelected ? '✓' : '+'}</span>
+          {isSelected ? 'Added to comparison' : 'Compare this school'}
         </button>
       )}
     </div>
@@ -1125,9 +1188,27 @@ function App() {
   const [showGuide, setShowGuide] = useState(() => {
     try { return localStorage.getItem('compareGuideSeen') !== '1'; } catch { return true; }
   });
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   function dismissGuide() {
     setShowGuide(false);
     try { localStorage.setItem('compareGuideSeen', '1'); } catch {}
+  }
+
+  function handleGeoClick() {
+    if (!navigator.geolocation) {
+      alert('Geolocation is not supported by your browser.');
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      function(pos) {
+        setGeoCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        setView('checker');
+      },
+      function() {
+        alert('Could not get your location. Please enter your postcode instead.');
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
   }
 
   function toggleCompare(school, e) {
@@ -1144,60 +1225,70 @@ function App() {
   return (
     <>
       <header className="header">
-        <div className="header-logo">🏛 London <span>Schools</span><div className="header-badge">Explorer</div></div>
+        <div className="header-logo">
+          <div className="logo-mark">LS</div>
+          <span className="logo-text">London <em>Schools</em></span>
+        </div>
         <nav className="header-nav">
-          {[['checker','📍 Near Me'],['schools','📋 Schools'],['map','🗺 Map'],['stats','📊 Stats']].map(([v,label]) => (
-            <button key={v} className={`nav-btn ${view===v?'active':''}`} onClick={() => setView(v)}>{label}</button>
-          ))}
-          <a href="/appeals" className="nav-btn" style={{textDecoration:'none',display:'inline-flex',alignItems:'center'}}>⚖️ Appeals</a>
+          {[['checker','Near Me'],['schools','Schools'],['map','Map'],['stats','Stats']].map(function(item){
+            return <button key={item[0]} className={view===item[0]?'nav-btn active':'nav-btn'} onClick={() => setView(item[0])}>{item[1]}</button>;
+          })}
+          <a href="/appeals" className="nav-btn">Appeals</a>
         </nav>
       </header>
 
       <section className="hero">
-        <div className="hero-eyebrow">Ofsted Data · 32 London Boroughs</div>
-        <h1>Find the right school<br />in <em>London</em></h1>
-        <p className="hero-sub">Enter your postcode to instantly see every school near you, ranked by Ofsted rating, exam results and admissions data.</p>
-        <div style={{display:'flex', gap:'8px', flexWrap:'wrap', marginBottom:'32px', maxWidth:'520px'}}>
-          <input
-            type="text"
-            value={heroPostcode}
-            onChange={e => setHeroPostcode(e.target.value)}
-            onKeyDown={e => { if(e.key==='Enter') setView('checker'); }}
-            placeholder="e.g. N1 2PL, SW1A 1AA"
-            style={{flex:1, minWidth:'180px', padding:'13px 16px', borderRadius:'8px', border:'none', fontSize:'1rem', fontFamily:"'DM Sans',sans-serif", outline:'none', color:'#1A1A2E'}}
-          />
-          <button
-            onClick={() => setView('checker')}
-            style={{padding:'13px 22px', background:'var(--gold)', color:'var(--ink)', border:'none', borderRadius:'8px', fontFamily:"'Playfair Display',serif", fontWeight:700, fontSize:'1rem', cursor:'pointer', whiteSpace:'nowrap'}}>
-            Find schools →
-          </button>
-          <button
-            onClick={() => {
-              if (!navigator.geolocation) {
-                alert('Geolocation is not supported by your browser.');
-                return;
-              }
-              navigator.geolocation.getCurrentPosition(
-                (pos) => {
-                  const { latitude: lat, longitude: lng } = pos.coords;
-                  setGeoCoords({ lat, lng });
-                  setView('checker');
-                },
-                (err) => {
-                  alert('Could not get your location. Please enter your postcode instead.');
-                },
-                { enableHighAccuracy: true, timeout: 10000 }
+        <div className="hero-bg-grid" />
+        <div className="hero-inner">
+          <div className="hero-content">
+            <div className="hero-eyebrow">Ofsted · KS2 & KS4 · Admissions · 32 Boroughs</div>
+            <h1>Find the right school<br />in <em>London</em></h1>
+            <p className="hero-sub">Every school across 32 London boroughs — rated, ranked and searchable in seconds.</p>
+            <div className="hero-search">
+              <input
+                className="hero-search-input"
+                type="text"
+                value={heroPostcode}
+                onChange={e => setHeroPostcode(e.target.value)}
+                onKeyDown={e => { if(e.key==='Enter') setView('checker'); }}
+                placeholder="Enter postcode — e.g. N1 2PL"
+              />
+              <button className="hero-search-btn" onClick={() => setView('checker')}>Find schools →</button>
+              <button className="hero-search-geo" onClick={handleGeoClick} title="Use my location">📍</button>
+            </div>
+            <div className="hero-features">
+              <span className="hero-feature"><span className="hero-feature-dot">✓</span>Free, no sign-up</span>
+              <span className="hero-feature"><span className="hero-feature-dot">✓</span>Updated monthly</span>
+              <span className="hero-feature"><span className="hero-feature-dot">✓</span>KS2 & KS4 results</span>
+              <span className="hero-feature"><span className="hero-feature-dot">✓</span>Admissions data</span>
+            </div>
+          </div>
+          <div className="hero-panel hide-mobile">
+            <div className="hero-panel-eyebrow">By the numbers</div>
+            {[
+              {n:stats.total,   l:'schools indexed'},
+              {n:stats.outstanding, l:'rated Outstanding'},
+              {n:stats.avg,     l:'average Ofsted score'},
+              {n:32,            l:'boroughs covered'}
+            ].map(function(item){
+              return (
+                <div key={item.l} className="hero-panel-stat">
+                  <span className="hero-panel-num">{item.n}</span>
+                  <span className="hero-panel-lbl">{item.l}</span>
+                </div>
               );
-            }}
-            title="Use my current location"
-            style={{padding:'13px 16px', background:'rgba(255,255,255,0.12)', color:'var(--cream)', border:'1px solid rgba(255,255,255,0.25)', borderRadius:'8px', fontSize:'1.1rem', cursor:'pointer', whiteSpace:'nowrap'}}>
-            📍
-          </button>
+            })}
+          </div>
         </div>
-        <div className="hero-stats">
-          {[{n:stats.total,l:'London Schools'},{n:stats.outstanding,l:'Outstanding'},{n:stats.avg,l:'Avg Ofsted Score'},{n:32,l:'Boroughs'}].map(({n,l}) => (
-            <div key={l} className="hero-stat"><span className="hero-stat-num">{n}</span><span className="hero-stat-label">{l}</span></div>
-          ))}
+        <div className="hero-stats hide-desktop">
+          {[
+            {n:stats.total,l:'Schools'},
+            {n:stats.outstanding,l:'Outstanding'},
+            {n:stats.avg,l:'Avg Score'},
+            {n:32,l:'Boroughs'}
+          ].map(function(item){
+            return <div key={item.l} className="hero-stat"><span className="hero-stat-num">{item.n}</span><span className="hero-stat-label">{item.l}</span></div>;
+          })}
         </div>
       </section>
 
@@ -1227,78 +1318,117 @@ function App() {
           </>
         ) : (
           <>
-            <div className="controls">
-              <div className="search-wrap"><span className="search-icon">🔍</span><input type="text" placeholder="Search by name or postcode..." value={filters.q} onChange={e => setFilter('q', e.target.value)} /></div>
-              <div className="filter-group"><span className="filter-label">Phase</span><select value={filters.phase} onChange={e => setFilter('phase', e.target.value)}><option value="">All phases</option>{phases.map(p=><option key={p} value={p}>{p}</option>)}</select></div>
-              <div className="filter-group"><span className="filter-label">Borough</span><select value={filters.local_authority} onChange={e => setFilter('local_authority', e.target.value)}><option value="">All boroughs</option>{localAuthorities.map(la=><option key={la} value={la}>{la}</option>)}</select></div>
-              <div className="filter-group"><span className="filter-label">Rating</span><select value={filters.score_band} onChange={e => setFilter('score_band', e.target.value)}><option value="">All ratings</option>{['Outstanding','Good','Requires improvement','Inadequate','Ungraded (monitoring)','Report card (2025+)'].map(b=><option key={b} value={b}>{b}</option>)}</select></div>
-              {hasFilters && <button className="clear-btn" onClick={clearFilters}>✕ Clear</button>}
-            </div>
-            <div className="results-header">
-              <div style={{display:'flex',alignItems:'center',gap:12,flexWrap:'wrap'}}>
-                <div className="results-count">Showing <strong>{filtered.length}</strong> school{filtered.length!==1?'s':''}{schools.length!==filtered.length?` of ${schools.length}`:''}</div>
-                <button onClick={()=>setShowGuide(g=>!g)} style={{background:'rgba(212,168,67,0.12)',border:'1px solid rgba(212,168,67,0.3)',borderRadius:5,padding:'3px 10px',fontSize:'0.75rem',color:'var(--gold)',cursor:'pointer',fontFamily:"'DM Sans',sans-serif"}}>
-                  ⊞ Compare schools
-                </button>
-              </div>
-              <div className="view-toggle" style={{display: window.innerWidth < 600 ? 'none' : 'flex'}}>
-                <button className={`view-btn ${displayMode==='grid'?'active':''}`} onClick={() => setDisplayMode('grid')}>⊞</button>
-                <button className={`view-btn ${displayMode==='table'?'active':''}`} onClick={() => setDisplayMode('table')}>☰</button>
-              </div>
-            </div>
-            {filtered.length === 0 ? (
-              <div className="empty-state"><h3>No schools found</h3><p>Try adjusting your filters.</p></div>
-            ) : displayMode === 'grid' ? (
-              <div className="school-grid">{paged.map(s => <ScoreCard key={s.urn} school={s} compareList={compareList} toggleCompare={toggleCompare} />)}</div>
-            ) : (
-              <table className="school-table">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>School</th>
-                    <th className="hide-mobile">Borough</th>
-                    <th className="hide-mobile">Phase</th>
-                    <th>Ofsted</th>
-                    <th className="hide-mobile">Admissions</th>
-                    <th className="hide-mobile">Pupils</th>
-                    <th className="hide-mobile">Inspected</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {paged.map((s,i) => {
-                    const band=s.score_band||s.quality_label||'Unknown';
-                    const adm=s.admissions;
-                    return (
-                      <tr key={s.urn} onClick={() => { window.location.href = schoolUrl(s); }}>
-                        <td><span className="rank-num">{(page-1)*PAGE_SIZE+i+1}</span></td>
-                        <td style={{fontWeight:600,maxWidth:200}}>{s.name}<div style={{fontSize:'0.75rem',color:'#999',fontWeight:400}}>{s.local_authority}</div></td>
-                        <td className="hide-mobile" style={{color:'#777'}}>{s.local_authority}</td>
-                        <td className="hide-mobile" style={{color:'#999',fontSize:'0.8rem'}}>{s.phase}</td>
-                        <td>
-                          <BandChip band={band} />
-                          {s.ofsted_score != null && <div style={{fontFamily:"'Playfair Display',serif",fontWeight:700,color:BAND_COLORS[band],fontSize:'0.85rem',marginTop:2}}>{s.ofsted_score}</div>}
-                        </td>
-                        <td className="hide-mobile" style={{fontSize:'0.82rem'}}>
-                          {adm==='Selective' ? <span style={{color:'#E65100',fontWeight:600}}>🎓 Selective</span>
-                            : adm==='Non-selective' ? <span style={{color:'#555'}}>Non-selective</span>
-                            : <span style={{color:'#bbb'}}>—</span>}
-                        </td>
-                        <td className="hide-mobile" style={{color:'#777'}}>{s.pupils??'—'}</td>
-                        <td className="hide-mobile" style={{color:'#aaa',fontSize:'0.8rem'}}>{s.inspection_date||'—'}</td>
+            <div className={sidebarOpen ? 'sidebar-overlay visible' : 'sidebar-overlay'} onClick={() => setSidebarOpen(false)} />
+            <div className="page-layout">
+              <aside className={sidebarOpen ? 'filter-sidebar sidebar-open' : 'filter-sidebar'}>
+                <div className="sidebar-header">
+                  <span className="sidebar-header-title">Filters</span>
+                  <div style={{display:'flex',alignItems:'center',gap:10}}>
+                    {hasFilters && <button className="sidebar-header-clear" onClick={clearFilters}>Clear all</button>}
+                    <button className="sidebar-mobile-close hide-desktop" onClick={() => setSidebarOpen(false)}>✕</button>
+                  </div>
+                </div>
+                <div className="sidebar-section">
+                  <div className="sidebar-section-title">Phase</div>
+                  <div>
+                    {phases.map(function(p){
+                      return <button key={p} className={filters.phase===p?'sidebar-chip active':'sidebar-chip'} onClick={() => setFilter('phase', filters.phase===p?'':p)}>{p}</button>;
+                    })}
+                  </div>
+                </div>
+                <div className="sidebar-section">
+                  <div className="sidebar-section-title">Borough</div>
+                  <select value={filters.local_authority} onChange={e => setFilter('local_authority', e.target.value)} style={{width:'100%'}}>
+                    <option value="">All boroughs</option>
+                    {localAuthorities.map(function(la){ return <option key={la} value={la}>{la}</option>; })}
+                  </select>
+                </div>
+                <div className="sidebar-section">
+                  <div className="sidebar-section-title">Rating</div>
+                  <div>
+                    {['Outstanding','Good','Requires improvement','Inadequate'].map(function(b){
+                      return (
+                        <button key={b} className={filters.score_band===b?'sidebar-chip active':'sidebar-chip'} onClick={() => setFilter('score_band', filters.score_band===b?'':b)}>
+                          <span className="sidebar-rating-dot" style={{background:BAND_COLORS[b]||'#ccc'}} />
+                          {b}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </aside>
+              <div className="content-area">
+                <div className="controls" style={{marginBottom:16}}>
+                  <div className="search-wrap"><span className="search-icon">🔍</span><input type="text" placeholder="Search by name or postcode..." value={filters.q} onChange={e => setFilter('q', e.target.value)} /></div>
+                  <button className="filters-toggle-btn" onClick={() => setSidebarOpen(true)}>
+                    Filters
+                    {hasFilters && <span className="filter-badge">{[filters.phase,filters.local_authority,filters.score_band].filter(Boolean).length}</span>}
+                  </button>
+                </div>
+                <div className="results-header">
+                  <div style={{display:'flex',alignItems:'center',gap:12,flexWrap:'wrap'}}>
+                    <div className="results-count">Showing <strong>{filtered.length}</strong> school{filtered.length!==1?'s':''}{schools.length!==filtered.length?` of ${schools.length}`:''}</div>
+                    <button onClick={()=>setShowGuide(g=>!g)} style={{background:'rgba(212,168,67,0.12)',border:'1px solid rgba(212,168,67,0.3)',borderRadius:5,padding:'3px 10px',fontSize:'0.75rem',color:'var(--gold)',cursor:'pointer',fontFamily:"'DM Sans',sans-serif"}}>
+                      ⊞ Compare
+                    </button>
+                  </div>
+                  <div className="view-toggle" style={{display: window.innerWidth < 600 ? 'none' : 'flex'}}>
+                    <button className={displayMode==='grid'?'view-btn active':'view-btn'} onClick={() => setDisplayMode('grid')}>⊞</button>
+                    <button className={displayMode==='table'?'view-btn active':'view-btn'} onClick={() => setDisplayMode('table')}>☰</button>
+                  </div>
+                </div>
+                {filtered.length === 0 ? (
+                  <div className="empty-state"><h3>No schools found</h3><p>Try adjusting your filters.</p></div>
+                ) : displayMode === 'grid' ? (
+                  <div className="school-grid">{paged.map(s => <ScoreCard key={s.urn} school={s} compareList={compareList} toggleCompare={toggleCompare} />)}</div>
+                ) : (
+                  <table className="school-table">
+                    <thead>
+                      <tr>
+                        <th>#</th><th>School</th>
+                        <th className="hide-mobile">Borough</th>
+                        <th className="hide-mobile">Phase</th>
+                        <th>Ofsted</th>
+                        <th className="hide-mobile">Admissions</th>
+                        <th className="hide-mobile">Pupils</th>
+                        <th className="hide-mobile">Inspected</th>
                       </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            )}
-            {totalPages > 1 && (
-              <div className="pagination">
-                <button className="page-btn" onClick={() => setPage(p=>p-1)} disabled={page===1}>‹</button>
-                {Array.from({length:Math.min(7,totalPages)},(_,i) => { let p; if(totalPages<=7) p=i+1; else if(page<=4) p=i+1; else if(page>=totalPages-3) p=totalPages-6+i; else p=page-3+i; return <button key={p} className={`page-btn ${page===p?'active':''}`} onClick={() => setPage(p)}>{p}</button>; })}
-                <button className="page-btn" onClick={() => setPage(p=>p+1)} disabled={page===totalPages}>›</button>
+                    </thead>
+                    <tbody>
+                      {paged.map(function(s,i){
+                        var band=s.score_band||s.quality_label||'Unknown';
+                        var adm=s.admissions;
+                        return (
+                          <tr key={s.urn} onClick={() => { window.location.href = schoolUrl(s); }}>
+                            <td><span className="rank-num">{(page-1)*PAGE_SIZE+i+1}</span></td>
+                            <td style={{fontWeight:600,maxWidth:200}}>{s.name}<div style={{fontSize:'0.75rem',color:'#999',fontWeight:400}}>{s.local_authority}</div></td>
+                            <td className="hide-mobile" style={{color:'#777'}}>{s.local_authority}</td>
+                            <td className="hide-mobile" style={{color:'#999',fontSize:'0.8rem'}}>{s.phase}</td>
+                            <td>
+                              <BandChip band={band} />
+                              {s.ofsted_score != null && <div style={{fontFamily:"'Playfair Display',serif",fontWeight:700,color:BAND_COLORS[band],fontSize:'0.85rem',marginTop:2}}>{s.ofsted_score}</div>}
+                            </td>
+                            <td className="hide-mobile" style={{fontSize:'0.82rem'}}>
+                              {adm==='Selective' ? <span style={{color:'#E65100',fontWeight:600}}>Selective</span> : adm==='Non-selective' ? <span style={{color:'#555'}}>Non-selective</span> : <span style={{color:'#bbb'}}>—</span>}
+                            </td>
+                            <td className="hide-mobile" style={{color:'#777'}}>{s.pupils??'—'}</td>
+                            <td className="hide-mobile" style={{color:'#aaa',fontSize:'0.8rem'}}>{s.inspection_date||'—'}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                )}
+                {totalPages > 1 && (
+                  <div className="pagination">
+                    <button className="page-btn" onClick={() => setPage(p=>p-1)} disabled={page===1}>‹</button>
+                    {Array.from({length:Math.min(7,totalPages)},function(_,i){ var p; if(totalPages<=7) p=i+1; else if(page<=4) p=i+1; else if(page>=totalPages-3) p=totalPages-6+i; else p=page-3+i; return <button key={p} className={page===p?'page-btn active':'page-btn'} onClick={() => setPage(p)}>{p}</button>; })}
+                    <button className="page-btn" onClick={() => setPage(p=>p+1)} disabled={page===totalPages}>›</button>
+                  </div>
+                )}
+                <BoroughsGrid />
               </div>
-            )}
-            <BoroughsGrid />
+            </div>
           </>
         )}
       </main>

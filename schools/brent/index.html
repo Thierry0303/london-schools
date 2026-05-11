@@ -138,519 +138,1256 @@
 </div>
 </div>
 
+  <!-- Borough share buttons -->
+  <div style="display:flex;gap:10px;margin:16px 0 8px;flex-wrap:wrap;align-items:center;">
+    <span style="font-size:13px;color:#555;font-weight:600;">Share Brent schools:</span>
+    <button onclick="shareBoroughWhatsApp()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 WhatsApp</button>
+    <button onclick="shareBoroughEmail()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#1565C0;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Email</button>
+    <span style="font-size:12px;color:#999;margin-left:4px;">Or tick schools below to share a shortlist</span>
+  </div>
+
+  <!-- Sticky compare bar (appears when schools are ticked) -->
+  <div id="cmp-bar" style="display:none;position:sticky;top:0;z-index:100;background:#1A1A2E;color:#fff;padding:12px 16px;border-radius:10px;margin-bottom:12px;display:none;align-items:center;gap:10px;flex-wrap:wrap;">
+    <span id="cmp-count" style="font-weight:700;font-size:14px;">0 schools selected</span>
+    <button onclick="shareCompareWhatsApp()" style="padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 Share via WhatsApp</button>
+    <button onclick="shareCompareEmail()" style="padding:8px 16px;background:#fff;color:#1A1A2E;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Share via Email</button>
+    <button onclick="clearSelection()" style="padding:8px 12px;background:transparent;color:#aaa;border:1px solid #555;border-radius:8px;font-size:12px;cursor:pointer;">✕ Clear</button>
+  </div>
+
   <table>
-    <thead><tr><th>School</th><th>Phase</th><th>Ofsted</th><th>Pupils</th></tr></thead>
+    <thead><tr><th style="width:36px"></th><th>School</th><th>Phase</th><th>Ofsted</th><th>Pupils</th></tr></thead>
     <tbody><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Al-Sadiq School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8="35.9"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/al-sadiq-school"></td>
           <td><a href="/schools/brent/al-sadiq-school">Al-Sadiq School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>136</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Al-Zahra School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8="36.5"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/al-zahra-school"></td>
           <td><a href="/schools/brent/al-zahra-school">Al-Zahra School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>115</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Alperton Community School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="49.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/alperton-community-school"></td>
           <td><a href="/schools/brent/alperton-community-school">Alperton Community School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1924</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Anson Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="64.0"
+            data-url="https://londonschool.directory/schools/brent/anson-primary-school"></td>
           <td><a href="/schools/brent/anson-primary-school">Anson Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>398</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Ark Academy"
+            data-ofsted="Outstanding"
+            data-phase="All-through"
+            data-att8="51.5"
+            data-ks2="77.0"
+            data-url="https://londonschool.directory/schools/brent/ark-academy"></td>
           <td><a href="/schools/brent/ark-academy">Ark Academy</a></td>
           <td>All-through</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>1642</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Ark Elvin Academy"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="45.9"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/ark-elvin-academy"></td>
           <td><a href="/schools/brent/ark-elvin-academy">Ark Elvin Academy</a></td>
           <td>Secondary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>1305</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Ark Franklin Primary Academy"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="96.0"
+            data-url="https://londonschool.directory/schools/brent/ark-franklin-primary-academy"></td>
           <td><a href="/schools/brent/ark-franklin-primary-academy">Ark Franklin Primary Academy</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>665</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Ashley College"
+            data-ofsted="Outstanding"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/ashley-college"></td>
           <td><a href="/schools/brent/ashley-college">Ashley College</a></td>
           <td>N/A</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>3</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Avigdor Hirsch Torah Temimah Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="69.0"
+            data-url="https://londonschool.directory/schools/brent/avigdor-hirsch-torah-temimah-primary-school"></td>
           <td><a href="/schools/brent/avigdor-hirsch-torah-temimah-primary-school">Avigdor Hirsch Torah Temimah Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>193</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Barham Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="60.0"
+            data-url="https://londonschool.directory/schools/brent/barham-primary-school"></td>
           <td><a href="/schools/brent/barham-primary-school">Barham Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>926</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Bnos Beis Yaakov Primary School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/bnos-beis-yaakov-primary-school"></td>
           <td><a href="/schools/brent/bnos-beis-yaakov-primary-school">Bnos Beis Yaakov Primary School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>99</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Braintcroft E-ACT Primary Academy"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="78.0"
+            data-url="https://londonschool.directory/schools/brent/braintcroft-e-act-primary-academy"></td>
           <td><a href="/schools/brent/braintcroft-e-act-primary-academy">Braintcroft E-ACT Primary Academy</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>663</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Brent River College"
+            data-ofsted="Good"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/brent-river-college"></td>
           <td><a href="/schools/brent/brent-river-college">Brent River College</a></td>
           <td>N/A</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>40</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Brentfield Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="63.0"
+            data-url="https://londonschool.directory/schools/brent/brentfield-primary-school"></td>
           <td><a href="/schools/brent/brentfield-primary-school">Brentfield Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>433</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Brondesbury College London"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8="65.9"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/brondesbury-college-london"></td>
           <td><a href="/schools/brent/brondesbury-college-london">Brondesbury College London</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>118</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Buxlow School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/buxlow-school"></td>
           <td><a href="/schools/brent/buxlow-school">Buxlow School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>40</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Carlton Vale Infant School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/carlton-vale-infant-school"></td>
           <td><a href="/schools/brent/carlton-vale-infant-school">Carlton Vale Infant School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>60</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Chalkhill Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="71.0"
+            data-url="https://londonschool.directory/schools/brent/chalkhill-primary-school"></td>
           <td><a href="/schools/brent/chalkhill-primary-school">Chalkhill Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>447</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Christ Church CofE Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="67.0"
+            data-url="https://londonschool.directory/schools/brent/christ-church-cofe-primary-school"></td>
           <td><a href="/schools/brent/christ-church-cofe-primary-school">Christ Church CofE Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>163</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Claremont High School"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="54.8"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/claremont-high-school"></td>
           <td><a href="/schools/brent/claremont-high-school">Claremont High School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>1657</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="College Green School and Services"
+            data-ofsted="Outstanding"
+            data-phase="Nursery"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/college-green-school-and-services"></td>
           <td><a href="/schools/brent/college-green-school-and-services">College Green School and Services</a></td>
           <td>Nursery</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>94</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Convent of Jesus and Mary RC Infant School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/convent-of-jesus-and-mary-rc-infant-school"></td>
           <td><a href="/schools/brent/convent-of-jesus-and-mary-rc-infant-school">Convent of Jesus and Mary RC Infant School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>205</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Curzon Nursery School & Family Wellbeing Centre"
+            data-ofsted="Good"
+            data-phase="Nursery"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/curzon-nursery-school-family-wellbeing-centre"></td>
           <td><a href="/schools/brent/curzon-nursery-school-family-wellbeing-centre">Curzon Nursery School & Family Wellbeing Centre</a></td>
           <td>Nursery</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>89</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Donnington Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="71.0"
+            data-url="https://londonschool.directory/schools/brent/donnington-primary-school"></td>
           <td><a href="/schools/brent/donnington-primary-school">Donnington Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>224</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="E-ACT Crest Academy"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="39.9"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/e-act-crest-academy"></td>
           <td><a href="/schools/brent/e-act-crest-academy">E-ACT Crest Academy</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1206</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="East Lane Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="94.0"
+            data-url="https://londonschool.directory/schools/brent/east-lane-primary-school"></td>
           <td><a href="/schools/brent/east-lane-primary-school">East Lane Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>628</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Edith Kay Independent School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8="1.0"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/edith-kay-independent-school"></td>
           <td><a href="/schools/brent/edith-kay-independent-school">Edith Kay Independent School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>19</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Elsley Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="48.0"
+            data-url="https://londonschool.directory/schools/brent/elsley-primary-school"></td>
           <td><a href="/schools/brent/elsley-primary-school">Elsley Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>808</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Fawood Nursery School & Family Wellbeing Centre"
+            data-ofsted="Good"
+            data-phase="Nursery"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/fawood-nursery-school-family-wellbeing-centre"></td>
           <td><a href="/schools/brent/fawood-nursery-school-family-wellbeing-centre">Fawood Nursery School & Family Wellbeing Centre</a></td>
           <td>Nursery</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>73</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Fryent Primary School"
+            data-ofsted="Requires improvement"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="46.0"
+            data-url="https://londonschool.directory/schools/brent/fryent-primary-school"></td>
           <td><a href="/schools/brent/fryent-primary-school">Fryent Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
           <td>689</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Furness Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="63.0"
+            data-url="https://londonschool.directory/schools/brent/furness-primary-school"></td>
           <td><a href="/schools/brent/furness-primary-school">Furness Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>343</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Gladstone Park Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="59.0"
+            data-url="https://londonschool.directory/schools/brent/gladstone-park-primary-school"></td>
           <td><a href="/schools/brent/gladstone-park-primary-school">Gladstone Park Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>661</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Granville Plus Nursery School"
+            data-ofsted="Good"
+            data-phase="Nursery"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/granville-plus-nursery-school"></td>
           <td><a href="/schools/brent/granville-plus-nursery-school">Granville Plus Nursery School</a></td>
           <td>Nursery</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>53</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Harlesden Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="72.0"
+            data-url="https://londonschool.directory/schools/brent/harlesden-primary-school"></td>
           <td><a href="/schools/brent/harlesden-primary-school">Harlesden Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>297</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Harris Lowe Academy Willesden"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="41.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/harris-lowe-academy-willesden"></td>
           <td><a href="/schools/brent/harris-lowe-academy-willesden">Harris Lowe Academy Willesden</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1120</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Harris Primary Academy South Kenton"
+            data-ofsted="Inadequate"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="78.0"
+            data-url="https://londonschool.directory/schools/brent/harris-primary-academy-south-kenton"></td>
           <td><a href="/schools/brent/harris-primary-academy-south-kenton">Harris Primary Academy South Kenton</a></td>
           <td>Primary</td>
           <td><span style="background:#FFEBEE;color:#B71C1C;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Inadequate</span></td>
           <td>718</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Islamia Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="74.0"
+            data-url="https://londonschool.directory/schools/brent/islamia-primary-school"></td>
           <td><a href="/schools/brent/islamia-primary-school">Islamia Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>418</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Islamia School for Girls'"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8="65.2"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/islamia-school-for-girls"></td>
           <td><a href="/schools/brent/islamia-school-for-girls">Islamia School for Girls'</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>119</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="JFS"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="64.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/jfs"></td>
           <td><a href="/schools/brent/jfs">JFS</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>2040</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="John Keble CofE Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="47.0"
+            data-url="https://londonschool.directory/schools/brent/john-keble-cofe-primary-school"></td>
           <td><a href="/schools/brent/john-keble-cofe-primary-school">John Keble CofE Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>402</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Kilburn Grange School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="59.0"
+            data-url="https://londonschool.directory/schools/brent/kilburn-grange-school"></td>
           <td><a href="/schools/brent/kilburn-grange-school">Kilburn Grange School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>205</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Kingsbury Green Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="67.0"
+            data-url="https://londonschool.directory/schools/brent/kingsbury-green-primary-school"></td>
           <td><a href="/schools/brent/kingsbury-green-primary-school">Kingsbury Green Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>573</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Kingsbury High School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="47.3"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/kingsbury-high-school"></td>
           <td><a href="/schools/brent/kingsbury-high-school">Kingsbury High School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1997</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Leopold Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="45.0"
+            data-url="https://londonschool.directory/schools/brent/leopold-primary-school"></td>
           <td><a href="/schools/brent/leopold-primary-school">Leopold Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>543</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Lycee International de Londres"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8="0.2"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/lycee-international-de-londres"></td>
           <td><a href="/schools/brent/lycee-international-de-londres">Lycee International de Londres</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>797</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Lyon Park Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="56.0"
+            data-url="https://londonschool.directory/schools/brent/lyon-park-primary-school"></td>
           <td><a href="/schools/brent/lyon-park-primary-school">Lyon Park Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>901</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Malorees Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="69.0"
+            data-url="https://londonschool.directory/schools/brent/malorees-junior-school"></td>
           <td><a href="/schools/brent/malorees-junior-school">Malorees Junior School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>219</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Malorees Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/malorees-primary-school"></td>
           <td><a href="/schools/brent/malorees-primary-school">Malorees Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>191</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Manor School"
+            data-ofsted="Good"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/manor-school"></td>
           <td><a href="/schools/brent/manor-school">Manor School</a></td>
           <td>N/A</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>204</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Mapesbury School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/mapesbury-school"></td>
           <td><a href="/schools/brent/mapesbury-school">Mapesbury School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>N/A</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Maple Walk School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/maple-walk-school"></td>
           <td><a href="/schools/brent/maple-walk-school">Maple Walk School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>174</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Michaela Community School"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="77.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/michaela-community-school"></td>
           <td><a href="/schools/brent/michaela-community-school">Michaela Community School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>744</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Mitchell Brook Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="81.0"
+            data-url="https://londonschool.directory/schools/brent/mitchell-brook-primary-school"></td>
           <td><a href="/schools/brent/mitchell-brook-primary-school">Mitchell Brook Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>638</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Mora Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="73.0"
+            data-url="https://londonschool.directory/schools/brent/mora-primary-school"></td>
           <td><a href="/schools/brent/mora-primary-school">Mora Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>430</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Mount Stewart Infant School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/mount-stewart-infant-school"></td>
           <td><a href="/schools/brent/mount-stewart-infant-school">Mount Stewart Infant School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>301</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Mount Stewart Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="78.0"
+            data-url="https://londonschool.directory/schools/brent/mount-stewart-junior-school"></td>
           <td><a href="/schools/brent/mount-stewart-junior-school">Mount Stewart Junior School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>358</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Newfield Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="63.0"
+            data-url="https://londonschool.directory/schools/brent/newfield-primary-school"></td>
           <td><a href="/schools/brent/newfield-primary-school">Newfield Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>246</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Newman Catholic College"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="35.9"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/newman-catholic-college"></td>
           <td><a href="/schools/brent/newman-catholic-college">Newman Catholic College</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>677</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="North Brent School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/north-brent-school"></td>
           <td><a href="/schools/brent/north-brent-school">North Brent School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>308</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="North West London Jewish Day School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="80.0"
+            data-url="https://londonschool.directory/schools/brent/north-west-london-jewish-day-school"></td>
           <td><a href="/schools/brent/north-west-london-jewish-day-school">North West London Jewish Day School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>202</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Northview Junior and Infant School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="78.0"
+            data-url="https://londonschool.directory/schools/brent/northview-junior-and-infant-school"></td>
           <td><a href="/schools/brent/northview-junior-and-infant-school">Northview Junior and Infant School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>218</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Oakington Manor Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="77.0"
+            data-url="https://londonschool.directory/schools/brent/oakington-manor-primary-school"></td>
           <td><a href="/schools/brent/oakington-manor-primary-school">Oakington Manor Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>662</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Oliver Goldsmith Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="64.0"
+            data-url="https://londonschool.directory/schools/brent/oliver-goldsmith-primary-school"></td>
           <td><a href="/schools/brent/oliver-goldsmith-primary-school">Oliver Goldsmith Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>455</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Our Lady of Grace Catholic Junior School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="93.0"
+            data-url="https://londonschool.directory/schools/brent/our-lady-of-grace-catholic-junior-school"></td>
           <td><a href="/schools/brent/our-lady-of-grace-catholic-junior-school">Our Lady of Grace Catholic Junior School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>238</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Our Lady of Grace RC Infant and Nursery School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/our-lady-of-grace-rc-infant-and-nursery-school"></td>
           <td><a href="/schools/brent/our-lady-of-grace-rc-infant-and-nursery-school">Our Lady of Grace RC Infant and Nursery School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>231</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Our Lady of Lourdes Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="44.0"
+            data-url="https://londonschool.directory/schools/brent/our-lady-of-lourdes-catholic-primary-school"></td>
           <td><a href="/schools/brent/our-lady-of-lourdes-catholic-primary-school">Our Lady of Lourdes Catholic Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>227</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Park Lane Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="78.0"
+            data-url="https://londonschool.directory/schools/brent/park-lane-primary-school"></td>
           <td><a href="/schools/brent/park-lane-primary-school">Park Lane Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>456</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Phoenix Arch School"
+            data-ofsted="Good"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2="10.0"
+            data-url="https://londonschool.directory/schools/brent/phoenix-arch-school"></td>
           <td><a href="/schools/brent/phoenix-arch-school">Phoenix Arch School</a></td>
           <td>N/A</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>55</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Preston Manor School"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8="46.2"
+            data-ks2="67.0"
+            data-url="https://londonschool.directory/schools/brent/preston-manor-school"></td>
           <td><a href="/schools/brent/preston-manor-school">Preston Manor School</a></td>
           <td>All-through</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1927</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Preston Park Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="63.0"
+            data-url="https://londonschool.directory/schools/brent/preston-park-primary-school"></td>
           <td><a href="/schools/brent/preston-park-primary-school">Preston Park Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>608</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Princess Frederica CofE Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="86.0"
+            data-url="https://londonschool.directory/schools/brent/princess-frederica-cofe-primary-school"></td>
           <td><a href="/schools/brent/princess-frederica-cofe-primary-school">Princess Frederica CofE Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>439</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Queens Park Community School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="51.1"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/queens-park-community-school"></td>
           <td><a href="/schools/brent/queens-park-community-school">Queens Park Community School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1310</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Roe Green Infant School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/roe-green-infant-school"></td>
           <td><a href="/schools/brent/roe-green-infant-school">Roe Green Infant School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>437</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Roe Green Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="40.0"
+            data-url="https://londonschool.directory/schools/brent/roe-green-junior-school"></td>
           <td><a href="/schools/brent/roe-green-junior-school">Roe Green Junior School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>476</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Roundwood School and Community Centre"
+            data-ofsted="Requires improvement"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/roundwood-school-and-community-centre"></td>
           <td><a href="/schools/brent/roundwood-school-and-community-centre">Roundwood School and Community Centre</a></td>
           <td>N/A</td>
           <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
           <td>18</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Saint Claudine's Catholic School for Girls"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="44.7"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/saint-claudines-catholic-school-for-girls"></td>
           <td><a href="/schools/brent/saint-claudines-catholic-school-for-girls">Saint Claudine's Catholic School for Girls</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>966</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Salusbury Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="69.0"
+            data-url="https://londonschool.directory/schools/brent/salusbury-primary-school"></td>
           <td><a href="/schools/brent/salusbury-primary-school">Salusbury Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>652</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Sinai Jewish Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="83.0"
+            data-url="https://londonschool.directory/schools/brent/sinai-jewish-primary-school"></td>
           <td><a href="/schools/brent/sinai-jewish-primary-school">Sinai Jewish Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>645</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Southover Partnership School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8="3.1"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/southover-partnership-school"></td>
           <td><a href="/schools/brent/southover-partnership-school">Southover Partnership School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>51</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Andrew and St Francis CofE Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="79.0"
+            data-url="https://londonschool.directory/schools/brent/st-andrew-and-st-francis-cofe-primary-school"></td>
           <td><a href="/schools/brent/st-andrew-and-st-francis-cofe-primary-school">St Andrew and St Francis CofE Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>438</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Christopher's Prep School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/st-christophers-prep-school"></td>
           <td><a href="/schools/brent/st-christophers-prep-school">St Christopher's Prep School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>108</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Gregory's Catholic Science College"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="60.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/st-gregorys-catholic-science-college"></td>
           <td><a href="/schools/brent/st-gregorys-catholic-science-college">St Gregory's Catholic Science College</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1160</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Joseph's Catholic Infant School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/st-josephs-catholic-infant-school"></td>
           <td><a href="/schools/brent/st-josephs-catholic-infant-school">St Joseph's Catholic Infant School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>254</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Joseph's Catholic Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="86.0"
+            data-url="https://londonschool.directory/schools/brent/st-josephs-catholic-junior-school"></td>
           <td><a href="/schools/brent/st-josephs-catholic-junior-school">St Joseph's Catholic Junior School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>274</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Joseph's Roman Catholic Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="97.0"
+            data-url="https://londonschool.directory/schools/brent/st-josephs-roman-catholic-primary-school"></td>
           <td><a href="/schools/brent/st-josephs-roman-catholic-primary-school">St Joseph's Roman Catholic Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>485</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Margaret Clitherow RC Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="75.0"
+            data-url="https://londonschool.directory/schools/brent/st-margaret-clitherow-rc-primary-school"></td>
           <td><a href="/schools/brent/st-margaret-clitherow-rc-primary-school">St Margaret Clitherow RC Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>222</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Mary Magdalen's Catholic Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="76.0"
+            data-url="https://londonschool.directory/schools/brent/st-mary-magdalens-catholic-junior-school"></td>
           <td><a href="/schools/brent/st-mary-magdalens-catholic-junior-school">St Mary Magdalen's Catholic Junior School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>241</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Mary's CofE Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="83.0"
+            data-url="https://londonschool.directory/schools/brent/st-marys-cofe-primary-school"></td>
           <td><a href="/schools/brent/st-marys-cofe-primary-school">St Mary's CofE Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>187</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Mary's RC Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="56.0"
+            data-url="https://londonschool.directory/schools/brent/st-marys-rc-primary-school"></td>
           <td><a href="/schools/brent/st-marys-rc-primary-school">St Mary's RC Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>187</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Robert Southwell Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="83.0"
+            data-url="https://londonschool.directory/schools/brent/st-robert-southwell-catholic-primary-school"></td>
           <td><a href="/schools/brent/st-robert-southwell-catholic-primary-school">St Robert Southwell Catholic Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>452</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Sudbury Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="72.0"
+            data-url="https://londonschool.directory/schools/brent/sudbury-primary-school"></td>
           <td><a href="/schools/brent/sudbury-primary-school">Sudbury Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>924</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Avenue School"
+            data-ofsted="Outstanding"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/the-avenue-school"></td>
           <td><a href="/schools/brent/the-avenue-school">The Avenue School</a></td>
           <td>N/A</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>100</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Corner School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/the-corner-school"></td>
           <td><a href="/schools/brent/the-corner-school">The Corner School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>15</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Kilburn Park School Foundation"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="78.0"
+            data-url="https://londonschool.directory/schools/brent/the-kilburn-park-school-foundation"></td>
           <td><a href="/schools/brent/the-kilburn-park-school-foundation">The Kilburn Park School Foundation</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>62</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The School of the Islamic Republic of Iran"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/the-school-of-the-islamic-republic-of-iran"></td>
           <td><a href="/schools/brent/the-school-of-the-islamic-republic-of-iran">The School of the Islamic Republic of Iran</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>65</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Stonebridge School"
+            data-ofsted="Requires improvement"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="48.0"
+            data-url="https://londonschool.directory/schools/brent/the-stonebridge-school"></td>
           <td><a href="/schools/brent/the-stonebridge-school">The Stonebridge School</a></td>
           <td>Primary</td>
           <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
           <td>352</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Village School"
+            data-ofsted="Outstanding"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/the-village-school"></td>
           <td><a href="/schools/brent/the-village-school">The Village School</a></td>
           <td>N/A</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>311</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Uxendon Manor Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="72.0"
+            data-url="https://londonschool.directory/schools/brent/uxendon-manor-primary-school"></td>
           <td><a href="/schools/brent/uxendon-manor-primary-school">Uxendon Manor Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>674</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Wembley High Technology College"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="63.5"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/wembley-high-technology-college"></td>
           <td><a href="/schools/brent/wembley-high-technology-college">Wembley High Technology College</a></td>
           <td>Secondary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>1553</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Wembley Manor"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/wembley-manor"></td>
           <td><a href="/schools/brent/wembley-manor">Wembley Manor</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>60</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Wembley Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="68.0"
+            data-url="https://londonschool.directory/schools/brent/wembley-primary-school"></td>
           <td><a href="/schools/brent/wembley-primary-school">Wembley Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>829</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Woodfield School"
+            data-ofsted="Good"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/brent/woodfield-school"></td>
           <td><a href="/schools/brent/woodfield-school">Woodfield School</a></td>
           <td>N/A</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>200</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Wykeham Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="71.0"
+            data-url="https://londonschool.directory/schools/brent/wykeham-primary-school"></td>
           <td><a href="/schools/brent/wykeham-primary-school">Wykeham Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
@@ -660,6 +1397,71 @@
 </div>
 <footer><a href="/">London Schools Explorer</a> &mdash; helping families find the right school in London.</footer>
 <script defer src="/_vercel/insights/script.js"></script>
+<script>
+(function(){
+  var borough="Brent", boroughUrl="https://londonschool.directory/schools/brent";
+  var outstanding=15, total=103;
+
+  // Borough-level share
+  window.shareBoroughWhatsApp=function(){
+    var t='🏙️ *Schools in '+borough+', London*\n'+
+        '📊 '+total+' schools · '+outstanding+' Outstanding\n\n'+
+        '🔗 '+boroughUrl;
+    window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank');
+  };
+  window.shareBoroughEmail=function(){
+    var s='Schools in '+borough+' — London Schools Explorer';
+    var b='Schools in '+borough+', London\n'+
+        total+' schools, '+outstanding+' rated Outstanding by Ofsted\n\n'+
+        'Browse them here: '+boroughUrl;
+    window.location.href='mailto:?subject='+encodeURIComponent(s)+'&body='+encodeURIComponent(b);
+  };
+
+  // Shortlist comparison share
+  function getSelected(){
+    return Array.from(document.querySelectorAll('.sch-sel:checked')).map(function(cb){
+      return {name:cb.dataset.name,ofsted:cb.dataset.ofsted,phase:cb.dataset.phase,
+               att8:cb.dataset.att8,ks2:cb.dataset.ks2,url:cb.dataset.url};
+    });
+  }
+  function updateBar(){
+    var sel=getSelected();
+    var bar=document.getElementById('cmp-bar');
+    document.getElementById('cmp-count').textContent=sel.length+' school'+(sel.length===1?'':' s')+' selected';
+    bar.style.display=sel.length>0?'flex':'none';
+  }
+  document.querySelectorAll('.sch-sel').forEach(function(cb){ cb.onchange=updateBar; });
+
+  function buildCompareText(sel,markdown){
+    var lines=['📋 *My '+borough+' school shortlist*',''];
+    sel.forEach(function(s,i){
+      lines.push((i+1)+'. '+(markdown?'*':'')+s.name+(markdown?'*':''));
+      lines.push('   ⭐ Ofsted: '+s.ofsted+(s.phase?' · '+s.phase:''));
+      if(s.att8)lines.push('   📊 Attainment 8: '+s.att8);
+      if(s.ks2)lines.push('   📝 KS2 expected: '+s.ks2+'%');
+      lines.push('   🔗 '+s.url);
+      lines.push('');
+    });
+    lines.push('via London Schools Explorer — '+boroughUrl);
+    return lines.join('\n');
+  }
+  window.shareCompareWhatsApp=function(){
+    var sel=getSelected();
+    if(!sel.length)return;
+    window.open('https://wa.me/?text='+encodeURIComponent(buildCompareText(sel,true)),'_blank');
+  };
+  window.shareCompareEmail=function(){
+    var sel=getSelected();
+    if(!sel.length)return;
+    var subj='My '+borough+' school shortlist — London Schools Explorer';
+    window.location.href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(buildCompareText(sel,false));
+  };
+  window.clearSelection=function(){
+    document.querySelectorAll('.sch-sel:checked').forEach(function(cb){cb.checked=false;});
+    updateBar();
+  };
+})();
+</script>
 </body>
 </html><style>
   #fb-btn{position:fixed;bottom:24px;right:24px;z-index:9999;background:#1A1A2E;color:#D4A843;border:2px solid #D4A843;border-radius:24px;padding:10px 18px;font-family:system-ui,sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 4px 16px rgba(0,0,0,0.25);transition:all 0.2s;}

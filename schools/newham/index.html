@@ -138,564 +138,1364 @@
 </div>
 </div>
 
+  <!-- Borough share buttons -->
+  <div style="display:flex;gap:10px;margin:16px 0 8px;flex-wrap:wrap;align-items:center;">
+    <span style="font-size:13px;color:#555;font-weight:600;">Share Newham schools:</span>
+    <button onclick="shareBoroughWhatsApp()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 WhatsApp</button>
+    <button onclick="shareBoroughEmail()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#1565C0;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Email</button>
+    <span style="font-size:12px;color:#999;margin-left:4px;">Or tick schools below to share a shortlist</span>
+  </div>
+
+  <!-- Sticky compare bar (appears when schools are ticked) -->
+  <div id="cmp-bar" style="display:none;position:sticky;top:0;z-index:100;background:#1A1A2E;color:#fff;padding:12px 16px;border-radius:10px;margin-bottom:12px;display:none;align-items:center;gap:10px;flex-wrap:wrap;">
+    <span id="cmp-count" style="font-weight:700;font-size:14px;">0 schools selected</span>
+    <button onclick="shareCompareWhatsApp()" style="padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 Share via WhatsApp</button>
+    <button onclick="shareCompareEmail()" style="padding:8px 16px;background:#fff;color:#1A1A2E;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Share via Email</button>
+    <button onclick="clearSelection()" style="padding:8px 12px;background:transparent;color:#aaa;border:1px solid #555;border-radius:8px;font-size:12px;cursor:pointer;">✕ Clear</button>
+  </div>
+
   <table>
-    <thead><tr><th>School</th><th>Phase</th><th>Ofsted</th><th>Pupils</th></tr></thead>
+    <thead><tr><th style="width:36px"></th><th>School</th><th>Phase</th><th>Ofsted</th><th>Pupils</th></tr></thead>
     <tbody><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Altmore Infant School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/altmore-infant-school"></td>
           <td><a href="/schools/newham/altmore-infant-school">Altmore Infant School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>551</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Avenue Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="91.0"
+            data-url="https://londonschool.directory/schools/newham/avenue-primary-school"></td>
           <td><a href="/schools/newham/avenue-primary-school">Avenue Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>556</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Azhar Academy Girls School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8="66.4"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/azhar-academy-girls-school"></td>
           <td><a href="/schools/newham/azhar-academy-girls-school">Azhar Academy Girls School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>618</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Bobby Moore Academy"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8="45.6"
+            data-ks2="91.0"
+            data-url="https://londonschool.directory/schools/newham/bobby-moore-academy"></td>
           <td><a href="/schools/newham/bobby-moore-academy">Bobby Moore Academy</a></td>
           <td>All-through</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1085</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Brampton Manor Academy"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="59.9"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/brampton-manor-academy"></td>
           <td><a href="/schools/newham/brampton-manor-academy">Brampton Manor Academy</a></td>
           <td>Secondary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>2914</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Brampton Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="74.0"
+            data-url="https://londonschool.directory/schools/newham/brampton-primary-school"></td>
           <td><a href="/schools/newham/brampton-primary-school">Brampton Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>908</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Britannia Village Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="66.0"
+            data-url="https://londonschool.directory/schools/newham/britannia-village-primary-school"></td>
           <td><a href="/schools/newham/britannia-village-primary-school">Britannia Village Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>441</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Carpenters Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="56.0"
+            data-url="https://londonschool.directory/schools/newham/carpenters-primary-school"></td>
           <td><a href="/schools/newham/carpenters-primary-school">Carpenters Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>338</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Central Park Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="53.0"
+            data-url="https://londonschool.directory/schools/newham/central-park-primary-school"></td>
           <td><a href="/schools/newham/central-park-primary-school">Central Park Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>919</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Cleves Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="96.0"
+            data-url="https://londonschool.directory/schools/newham/cleves-primary-school"></td>
           <td><a href="/schools/newham/cleves-primary-school">Cleves Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>474</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Colegrave Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="69.0"
+            data-url="https://londonschool.directory/schools/newham/colegrave-primary-school"></td>
           <td><a href="/schools/newham/colegrave-primary-school">Colegrave Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>566</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Connaught Special School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/connaught-special-school"></td>
           <td><a href="/schools/newham/connaught-special-school">Connaught Special School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>26</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Cumberland Community School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="52.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/cumberland-community-school"></td>
           <td><a href="/schools/newham/cumberland-community-school">Cumberland Community School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1346</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Curwen Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="80.0"
+            data-url="https://londonschool.directory/schools/newham/curwen-primary-school"></td>
           <td><a href="/schools/newham/curwen-primary-school">Curwen Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>854</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Dersingham Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="79.0"
+            data-url="https://londonschool.directory/schools/newham/dersingham-primary-school"></td>
           <td><a href="/schools/newham/dersingham-primary-school">Dersingham Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>621</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Drew Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="75.0"
+            data-url="https://londonschool.directory/schools/newham/drew-primary-school"></td>
           <td><a href="/schools/newham/drew-primary-school">Drew Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>404</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Earlham Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="85.0"
+            data-url="https://londonschool.directory/schools/newham/earlham-primary-school"></td>
           <td><a href="/schools/newham/earlham-primary-school">Earlham Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>464</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="East London Independent School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8="1.5"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/east-london-independent-school"></td>
           <td><a href="/schools/newham/east-london-independent-school">East London Independent School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>75</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Eastlea Community School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="41.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/eastlea-community-school"></td>
           <td><a href="/schools/newham/eastlea-community-school">Eastlea Community School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>689</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Edith Kerrison Nursery School"
+            data-ofsted="Good"
+            data-phase="Nursery"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/edith-kerrison-nursery-school"></td>
           <td><a href="/schools/newham/edith-kerrison-nursery-school">Edith Kerrison Nursery School</a></td>
           <td>Nursery</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>129</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Education Links"
+            data-ofsted="Good"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/education-links"></td>
           <td><a href="/schools/newham/education-links">Education Links</a></td>
           <td>N/A</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>75</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Ellen Wilkinson Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="77.0"
+            data-url="https://londonschool.directory/schools/newham/ellen-wilkinson-primary-school"></td>
           <td><a href="/schools/newham/ellen-wilkinson-primary-school">Ellen Wilkinson Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>445</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Elmhurst Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="91.0"
+            data-url="https://londonschool.directory/schools/newham/elmhurst-primary-school"></td>
           <td><a href="/schools/newham/elmhurst-primary-school">Elmhurst Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>988</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Essex Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="81.0"
+            data-url="https://londonschool.directory/schools/newham/essex-primary-school"></td>
           <td><a href="/schools/newham/essex-primary-school">Essex Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>887</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Forest Gate Community School"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="58.1"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/forest-gate-community-school"></td>
           <td><a href="/schools/newham/forest-gate-community-school">Forest Gate Community School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>1344</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Gainsborough Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="79.0"
+            data-url="https://londonschool.directory/schools/newham/gainsborough-primary-school"></td>
           <td><a href="/schools/newham/gainsborough-primary-school">Gainsborough Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>202</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Gallions Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="61.0"
+            data-url="https://londonschool.directory/schools/newham/gallions-primary-school"></td>
           <td><a href="/schools/newham/gallions-primary-school">Gallions Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>460</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Godwin Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="75.0"
+            data-url="https://londonschool.directory/schools/newham/godwin-junior-school"></td>
           <td><a href="/schools/newham/godwin-junior-school">Godwin Junior School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>347</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Grange Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="79.0"
+            data-url="https://londonschool.directory/schools/newham/grange-primary-school"></td>
           <td><a href="/schools/newham/grange-primary-school">Grange Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>195</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Grangewood Independent School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/grangewood-independent-school"></td>
           <td><a href="/schools/newham/grangewood-independent-school">Grangewood Independent School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>45</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hafs Academy"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8="39.9"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/hafs-academy"></td>
           <td><a href="/schools/newham/hafs-academy">Hafs Academy</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>71</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hallsville Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="88.0"
+            data-url="https://londonschool.directory/schools/newham/hallsville-primary-school"></td>
           <td><a href="/schools/newham/hallsville-primary-school">Hallsville Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>464</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Harris Academy Chobham"
+            data-ofsted="Outstanding"
+            data-phase="All-through"
+            data-att8="49.5"
+            data-ks2="80.0"
+            data-url="https://londonschool.directory/schools/newham/harris-academy-chobham"></td>
           <td><a href="/schools/newham/harris-academy-chobham">Harris Academy Chobham</a></td>
           <td>All-through</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>2044</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Harris Science Academy East London"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="56.9"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/harris-science-academy-east-london"></td>
           <td><a href="/schools/newham/harris-science-academy-east-london">Harris Science Academy East London</a></td>
           <td>Secondary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>441</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hartley Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="59.0"
+            data-url="https://londonschool.directory/schools/newham/hartley-primary-school"></td>
           <td><a href="/schools/newham/hartley-primary-school">Hartley Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>587</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Horizon Academy"
+            data-ofsted="Good"
+            data-phase="N/A"
+            data-att8="5.1"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/horizon-academy"></td>
           <td><a href="/schools/newham/horizon-academy">Horizon Academy</a></td>
           <td>N/A</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>69</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="John F Kennedy Special School"
+            data-ofsted="Outstanding"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/john-f-kennedy-special-school"></td>
           <td><a href="/schools/newham/john-f-kennedy-special-school">John F Kennedy Special School</a></td>
           <td>N/A</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>198</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Kaizen Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="81.0"
+            data-url="https://londonschool.directory/schools/newham/kaizen-primary-school"></td>
           <td><a href="/schools/newham/kaizen-primary-school">Kaizen Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>420</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Kay Rowe Nursery School"
+            data-ofsted="Outstanding"
+            data-phase="Nursery"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/kay-rowe-nursery-school"></td>
           <td><a href="/schools/newham/kay-rowe-nursery-school">Kay Rowe Nursery School</a></td>
           <td>Nursery</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>155</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Keir Hardie Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="76.0"
+            data-url="https://londonschool.directory/schools/newham/keir-hardie-primary-school"></td>
           <td><a href="/schools/newham/keir-hardie-primary-school">Keir Hardie Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>451</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Kensington Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="59.0"
+            data-url="https://londonschool.directory/schools/newham/kensington-primary-school"></td>
           <td><a href="/schools/newham/kensington-primary-school">Kensington Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>636</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Kingsford Community School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="50.1"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/kingsford-community-school"></td>
           <td><a href="/schools/newham/kingsford-community-school">Kingsford Community School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1500</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Langdon Academy"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8="53.5"
+            data-ks2="71.0"
+            data-url="https://londonschool.directory/schools/newham/langdon-academy"></td>
           <td><a href="/schools/newham/langdon-academy">Langdon Academy</a></td>
           <td>All-through</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>2064</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Lathom Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="77.0"
+            data-url="https://londonschool.directory/schools/newham/lathom-junior-school"></td>
           <td><a href="/schools/newham/lathom-junior-school">Lathom Junior School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>529</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Lister Community School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="44.1"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/lister-community-school"></td>
           <td><a href="/schools/newham/lister-community-school">Lister Community School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1497</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Little Ilford School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="47.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/little-ilford-school"></td>
           <td><a href="/schools/newham/little-ilford-school">Little Ilford School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1700</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="London Academy of Excellence"
+            data-ofsted="Not yet rated"
+            data-phase="16 plus"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/london-academy-of-excellence"></td>
           <td><a href="/schools/newham/london-academy-of-excellence">London Academy of Excellence</a></td>
           <td>16 plus</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>483</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="London Design and Engineering UTC"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="49.5"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/london-design-and-engineering-utc"></td>
           <td><a href="/schools/newham/london-design-and-engineering-utc">London Design and Engineering UTC</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>792</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Madaniyah Foundation"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/madaniyah-foundation"></td>
           <td><a href="/schools/newham/madaniyah-foundation">Madaniyah Foundation</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>33</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Maryland Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="78.0"
+            data-url="https://londonschool.directory/schools/newham/maryland-primary-school"></td>
           <td><a href="/schools/newham/maryland-primary-school">Maryland Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>390</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Monega Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="88.0"
+            data-url="https://londonschool.directory/schools/newham/monega-primary-school"></td>
           <td><a href="/schools/newham/monega-primary-school">Monega Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>584</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Nelson Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="56.0"
+            data-url="https://londonschool.directory/schools/newham/nelson-primary-school"></td>
           <td><a href="/schools/newham/nelson-primary-school">Nelson Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>730</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="New City Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="88.0"
+            data-url="https://londonschool.directory/schools/newham/new-city-primary-school"></td>
           <td><a href="/schools/newham/new-city-primary-school">New City Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>631</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="New Directions"
+            data-ofsted="Good"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/new-directions"></td>
           <td><a href="/schools/newham/new-directions">New Directions</a></td>
           <td>N/A</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>18</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Newham Collegiate Sixth Form Centre, City of London Academy"
+            data-ofsted="Not yet rated"
+            data-phase="16 plus"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/newham-collegiate-sixth-form-centre-city-of-london-academy"></td>
           <td><a href="/schools/newham/newham-collegiate-sixth-form-centre-city-of-london-academy">Newham Collegiate Sixth Form Centre, City of London Academy</a></td>
           <td>16 plus</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>699</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="North Beckton Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="88.0"
+            data-url="https://londonschool.directory/schools/newham/north-beckton-primary-school"></td>
           <td><a href="/schools/newham/north-beckton-primary-school">North Beckton Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>412</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Oasis Academy Silvertown"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="45.1"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/oasis-academy-silvertown"></td>
           <td><a href="/schools/newham/oasis-academy-silvertown">Oasis Academy Silvertown</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>511</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Odessa Infant School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/odessa-infant-school"></td>
           <td><a href="/schools/newham/odessa-infant-school">Odessa Infant School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>205</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Oliver Thomas Nursery School"
+            data-ofsted="Outstanding"
+            data-phase="Nursery"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/oliver-thomas-nursery-school"></td>
           <td><a href="/schools/newham/oliver-thomas-nursery-school">Oliver Thomas Nursery School</a></td>
           <td>Nursery</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>156</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Park Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="64.0"
+            data-url="https://londonschool.directory/schools/newham/park-primary-school"></td>
           <td><a href="/schools/newham/park-primary-school">Park Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>632</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Plaistow Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="63.0"
+            data-url="https://londonschool.directory/schools/newham/plaistow-primary-school"></td>
           <td><a href="/schools/newham/plaistow-primary-school">Plaistow Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>362</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Plashet, City of London Academy"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/plashet-city-of-london-academy"></td>
           <td><a href="/schools/newham/plashet-city-of-london-academy">Plashet, City of London Academy</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>N/A</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Portway Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="71.0"
+            data-url="https://londonschool.directory/schools/newham/portway-primary-school"></td>
           <td><a href="/schools/newham/portway-primary-school">Portway Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>547</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Quwwat Ul Islam Girls' School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8="52.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/quwwat-ul-islam-girls-school"></td>
           <td><a href="/schools/newham/quwwat-ul-islam-girls-school">Quwwat Ul Islam Girls' School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>204</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Ranelagh Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="86.0"
+            data-url="https://londonschool.directory/schools/newham/ranelagh-primary-school"></td>
           <td><a href="/schools/newham/ranelagh-primary-school">Ranelagh Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>295</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Ravenscroft Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="78.0"
+            data-url="https://londonschool.directory/schools/newham/ravenscroft-primary-school"></td>
           <td><a href="/schools/newham/ravenscroft-primary-school">Ravenscroft Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>514</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Rebecca Cheetham Nursery and Children's Centre"
+            data-ofsted="Outstanding"
+            data-phase="Nursery"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/rebecca-cheetham-nursery-and-childrens-centre"></td>
           <td><a href="/schools/newham/rebecca-cheetham-nursery-and-childrens-centre">Rebecca Cheetham Nursery and Children's Centre</a></td>
           <td>Nursery</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>159</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Rokeby School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="50.8"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/rokeby-school"></td>
           <td><a href="/schools/newham/rokeby-school">Rokeby School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>588</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Roman Road Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="89.0"
+            data-url="https://londonschool.directory/schools/newham/roman-road-primary-school"></td>
           <td><a href="/schools/newham/roman-road-primary-school">Roman Road Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>334</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Ronald Openshaw Nursery School"
+            data-ofsted="Outstanding"
+            data-phase="Nursery"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/ronald-openshaw-nursery-school"></td>
           <td><a href="/schools/newham/ronald-openshaw-nursery-school">Ronald Openshaw Nursery School</a></td>
           <td>Nursery</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>117</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Rosetta Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="88.0"
+            data-url="https://londonschool.directory/schools/newham/rosetta-primary-school"></td>
           <td><a href="/schools/newham/rosetta-primary-school">Rosetta Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>559</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Royal Docks Academy"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="39.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/royal-docks-academy"></td>
           <td><a href="/schools/newham/royal-docks-academy">Royal Docks Academy</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>905</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Royal Wharf Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/royal-wharf-primary-school"></td>
           <td><a href="/schools/newham/royal-wharf-primary-school">Royal Wharf Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>387</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Salisbury Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="71.0"
+            data-url="https://londonschool.directory/schools/newham/salisbury-primary-school"></td>
           <td><a href="/schools/newham/salisbury-primary-school">Salisbury Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>496</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Sandringham Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="69.0"
+            data-url="https://londonschool.directory/schools/newham/sandringham-primary-school"></td>
           <td><a href="/schools/newham/sandringham-primary-school">Sandringham Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>990</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Sarah Bonnell School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="56.7"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/sarah-bonnell-school"></td>
           <td><a href="/schools/newham/sarah-bonnell-school">Sarah Bonnell School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1275</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="School 21"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8="47.8"
+            data-ks2="64.0"
+            data-url="https://londonschool.directory/schools/newham/school-21"></td>
           <td><a href="/schools/newham/school-21">School 21</a></td>
           <td>All-through</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1098</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="School 360"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/school-360"></td>
           <td><a href="/schools/newham/school-360">School 360</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>155</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Scott Wilkie Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="85.0"
+            data-url="https://londonschool.directory/schools/newham/scott-wilkie-primary-school"></td>
           <td><a href="/schools/newham/scott-wilkie-primary-school">Scott Wilkie Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>390</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Selwyn Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="80.0"
+            data-url="https://londonschool.directory/schools/newham/selwyn-primary-school"></td>
           <td><a href="/schools/newham/selwyn-primary-school">Selwyn Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>462</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Shaftesbury Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="80.0"
+            data-url="https://londonschool.directory/schools/newham/shaftesbury-primary-school"></td>
           <td><a href="/schools/newham/shaftesbury-primary-school">Shaftesbury Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>637</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Sheringham Nursery School & Children's Centre"
+            data-ofsted="Outstanding"
+            data-phase="Nursery"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/sheringham-nursery-school-childrens-centre"></td>
           <td><a href="/schools/newham/sheringham-nursery-school-childrens-centre">Sheringham Nursery School & Children's Centre</a></td>
           <td>Nursery</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>191</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Sheringham Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="66.0"
+            data-url="https://londonschool.directory/schools/newham/sheringham-primary-school"></td>
           <td><a href="/schools/newham/sheringham-primary-school">Sheringham Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>603</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Sir John Heron Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="71.0"
+            data-url="https://londonschool.directory/schools/newham/sir-john-heron-primary-school"></td>
           <td><a href="/schools/newham/sir-john-heron-primary-school">Sir John Heron Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>443</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Southern Road Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="73.0"
+            data-url="https://londonschool.directory/schools/newham/southern-road-primary-school"></td>
           <td><a href="/schools/newham/southern-road-primary-school">Southern Road Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>592</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Angela's Ursuline School"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="54.1"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/st-angelas-ursuline-school"></td>
           <td><a href="/schools/newham/st-angelas-ursuline-school">St Angela's Ursuline School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>1295</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Antony's Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="95.0"
+            data-url="https://londonschool.directory/schools/newham/st-antonys-catholic-primary-school"></td>
           <td><a href="/schools/newham/st-antonys-catholic-primary-school">St Antony's Catholic Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>435</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Bonaventure's RC School"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="47.3"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/st-bonaventures-rc-school"></td>
           <td><a href="/schools/newham/st-bonaventures-rc-school">St Bonaventure's RC School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>1348</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Edward's Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="73.0"
+            data-url="https://londonschool.directory/schools/newham/st-edwards-catholic-primary-school"></td>
           <td><a href="/schools/newham/st-edwards-catholic-primary-school">St Edward's Catholic Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>416</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Francis' Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="77.0"
+            data-url="https://londonschool.directory/schools/newham/st-francis-catholic-primary-school"></td>
           <td><a href="/schools/newham/st-francis-catholic-primary-school">St Francis' Catholic Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>295</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Helen's Catholic Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="78.0"
+            data-url="https://londonschool.directory/schools/newham/st-helens-catholic-primary-school"></td>
           <td><a href="/schools/newham/st-helens-catholic-primary-school">St Helen's Catholic Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>476</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St James' CofE Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="54.0"
+            data-url="https://londonschool.directory/schools/newham/st-james-cofe-junior-school"></td>
           <td><a href="/schools/newham/st-james-cofe-junior-school">St James' CofE Junior School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>208</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Joachim's Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="79.0"
+            data-url="https://londonschool.directory/schools/newham/st-joachims-catholic-primary-school"></td>
           <td><a href="/schools/newham/st-joachims-catholic-primary-school">St Joachim's Catholic Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>359</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Luke's Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="70.0"
+            data-url="https://londonschool.directory/schools/newham/st-lukes-primary-school"></td>
           <td><a href="/schools/newham/st-lukes-primary-school">St Luke's Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>216</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Michael's Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="68.0"
+            data-url="https://londonschool.directory/schools/newham/st-michaels-catholic-primary-school"></td>
           <td><a href="/schools/newham/st-michaels-catholic-primary-school">St Michael's Catholic Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>212</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Stephen's Nursery School"
+            data-ofsted="Outstanding"
+            data-phase="Nursery"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/st-stephens-nursery-school"></td>
           <td><a href="/schools/newham/st-stephens-nursery-school">St Stephen's Nursery School</a></td>
           <td>Nursery</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>198</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Stephen's Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="93.0"
+            data-url="https://londonschool.directory/schools/newham/st-stephens-primary-school"></td>
           <td><a href="/schools/newham/st-stephens-primary-school">St Stephen's Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>623</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Winefride's RC Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="73.0"
+            data-url="https://londonschool.directory/schools/newham/st-winefrides-rc-primary-school"></td>
           <td><a href="/schools/newham/st-winefrides-rc-primary-school">St Winefride's RC Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>242</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Star Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="58.0"
+            data-url="https://londonschool.directory/schools/newham/star-primary-school"></td>
           <td><a href="/schools/newham/star-primary-school">Star Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>584</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Stratford Circus"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/stratford-circus"></td>
           <td><a href="/schools/newham/stratford-circus">Stratford Circus</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>N/A</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Stratford Manor Primary School & Nursery"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="38.0"
+            data-url="https://londonschool.directory/schools/newham/stratford-manor-primary-school-nursery"></td>
           <td><a href="/schools/newham/stratford-manor-primary-school-nursery">Stratford Manor Primary School & Nursery</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>228</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Stratford School Academy"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="53.9"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/stratford-school-academy"></td>
           <td><a href="/schools/newham/stratford-school-academy">Stratford School Academy</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1480</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Service for Deaf and Partially Hearing Children"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/the-service-for-deaf-and-partially-hearing-children"></td>
           <td><a href="/schools/newham/the-service-for-deaf-and-partially-hearing-children">The Service for Deaf and Partially Hearing Children</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>N/A</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Tollgate Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="97.0"
+            data-url="https://londonschool.directory/schools/newham/tollgate-primary-school"></td>
           <td><a href="/schools/newham/tollgate-primary-school">Tollgate Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>412</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Tunmarsh School"
+            data-ofsted="Good"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/tunmarsh-school"></td>
           <td><a href="/schools/newham/tunmarsh-school">Tunmarsh School</a></td>
           <td>N/A</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>51</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Upton Cross Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="63.0"
+            data-url="https://londonschool.directory/schools/newham/upton-cross-primary-school"></td>
           <td><a href="/schools/newham/upton-cross-primary-school">Upton Cross Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>565</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Vicarage Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="91.0"
+            data-url="https://londonschool.directory/schools/newham/vicarage-primary-school"></td>
           <td><a href="/schools/newham/vicarage-primary-school">Vicarage Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>876</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="West Ham Church Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="65.0"
+            data-url="https://londonschool.directory/schools/newham/west-ham-church-primary-school"></td>
           <td><a href="/schools/newham/west-ham-church-primary-school">West Ham Church Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>308</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="William Davies Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="81.0"
+            data-url="https://londonschool.directory/schools/newham/william-davies-primary-school"></td>
           <td><a href="/schools/newham/william-davies-primary-school">William Davies Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>244</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Winsor Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="59.0"
+            data-url="https://londonschool.directory/schools/newham/winsor-primary-school"></td>
           <td><a href="/schools/newham/winsor-primary-school">Winsor Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>589</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Woodgrange Infant School"
+            data-ofsted="Requires improvement"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/woodgrange-infant-school"></td>
           <td><a href="/schools/newham/woodgrange-infant-school">Woodgrange Infant School</a></td>
           <td>Primary</td>
           <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
           <td>379</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Zakariya Primary School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/newham/zakariya-primary-school"></td>
           <td><a href="/schools/newham/zakariya-primary-school">Zakariya Primary School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
@@ -705,6 +1505,71 @@
 </div>
 <footer><a href="/">London Schools Explorer</a> &mdash; helping families find the right school in London.</footer>
 <script defer src="/_vercel/insights/script.js"></script>
+<script>
+(function(){
+  var borough="Newham", boroughUrl="https://londonschool.directory/schools/newham";
+  var outstanding=38, total=112;
+
+  // Borough-level share
+  window.shareBoroughWhatsApp=function(){
+    var t='🏙️ *Schools in '+borough+', London*\n'+
+        '📊 '+total+' schools · '+outstanding+' Outstanding\n\n'+
+        '🔗 '+boroughUrl;
+    window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank');
+  };
+  window.shareBoroughEmail=function(){
+    var s='Schools in '+borough+' — London Schools Explorer';
+    var b='Schools in '+borough+', London\n'+
+        total+' schools, '+outstanding+' rated Outstanding by Ofsted\n\n'+
+        'Browse them here: '+boroughUrl;
+    window.location.href='mailto:?subject='+encodeURIComponent(s)+'&body='+encodeURIComponent(b);
+  };
+
+  // Shortlist comparison share
+  function getSelected(){
+    return Array.from(document.querySelectorAll('.sch-sel:checked')).map(function(cb){
+      return {name:cb.dataset.name,ofsted:cb.dataset.ofsted,phase:cb.dataset.phase,
+               att8:cb.dataset.att8,ks2:cb.dataset.ks2,url:cb.dataset.url};
+    });
+  }
+  function updateBar(){
+    var sel=getSelected();
+    var bar=document.getElementById('cmp-bar');
+    document.getElementById('cmp-count').textContent=sel.length+' school'+(sel.length===1?'':' s')+' selected';
+    bar.style.display=sel.length>0?'flex':'none';
+  }
+  document.querySelectorAll('.sch-sel').forEach(function(cb){ cb.onchange=updateBar; });
+
+  function buildCompareText(sel,markdown){
+    var lines=['📋 *My '+borough+' school shortlist*',''];
+    sel.forEach(function(s,i){
+      lines.push((i+1)+'. '+(markdown?'*':'')+s.name+(markdown?'*':''));
+      lines.push('   ⭐ Ofsted: '+s.ofsted+(s.phase?' · '+s.phase:''));
+      if(s.att8)lines.push('   📊 Attainment 8: '+s.att8);
+      if(s.ks2)lines.push('   📝 KS2 expected: '+s.ks2+'%');
+      lines.push('   🔗 '+s.url);
+      lines.push('');
+    });
+    lines.push('via London Schools Explorer — '+boroughUrl);
+    return lines.join('\n');
+  }
+  window.shareCompareWhatsApp=function(){
+    var sel=getSelected();
+    if(!sel.length)return;
+    window.open('https://wa.me/?text='+encodeURIComponent(buildCompareText(sel,true)),'_blank');
+  };
+  window.shareCompareEmail=function(){
+    var sel=getSelected();
+    if(!sel.length)return;
+    var subj='My '+borough+' school shortlist — London Schools Explorer';
+    window.location.href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(buildCompareText(sel,false));
+  };
+  window.clearSelection=function(){
+    document.querySelectorAll('.sch-sel:checked').forEach(function(cb){cb.checked=false;});
+    updateBar();
+  };
+})();
+</script>
 </body>
 </html><style>
   #fb-btn{position:fixed;bottom:24px;right:24px;z-index:9999;background:#1A1A2E;color:#D4A843;border:2px solid #D4A843;border-radius:24px;padding:10px 18px;font-family:system-ui,sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 4px 16px rgba(0,0,0,0.25);transition:all 0.2s;}

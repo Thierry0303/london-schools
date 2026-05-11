@@ -138,464 +138,1124 @@
 </div>
 </div>
 
+  <!-- Borough share buttons -->
+  <div style="display:flex;gap:10px;margin:16px 0 8px;flex-wrap:wrap;align-items:center;">
+    <span style="font-size:13px;color:#555;font-weight:600;">Share Havering schools:</span>
+    <button onclick="shareBoroughWhatsApp()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 WhatsApp</button>
+    <button onclick="shareBoroughEmail()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#1565C0;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Email</button>
+    <span style="font-size:12px;color:#999;margin-left:4px;">Or tick schools below to share a shortlist</span>
+  </div>
+
+  <!-- Sticky compare bar (appears when schools are ticked) -->
+  <div id="cmp-bar" style="display:none;position:sticky;top:0;z-index:100;background:#1A1A2E;color:#fff;padding:12px 16px;border-radius:10px;margin-bottom:12px;display:none;align-items:center;gap:10px;flex-wrap:wrap;">
+    <span id="cmp-count" style="font-weight:700;font-size:14px;">0 schools selected</span>
+    <button onclick="shareCompareWhatsApp()" style="padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 Share via WhatsApp</button>
+    <button onclick="shareCompareEmail()" style="padding:8px 16px;background:#fff;color:#1A1A2E;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Share via Email</button>
+    <button onclick="clearSelection()" style="padding:8px 12px;background:transparent;color:#aaa;border:1px solid #555;border-radius:8px;font-size:12px;cursor:pointer;">✕ Clear</button>
+  </div>
+
   <table>
-    <thead><tr><th>School</th><th>Phase</th><th>Ofsted</th><th>Pupils</th></tr></thead>
+    <thead><tr><th style="width:36px"></th><th>School</th><th>Phase</th><th>Ofsted</th><th>Pupils</th></tr></thead>
     <tbody><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Abbs Cross Academy and Arts College"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="45.5"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/abbs-cross-academy-and-arts-college"></td>
           <td><a href="/schools/havering/abbs-cross-academy-and-arts-college">Abbs Cross Academy and Arts College</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>887</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Ardleigh Green Infant School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/ardleigh-green-infant-school"></td>
           <td><a href="/schools/havering/ardleigh-green-infant-school">Ardleigh Green Infant School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>269</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Ardleigh Green Junior School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="77.0"
+            data-url="https://londonschool.directory/schools/havering/ardleigh-green-junior-school"></td>
           <td><a href="/schools/havering/ardleigh-green-junior-school">Ardleigh Green Junior School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>359</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Benhurst Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="79.0"
+            data-url="https://londonschool.directory/schools/havering/benhurst-primary-school"></td>
           <td><a href="/schools/havering/benhurst-primary-school">Benhurst Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>411</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Bep Academy"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8="3.7"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/bep-academy"></td>
           <td><a href="/schools/havering/bep-academy">Bep Academy</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>29</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Bower Park Academy"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="37.7"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/bower-park-academy"></td>
           <td><a href="/schools/havering/bower-park-academy">Bower Park Academy</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1016</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Brady Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="58.0"
+            data-url="https://londonschool.directory/schools/havering/brady-primary-school"></td>
           <td><a href="/schools/havering/brady-primary-school">Brady Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>399</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Branfil Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="70.0"
+            data-url="https://londonschool.directory/schools/havering/branfil-primary-school"></td>
           <td><a href="/schools/havering/branfil-primary-school">Branfil Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>554</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Broadford Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="66.0"
+            data-url="https://londonschool.directory/schools/havering/broadford-primary-school"></td>
           <td><a href="/schools/havering/broadford-primary-school">Broadford Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>670</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Clockhouse Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="73.0"
+            data-url="https://londonschool.directory/schools/havering/clockhouse-primary-school"></td>
           <td><a href="/schools/havering/clockhouse-primary-school">Clockhouse Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>707</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Concordia Academy"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="74.0"
+            data-url="https://londonschool.directory/schools/havering/concordia-academy"></td>
           <td><a href="/schools/havering/concordia-academy">Concordia Academy</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>539</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Corbets Tey School"
+            data-ofsted="Good"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/corbets-tey-school"></td>
           <td><a href="/schools/havering/corbets-tey-school">Corbets Tey School</a></td>
           <td>N/A</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>158</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Crowlands Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="74.0"
+            data-url="https://londonschool.directory/schools/havering/crowlands-primary-school"></td>
           <td><a href="/schools/havering/crowlands-primary-school">Crowlands Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>669</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Crownfield Infant School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/crownfield-infant-school"></td>
           <td><a href="/schools/havering/crownfield-infant-school">Crownfield Infant School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>352</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Crownfield Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="59.0"
+            data-url="https://londonschool.directory/schools/havering/crownfield-junior-school"></td>
           <td><a href="/schools/havering/crownfield-junior-school">Crownfield Junior School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>430</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Dame Tipping Church of England Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="77.0"
+            data-url="https://londonschool.directory/schools/havering/dame-tipping-church-of-england-primary-school"></td>
           <td><a href="/schools/havering/dame-tipping-church-of-england-primary-school">Dame Tipping Church of England Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>94</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Drapers' Academy"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="38.8"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/drapers-academy"></td>
           <td><a href="/schools/havering/drapers-academy">Drapers' Academy</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1206</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Drapers' Brookside Infant School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/drapers-brookside-infant-school"></td>
           <td><a href="/schools/havering/drapers-brookside-infant-school">Drapers' Brookside Infant School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>229</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Drapers' Brookside Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="62.0"
+            data-url="https://londonschool.directory/schools/havering/drapers-brookside-junior-school"></td>
           <td><a href="/schools/havering/drapers-brookside-junior-school">Drapers' Brookside Junior School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>238</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Drapers' Maylands Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="54.0"
+            data-url="https://londonschool.directory/schools/havering/drapers-maylands-primary-school"></td>
           <td><a href="/schools/havering/drapers-maylands-primary-school">Drapers' Maylands Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>361</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Drapers' Pyrgo Priory School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="58.0"
+            data-url="https://londonschool.directory/schools/havering/drapers-pyrgo-priory-school"></td>
           <td><a href="/schools/havering/drapers-pyrgo-priory-school">Drapers' Pyrgo Priory School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>320</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Edullect Academy Independent School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/edullect-academy-independent-school"></td>
           <td><a href="/schools/havering/edullect-academy-independent-school">Edullect Academy Independent School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>N/A</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Elm Park Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="59.0"
+            data-url="https://londonschool.directory/schools/havering/elm-park-primary-school"></td>
           <td><a href="/schools/havering/elm-park-primary-school">Elm Park Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>416</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Emerson Park Academy"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="44.7"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/emerson-park-academy"></td>
           <td><a href="/schools/havering/emerson-park-academy">Emerson Park Academy</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1034</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Engayne Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="67.0"
+            data-url="https://londonschool.directory/schools/havering/engayne-primary-school"></td>
           <td><a href="/schools/havering/engayne-primary-school">Engayne Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>587</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Gaynes School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="50.7"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/gaynes-school"></td>
           <td><a href="/schools/havering/gaynes-school">Gaynes School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>473</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Gidea Park Preparatory School and Nursery"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/gidea-park-preparatory-school-and-nursery"></td>
           <td><a href="/schools/havering/gidea-park-preparatory-school-and-nursery">Gidea Park Preparatory School and Nursery</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>168</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Gidea Park Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="86.0"
+            data-url="https://londonschool.directory/schools/havering/gidea-park-primary-school"></td>
           <td><a href="/schools/havering/gidea-park-primary-school">Gidea Park Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>458</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hacton Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="92.0"
+            data-url="https://londonschool.directory/schools/havering/hacton-primary-school"></td>
           <td><a href="/schools/havering/hacton-primary-school">Hacton Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>635</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hall Mead School"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="50.1"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/hall-mead-school"></td>
           <td><a href="/schools/havering/hall-mead-school">Hall Mead School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>1066</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Harold Court Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="49.0"
+            data-url="https://londonschool.directory/schools/havering/harold-court-primary-school"></td>
           <td><a href="/schools/havering/harold-court-primary-school">Harold Court Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>386</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Harold Wood Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="67.0"
+            data-url="https://londonschool.directory/schools/havering/harold-wood-primary-school"></td>
           <td><a href="/schools/havering/harold-wood-primary-school">Harold Wood Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>641</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Harris Academy Rainham"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="50.4"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/harris-academy-rainham"></td>
           <td><a href="/schools/havering/harris-academy-rainham">Harris Academy Rainham</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>901</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Harris Rainham Sixth Form"
+            data-ofsted="Not yet rated"
+            data-phase="16 plus"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/harris-rainham-sixth-form"></td>
           <td><a href="/schools/havering/harris-rainham-sixth-form">Harris Rainham Sixth Form</a></td>
           <td>16 plus</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>240</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Harrow Lodge Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="75.0"
+            data-url="https://londonschool.directory/schools/havering/harrow-lodge-primary-school"></td>
           <td><a href="/schools/havering/harrow-lodge-primary-school">Harrow Lodge Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>449</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hilldene Primary School"
+            data-ofsted="Requires improvement"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="64.0"
+            data-url="https://londonschool.directory/schools/havering/hilldene-primary-school"></td>
           <td><a href="/schools/havering/hilldene-primary-school">Hilldene Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
           <td>663</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hornchurch High School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="54.0"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/hornchurch-high-school"></td>
           <td><a href="/schools/havering/hornchurch-high-school">Hornchurch High School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>717</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hylands Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="75.0"
+            data-url="https://londonschool.directory/schools/havering/hylands-primary-school"></td>
           <td><a href="/schools/havering/hylands-primary-school">Hylands Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>656</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Immanuel School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8="51.3"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/immanuel-school"></td>
           <td><a href="/schools/havering/immanuel-school">Immanuel School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>110</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Koru Independent AP Academy"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8="3.4"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/koru-independent-ap-academy"></td>
           <td><a href="/schools/havering/koru-independent-ap-academy">Koru Independent AP Academy</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>45</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="La Salette Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="88.0"
+            data-url="https://londonschool.directory/schools/havering/la-salette-catholic-primary-school"></td>
           <td><a href="/schools/havering/la-salette-catholic-primary-school">La Salette Catholic Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>211</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Langtons Infant School & Nursery"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/langtons-infant-school-nursery"></td>
           <td><a href="/schools/havering/langtons-infant-school-nursery">Langtons Infant School & Nursery</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>198</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Langtons Junior Academy"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="71.0"
+            data-url="https://londonschool.directory/schools/havering/langtons-junior-academy"></td>
           <td><a href="/schools/havering/langtons-junior-academy">Langtons Junior Academy</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>221</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Lime Academy Forest Approach"
+            data-ofsted="Good"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/lime-academy-forest-approach"></td>
           <td><a href="/schools/havering/lime-academy-forest-approach">Lime Academy Forest Approach</a></td>
           <td>N/A</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>129</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Lime Academy Ravensbourne"
+            data-ofsted="Good"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/lime-academy-ravensbourne"></td>
           <td><a href="/schools/havering/lime-academy-ravensbourne">Lime Academy Ravensbourne</a></td>
           <td>N/A</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>86</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Marshalls Park Academy"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="42.9"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/marshalls-park-academy"></td>
           <td><a href="/schools/havering/marshalls-park-academy">Marshalls Park Academy</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1175</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Mead Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="42.0"
+            data-url="https://londonschool.directory/schools/havering/mead-primary-school"></td>
           <td><a href="/schools/havering/mead-primary-school">Mead Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>796</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Nelmes Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="90.0"
+            data-url="https://londonschool.directory/schools/havering/nelmes-primary-school"></td>
           <td><a href="/schools/havering/nelmes-primary-school">Nelmes Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>430</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Newtons Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="61.0"
+            data-url="https://londonschool.directory/schools/havering/newtons-primary-school"></td>
           <td><a href="/schools/havering/newtons-primary-school">Newtons Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>455</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="OA - Havering"
+            data-ofsted="Good"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/oa-havering"></td>
           <td><a href="/schools/havering/oa-havering">OA - Havering</a></td>
           <td>N/A</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>33</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Oakfields Preparatory School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/oakfields-preparatory-school"></td>
           <td><a href="/schools/havering/oakfields-preparatory-school">Oakfields Preparatory School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>218</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Oasis Academy Pinewood"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="72.0"
+            data-url="https://londonschool.directory/schools/havering/oasis-academy-pinewood"></td>
           <td><a href="/schools/havering/oasis-academy-pinewood">Oasis Academy Pinewood</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>369</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Park Primary Academy"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/park-primary-academy"></td>
           <td><a href="/schools/havering/park-primary-academy">Park Primary Academy</a></td>
           <td>Primary</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>N/A</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Parklands Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="69.0"
+            data-url="https://londonschool.directory/schools/havering/parklands-primary-school"></td>
           <td><a href="/schools/havering/parklands-primary-school">Parklands Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>905</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Parsonage Farm Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="52.0"
+            data-url="https://londonschool.directory/schools/havering/parsonage-farm-primary-school"></td>
           <td><a href="/schools/havering/parsonage-farm-primary-school">Parsonage Farm Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>559</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="R J Mitchell Primary School"
+            data-ofsted="Requires improvement"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="47.0"
+            data-url="https://londonschool.directory/schools/havering/r-j-mitchell-primary-school"></td>
           <td><a href="/schools/havering/r-j-mitchell-primary-school">R J Mitchell Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
           <td>301</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Rainham Village Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="66.0"
+            data-url="https://londonschool.directory/schools/havering/rainham-village-primary-school"></td>
           <td><a href="/schools/havering/rainham-village-primary-school">Rainham Village Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>464</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Redden Court School"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="47.4"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/redden-court-school"></td>
           <td><a href="/schools/havering/redden-court-school">Redden Court School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>1061</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Rise Park Infant School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/rise-park-infant-school"></td>
           <td><a href="/schools/havering/rise-park-infant-school">Rise Park Infant School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>296</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Rise Park Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="49.0"
+            data-url="https://londonschool.directory/schools/havering/rise-park-junior-school"></td>
           <td><a href="/schools/havering/rise-park-junior-school">Rise Park Junior School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>350</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Routes4Life Limited"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/routes4life-limited"></td>
           <td><a href="/schools/havering/routes4life-limited">Routes4Life Limited</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>N/A</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Sacred Heart of Mary Girls' School"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="62.2"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/sacred-heart-of-mary-girls-school"></td>
           <td><a href="/schools/havering/sacred-heart-of-mary-girls-school">Sacred Heart of Mary Girls' School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>829</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Sanders Draper"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="44.4"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/sanders-draper"></td>
           <td><a href="/schools/havering/sanders-draper">Sanders Draper</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>705</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Scargill Infant School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/scargill-infant-school"></td>
           <td><a href="/schools/havering/scargill-infant-school">Scargill Infant School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>231</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Scargill Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="75.0"
+            data-url="https://londonschool.directory/schools/havering/scargill-junior-school"></td>
           <td><a href="/schools/havering/scargill-junior-school">Scargill Junior School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>359</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Scotts Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="91.0"
+            data-url="https://londonschool.directory/schools/havering/scotts-primary-school"></td>
           <td><a href="/schools/havering/scotts-primary-school">Scotts Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>420</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Squirrels Heath Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="73.0"
+            data-url="https://londonschool.directory/schools/havering/squirrels-heath-primary-school"></td>
           <td><a href="/schools/havering/squirrels-heath-primary-school">Squirrels Heath Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>345</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Alban's Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="78.0"
+            data-url="https://londonschool.directory/schools/havering/st-albans-catholic-primary-school"></td>
           <td><a href="/schools/havering/st-albans-catholic-primary-school">St Alban's Catholic Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>208</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Edward's Church of England Academy"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="44.1"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/st-edwards-church-of-england-academy"></td>
           <td><a href="/schools/havering/st-edwards-church-of-england-academy">St Edward's Church of England Academy</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>848</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Edward's Church of England Voluntary Aided Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="66.0"
+            data-url="https://londonschool.directory/schools/havering/st-edwards-church-of-england-voluntary-aided-primary-school"></td>
           <td><a href="/schools/havering/st-edwards-church-of-england-voluntary-aided-primary-school">St Edward's Church of England Voluntary Aided Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>662</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Joseph's Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="82.0"
+            data-url="https://londonschool.directory/schools/havering/st-josephs-catholic-primary-school"></td>
           <td><a href="/schools/havering/st-josephs-catholic-primary-school">St Joseph's Catholic Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>411</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Mary's Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="62.0"
+            data-url="https://londonschool.directory/schools/havering/st-marys-catholic-primary-school"></td>
           <td><a href="/schools/havering/st-marys-catholic-primary-school">St Mary's Catholic Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>419</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Mary's Hare Park School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/st-marys-hare-park-school"></td>
           <td><a href="/schools/havering/st-marys-hare-park-school">St Mary's Hare Park School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>146</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Patrick's Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="65.0"
+            data-url="https://londonschool.directory/schools/havering/st-patricks-catholic-primary-school"></td>
           <td><a href="/schools/havering/st-patricks-catholic-primary-school">St Patrick's Catholic Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>406</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Peter's Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="75.0"
+            data-url="https://londonschool.directory/schools/havering/st-peters-catholic-primary-school"></td>
           <td><a href="/schools/havering/st-peters-catholic-primary-school">St Peter's Catholic Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>405</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Ursula's Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="81.0"
+            data-url="https://londonschool.directory/schools/havering/st-ursulas-catholic-primary-school"></td>
           <td><a href="/schools/havering/st-ursulas-catholic-primary-school">St Ursula's Catholic Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>439</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Suttons Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="76.0"
+            data-url="https://londonschool.directory/schools/havering/suttons-primary-school"></td>
           <td><a href="/schools/havering/suttons-primary-school">Suttons Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>466</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Bridge"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8="24.3"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/the-bridge"></td>
           <td><a href="/schools/havering/the-bridge">The Bridge</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>29</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Brittons Academy"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="39.5"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/the-brittons-academy"></td>
           <td><a href="/schools/havering/the-brittons-academy">The Brittons Academy</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>711</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Campion School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="52.8"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/the-campion-school"></td>
           <td><a href="/schools/havering/the-campion-school">The Campion School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1244</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Compass School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/the-compass-school"></td>
           <td><a href="/schools/havering/the-compass-school">The Compass School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>40</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Coopers' Company and Coborn School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="58.2"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/the-coopers-company-and-coborn-school"></td>
           <td><a href="/schools/havering/the-coopers-company-and-coborn-school">The Coopers' Company and Coborn School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1550</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Frances Bardsley Academy for Girls"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="51.4"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/the-frances-bardsley-academy-for-girls"></td>
           <td><a href="/schools/havering/the-frances-bardsley-academy-for-girls">The Frances Bardsley Academy for Girls</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1393</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The James Oglethorpe Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="61.0"
+            data-url="https://londonschool.directory/schools/havering/the-james-oglethorpe-primary-school"></td>
           <td><a href="/schools/havering/the-james-oglethorpe-primary-school">The James Oglethorpe Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>396</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Mawney Foundation School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="71.0"
+            data-url="https://londonschool.directory/schools/havering/the-mawney-foundation-school"></td>
           <td><a href="/schools/havering/the-mawney-foundation-school">The Mawney Foundation School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>658</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Royal Liberty School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="51.0"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/the-royal-liberty-school"></td>
           <td><a href="/schools/havering/the-royal-liberty-school">The Royal Liberty School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>738</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Towers Infant School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/towers-infant-school"></td>
           <td><a href="/schools/havering/towers-infant-school">Towers Infant School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>314</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Towers Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="80.0"
+            data-url="https://londonschool.directory/schools/havering/towers-junior-school"></td>
           <td><a href="/schools/havering/towers-junior-school">Towers Junior School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>352</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Upminster Infant School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/upminster-infant-school"></td>
           <td><a href="/schools/havering/upminster-infant-school">Upminster Infant School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>267</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Upminster Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="82.0"
+            data-url="https://londonschool.directory/schools/havering/upminster-junior-school"></td>
           <td><a href="/schools/havering/upminster-junior-school">Upminster Junior School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>362</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Whybridge Infant School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/havering/whybridge-infant-school"></td>
           <td><a href="/schools/havering/whybridge-infant-school">Whybridge Infant School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>270</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Whybridge Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="74.0"
+            data-url="https://londonschool.directory/schools/havering/whybridge-junior-school"></td>
           <td><a href="/schools/havering/whybridge-junior-school">Whybridge Junior School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
@@ -605,6 +1265,71 @@
 </div>
 <footer><a href="/">London Schools Explorer</a> &mdash; helping families find the right school in London.</footer>
 <script defer src="/_vercel/insights/script.js"></script>
+<script>
+(function(){
+  var borough="Havering", boroughUrl="https://londonschool.directory/schools/havering";
+  var outstanding=12, total=92;
+
+  // Borough-level share
+  window.shareBoroughWhatsApp=function(){
+    var t='🏙️ *Schools in '+borough+', London*\n'+
+        '📊 '+total+' schools · '+outstanding+' Outstanding\n\n'+
+        '🔗 '+boroughUrl;
+    window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank');
+  };
+  window.shareBoroughEmail=function(){
+    var s='Schools in '+borough+' — London Schools Explorer';
+    var b='Schools in '+borough+', London\n'+
+        total+' schools, '+outstanding+' rated Outstanding by Ofsted\n\n'+
+        'Browse them here: '+boroughUrl;
+    window.location.href='mailto:?subject='+encodeURIComponent(s)+'&body='+encodeURIComponent(b);
+  };
+
+  // Shortlist comparison share
+  function getSelected(){
+    return Array.from(document.querySelectorAll('.sch-sel:checked')).map(function(cb){
+      return {name:cb.dataset.name,ofsted:cb.dataset.ofsted,phase:cb.dataset.phase,
+               att8:cb.dataset.att8,ks2:cb.dataset.ks2,url:cb.dataset.url};
+    });
+  }
+  function updateBar(){
+    var sel=getSelected();
+    var bar=document.getElementById('cmp-bar');
+    document.getElementById('cmp-count').textContent=sel.length+' school'+(sel.length===1?'':' s')+' selected';
+    bar.style.display=sel.length>0?'flex':'none';
+  }
+  document.querySelectorAll('.sch-sel').forEach(function(cb){ cb.onchange=updateBar; });
+
+  function buildCompareText(sel,markdown){
+    var lines=['📋 *My '+borough+' school shortlist*',''];
+    sel.forEach(function(s,i){
+      lines.push((i+1)+'. '+(markdown?'*':'')+s.name+(markdown?'*':''));
+      lines.push('   ⭐ Ofsted: '+s.ofsted+(s.phase?' · '+s.phase:''));
+      if(s.att8)lines.push('   📊 Attainment 8: '+s.att8);
+      if(s.ks2)lines.push('   📝 KS2 expected: '+s.ks2+'%');
+      lines.push('   🔗 '+s.url);
+      lines.push('');
+    });
+    lines.push('via London Schools Explorer — '+boroughUrl);
+    return lines.join('\n');
+  }
+  window.shareCompareWhatsApp=function(){
+    var sel=getSelected();
+    if(!sel.length)return;
+    window.open('https://wa.me/?text='+encodeURIComponent(buildCompareText(sel,true)),'_blank');
+  };
+  window.shareCompareEmail=function(){
+    var sel=getSelected();
+    if(!sel.length)return;
+    var subj='My '+borough+' school shortlist — London Schools Explorer';
+    window.location.href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(buildCompareText(sel,false));
+  };
+  window.clearSelection=function(){
+    document.querySelectorAll('.sch-sel:checked').forEach(function(cb){cb.checked=false;});
+    updateBar();
+  };
+})();
+</script>
 </body>
 </html><style>
   #fb-btn{position:fixed;bottom:24px;right:24px;z-index:9999;background:#1A1A2E;color:#D4A843;border:2px solid #D4A843;border-radius:24px;padding:10px 18px;font-family:system-ui,sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 4px 16px rgba(0,0,0,0.25);transition:all 0.2s;}

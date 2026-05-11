@@ -138,429 +138,1040 @@
 </div>
 </div>
 
+  <!-- Borough share buttons -->
+  <div style="display:flex;gap:10px;margin:16px 0 8px;flex-wrap:wrap;align-items:center;">
+    <span style="font-size:13px;color:#555;font-weight:600;">Share Waltham Forest schools:</span>
+    <button onclick="shareBoroughWhatsApp()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 WhatsApp</button>
+    <button onclick="shareBoroughEmail()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#1565C0;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Email</button>
+    <span style="font-size:12px;color:#999;margin-left:4px;">Or tick schools below to share a shortlist</span>
+  </div>
+
+  <!-- Sticky compare bar (appears when schools are ticked) -->
+  <div id="cmp-bar" style="display:none;position:sticky;top:0;z-index:100;background:#1A1A2E;color:#fff;padding:12px 16px;border-radius:10px;margin-bottom:12px;display:none;align-items:center;gap:10px;flex-wrap:wrap;">
+    <span id="cmp-count" style="font-weight:700;font-size:14px;">0 schools selected</span>
+    <button onclick="shareCompareWhatsApp()" style="padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 Share via WhatsApp</button>
+    <button onclick="shareCompareEmail()" style="padding:8px 16px;background:#fff;color:#1A1A2E;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Share via Email</button>
+    <button onclick="clearSelection()" style="padding:8px 12px;background:transparent;color:#aaa;border:1px solid #555;border-radius:8px;font-size:12px;cursor:pointer;">✕ Clear</button>
+  </div>
+
   <table>
-    <thead><tr><th>School</th><th>Phase</th><th>Ofsted</th><th>Pupils</th></tr></thead>
+    <thead><tr><th style="width:36px"></th><th>School</th><th>Phase</th><th>Ofsted</th><th>Pupils</th></tr></thead>
     <tbody><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Acacia Nursery"
+            data-ofsted="Outstanding"
+            data-phase="Nursery"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/waltham-forest/acacia-nursery"></td>
           <td><a href="/schools/waltham-forest/acacia-nursery">Acacia Nursery</a></td>
           <td>Nursery</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>116</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Ainslie Wood Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="89.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/ainslie-wood-primary-school"></td>
           <td><a href="/schools/waltham-forest/ainslie-wood-primary-school">Ainslie Wood Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>437</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Barclay Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="89.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/barclay-primary-school"></td>
           <td><a href="/schools/waltham-forest/barclay-primary-school">Barclay Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>1265</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Barn Croft Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="40.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/barn-croft-primary-school"></td>
           <td><a href="/schools/waltham-forest/barn-croft-primary-school">Barn Croft Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>183</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Belmont Park School"
+            data-ofsted="Good"
+            data-phase="N/A"
+            data-att8="3.8"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/waltham-forest/belmont-park-school"></td>
           <td><a href="/schools/waltham-forest/belmont-park-school">Belmont Park School</a></td>
           <td>N/A</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>45</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Big Creative Academy"
+            data-ofsted="Not yet rated"
+            data-phase="16 plus"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/waltham-forest/big-creative-academy"></td>
           <td><a href="/schools/waltham-forest/big-creative-academy">Big Creative Academy</a></td>
           <td>16 plus</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>0</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Big Creative Independent School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8="8.2"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/waltham-forest/big-creative-independent-school"></td>
           <td><a href="/schools/waltham-forest/big-creative-independent-school">Big Creative Independent School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>12</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Burnside Secondary PRU"
+            data-ofsted="Good"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/waltham-forest/burnside-secondary-pru"></td>
           <td><a href="/schools/waltham-forest/burnside-secondary-pru">Burnside Secondary PRU</a></td>
           <td>N/A</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>23</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Buxton School"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8="45.2"
+            data-ks2="51.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/buxton-school"></td>
           <td><a href="/schools/waltham-forest/buxton-school">Buxton School</a></td>
           <td>All-through</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1154</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Chapel End Infant School and Early Years Centre"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/waltham-forest/chapel-end-infant-school-and-early-years-centre"></td>
           <td><a href="/schools/waltham-forest/chapel-end-infant-school-and-early-years-centre">Chapel End Infant School and Early Years Centre</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>294</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Chapel End Junior Academy"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="57.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/chapel-end-junior-academy"></td>
           <td><a href="/schools/waltham-forest/chapel-end-junior-academy">Chapel End Junior Academy</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>248</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Chase Lane Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="82.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/chase-lane-primary-school"></td>
           <td><a href="/schools/waltham-forest/chase-lane-primary-school">Chase Lane Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>676</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Chingford CofE Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="74.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/chingford-cofe-primary-school"></td>
           <td><a href="/schools/waltham-forest/chingford-cofe-primary-school">Chingford CofE Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>418</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Chingford Foundation School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="47.1"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/waltham-forest/chingford-foundation-school"></td>
           <td><a href="/schools/waltham-forest/chingford-foundation-school">Chingford Foundation School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1401</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Church Hill Nursery School"
+            data-ofsted="Outstanding"
+            data-phase="Nursery"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/waltham-forest/church-hill-nursery-school"></td>
           <td><a href="/schools/waltham-forest/church-hill-nursery-school">Church Hill Nursery School</a></td>
           <td>Nursery</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>93</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Connaught School for Girls"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="50.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/waltham-forest/connaught-school-for-girls"></td>
           <td><a href="/schools/waltham-forest/connaught-school-for-girls">Connaught School for Girls</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>603</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Coppermill Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="86.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/coppermill-primary-school"></td>
           <td><a href="/schools/waltham-forest/coppermill-primary-school">Coppermill Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>183</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Davies Lane Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="79.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/davies-lane-primary-school"></td>
           <td><a href="/schools/waltham-forest/davies-lane-primary-school">Davies Lane Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>956</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Dawlish Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="72.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/dawlish-primary-school"></td>
           <td><a href="/schools/waltham-forest/dawlish-primary-school">Dawlish Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>180</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Downsell Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="68.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/downsell-primary-school"></td>
           <td><a href="/schools/waltham-forest/downsell-primary-school">Downsell Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>438</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Eden Girls' School, Waltham Forest"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="63.5"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/waltham-forest/eden-girls-school-waltham-forest"></td>
           <td><a href="/schools/waltham-forest/eden-girls-school-waltham-forest">Eden Girls' School, Waltham Forest</a></td>
           <td>Secondary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>620</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Edinburgh Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="71.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/edinburgh-primary-school"></td>
           <td><a href="/schools/waltham-forest/edinburgh-primary-school">Edinburgh Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>182</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Emmanuel Community School"
+            data-ofsted="Requires improvement"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="55.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/emmanuel-community-school"></td>
           <td><a href="/schools/waltham-forest/emmanuel-community-school">Emmanuel Community School</a></td>
           <td>Primary</td>
           <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
           <td>135</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Forest School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8="14.7"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/waltham-forest/forest-school"></td>
           <td><a href="/schools/waltham-forest/forest-school">Forest School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>1590</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Frederick Bremer School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="46.7"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/waltham-forest/frederick-bremer-school"></td>
           <td><a href="/schools/waltham-forest/frederick-bremer-school">Frederick Bremer School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>881</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="George Mitchell School"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8="47.0"
+            data-ks2="59.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/george-mitchell-school"></td>
           <td><a href="/schools/waltham-forest/george-mitchell-school">George Mitchell School</a></td>
           <td>All-through</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1004</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="George Tomlinson Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="64.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/george-tomlinson-primary-school"></td>
           <td><a href="/schools/waltham-forest/george-tomlinson-primary-school">George Tomlinson Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>537</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Greenleaf Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="67.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/greenleaf-primary-school"></td>
           <td><a href="/schools/waltham-forest/greenleaf-primary-school">Greenleaf Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>455</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Gwyn Jones Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="88.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/gwyn-jones-primary-school"></td>
           <td><a href="/schools/waltham-forest/gwyn-jones-primary-school">Gwyn Jones Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>429</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Handsworth Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="72.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/handsworth-primary-school"></td>
           <td><a href="/schools/waltham-forest/handsworth-primary-school">Handsworth Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>449</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hawkswood (Therapeutic)"
+            data-ofsted="Good"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/waltham-forest/hawkswood-therapeutic"></td>
           <td><a href="/schools/waltham-forest/hawkswood-therapeutic">Hawkswood (Therapeutic)</a></td>
           <td>N/A</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>0</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hawkswood Primary PRU"
+            data-ofsted="Outstanding"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/waltham-forest/hawkswood-primary-pru"></td>
           <td><a href="/schools/waltham-forest/hawkswood-primary-pru">Hawkswood Primary PRU</a></td>
           <td>N/A</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>0</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Heathcote School & Science College"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="46.1"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/waltham-forest/heathcote-school-science-college"></td>
           <td><a href="/schools/waltham-forest/heathcote-school-science-college">Heathcote School & Science College</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1116</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Henry Maynard Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="70.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/henry-maynard-primary-school"></td>
           <td><a href="/schools/waltham-forest/henry-maynard-primary-school">Henry Maynard Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>756</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Highams Park School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="47.5"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/waltham-forest/highams-park-school"></td>
           <td><a href="/schools/waltham-forest/highams-park-school">Highams Park School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1547</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hillyfield Primary Academy"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="80.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/hillyfield-primary-academy"></td>
           <td><a href="/schools/waltham-forest/hillyfield-primary-academy">Hillyfield Primary Academy</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1194</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Holy Family Catholic School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="45.5"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/waltham-forest/holy-family-catholic-school"></td>
           <td><a href="/schools/waltham-forest/holy-family-catholic-school">Holy Family Catholic School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1211</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Joseph Clarke School"
+            data-ofsted="Good"
+            data-phase="N/A"
+            data-att8="4.0"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/waltham-forest/joseph-clarke-school"></td>
           <td><a href="/schools/waltham-forest/joseph-clarke-school">Joseph Clarke School</a></td>
           <td>N/A</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>109</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Kelmscott School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="43.7"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/waltham-forest/kelmscott-school"></td>
           <td><a href="/schools/waltham-forest/kelmscott-school">Kelmscott School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1097</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Lammas School"
+            data-ofsted="Requires improvement"
+            data-phase="Secondary"
+            data-att8="36.3"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/waltham-forest/lammas-school"></td>
           <td><a href="/schools/waltham-forest/lammas-school">Lammas School</a></td>
           <td>Secondary</td>
           <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
           <td>574</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Lantern of Knowledge Secondary School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8="56.5"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/waltham-forest/lantern-of-knowledge-secondary-school"></td>
           <td><a href="/schools/waltham-forest/lantern-of-knowledge-secondary-school">Lantern of Knowledge Secondary School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>100</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Leytonstone School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="49.0"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/waltham-forest/leytonstone-school"></td>
           <td><a href="/schools/waltham-forest/leytonstone-school">Leytonstone School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1029</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Lime Academy Hornbeam"
+            data-ofsted="Good"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/waltham-forest/lime-academy-hornbeam"></td>
           <td><a href="/schools/waltham-forest/lime-academy-hornbeam">Lime Academy Hornbeam</a></td>
           <td>N/A</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>290</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Lime Academy Larkswood"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="85.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/lime-academy-larkswood"></td>
           <td><a href="/schools/waltham-forest/lime-academy-larkswood">Lime Academy Larkswood</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>585</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Longshaw Primary Academy"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="59.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/longshaw-primary-academy"></td>
           <td><a href="/schools/waltham-forest/longshaw-primary-academy">Longshaw Primary Academy</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>217</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Low Hall Nursery School"
+            data-ofsted="Outstanding"
+            data-phase="Nursery"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/waltham-forest/low-hall-nursery-school"></td>
           <td><a href="/schools/waltham-forest/low-hall-nursery-school">Low Hall Nursery School</a></td>
           <td>Nursery</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>55</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Mayville Academy"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="79.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/mayville-academy"></td>
           <td><a href="/schools/waltham-forest/mayville-academy">Mayville Academy</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>311</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Mission Grove Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="55.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/mission-grove-primary-school"></td>
           <td><a href="/schools/waltham-forest/mission-grove-primary-school">Mission Grove Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>844</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Newport School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="82.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/newport-school"></td>
           <td><a href="/schools/waltham-forest/newport-school">Newport School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>828</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Noor Ul Islam Primary School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/waltham-forest/noor-ul-islam-primary-school"></td>
           <td><a href="/schools/waltham-forest/noor-ul-islam-primary-school">Noor Ul Islam Primary School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>168</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Norlington School and 6th Form"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="48.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/waltham-forest/norlington-school-and-6th-form"></td>
           <td><a href="/schools/waltham-forest/norlington-school-and-6th-form">Norlington School and 6th Form</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>902</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Normanhurst School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8="55.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/waltham-forest/normanhurst-school"></td>
           <td><a href="/schools/waltham-forest/normanhurst-school">Normanhurst School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>246</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Oakhill Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="63.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/oakhill-primary-school"></td>
           <td><a href="/schools/waltham-forest/oakhill-primary-school">Oakhill Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>196</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Our Lady and St George's Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="48.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/our-lady-and-st-georges-catholic-primary-school"></td>
           <td><a href="/schools/waltham-forest/our-lady-and-st-georges-catholic-primary-school">Our Lady and St George's Catholic Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>328</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Parkside Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="68.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/parkside-primary-school"></td>
           <td><a href="/schools/waltham-forest/parkside-primary-school">Parkside Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>666</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Riverley Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="98.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/riverley-primary-school"></td>
           <td><a href="/schools/waltham-forest/riverley-primary-school">Riverley Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>450</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Roger Ascham Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="90.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/roger-ascham-primary-school"></td>
           <td><a href="/schools/waltham-forest/roger-ascham-primary-school">Roger Ascham Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>407</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Salisbury Manor Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="62.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/salisbury-manor-primary-school"></td>
           <td><a href="/schools/waltham-forest/salisbury-manor-primary-school">Salisbury Manor Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>301</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Selwyn Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="84.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/selwyn-primary-school"></td>
           <td><a href="/schools/waltham-forest/selwyn-primary-school">Selwyn Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>708</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="South Chingford Foundation School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="32.8"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/waltham-forest/south-chingford-foundation-school"></td>
           <td><a href="/schools/waltham-forest/south-chingford-foundation-school">South Chingford Foundation School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>617</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="South Grove Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="86.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/south-grove-primary-school"></td>
           <td><a href="/schools/waltham-forest/south-grove-primary-school">South Grove Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>460</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Joseph's Catholic Infant School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/waltham-forest/st-josephs-catholic-infant-school"></td>
           <td><a href="/schools/waltham-forest/st-josephs-catholic-infant-school">St Joseph's Catholic Infant School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>128</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Joseph's Catholic Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="75.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/st-josephs-catholic-junior-school"></td>
           <td><a href="/schools/waltham-forest/st-josephs-catholic-junior-school">St Joseph's Catholic Junior School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>125</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Mary's Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="82.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/st-marys-catholic-primary-school"></td>
           <td><a href="/schools/waltham-forest/st-marys-catholic-primary-school">St Mary's Catholic Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>209</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Mary's CofE Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="94.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/st-marys-cofe-primary-school"></td>
           <td><a href="/schools/waltham-forest/st-marys-cofe-primary-school">St Mary's CofE Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>578</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Patrick's Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="63.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/st-patricks-catholic-primary-school"></td>
           <td><a href="/schools/waltham-forest/st-patricks-catholic-primary-school">St Patrick's Catholic Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>382</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Saviour's Church of England Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="89.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/st-saviours-church-of-england-primary-school"></td>
           <td><a href="/schools/waltham-forest/st-saviours-church-of-england-primary-school">St Saviour's Church of England Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>336</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Stoneydown Park School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="79.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/stoneydown-park-school"></td>
           <td><a href="/schools/waltham-forest/stoneydown-park-school">Stoneydown Park School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>611</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Sybourn Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="88.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/sybourn-primary-school"></td>
           <td><a href="/schools/waltham-forest/sybourn-primary-school">Sybourn Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>516</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Jenny Hammond Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="69.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/the-jenny-hammond-primary-school"></td>
           <td><a href="/schools/waltham-forest/the-jenny-hammond-primary-school">The Jenny Hammond Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>380</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Winns Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="78.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/the-winns-primary-school"></td>
           <td><a href="/schools/waltham-forest/the-winns-primary-school">The Winns Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>626</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Woodside Primary Academy"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="72.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/the-woodside-primary-academy"></td>
           <td><a href="/schools/waltham-forest/the-woodside-primary-academy">The Woodside Primary Academy</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>1285</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Thomas Gamuel Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="78.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/thomas-gamuel-primary-school"></td>
           <td><a href="/schools/waltham-forest/thomas-gamuel-primary-school">Thomas Gamuel Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>347</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Thorpe Hall Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="86.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/thorpe-hall-primary-school"></td>
           <td><a href="/schools/waltham-forest/thorpe-hall-primary-school">Thorpe Hall Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>362</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Walthamstow Academy"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="49.2"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/waltham-forest/walthamstow-academy"></td>
           <td><a href="/schools/waltham-forest/walthamstow-academy">Walthamstow Academy</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1071</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Walthamstow Montessori School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/waltham-forest/walthamstow-montessori-school"></td>
           <td><a href="/schools/waltham-forest/walthamstow-montessori-school">Walthamstow Montessori School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>109</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Walthamstow Primary Academy"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="67.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/walthamstow-primary-academy"></td>
           <td><a href="/schools/waltham-forest/walthamstow-primary-academy">Walthamstow Primary Academy</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>171</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Walthamstow School for Girls"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="60.0"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/waltham-forest/walthamstow-school-for-girls"></td>
           <td><a href="/schools/waltham-forest/walthamstow-school-for-girls">Walthamstow School for Girls</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>890</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Whitefield School"
+            data-ofsted="Good"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/waltham-forest/whitefield-school"></td>
           <td><a href="/schools/waltham-forest/whitefield-school">Whitefield School</a></td>
           <td>N/A</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>372</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Whitehall Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="74.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/whitehall-primary-school"></td>
           <td><a href="/schools/waltham-forest/whitehall-primary-school">Whitehall Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>443</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Whittingham Primary Academy"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="69.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/whittingham-primary-academy"></td>
           <td><a href="/schools/waltham-forest/whittingham-primary-academy">Whittingham Primary Academy</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>363</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Willow Brook Primary School Academy"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="100.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/willow-brook-primary-school-academy"></td>
           <td><a href="/schools/waltham-forest/willow-brook-primary-school-academy">Willow Brook Primary School Academy</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>664</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Willowfield School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="46.1"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/waltham-forest/willowfield-school"></td>
           <td><a href="/schools/waltham-forest/willowfield-school">Willowfield School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1004</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Woodford Green Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="86.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/woodford-green-primary-school"></td>
           <td><a href="/schools/waltham-forest/woodford-green-primary-school">Woodford Green Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>229</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Yardley Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="93.0"
+            data-url="https://londonschool.directory/schools/waltham-forest/yardley-primary-school"></td>
           <td><a href="/schools/waltham-forest/yardley-primary-school">Yardley Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
@@ -570,6 +1181,71 @@
 </div>
 <footer><a href="/">London Schools Explorer</a> &mdash; helping families find the right school in London.</footer>
 <script defer src="/_vercel/insights/script.js"></script>
+<script>
+(function(){
+  var borough="Waltham Forest", boroughUrl="https://londonschool.directory/schools/waltham-forest";
+  var outstanding=19, total=85;
+
+  // Borough-level share
+  window.shareBoroughWhatsApp=function(){
+    var t='🏙️ *Schools in '+borough+', London*\n'+
+        '📊 '+total+' schools · '+outstanding+' Outstanding\n\n'+
+        '🔗 '+boroughUrl;
+    window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank');
+  };
+  window.shareBoroughEmail=function(){
+    var s='Schools in '+borough+' — London Schools Explorer';
+    var b='Schools in '+borough+', London\n'+
+        total+' schools, '+outstanding+' rated Outstanding by Ofsted\n\n'+
+        'Browse them here: '+boroughUrl;
+    window.location.href='mailto:?subject='+encodeURIComponent(s)+'&body='+encodeURIComponent(b);
+  };
+
+  // Shortlist comparison share
+  function getSelected(){
+    return Array.from(document.querySelectorAll('.sch-sel:checked')).map(function(cb){
+      return {name:cb.dataset.name,ofsted:cb.dataset.ofsted,phase:cb.dataset.phase,
+               att8:cb.dataset.att8,ks2:cb.dataset.ks2,url:cb.dataset.url};
+    });
+  }
+  function updateBar(){
+    var sel=getSelected();
+    var bar=document.getElementById('cmp-bar');
+    document.getElementById('cmp-count').textContent=sel.length+' school'+(sel.length===1?'':' s')+' selected';
+    bar.style.display=sel.length>0?'flex':'none';
+  }
+  document.querySelectorAll('.sch-sel').forEach(function(cb){ cb.onchange=updateBar; });
+
+  function buildCompareText(sel,markdown){
+    var lines=['📋 *My '+borough+' school shortlist*',''];
+    sel.forEach(function(s,i){
+      lines.push((i+1)+'. '+(markdown?'*':'')+s.name+(markdown?'*':''));
+      lines.push('   ⭐ Ofsted: '+s.ofsted+(s.phase?' · '+s.phase:''));
+      if(s.att8)lines.push('   📊 Attainment 8: '+s.att8);
+      if(s.ks2)lines.push('   📝 KS2 expected: '+s.ks2+'%');
+      lines.push('   🔗 '+s.url);
+      lines.push('');
+    });
+    lines.push('via London Schools Explorer — '+boroughUrl);
+    return lines.join('\n');
+  }
+  window.shareCompareWhatsApp=function(){
+    var sel=getSelected();
+    if(!sel.length)return;
+    window.open('https://wa.me/?text='+encodeURIComponent(buildCompareText(sel,true)),'_blank');
+  };
+  window.shareCompareEmail=function(){
+    var sel=getSelected();
+    if(!sel.length)return;
+    var subj='My '+borough+' school shortlist — London Schools Explorer';
+    window.location.href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(buildCompareText(sel,false));
+  };
+  window.clearSelection=function(){
+    document.querySelectorAll('.sch-sel:checked').forEach(function(cb){cb.checked=false;});
+    updateBar();
+  };
+})();
+</script>
 </body>
 </html><style>
   #fb-btn{position:fixed;bottom:24px;right:24px;z-index:9999;background:#1A1A2E;color:#D4A843;border:2px solid #D4A843;border-radius:24px;padding:10px 18px;font-family:system-ui,sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 4px 16px rgba(0,0,0,0.25);transition:all 0.2s;}

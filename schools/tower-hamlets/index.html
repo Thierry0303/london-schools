@@ -138,559 +138,1352 @@
 </div>
 </div>
 
+  <!-- Borough share buttons -->
+  <div style="display:flex;gap:10px;margin:16px 0 8px;flex-wrap:wrap;align-items:center;">
+    <span style="font-size:13px;color:#555;font-weight:600;">Share Tower Hamlets schools:</span>
+    <button onclick="shareBoroughWhatsApp()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 WhatsApp</button>
+    <button onclick="shareBoroughEmail()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#1565C0;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Email</button>
+    <span style="font-size:12px;color:#999;margin-left:4px;">Or tick schools below to share a shortlist</span>
+  </div>
+
+  <!-- Sticky compare bar (appears when schools are ticked) -->
+  <div id="cmp-bar" style="display:none;position:sticky;top:0;z-index:100;background:#1A1A2E;color:#fff;padding:12px 16px;border-radius:10px;margin-bottom:12px;display:none;align-items:center;gap:10px;flex-wrap:wrap;">
+    <span id="cmp-count" style="font-weight:700;font-size:14px;">0 schools selected</span>
+    <button onclick="shareCompareWhatsApp()" style="padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 Share via WhatsApp</button>
+    <button onclick="shareCompareEmail()" style="padding:8px 16px;background:#fff;color:#1A1A2E;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Share via Email</button>
+    <button onclick="clearSelection()" style="padding:8px 12px;background:transparent;color:#aaa;border:1px solid #555;border-radius:8px;font-size:12px;cursor:pointer;">✕ Clear</button>
+  </div>
+
   <table>
-    <thead><tr><th>School</th><th>Phase</th><th>Ofsted</th><th>Pupils</th></tr></thead>
+    <thead><tr><th style="width:36px"></th><th>School</th><th>Phase</th><th>Ofsted</th><th>Pupils</th></tr></thead>
     <tbody><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Al-Mizan School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/al-mizan-school"></td>
           <td><a href="/schools/tower-hamlets/al-mizan-school">Al-Mizan School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>111</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Alice Model Nursery School"
+            data-ofsted="Outstanding"
+            data-phase="Nursery"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/alice-model-nursery-school"></td>
           <td><a href="/schools/tower-hamlets/alice-model-nursery-school">Alice Model Nursery School</a></td>
           <td>Nursery</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>61</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Arnhem Wharf Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="61.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/arnhem-wharf-primary-school"></td>
           <td><a href="/schools/tower-hamlets/arnhem-wharf-primary-school">Arnhem Wharf Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>511</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Bangabandhu Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="50.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/bangabandhu-primary-school"></td>
           <td><a href="/schools/tower-hamlets/bangabandhu-primary-school">Bangabandhu Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>335</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Beatrice Tate School"
+            data-ofsted="Outstanding"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/beatrice-tate-school"></td>
           <td><a href="/schools/tower-hamlets/beatrice-tate-school">Beatrice Tate School</a></td>
           <td>N/A</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>127</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Ben Jonson Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="60.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/ben-jonson-primary-school"></td>
           <td><a href="/schools/tower-hamlets/ben-jonson-primary-school">Ben Jonson Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>631</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Bigland Green Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="80.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/bigland-green-primary-school"></td>
           <td><a href="/schools/tower-hamlets/bigland-green-primary-school">Bigland Green Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>475</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Bishop Challoner Catholic School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="44.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/bishop-challoner-catholic-school"></td>
           <td><a href="/schools/tower-hamlets/bishop-challoner-catholic-school">Bishop Challoner Catholic School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1034</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Blue Gate Fields Infants' School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/blue-gate-fields-infants-school"></td>
           <td><a href="/schools/tower-hamlets/blue-gate-fields-infants-school">Blue Gate Fields Infants' School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>328</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Blue Gate Fields Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="85.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/blue-gate-fields-junior-school"></td>
           <td><a href="/schools/tower-hamlets/blue-gate-fields-junior-school">Blue Gate Fields Junior School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>352</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Bonner Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="65.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/bonner-primary-school"></td>
           <td><a href="/schools/tower-hamlets/bonner-primary-school">Bonner Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>704</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Bow School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="43.2"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/bow-school"></td>
           <td><a href="/schools/tower-hamlets/bow-school">Bow School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1173</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Bowden House School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8="11.1"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/bowden-house-school"></td>
           <td><a href="/schools/tower-hamlets/bowden-house-school">Bowden House School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>38</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Brick Lane School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/brick-lane-school"></td>
           <td><a href="/schools/tower-hamlets/brick-lane-school">Brick Lane School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>68</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Buttercup Primary School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/buttercup-primary-school"></td>
           <td><a href="/schools/tower-hamlets/buttercup-primary-school">Buttercup Primary School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>113</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Bygrove Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="93.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/bygrove-primary-school"></td>
           <td><a href="/schools/tower-hamlets/bygrove-primary-school">Bygrove Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>249</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Canary Wharf College Crossharbour"
+            data-ofsted="Requires improvement"
+            data-phase="Secondary"
+            data-att8="52.9"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/canary-wharf-college-crossharbour"></td>
           <td><a href="/schools/tower-hamlets/canary-wharf-college-crossharbour">Canary Wharf College Crossharbour</a></td>
           <td>Secondary</td>
           <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
           <td>462</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Canary Wharf College, East Ferry"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="82.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/canary-wharf-college-east-ferry"></td>
           <td><a href="/schools/tower-hamlets/canary-wharf-college-east-ferry">Canary Wharf College, East Ferry</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>306</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Canary Wharf College, Glenworth"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="85.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/canary-wharf-college-glenworth"></td>
           <td><a href="/schools/tower-hamlets/canary-wharf-college-glenworth">Canary Wharf College, Glenworth</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>302</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Cayley Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="87.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/cayley-primary-school"></td>
           <td><a href="/schools/tower-hamlets/cayley-primary-school">Cayley Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>432</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Central Foundation Girls' School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="54.3"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/central-foundation-girls-school"></td>
           <td><a href="/schools/tower-hamlets/central-foundation-girls-school">Central Foundation Girls' School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1541</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Childrens House Nursery School"
+            data-ofsted="Outstanding"
+            data-phase="Nursery"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/childrens-house-nursery-school"></td>
           <td><a href="/schools/tower-hamlets/childrens-house-nursery-school">Childrens House Nursery School</a></td>
           <td>Nursery</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>123</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Chisenhale Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="70.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/chisenhale-primary-school"></td>
           <td><a href="/schools/tower-hamlets/chisenhale-primary-school">Chisenhale Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>321</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Christ Church CofE School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="68.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/christ-church-cofe-school"></td>
           <td><a href="/schools/tower-hamlets/christ-church-cofe-school">Christ Church CofE School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>153</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Columbia Market Nursery School"
+            data-ofsted="Good"
+            data-phase="Nursery"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/columbia-market-nursery-school"></td>
           <td><a href="/schools/tower-hamlets/columbia-market-nursery-school">Columbia Market Nursery School</a></td>
           <td>Nursery</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>52</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Columbia Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="88.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/columbia-primary-school"></td>
           <td><a href="/schools/tower-hamlets/columbia-primary-school">Columbia Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>427</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Cubitt Town Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="67.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/cubitt-town-primary-school"></td>
           <td><a href="/schools/tower-hamlets/cubitt-town-primary-school">Cubitt Town Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>694</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Culloden Primary - A Paradigm Academy"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="81.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/culloden-primary-a-paradigm-academy"></td>
           <td><a href="/schools/tower-hamlets/culloden-primary-a-paradigm-academy">Culloden Primary - A Paradigm Academy</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>626</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Cyril Jackson Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="69.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/cyril-jackson-primary-school"></td>
           <td><a href="/schools/tower-hamlets/cyril-jackson-primary-school">Cyril Jackson Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>448</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Daffodil Preparatory School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/daffodil-preparatory-school"></td>
           <td><a href="/schools/tower-hamlets/daffodil-preparatory-school">Daffodil Preparatory School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>21</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Darul Hadis Latifiah"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8="52.7"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/darul-hadis-latifiah"></td>
           <td><a href="/schools/tower-hamlets/darul-hadis-latifiah">Darul Hadis Latifiah</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>132</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Date Palm Primary"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/date-palm-primary"></td>
           <td><a href="/schools/tower-hamlets/date-palm-primary">Date Palm Primary</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>233</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="East London Arts & Music"
+            data-ofsted="Not yet rated"
+            data-phase="16 plus"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/east-london-arts-music"></td>
           <td><a href="/schools/tower-hamlets/east-london-arts-music">East London Arts & Music</a></td>
           <td>16 plus</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>275</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Elizabeth Selby Infants' School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/elizabeth-selby-infants-school"></td>
           <td><a href="/schools/tower-hamlets/elizabeth-selby-infants-school">Elizabeth Selby Infants' School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>265</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="English Martyrs Roman Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="65.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/english-martyrs-roman-catholic-primary-school"></td>
           <td><a href="/schools/tower-hamlets/english-martyrs-roman-catholic-primary-school">English Martyrs Roman Catholic Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>173</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Faraday School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/faraday-school"></td>
           <td><a href="/schools/tower-hamlets/faraday-school">Faraday School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>108</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Gatehouse School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/gatehouse-school"></td>
           <td><a href="/schools/tower-hamlets/gatehouse-school">Gatehouse School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>533</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="George Green's School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="49.0"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/george-greens-school"></td>
           <td><a href="/schools/tower-hamlets/george-greens-school">George Green's School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1261</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Globe Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="81.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/globe-primary-school"></td>
           <td><a href="/schools/tower-hamlets/globe-primary-school">Globe Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>363</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hague Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="69.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/hague-primary-school"></td>
           <td><a href="/schools/tower-hamlets/hague-primary-school">Hague Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>213</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Halley Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="64.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/halley-primary-school"></td>
           <td><a href="/schools/tower-hamlets/halley-primary-school">Halley Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>204</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Harbinger Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="74.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/harbinger-primary-school"></td>
           <td><a href="/schools/tower-hamlets/harbinger-primary-school">Harbinger Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>291</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Harry Gosling Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="79.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/harry-gosling-primary-school"></td>
           <td><a href="/schools/tower-hamlets/harry-gosling-primary-school">Harry Gosling Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>416</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hermitage Primary School"
+            data-ofsted="Requires improvement"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="41.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/hermitage-primary-school"></td>
           <td><a href="/schools/tower-hamlets/hermitage-primary-school">Hermitage Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
           <td>272</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Ian Mikardo High School"
+            data-ofsted="Good"
+            data-phase="N/A"
+            data-att8="5.7"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/ian-mikardo-high-school"></td>
           <td><a href="/schools/tower-hamlets/ian-mikardo-high-school">Ian Mikardo High School</a></td>
           <td>N/A</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>50</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Jamiatul Ummah School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8="58.1"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/jamiatul-ummah-school"></td>
           <td><a href="/schools/tower-hamlets/jamiatul-ummah-school">Jamiatul Ummah School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>190</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="John Scurr Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="76.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/john-scurr-primary-school"></td>
           <td><a href="/schools/tower-hamlets/john-scurr-primary-school">John Scurr Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>493</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Kobi Nazrul Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="82.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/kobi-nazrul-primary-school"></td>
           <td><a href="/schools/tower-hamlets/kobi-nazrul-primary-school">Kobi Nazrul Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>239</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Langdon Park Community School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="43.5"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/langdon-park-community-school"></td>
           <td><a href="/schools/tower-hamlets/langdon-park-community-school">Langdon Park Community School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1061</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Lansbury Lawrence Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="78.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/lansbury-lawrence-primary-school"></td>
           <td><a href="/schools/tower-hamlets/lansbury-lawrence-primary-school">Lansbury Lawrence Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>452</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Lawdale Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="100.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/lawdale-junior-school"></td>
           <td><a href="/schools/tower-hamlets/lawdale-junior-school">Lawdale Junior School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>207</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="London East Academy"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8="55.7"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/london-east-academy"></td>
           <td><a href="/schools/tower-hamlets/london-east-academy">London East Academy</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>153</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="London East Alternative Provision"
+            data-ofsted="Outstanding"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/london-east-alternative-provision"></td>
           <td><a href="/schools/tower-hamlets/london-east-alternative-provision">London East Alternative Provision</a></td>
           <td>N/A</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>106</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="London Enterprise Academy"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="48.0"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/london-enterprise-academy"></td>
           <td><a href="/schools/tower-hamlets/london-enterprise-academy">London Enterprise Academy</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>415</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="London Islamic School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8="58.7"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/london-islamic-school"></td>
           <td><a href="/schools/tower-hamlets/london-islamic-school">London Islamic School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>135</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Madani Secondary Girls' School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8="56.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/madani-secondary-girls-school"></td>
           <td><a href="/schools/tower-hamlets/madani-secondary-girls-school">Madani Secondary Girls' School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>260</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Malmesbury Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="71.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/malmesbury-primary-school"></td>
           <td><a href="/schools/tower-hamlets/malmesbury-primary-school">Malmesbury Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>442</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Manorfield Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="82.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/manorfield-primary-school"></td>
           <td><a href="/schools/tower-hamlets/manorfield-primary-school">Manorfield Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>691</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Marion Richardson Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="59.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/marion-richardson-primary-school"></td>
           <td><a href="/schools/tower-hamlets/marion-richardson-primary-school">Marion Richardson Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>469</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Marner Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="77.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/marner-primary-school"></td>
           <td><a href="/schools/tower-hamlets/marner-primary-school">Marner Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>651</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Mayflower Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="91.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/mayflower-primary-school"></td>
           <td><a href="/schools/tower-hamlets/mayflower-primary-school">Mayflower Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>407</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Mazahirul Uloom London School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8="43.1"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/mazahirul-uloom-london-school"></td>
           <td><a href="/schools/tower-hamlets/mazahirul-uloom-london-school">Mazahirul Uloom London School</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>117</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Morpeth School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="49.2"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/morpeth-school"></td>
           <td><a href="/schools/tower-hamlets/morpeth-school">Morpeth School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1513</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Mowlem Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="67.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/mowlem-primary-school"></td>
           <td><a href="/schools/tower-hamlets/mowlem-primary-school">Mowlem Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>226</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Mulberry Academy London Dock"
+            data-ofsted="Not yet rated"
+            data-phase="Secondary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/mulberry-academy-london-dock"></td>
           <td><a href="/schools/tower-hamlets/mulberry-academy-london-dock">Mulberry Academy London Dock</a></td>
           <td>Secondary</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>127</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Mulberry Academy Shoreditch"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="45.0"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/mulberry-academy-shoreditch"></td>
           <td><a href="/schools/tower-hamlets/mulberry-academy-shoreditch">Mulberry Academy Shoreditch</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1419</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Mulberry Canon Barnett Primary Academy"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="63.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/mulberry-canon-barnett-primary-academy"></td>
           <td><a href="/schools/tower-hamlets/mulberry-canon-barnett-primary-academy">Mulberry Canon Barnett Primary Academy</a></td>
           <td>Primary</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>166</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Mulberry School for Girls"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="55.2"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/mulberry-school-for-girls"></td>
           <td><a href="/schools/tower-hamlets/mulberry-school-for-girls">Mulberry School for Girls</a></td>
           <td>Secondary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>1647</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Mulberry Stepney Green Mathematics and Computing College"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="47.5"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/mulberry-stepney-green-mathematics-and-computing-college"></td>
           <td><a href="/schools/tower-hamlets/mulberry-stepney-green-mathematics-and-computing-college">Mulberry Stepney Green Mathematics and Computing College</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1352</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Mulberry UTC"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="30.3"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/mulberry-utc"></td>
           <td><a href="/schools/tower-hamlets/mulberry-utc">Mulberry UTC</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>510</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Mulberry Wood Wharf Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/mulberry-wood-wharf-primary-school"></td>
           <td><a href="/schools/tower-hamlets/mulberry-wood-wharf-primary-school">Mulberry Wood Wharf Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>129</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="OMG Education"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/omg-education"></td>
           <td><a href="/schools/tower-hamlets/omg-education">OMG Education</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>7</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Oaklands School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="52.4"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/oaklands-school"></td>
           <td><a href="/schools/tower-hamlets/oaklands-school">Oaklands School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>880</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Old Ford Primary - A Paradigm Academy"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="80.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/old-ford-primary-a-paradigm-academy"></td>
           <td><a href="/schools/tower-hamlets/old-ford-primary-a-paradigm-academy">Old Ford Primary - A Paradigm Academy</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>647</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Old Palace Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="87.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/old-palace-primary-school"></td>
           <td><a href="/schools/tower-hamlets/old-palace-primary-school">Old Palace Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>394</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Olga Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="81.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/olga-primary-school"></td>
           <td><a href="/schools/tower-hamlets/olga-primary-school">Olga Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>537</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Onelab College"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/onelab-college"></td>
           <td><a href="/schools/tower-hamlets/onelab-college">Onelab College</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>N/A</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Osmani Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="80.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/osmani-primary-school"></td>
           <td><a href="/schools/tower-hamlets/osmani-primary-school">Osmani Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>419</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Our Lady and St Joseph Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="76.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/our-lady-and-st-joseph-catholic-primary-school"></td>
           <td><a href="/schools/tower-hamlets/our-lady-and-st-joseph-catholic-primary-school">Our Lady and St Joseph Catholic Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>414</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Phoenix Autism Trust"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/phoenix-autism-trust"></td>
           <td><a href="/schools/tower-hamlets/phoenix-autism-trust">Phoenix Autism Trust</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>N/A</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Phoenix School"
+            data-ofsted="Outstanding"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/phoenix-school"></td>
           <td><a href="/schools/tower-hamlets/phoenix-school">Phoenix School</a></td>
           <td>N/A</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>502</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Seven Mills Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="90.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/seven-mills-primary-school"></td>
           <td><a href="/schools/tower-hamlets/seven-mills-primary-school">Seven Mills Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>228</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Sir William Burrough Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="77.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/sir-william-burrough-primary-school"></td>
           <td><a href="/schools/tower-hamlets/sir-william-burrough-primary-school">Sir William Burrough Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>326</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Solebay Primary - A Paradigm Academy"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="83.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/solebay-primary-a-paradigm-academy"></td>
           <td><a href="/schools/tower-hamlets/solebay-primary-a-paradigm-academy">Solebay Primary - A Paradigm Academy</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>188</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Agnes RC Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="85.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/st-agnes-rc-primary-school"></td>
           <td><a href="/schools/tower-hamlets/st-agnes-rc-primary-school">St Agnes RC Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>207</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Anne's and Guardian Angels Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/st-annes-and-guardian-angels-catholic-primary-school"></td>
           <td><a href="/schools/tower-hamlets/st-annes-and-guardian-angels-catholic-primary-school">St Anne's and Guardian Angels Catholic Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>185</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Edmund's Catholic School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="69.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/st-edmunds-catholic-school"></td>
           <td><a href="/schools/tower-hamlets/st-edmunds-catholic-school">St Edmund's Catholic School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>204</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Elizabeth Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/st-elizabeth-catholic-primary-school"></td>
           <td><a href="/schools/tower-hamlets/st-elizabeth-catholic-primary-school">St Elizabeth Catholic Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>N/A</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St John's Church of England Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="79.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/st-johns-church-of-england-primary-school"></td>
           <td><a href="/schools/tower-hamlets/st-johns-church-of-england-primary-school">St John's Church of England Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>172</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Luke's Church of England Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="66.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/st-lukes-church-of-england-primary-school"></td>
           <td><a href="/schools/tower-hamlets/st-lukes-church-of-england-primary-school">St Luke's Church of England Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>397</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Mary and St Michael Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="73.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/st-mary-and-st-michael-primary-school"></td>
           <td><a href="/schools/tower-hamlets/st-mary-and-st-michael-primary-school">St Mary and St Michael Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>389</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Paul With St Luke CofE Primary Federation"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="86.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/st-paul-with-st-luke-cofe-primary-federation"></td>
           <td><a href="/schools/tower-hamlets/st-paul-with-st-luke-cofe-primary-federation">St Paul With St Luke CofE Primary Federation</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>180</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Paul's Way Trust School"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8="51.8"
+            data-ks2="81.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/st-pauls-way-trust-school"></td>
           <td><a href="/schools/tower-hamlets/st-pauls-way-trust-school">St Paul's Way Trust School</a></td>
           <td>All-through</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>1884</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Paul's Whitechapel Church of England Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="84.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/st-pauls-whitechapel-church-of-england-primary-school"></td>
           <td><a href="/schools/tower-hamlets/st-pauls-whitechapel-church-of-england-primary-school">St Paul's Whitechapel Church of England Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>212</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Peter's London Docks CofE Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="76.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/st-peters-london-docks-cofe-primary-school"></td>
           <td><a href="/schools/tower-hamlets/st-peters-london-docks-cofe-primary-school">St Peter's London Docks CofE Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>232</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Saviour's Church of England Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="82.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/st-saviours-church-of-england-primary-school"></td>
           <td><a href="/schools/tower-hamlets/st-saviours-church-of-england-primary-school">St Saviour's Church of England Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>216</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Stebon Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="77.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/stebon-primary-school"></td>
           <td><a href="/schools/tower-hamlets/stebon-primary-school">Stebon Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>703</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Stephen Hawking School"
+            data-ofsted="Good"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/stephen-hawking-school"></td>
           <td><a href="/schools/tower-hamlets/stephen-hawking-school">Stephen Hawking School</a></td>
           <td>N/A</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>98</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Stepney All Saints Church of England Secondary School"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="53.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/stepney-all-saints-church-of-england-secondary-school"></td>
           <td><a href="/schools/tower-hamlets/stepney-all-saints-church-of-england-secondary-school">Stepney All Saints Church of England Secondary School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>1373</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Stepney Greencoat Church of England Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="77.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/stepney-greencoat-church-of-england-primary-school"></td>
           <td><a href="/schools/tower-hamlets/stepney-greencoat-church-of-england-primary-school">Stepney Greencoat Church of England Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>172</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Stepney Park Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="64.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/stepney-park-primary-school"></td>
           <td><a href="/schools/tower-hamlets/stepney-park-primary-school">Stepney Park Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>738</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Stewart Headlam Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="80.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/stewart-headlam-primary-school"></td>
           <td><a href="/schools/tower-hamlets/stewart-headlam-primary-school">Stewart Headlam Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>197</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Swanlea School"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="56.9"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/swanlea-school"></td>
           <td><a href="/schools/tower-hamlets/swanlea-school">Swanlea School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>1281</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Clara Grant Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="71.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/the-clara-grant-primary-school"></td>
           <td><a href="/schools/tower-hamlets/the-clara-grant-primary-school">The Clara Grant Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>427</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Complete Works"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8="4.9"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/the-complete-works"></td>
           <td><a href="/schools/tower-hamlets/the-complete-works">The Complete Works</a></td>
           <td>N/A</td>
           <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
           <td>97</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Thomas Buxton Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="69.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/thomas-buxton-primary-school"></td>
           <td><a href="/schools/tower-hamlets/thomas-buxton-primary-school">Thomas Buxton Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>411</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Virginia Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/virginia-primary-school"></td>
           <td><a href="/schools/tower-hamlets/virginia-primary-school">Virginia Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>N/A</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Wapping High School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="46.9"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/tower-hamlets/wapping-high-school"></td>
           <td><a href="/schools/tower-hamlets/wapping-high-school">Wapping High School</a></td>
           <td>Secondary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>294</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Wellington Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="77.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/wellington-primary-school"></td>
           <td><a href="/schools/tower-hamlets/wellington-primary-school">Wellington Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
           <td>405</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="William Davis Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="89.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/william-davis-primary-school"></td>
           <td><a href="/schools/tower-hamlets/william-davis-primary-school">William Davis Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
           <td>174</td>
         </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Woolmore Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="81.0"
+            data-url="https://londonschool.directory/schools/tower-hamlets/woolmore-primary-school"></td>
           <td><a href="/schools/tower-hamlets/woolmore-primary-school">Woolmore Primary School</a></td>
           <td>Primary</td>
           <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
@@ -700,6 +1493,71 @@
 </div>
 <footer><a href="/">London Schools Explorer</a> &mdash; helping families find the right school in London.</footer>
 <script defer src="/_vercel/insights/script.js"></script>
+<script>
+(function(){
+  var borough="Tower Hamlets", boroughUrl="https://londonschool.directory/schools/tower-hamlets";
+  var outstanding=25, total=111;
+
+  // Borough-level share
+  window.shareBoroughWhatsApp=function(){
+    var t='🏙️ *Schools in '+borough+', London*\n'+
+        '📊 '+total+' schools · '+outstanding+' Outstanding\n\n'+
+        '🔗 '+boroughUrl;
+    window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank');
+  };
+  window.shareBoroughEmail=function(){
+    var s='Schools in '+borough+' — London Schools Explorer';
+    var b='Schools in '+borough+', London\n'+
+        total+' schools, '+outstanding+' rated Outstanding by Ofsted\n\n'+
+        'Browse them here: '+boroughUrl;
+    window.location.href='mailto:?subject='+encodeURIComponent(s)+'&body='+encodeURIComponent(b);
+  };
+
+  // Shortlist comparison share
+  function getSelected(){
+    return Array.from(document.querySelectorAll('.sch-sel:checked')).map(function(cb){
+      return {name:cb.dataset.name,ofsted:cb.dataset.ofsted,phase:cb.dataset.phase,
+               att8:cb.dataset.att8,ks2:cb.dataset.ks2,url:cb.dataset.url};
+    });
+  }
+  function updateBar(){
+    var sel=getSelected();
+    var bar=document.getElementById('cmp-bar');
+    document.getElementById('cmp-count').textContent=sel.length+' school'+(sel.length===1?'':' s')+' selected';
+    bar.style.display=sel.length>0?'flex':'none';
+  }
+  document.querySelectorAll('.sch-sel').forEach(function(cb){ cb.onchange=updateBar; });
+
+  function buildCompareText(sel,markdown){
+    var lines=['📋 *My '+borough+' school shortlist*',''];
+    sel.forEach(function(s,i){
+      lines.push((i+1)+'. '+(markdown?'*':'')+s.name+(markdown?'*':''));
+      lines.push('   ⭐ Ofsted: '+s.ofsted+(s.phase?' · '+s.phase:''));
+      if(s.att8)lines.push('   📊 Attainment 8: '+s.att8);
+      if(s.ks2)lines.push('   📝 KS2 expected: '+s.ks2+'%');
+      lines.push('   🔗 '+s.url);
+      lines.push('');
+    });
+    lines.push('via London Schools Explorer — '+boroughUrl);
+    return lines.join('\n');
+  }
+  window.shareCompareWhatsApp=function(){
+    var sel=getSelected();
+    if(!sel.length)return;
+    window.open('https://wa.me/?text='+encodeURIComponent(buildCompareText(sel,true)),'_blank');
+  };
+  window.shareCompareEmail=function(){
+    var sel=getSelected();
+    if(!sel.length)return;
+    var subj='My '+borough+' school shortlist — London Schools Explorer';
+    window.location.href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(buildCompareText(sel,false));
+  };
+  window.clearSelection=function(){
+    document.querySelectorAll('.sch-sel:checked').forEach(function(cb){cb.checked=false;});
+    updateBar();
+  };
+})();
+</script>
 </body>
 </html><style>
   #fb-btn{position:fixed;bottom:24px;right:24px;z-index:9999;background:#1A1A2E;color:#D4A843;border:2px solid #D4A843;border-radius:24px;padding:10px 18px;font-family:system-ui,sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 4px 16px rgba(0,0,0,0.25);transition:all 0.2s;}

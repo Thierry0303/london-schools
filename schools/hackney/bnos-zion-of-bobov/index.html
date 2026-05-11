@@ -137,9 +137,39 @@
       <a class='btn' href='https://snobe.co.uk/schools/bnos-zion-bobov' target='_blank' rel='noopener' style='background:#7B2FBE;color:white;border-color:#7B2FBE'>View on Snobe</a>
       <a class="btn" href="/schools/hackney">More schools in Hackney</a>
       <a class="btn" href="/">All London schools</a>
+      <button class="btn" onclick="shareSchoolWhatsApp()" style="background:#25D366;color:#fff;border-color:#25D366;">📱 WhatsApp</button>
+      <button class="btn" onclick="shareSchoolEmail()" style="background:#1565C0;color:#fff;border-color:#1565C0;">✉️ Email</button>
     </div>
   </div>
 </div>
+<script>
+(function(){
+  var d={name:"Bnos Zion of Bobov",borough:"Hackney",ofsted:"Not yet rated",
+    att8:"61.9",
+    ks2:"",
+    apps:"",
+    url:"https://londonschool.directory/schools/hackney/bnos-zion-of-bobov"};
+  window.shareSchoolWhatsApp=function(){
+    var p=['🏫 *'+d.name+'*','📍 '+d.borough];
+    if(d.ofsted&&d.ofsted!=='Not yet rated')p.push('⭐ Ofsted: *'+d.ofsted+'*');
+    if(d.att8)p.push('📊 Attainment 8: '+d.att8);
+    if(d.ks2)p.push('📝 KS2 expected: '+d.ks2+'%');
+    if(d.apps&&d.apps!=='N/A')p.push('🎯 Applications per place: '+d.apps);
+    p.push('\n🔗 '+d.url);
+    window.open('https://wa.me/?text='+encodeURIComponent(p.join('\n')),'_blank');
+  };
+  window.shareSchoolEmail=function(){
+    var subj=d.name+' — London Schools Explorer';
+    var p=[d.name,'Borough: '+d.borough];
+    if(d.ofsted)p.push('Ofsted: '+d.ofsted);
+    if(d.att8)p.push('Attainment 8: '+d.att8);
+    if(d.ks2)p.push('KS2 expected standard: '+d.ks2+'%');
+    if(d.apps&&d.apps!=='N/A')p.push('Applications per place: '+d.apps);
+    p.push('','Full school profile: '+d.url);
+    window.location.href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(p.join('\n'));
+  };
+})();
+</script>
 
 <div class="container">
 
@@ -259,7 +289,7 @@
 </div>
 
 <footer>
-  Data sourced from Ofsted and the Department for Education. Last updated 10 May 2026.<br>
+  Data sourced from Ofsted and the Department for Education. Last updated 11 May 2026.<br>
   <a href="/">London Schools Explorer</a> &mdash; helping families find the right school.
 </footer>
 

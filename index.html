@@ -163,6 +163,18 @@
     .filters-toggle-btn { display: flex; align-items: center; gap: 7px; padding: 9px 14px; background: var(--ink); color: var(--cream); border: none; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.83rem; font-weight: 600; cursor: pointer; white-space: nowrap; }
     .filter-badge { background: var(--gold); color: var(--ink); border-radius: 20px; padding: 1px 7px; font-size: 0.68rem; font-weight: 700; }
     .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 9099; opacity: 0; pointer-events: none; transition: opacity 0.28s; display: none; }
+    .sidebar-section-title-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .sidebar-active-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); flex-shrink: 0; box-shadow: 0 0 0 2px rgba(212,168,67,0.25); }
+    .sidebar-borough-search { width: 100%; padding: 7px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.78rem; font-family: 'DM Sans', sans-serif; outline: none; color: var(--ink); margin-bottom: 8px; transition: border-color 0.2s; }
+    .sidebar-borough-search:focus { border-color: var(--gold); }
+    .sidebar-chip-scroll { max-height: 150px; overflow-y: auto; display: flex; flex-wrap: wrap; gap: 4px; scrollbar-width: thin; scrollbar-color: var(--border) transparent; padding-bottom: 2px; }
+    .sidebar-chip-scroll::-webkit-scrollbar { width: 4px; }
+    .sidebar-chip-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    .sidebar-selected-borough { display: flex; align-items: center; justify-content: space-between; padding: 6px 10px; background: rgba(212,168,67,0.1); border: 1px solid var(--gold); border-radius: 6px; font-size: 0.78rem; font-weight: 600; color: #7a5500; margin-bottom: 8px; }
+    .sidebar-selected-clear { background: none; border: none; color: #7a5500; cursor: pointer; font-size: 0.9rem; opacity: 0.6; padding: 0; line-height: 1; }
+    .sidebar-selected-clear:hover { opacity: 1; }
+    .header-logo { background: none; border: none; padding: 0; cursor: pointer; }
+    .header-logo:hover .logo-mark { background: #e0b030; }
     @media (min-width: 769px) { .filters-toggle-btn { display: none; } }
     @media (max-width: 768px) {
       .page-layout { display: block; }
@@ -501,6 +513,42 @@ function QuickBrowse() {
             {t.label}
           </a>
         ))}
+      </div>
+    </div>
+  );
+}
+
+function SidebarBoroughPicker({ localAuthorities, value, onChange }) {
+  const [q, setQ] = useState('');
+  const shown = q.trim()
+    ? localAuthorities.filter(function(la){ return la.toLowerCase().indexOf(q.toLowerCase()) !== -1; })
+    : localAuthorities;
+  function handleChange(e) { setQ(e.target.value); }
+  function handleSelect(la) { onChange(value === la ? '' : la); }
+  return (
+    <div>
+      {value ? (
+        <div className="sidebar-selected-borough">
+          <span>{value}</span>
+          <button className="sidebar-selected-clear" onClick={() => { onChange(''); setQ(''); }} title="Clear borough">✕</button>
+        </div>
+      ) : null}
+      <input
+        type="text"
+        className="sidebar-borough-search"
+        placeholder={value ? 'Change borough…' : 'Search boroughs…'}
+        value={q}
+        onChange={handleChange}
+      />
+      <div className="sidebar-chip-scroll">
+        {shown.map(function(la){
+          return (
+            <button key={la} className={value===la?'sidebar-chip active':'sidebar-chip'} onClick={() => handleSelect(la)}>
+              {la}
+            </button>
+          );
+        })}
+        {shown.length === 0 && <span style={{fontSize:'0.76rem',color:'#aaa'}}>No match</span>}
       </div>
     </div>
   );
@@ -1225,10 +1273,10 @@ function App() {
   return (
     <>
       <header className="header">
-        <div className="header-logo">
+        <button className="header-logo" onClick={() => { clearFilters(); setView('schools'); }} title="Back to all schools">
           <div className="logo-mark">LS</div>
           <span className="logo-text">London <em>Schools</em></span>
-        </div>
+        </button>
         <nav className="header-nav">
           {[['checker','Near Me'],['schools','Schools'],['map','Map'],['stats','Stats']].map(function(item){
             return <button key={item[0]} className={view===item[0]?'nav-btn active':'nav-btn'} onClick={() => setView(item[0])}>{item[1]}</button>;
@@ -1322,14 +1370,24 @@ function App() {
             <div className="page-layout">
               <aside className={sidebarOpen ? 'filter-sidebar sidebar-open' : 'filter-sidebar'}>
                 <div className="sidebar-header">
-                  <span className="sidebar-header-title">Filters</span>
+                  <div style={{display:'flex',flexDirection:'column',gap:2}}>
+                    <span className="sidebar-header-title">Filters</span>
+                    {hasFilters && (
+                      <span style={{fontSize:'0.67rem',color:'rgba(245,240,232,0.45)',letterSpacing:'0.04em'}}>
+                        {[filters.phase,filters.local_authority,filters.score_band].filter(Boolean).length} active
+                      </span>
+                    )}
+                  </div>
                   <div style={{display:'flex',alignItems:'center',gap:10}}>
                     {hasFilters && <button className="sidebar-header-clear" onClick={clearFilters}>Clear all</button>}
                     <button className="sidebar-mobile-close hide-desktop" onClick={() => setSidebarOpen(false)}>✕</button>
                   </div>
                 </div>
                 <div className="sidebar-section">
-                  <div className="sidebar-section-title">Phase</div>
+                  <div className="sidebar-section-title-row">
+                    <span className="sidebar-section-title">Phase</span>
+                    {filters.phase && <span className="sidebar-active-dot" />}
+                  </div>
                   <div>
                     {phases.map(function(p){
                       return <button key={p} className={filters.phase===p?'sidebar-chip active':'sidebar-chip'} onClick={() => setFilter('phase', filters.phase===p?'':p)}>{p}</button>;
@@ -1337,14 +1395,21 @@ function App() {
                   </div>
                 </div>
                 <div className="sidebar-section">
-                  <div className="sidebar-section-title">Borough</div>
-                  <select value={filters.local_authority} onChange={e => setFilter('local_authority', e.target.value)} style={{width:'100%'}}>
-                    <option value="">All boroughs</option>
-                    {localAuthorities.map(function(la){ return <option key={la} value={la}>{la}</option>; })}
-                  </select>
+                  <div className="sidebar-section-title-row">
+                    <span className="sidebar-section-title">Borough</span>
+                    {filters.local_authority && <span className="sidebar-active-dot" />}
+                  </div>
+                  <SidebarBoroughPicker
+                    localAuthorities={localAuthorities}
+                    value={filters.local_authority}
+                    onChange={function(la){ setFilter('local_authority', la); }}
+                  />
                 </div>
                 <div className="sidebar-section">
-                  <div className="sidebar-section-title">Rating</div>
+                  <div className="sidebar-section-title-row">
+                    <span className="sidebar-section-title">Rating</span>
+                    {filters.score_band && <span className="sidebar-active-dot" />}
+                  </div>
                   <div>
                     {['Outstanding','Good','Requires improvement','Inadequate'].map(function(b){
                       return (

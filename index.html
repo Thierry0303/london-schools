@@ -293,10 +293,7 @@
       .clear-btn { width: 100%; text-align: center; }
 
       /* Results header */
-      .results-header { flex-direction: column; gap: 10px; align-items: stretch; }
-      .results-header > div:last-child { display: flex; align-items: center; gap: 8px; }
-      .results-header select { flex: 1; font-size: 0.85rem; padding: 9px 28px 9px 12px; }
-      .view-btn { padding: 9px 0; flex: 1; font-size: 0.85rem; }
+      .results-header { flex-direction: column; gap: 8px; align-items: stretch; }
 
       /* Grid */
       .school-grid { grid-template-columns: 1fr; gap: 12px; }
@@ -1266,7 +1263,7 @@ function App() {
   const [page, setPage] = useState(1);
   const PAGE_SIZE = 24;
   const [filters, setFilters] = useState({ q:'', phase:'', local_authority:[], score_band:'' });
-  const [sortBy, setSortBy] = useState('name');
+  const [sortBy, setSortBy] = useState('nearby');
 
   useEffect(() => {
     async function load() {
@@ -1300,20 +1297,30 @@ function App() {
     if (filters.local_authority.length) r = r.filter(s => filters.local_authority.includes(s.local_authority));
     if (filters.score_band) r = r.filter(s => (s.score_band||s.quality_label) === filters.score_band);
     r = [...r];
+    // Academic score: normalise Att8 and KS2 to the same relative-to-average scale
+    function academicScore(s) {
+      if (s.ks4_att8 != null) return (s.ks4_att8 / ENG_ATT8_AVG) * 100;
+      if (s.ks2_expected_pct != null) return (s.ks2_expected_pct / ENG_KS2_EXP_AVG) * 100;
+      return -1;
+    }
     if (sortBy === 'score') r.sort((a,b) => { var d=(b.ofsted_score??-1)-(a.ofsted_score??-1); return d!==0?d:a.name.localeCompare(b.name); });
+    else if (sortBy === 'results') r.sort(function(a,b){ var d=academicScore(b)-academicScore(a); return d!==0?d:a.name.localeCompare(b.name); });
     else if (sortBy === 'name') r.sort((a,b) => a.name.localeCompare(b.name));
     else if (sortBy === 'apps') r.sort((a,b) => { var d=(b.apps_per_place??-1)-(a.apps_per_place??-1); return d!==0?d:a.name.localeCompare(b.name); });
     else if (sortBy === 'pupils') r.sort((a,b) => { var d=(b.pupils??-1)-(a.pupils??-1); return d!==0?d:a.name.localeCompare(b.name); });
+    else if (sortBy === 'nearby' && !userCoords) { r.sort((a,b) => { var d=(b.ofsted_score??-1)-(a.ofsted_score??-1); return d!==0?d:a.name.localeCompare(b.name); }); }
     else if (sortBy === 'nearby' && userCoords) {
       r.sort(function(a,b) {
         var scoreA = a.ofsted_score != null ? a.ofsted_score : 50;
         var scoreB = b.ofsted_score != null ? b.ofsted_score : 50;
         var distA = (a.lat && a.lng) ? haversineKm(userCoords.lat, userCoords.lng, a.lat, a.lng) : 999;
         var distB = (b.lat && b.lng) ? haversineKm(userCoords.lat, userCoords.lng, b.lat, b.lng) : 999;
-        var proxA = 100 / (1 + distA * 0.4);
-        var proxB = 100 / (1 + distB * 0.4);
-        var compositeA = scoreA * 0.5 + proxA * 0.5;
-        var compositeB = scoreB * 0.5 + proxB * 0.5;
+        // Exponential decay: halves every ~2.8km so a 7km school scores ~10% of a 0km school
+        var proxA = Math.exp(-distA * 0.25) * 100;
+        var proxB = Math.exp(-distB * 0.25) * 100;
+        // 35% score, 65% proximity — nearby school with Good rating beats distant Outstanding
+        var compositeA = scoreA * 0.35 + proxA * 0.65;
+        var compositeB = scoreB * 0.35 + proxB * 0.65;
         return compositeB - compositeA;
       });
     }
@@ -1370,10 +1377,13 @@ function App() {
         setUserCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
         setLocationStatus('granted');
       },
-      function() { setLocationStatus('denied'); setSortBy('score'); },
-      { enableHighAccuracy: true, timeout: 10000 }
+      function() { setLocationStatus('denied'); },
+      { enableHighAccuracy: false, timeout: 8000 }
     );
   }
+
+  // Request location on mount so the default sort works immediately
+  useEffect(function() { requestLocation(); }, []);
 
   function handleSortChange(val) {
     setSortBy(val);
@@ -1555,23 +1565,24 @@ function App() {
                 </div>
                 <div className="results-header">
                   <div className="results-count">Showing <strong>{filtered.length}</strong> school{filtered.length!==1?'s':''}{schools.length!==filtered.length?` of ${schools.length}`:''}</div>
-                  <div style={{display:'flex',alignItems:'center',gap:8}}>
-                    <div style={{display:'flex',flexDirection:'column',gap:3}}>
-                      <select value={sortBy} onChange={function(e){handleSortChange(e.target.value);}} style={{minWidth:'unset',padding:'6px 28px 6px 10px',fontSize:'0.78rem',border:'1.5px solid var(--border)',borderRadius:6,background:'white'}}>
+                  <div style={{display:'flex',flexDirection:'column',gap:4}}>
+                    <div style={{display:'flex',alignItems:'center',gap:8}}>
+                      <select value={sortBy} onChange={function(e){handleSortChange(e.target.value);}} style={{flex:1,minWidth:0,padding:'8px 28px 8px 10px',fontSize:'0.82rem',border:'1.5px solid var(--border)',borderRadius:6,background:'white'}}>
+                        <option value="nearby">📍 Near me + score</option>
+                        <option value="results">🎓 Best results</option>
+                        <option value="score">Ofsted grade</option>
                         <option value="name">A–Z</option>
-                        <option value="score">Top score</option>
                         <option value="apps">Oversubscribed</option>
                         <option value="pupils">Largest</option>
-                        <option value="nearby">📍 Near me + score</option>
                       </select>
-                      {sortBy === 'nearby' && locationStatus === 'requesting' && <span style={{fontSize:'0.65rem',color:'#aaa',paddingLeft:2}}>Getting location…</span>}
-                      {sortBy === 'nearby' && locationStatus === 'granted' && <span style={{fontSize:'0.65rem',color:'#27AE60',paddingLeft:2}}>📍 Sorting by proximity + score</span>}
-                      {sortBy === 'nearby' && locationStatus === 'denied' && <span style={{fontSize:'0.65rem',color:'#C0392B',paddingLeft:2}}>Location denied — enable in browser</span>}
+                      <div className="view-toggle" style={{flexShrink:0}}>
+                        <button className={displayMode==='table'?'view-btn active':'view-btn'} onClick={() => setDisplayMode('table')}>List</button>
+                        <button className={displayMode==='grid'?'view-btn active':'view-btn'} onClick={() => setDisplayMode('grid')}>Cards</button>
+                      </div>
                     </div>
-                    <div className="view-toggle">
-                      <button className={displayMode==='table'?'view-btn active':'view-btn'} onClick={() => setDisplayMode('table')}>List</button>
-                      <button className={displayMode==='grid'?'view-btn active':'view-btn'} onClick={() => setDisplayMode('grid')}>Cards</button>
-                    </div>
+                    {sortBy === 'nearby' && locationStatus === 'requesting' && <span style={{fontSize:'0.67rem',color:'#888'}}>📍 Getting your location…</span>}
+                    {sortBy === 'nearby' && locationStatus === 'granted' && <span style={{fontSize:'0.67rem',color:'#27AE60'}}>📍 Sorted by proximity + score</span>}
+                    {sortBy === 'nearby' && locationStatus === 'denied' && <span style={{fontSize:'0.67rem',color:'#C0392B'}}>Location blocked — enable in browser settings</span>}
                   </div>
                 </div>
                 {filtered.length === 0 ? (

@@ -1319,16 +1319,21 @@ function App() {
     else if (sortBy === 'nearby' && !userCoords) { r.sort((a,b) => { var d=(b.ofsted_score??-1)-(a.ofsted_score??-1); return d!==0?d:a.name.localeCompare(b.name); }); }
     else if (sortBy === 'nearby' && userCoords) {
       r.sort(function(a,b) {
-        var scoreA = a.ofsted_score != null ? a.ofsted_score : 50;
-        var scoreB = b.ofsted_score != null ? b.ofsted_score : 50;
         var distA = (a.lat && a.lng) ? haversineKm(userCoords.lat, userCoords.lng, a.lat, a.lng) : 999;
         var distB = (b.lat && b.lng) ? haversineKm(userCoords.lat, userCoords.lng, b.lat, b.lng) : 999;
-        // Exponential decay: halves every ~2.8km so a 7km school scores ~10% of a 0km school
+        // Exponential decay — halves every ~2.8km
         var proxA = Math.exp(-distA * 0.25) * 100;
         var proxB = Math.exp(-distB * 0.25) * 100;
-        // 35% score, 65% proximity — nearby school with Good rating beats distant Outstanding
-        var compositeA = scoreA * 0.35 + proxA * 0.65;
-        var compositeB = scoreB * 0.35 + proxB * 0.65;
+        // Academic score normalised to 0-100 (avg school = 77, top school ≈ 100+)
+        // academicScore returns -1 when no exam data — fall back to Ofsted grade
+        var rawAcadA = academicScore(a); var rawAcadB = academicScore(b);
+        var acadA = rawAcadA > 0 ? Math.min(rawAcadA / 1.5, 100) : (a.ofsted_score != null ? a.ofsted_score * 0.6 : 40);
+        var acadB = rawAcadB > 0 ? Math.min(rawAcadB / 1.5, 100) : (b.ofsted_score != null ? b.ofsted_score * 0.6 : 40);
+        var ofstedA = a.ofsted_score != null ? a.ofsted_score : 50;
+        var ofstedB = b.ofsted_score != null ? b.ofsted_score : 50;
+        // Weights: 45% proximity · 35% academic results · 20% Ofsted grade
+        var compositeA = proxA * 0.45 + acadA * 0.35 + ofstedA * 0.20;
+        var compositeB = proxB * 0.45 + acadB * 0.35 + ofstedB * 0.20;
         return compositeB - compositeA;
       });
     }

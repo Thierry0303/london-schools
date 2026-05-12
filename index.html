@@ -876,19 +876,26 @@ function ScoreCard({ school, compareList, toggleCompare, userCoords }) {
         </span>
       </div>
       <div className="card-name">{school.name}</div>
-      <div className="card-la">📍 {school.local_authority} · {school.postcode}{userCoords && school.lat && school.lng ? <span style={{color:'var(--gold)',fontWeight:600,marginLeft:4}}>· {(function(){ var d=haversineKm(userCoords.lat,userCoords.lng,school.lat,school.lng); return d<1?Math.round(d*1000)+'m':d.toFixed(1)+'km'; })()}</span> : null}</div>
+      <div className="card-la">📍 {school.local_authority} · {school.postcode}</div>
       <div className="card-stats-row">
+        {userCoords && school.lat && school.lng ? (function(){
+          var d = haversineKm(userCoords.lat, userCoords.lng, school.lat, school.lng);
+          var distStr = d < 1 ? Math.round(d * 1000) + 'm' : d.toFixed(1) + 'km';
+          var distCol = d <= 1 ? '#27AE60' : d <= 2 ? '#2980B9' : d <= 3 ? '#E67E22' : '#aaa';
+          return (
+            <div className="card-stat-item" style={{background:'rgba(212,168,67,0.07)'}}>
+              <div className="card-stat-num" style={{color:distCol,fontSize:'1rem'}}>{distStr}</div>
+              <div className="card-stat-lbl">Distance</div>
+            </div>
+          );
+        })() : null}
         <div className="card-stat-item">
-          <div className="card-stat-num" style={{color: score != null ? 'var(--ink)' : '#ccc'}}>{score != null ? score : '—'}</div>
-          <div className="card-stat-lbl">Score</div>
+          <div className="card-stat-num" style={{color: stat3color}}>{stat3num}</div>
+          <div className="card-stat-lbl">{stat3lbl}</div>
         </div>
         <div className="card-stat-item">
           <div className="card-stat-num" style={{color: appsColor}}>{school.apps_per_place != null ? school.apps_per_place + '×' : '—'}</div>
           <div className="card-stat-lbl">Apps/place</div>
-        </div>
-        <div className="card-stat-item">
-          <div className="card-stat-num" style={{color: stat3color}}>{stat3num}</div>
-          <div className="card-stat-lbl">{stat3lbl}</div>
         </div>
       </div>
       {school.ungraded_outcome && (
@@ -1331,9 +1338,10 @@ function App() {
         var acadB = rawAcadB > 0 ? Math.min(rawAcadB / 1.5, 100) : (b.ofsted_score != null ? b.ofsted_score * 0.6 : 40);
         var ofstedA = a.ofsted_score != null ? a.ofsted_score : 50;
         var ofstedB = b.ofsted_score != null ? b.ofsted_score : 50;
-        // Weights: 45% proximity · 35% academic results · 20% Ofsted grade
-        var compositeA = proxA * 0.45 + acadA * 0.35 + ofstedA * 0.20;
-        var compositeB = proxB * 0.45 + acadB * 0.35 + ofstedB * 0.20;
+        // Weights: 50% academic results · 30% proximity · 20% Ofsted grade
+        // Academic quality leads — distance breaks ties between similar-quality schools
+        var compositeA = acadA * 0.50 + proxA * 0.30 + ofstedA * 0.20;
+        var compositeB = acadB * 0.50 + proxB * 0.30 + ofstedB * 0.20;
         return compositeB - compositeA;
       });
     }

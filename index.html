@@ -1327,23 +1327,25 @@ function App() {
     else if (sortBy === 'nearby' && userCoords) {
       var BAND_RANK = {'Outstanding':4,'Good':3,'Requires improvement':2,'Inadequate':1,'Ungraded (monitoring)':2,'Report card (2025+)':2};
       r.sort(function(a,b) {
-        // 1. Quality band is the hard primary sort — Outstanding always beats Good
+        // 1. Quality band is hard primary sort — Outstanding always beats Good
         var bandRankA = BAND_RANK[a.score_band||a.quality_label||''] || 0;
         var bandRankB = BAND_RANK[b.score_band||b.quality_label||''] || 0;
         if (bandRankA !== bandRankB) return bandRankB - bandRankA;
-        // 2. Within the same band: best academic results first
+        // 2. Within same band: distance is the primary criterion ("Near me")
+        var distA = (a.lat && a.lng) ? haversineKm(userCoords.lat, userCoords.lng, a.lat, a.lng) : 999;
+        var distB = (b.lat && b.lng) ? haversineKm(userCoords.lat, userCoords.lng, b.lat, b.lng) : 999;
+        // If one school is more than 5km further away, distance always wins
+        if (Math.abs(distA - distB) > 5) return distA - distB;
+        // When schools are similarly close (within 5km of each other),
+        // use academic score as the tiebreaker — but only if it's a meaningful gap (>20%)
         var rawAcadA = academicScore(a); var rawAcadB = academicScore(b);
         var acadA = rawAcadA > 0 ? rawAcadA : (a.ofsted_score || 50);
         var acadB = rawAcadB > 0 ? rawAcadB : (b.ofsted_score || 50);
-        // Allow distance to tip the scales only when academic scores are within 10 points
-        var distA = (a.lat && a.lng) ? haversineKm(userCoords.lat, userCoords.lng, a.lat, a.lng) : 999;
-        var distB = (b.lat && b.lng) ? haversineKm(userCoords.lat, userCoords.lng, b.lat, b.lng) : 999;
-        var proxA = Math.exp(-distA * 0.25) * 100;
-        var proxB = Math.exp(-distB * 0.25) * 100;
-        // Within same band: 70% academic results + 30% proximity
-        var withinA = acadA * 0.70 + proxA * 0.30;
-        var withinB = acadB * 0.70 + proxB * 0.30;
-        return withinB - withinA;
+        var acadMax = Math.max(acadA, acadB);
+        var acadGap = Math.abs(acadA - acadB) / (acadMax || 1);
+        if (acadGap > 0.20) return acadB - acadA;
+        // Otherwise pure distance
+        return distA - distB;
       });
     }
     return r;

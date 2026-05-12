@@ -1336,15 +1336,17 @@ function App() {
         var distB = (b.lat && b.lng) ? haversineKm(userCoords.lat, userCoords.lng, b.lat, b.lng) : 999;
         // If one school is more than 5km further away, distance always wins
         if (Math.abs(distA - distB) > 5) return distA - distB;
-        // When schools are similarly close (within 5km of each other),
-        // use academic score as the tiebreaker — but only if it's a meaningful gap (>20%)
+        // Academic score to break ties or when gap is meaningful
         var rawAcadA = academicScore(a); var rawAcadB = academicScore(b);
         var acadA = rawAcadA > 0 ? rawAcadA : (a.ofsted_score || 50);
         var acadB = rawAcadB > 0 ? rawAcadB : (b.ofsted_score || 50);
         var acadMax = Math.max(acadA, acadB);
         var acadGap = Math.abs(acadA - acadB) / (acadMax || 1);
-        if (acadGap > 0.20) return acadB - acadA;
-        // Otherwise pure distance
+        // When schools are essentially the same distance (within 0.5km), academics decide
+        if (Math.abs(distA - distB) <= 0.5) return acadB - acadA;
+        // When there's a meaningful academic gap (>15%) and schools are within 3km of each other
+        if (acadGap > 0.15 && distA <= 3 && distB <= 3) return acadB - acadA;
+        // Otherwise: closer school wins
         return distA - distB;
       });
     }

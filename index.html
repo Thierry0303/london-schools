@@ -132,6 +132,10 @@
     .card-stat-item + .card-stat-item { border-left: 1px solid var(--border); }
     .card-stat-num { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--ink); line-height: 1; }
     .card-stat-lbl { font-size: 0.59rem; color: #bbb; text-transform: uppercase; letter-spacing: 0.07em; margin-top: 3px; }
+    .radius-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+    .radius-chip { padding: 5px 13px; border-radius: 20px; border: 1.5px solid var(--border); background: white; font-size: 0.78rem; font-weight: 600; font-family: 'DM Sans', sans-serif; color: #888; cursor: pointer; transition: all 0.15s; }
+    .radius-chip:hover { border-color: var(--gold); color: #7a5500; }
+    .radius-chip.active { border-color: var(--gold); background: rgba(212,168,67,0.12); color: #7a5500; }
     .card-area-row { display: flex; flex-wrap: wrap; gap: 5px; margin: 0 0 9px; }
     .card-area-badge { font-size: 0.69rem; font-weight: 600; padding: 2px 8px; border-radius: 4px; border: 1px solid; white-space: nowrap; }
     .card-pills { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
@@ -1264,6 +1268,9 @@ function App() {
   const PAGE_SIZE = 24;
   const [filters, setFilters] = useState({ q:'', phase:'', local_authority:[], score_band:'' });
   const [sortBy, setSortBy] = useState('nearby');
+  const [userCoords, setUserCoords] = useState(null);
+  const [locationStatus, setLocationStatus] = useState('idle');
+  const [radiusKm, setRadiusKm] = useState(null);
 
   useEffect(() => {
     async function load() {
@@ -1296,6 +1303,7 @@ function App() {
     if (filters.phase) r = r.filter(s => s.phase === filters.phase);
     if (filters.local_authority.length) r = r.filter(s => filters.local_authority.includes(s.local_authority));
     if (filters.score_band) r = r.filter(s => (s.score_band||s.quality_label) === filters.score_band);
+    if (radiusKm && userCoords) r = r.filter(s => s.lat && s.lng && haversineKm(userCoords.lat, userCoords.lng, s.lat, s.lng) <= radiusKm);
     r = [...r];
     // Academic score: normalise Att8 and KS2 to the same relative-to-average scale
     function academicScore(s) {
@@ -1325,7 +1333,7 @@ function App() {
       });
     }
     return r;
-  }, [schools, filters, sortBy, userCoords]);
+  }, [schools, filters, sortBy, userCoords, radiusKm]);
 
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
   const paged = filtered.slice((page-1)*PAGE_SIZE, page*PAGE_SIZE);
@@ -1339,8 +1347,6 @@ function App() {
 
   const [heroPostcode, setHeroPostcode] = useState('');
   const [geoCoords, setGeoCoords] = useState(null);
-  const [userCoords, setUserCoords] = useState(null);
-  const [locationStatus, setLocationStatus] = useState('idle'); // idle | requesting | granted | denied
   const [compareList, setCompareList] = useState([]);
   const [showCompare, setShowCompare] = useState(false);
   const [showGuide, setShowGuide] = useState(() => {
@@ -1387,6 +1393,7 @@ function App() {
 
   function handleSortChange(val) {
     setSortBy(val);
+    if (val !== 'nearby') setRadiusKm(null);
     if (val === 'nearby' && locationStatus === 'idle') requestLocation();
     setPage(1);
   }
@@ -1581,7 +1588,21 @@ function App() {
                       </div>
                     </div>
                     {sortBy === 'nearby' && locationStatus === 'requesting' && <span style={{fontSize:'0.67rem',color:'#888'}}>📍 Getting your location…</span>}
-                    {sortBy === 'nearby' && locationStatus === 'granted' && <span style={{fontSize:'0.67rem',color:'#27AE60'}}>📍 Sorted by proximity + score</span>}
+                    {sortBy === 'nearby' && locationStatus === 'granted' && (
+                      <div>
+                        <div className="radius-chips">
+                          {[1,2,3].map(function(km){
+                            return (
+                              <button key={km} className={radiusKm===km?'radius-chip active':'radius-chip'} onClick={function(){ setRadiusKm(radiusKm===km?null:km); setPage(1); }}>
+                                {km}km
+                              </button>
+                            );
+                          })}
+                          {radiusKm && <span style={{fontSize:'0.67rem',color:'#27AE60',alignSelf:'center'}}>📍 Within {radiusKm}km · {filtered.length} schools</span>}
+                          {!radiusKm && <span style={{fontSize:'0.67rem',color:'#27AE60',alignSelf:'center'}}>📍 Sorted by proximity + score</span>}
+                        </div>
+                      </div>
+                    )}
                     {sortBy === 'nearby' && locationStatus === 'denied' && <span style={{fontSize:'0.67rem',color:'#C0392B'}}>Location blocked — enable in browser settings</span>}
                   </div>
                 </div>

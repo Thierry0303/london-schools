@@ -1325,24 +1325,25 @@ function App() {
     else if (sortBy === 'pupils') r.sort((a,b) => { var d=(b.pupils??-1)-(a.pupils??-1); return d!==0?d:a.name.localeCompare(b.name); });
     else if (sortBy === 'nearby' && !userCoords) { r.sort((a,b) => { var d=(b.ofsted_score??-1)-(a.ofsted_score??-1); return d!==0?d:a.name.localeCompare(b.name); }); }
     else if (sortBy === 'nearby' && userCoords) {
+      var BAND_RANK = {'Outstanding':4,'Good':3,'Requires improvement':2,'Inadequate':1,'Ungraded (monitoring)':2,'Report card (2025+)':2};
       r.sort(function(a,b) {
+        // 1. Quality band is the hard primary sort — Outstanding always beats Good
+        var bandRankA = BAND_RANK[a.score_band||a.quality_label||''] || 0;
+        var bandRankB = BAND_RANK[b.score_band||b.quality_label||''] || 0;
+        if (bandRankA !== bandRankB) return bandRankB - bandRankA;
+        // 2. Within the same band: best academic results first
+        var rawAcadA = academicScore(a); var rawAcadB = academicScore(b);
+        var acadA = rawAcadA > 0 ? rawAcadA : (a.ofsted_score || 50);
+        var acadB = rawAcadB > 0 ? rawAcadB : (b.ofsted_score || 50);
+        // Allow distance to tip the scales only when academic scores are within 10 points
         var distA = (a.lat && a.lng) ? haversineKm(userCoords.lat, userCoords.lng, a.lat, a.lng) : 999;
         var distB = (b.lat && b.lng) ? haversineKm(userCoords.lat, userCoords.lng, b.lat, b.lng) : 999;
-        // Exponential decay — halves every ~2.8km
         var proxA = Math.exp(-distA * 0.25) * 100;
         var proxB = Math.exp(-distB * 0.25) * 100;
-        // Academic score normalised to 0-100 (avg school = 77, top school ≈ 100+)
-        // academicScore returns -1 when no exam data — fall back to Ofsted grade
-        var rawAcadA = academicScore(a); var rawAcadB = academicScore(b);
-        var acadA = rawAcadA > 0 ? Math.min(rawAcadA / 1.5, 100) : (a.ofsted_score != null ? a.ofsted_score * 0.6 : 40);
-        var acadB = rawAcadB > 0 ? Math.min(rawAcadB / 1.5, 100) : (b.ofsted_score != null ? b.ofsted_score * 0.6 : 40);
-        var ofstedA = a.ofsted_score != null ? a.ofsted_score : 50;
-        var ofstedB = b.ofsted_score != null ? b.ofsted_score : 50;
-        // Weights: 50% academic results · 30% proximity · 20% Ofsted grade
-        // Academic quality leads — distance breaks ties between similar-quality schools
-        var compositeA = acadA * 0.50 + proxA * 0.30 + ofstedA * 0.20;
-        var compositeB = acadB * 0.50 + proxB * 0.30 + ofstedB * 0.20;
-        return compositeB - compositeA;
+        // Within same band: 70% academic results + 30% proximity
+        var withinA = acadA * 0.70 + proxA * 0.30;
+        var withinB = acadB * 0.70 + proxB * 0.30;
+        return withinB - withinA;
       });
     }
     return r;

@@ -837,6 +837,16 @@ function ScoreCard({ school, compareList, toggleCompare, userCoords }) {
   const score = school.ofsted_score;
   const isSelected = compareList && compareList.find(function(s){return s.urn===school.urn;});
 
+  // Composite score: 60% quality band + 40% academic results (0–100)
+  var COMP_BAND = {'Outstanding':100,'Good':75,'Requires improvement':50,'Inadequate':25,'Ungraded (monitoring)':50,'Report card (2025+)':50};
+  var bandVal = COMP_BAND[band] || 50;
+  var acadRaw = -1;
+  if (school.ks4_att8 != null) acadRaw = (school.ks4_att8 / ENG_ATT8_AVG) * 100;
+  else if (school.ks2_expected_pct != null) acadRaw = (school.ks2_expected_pct / ENG_KS2_EXP_AVG) * 100;
+  var acadVal = acadRaw > 0 ? Math.min(100, acadRaw) : bandVal;
+  var compositeScore = Math.round(bandVal * 0.60 + acadVal * 0.40);
+  var scoreColor = compositeScore >= 85 ? '#27AE60' : compositeScore >= 70 ? '#2980B9' : compositeScore >= 50 ? '#E67E22' : '#C0392B';
+
   // Apps/place colour
   var appsColor = '#aaa';
   if (school.apps_per_place != null) {
@@ -870,10 +880,16 @@ function ScoreCard({ school, compareList, toggleCompare, userCoords }) {
     <div className="school-card" style={{'--band-color': color}} onClick={handleClick}>
       <div className="card-top">
         <span className="card-phase">{school.phase}</span>
-        <span className="card-rating-pill" style={{background: color + '1a', color: color, border: '1px solid ' + color + '55'}}>
-          <span style={{width:7,height:7,borderRadius:'50%',background:color,display:'inline-block',flexShrink:0}} />
-          {band}
-        </span>
+        <div style={{display:'flex',alignItems:'center',gap:7,flexShrink:0}}>
+          <span className="card-rating-pill" style={{background: color + '1a', color: color, border: '1px solid ' + color + '55'}}>
+            <span style={{width:7,height:7,borderRadius:'50%',background:color,display:'inline-block',flexShrink:0}} />
+            {band}
+          </span>
+          <div style={{display:'flex',flexDirection:'column',alignItems:'center',background:'var(--ink)',borderRadius:6,padding:'4px 9px',minWidth:42}}>
+            <span style={{fontFamily:"'Playfair Display',serif",fontSize:'1.1rem',fontWeight:700,lineHeight:1,color:scoreColor}}>{compositeScore}</span>
+            <span style={{fontSize:'0.53rem',textTransform:'uppercase',letterSpacing:'0.08em',color:'rgba(245,240,232,0.45)',marginTop:2}}>Score</span>
+          </div>
+        </div>
       </div>
       <div className="card-name">{school.name}</div>
       <div className="card-la">📍 {school.local_authority} · {school.postcode}</div>

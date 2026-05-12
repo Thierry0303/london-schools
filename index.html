@@ -111,8 +111,8 @@
     .results-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
     .results-count { font-size: 0.88rem; color: #777; }
     .results-count strong { color: var(--ink); font-size: 0.95rem; }
-    .view-toggle { display: flex; border: 2px solid var(--border); border-radius: 6px; overflow: hidden; }
-    .view-btn { padding: 6px 12px; background: white; border: none; cursor: pointer; font-size: 1rem; color: #bbb; transition: all 0.15s; }
+    .view-toggle { display: flex; border: 1.5px solid var(--border); border-radius: 7px; overflow: hidden; }
+    .view-btn { padding: 7px 13px; background: white; border: none; cursor: pointer; font-size: 0.78rem; font-weight: 600; font-family: 'DM Sans', sans-serif; color: #aaa; transition: all 0.15s; letter-spacing: 0.02em; }
     .view-btn.active { background: var(--ink); color: var(--cream); }
 
     .school-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; }
@@ -1203,7 +1203,7 @@ function AddressChecker({ schools, initialPostcode, initialCoords }) {
 
 function App() {
   const [view, setView] = useState('schools');
-  const [displayMode, setDisplayMode] = useState(window.innerWidth < 768 ? 'grid' : 'grid');
+  const [displayMode, setDisplayMode] = useState('table');
   const [schools, setSchools] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -1463,22 +1463,17 @@ function App() {
                   </button>
                 </div>
                 <div className="results-header">
-                  <div style={{display:'flex',alignItems:'center',gap:10,flexWrap:'wrap'}}>
-                    <div className="results-count">Showing <strong>{filtered.length}</strong> school{filtered.length!==1?'s':''}{schools.length!==filtered.length?` of ${schools.length}`:''}</div>
-                    <button onClick={()=>setShowGuide(g=>!g)} style={{background:'rgba(212,168,67,0.12)',border:'1px solid rgba(212,168,67,0.3)',borderRadius:5,padding:'3px 10px',fontSize:'0.75rem',color:'var(--gold)',cursor:'pointer',fontFamily:"'DM Sans',sans-serif"}}>
-                      ⊞ Compare
-                    </button>
-                  </div>
+                  <div className="results-count">Showing <strong>{filtered.length}</strong> school{filtered.length!==1?'s':''}{schools.length!==filtered.length?` of ${schools.length}`:''}</div>
                   <div style={{display:'flex',alignItems:'center',gap:8}}>
                     <select value={sortBy} onChange={function(e){setSortBy(e.target.value);setPage(1);}} style={{minWidth:'unset',padding:'6px 28px 6px 10px',fontSize:'0.78rem',border:'1.5px solid var(--border)',borderRadius:6,background:'white'}}>
-                      <option value="score">Sort: Top score</option>
-                      <option value="name">Sort: A–Z</option>
-                      <option value="apps">Sort: Oversubscribed</option>
-                      <option value="pupils">Sort: Largest</option>
+                      <option value="score">Top score</option>
+                      <option value="name">A–Z</option>
+                      <option value="apps">Oversubscribed</option>
+                      <option value="pupils">Largest</option>
                     </select>
                     <div className="view-toggle">
-                      <button className={displayMode==='grid'?'view-btn active':'view-btn'} onClick={() => setDisplayMode('grid')}>⊞</button>
-                      <button className={displayMode==='table'?'view-btn active':'view-btn'} onClick={() => setDisplayMode('table')}>☰</button>
+                      <button className={displayMode==='table'?'view-btn active':'view-btn'} onClick={() => setDisplayMode('table')}>List</button>
+                      <button className={displayMode==='grid'?'view-btn active':'view-btn'} onClick={() => setDisplayMode('grid')}>Cards</button>
                     </div>
                   </div>
                 </div>
@@ -1490,21 +1485,28 @@ function App() {
                   <table className="school-table">
                     <thead>
                       <tr>
+                        <th style={{width:36,textAlign:'center',fontSize:'0.65rem',color:'rgba(245,240,232,0.5)'}}>CMP</th>
                         <th>#</th><th>School</th>
                         <th className="hide-mobile">Borough</th>
                         <th className="hide-mobile">Phase</th>
                         <th>Ofsted</th>
                         <th className="hide-mobile">Admissions</th>
                         <th className="hide-mobile">Pupils</th>
-                        <th className="hide-mobile">Inspected</th>
                       </tr>
                     </thead>
                     <tbody>
                       {paged.map(function(s,i){
                         var band=s.score_band||s.quality_label||'Unknown';
                         var adm=s.admissions;
+                        var isSel=compareList && compareList.find(function(c){return c.urn===s.urn;});
+                        function handleRowCompare(e) { e.stopPropagation(); if(toggleCompare) toggleCompare(s,e); }
                         return (
-                          <tr key={s.urn} onClick={() => { window.location.href = schoolUrl(s); }}>
+                          <tr key={s.urn} onClick={() => { window.location.href = schoolUrl(s); }} style={{background: isSel ? 'rgba(212,168,67,0.06)' : ''}}>
+                            <td style={{textAlign:'center',padding:'8px 6px'}} onClick={handleRowCompare}>
+                              <span style={{display:'inline-flex',alignItems:'center',justifyContent:'center',width:22,height:22,borderRadius:5,border: isSel ? '1.5px solid var(--gold)' : '1.5px solid #ddd',background: isSel ? 'var(--gold)' : 'white',color: isSel ? 'var(--ink)' : '#ccc',fontSize:'0.7rem',fontWeight:700,cursor:'pointer',transition:'all 0.15s',flexShrink:0}}>
+                                {isSel ? '✓' : '+'}
+                              </span>
+                            </td>
                             <td><span className="rank-num">{(page-1)*PAGE_SIZE+i+1}</span></td>
                             <td style={{fontWeight:600,maxWidth:200}}>{s.name}<div style={{fontSize:'0.75rem',color:'#999',fontWeight:400}}>{s.local_authority}</div></td>
                             <td className="hide-mobile" style={{color:'#777'}}>{s.local_authority}</td>
@@ -1517,7 +1519,6 @@ function App() {
                               {adm==='Selective' ? <span style={{color:'#E65100',fontWeight:600}}>Selective</span> : adm==='Non-selective' ? <span style={{color:'#555'}}>Non-selective</span> : <span style={{color:'#bbb'}}>—</span>}
                             </td>
                             <td className="hide-mobile" style={{color:'#777'}}>{s.pupils??'—'}</td>
-                            <td className="hide-mobile" style={{color:'#aaa',fontSize:'0.8rem'}}>{s.inspection_date||'—'}</td>
                           </tr>
                         );
                       })}

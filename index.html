@@ -132,6 +132,8 @@
     .card-stat-item + .card-stat-item { border-left: 1px solid var(--border); }
     .card-stat-num { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--ink); line-height: 1; }
     .card-stat-lbl { font-size: 0.59rem; color: #bbb; text-transform: uppercase; letter-spacing: 0.07em; margin-top: 3px; }
+    .card-area-row { display: flex; flex-wrap: wrap; gap: 5px; margin: 0 0 9px; }
+    .card-area-badge { font-size: 0.69rem; font-weight: 600; padding: 2px 8px; border-radius: 4px; border: 1px solid; white-space: nowrap; }
     .card-pills { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
     .pill { font-size: 0.72rem; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
     .pill-o { background: #E8F5E9; color: #1B5E20; } .pill-g { background: #E3F2FD; color: #0D47A1; }
@@ -852,6 +854,20 @@ function ScoreCard({ school, compareList, toggleCompare }) {
           {school.ungraded_outcome}
         </div>
       )}
+      {(school.crime_label || school.fsm_label) && (
+        <div className="card-area-row">
+          {school.crime_label && (function(){
+            var low = school.crime_label.toLowerCase();
+            var col = low.indexOf('below') !== -1 ? '#27AE60' : low.indexOf('above') !== -1 ? '#C0392B' : '#888';
+            return <span className="card-area-badge" style={{color:col,borderColor:col+'44',background:col+'0d'}}>🔒 {school.crime_label}</span>;
+          })()}
+          {school.fsm_label && (function(){
+            var low = school.fsm_label.toLowerCase();
+            var col = low.indexOf('below') !== -1 ? '#27AE60' : low.indexOf('above') !== -1 ? '#E67E22' : '#888';
+            return <span className="card-area-badge" style={{color:col,borderColor:col+'44',background:col+'0d'}}>📊 {school.fsm_label}</span>;
+          })()}
+        </div>
+      )}
       <div className="card-pills">
         {admissions === 'Selective' && <span className="pill" style={{background:'#FFF8E1',color:'#E65100',border:'1px solid #FFE082'}}>🎓 Selective</span>}
         {school.sixth_form === 'Has a sixth form' && <span className="pill" style={{background:'#EDE7F6',color:'#4527A0'}}>Sixth Form</span>}
@@ -1209,7 +1225,7 @@ function App() {
   const [page, setPage] = useState(1);
   const PAGE_SIZE = 24;
   const [filters, setFilters] = useState({ q:'', phase:'', local_authority:[], score_band:'' });
-  const [sortBy, setSortBy] = useState('score');
+  const [sortBy, setSortBy] = useState('name');
 
   useEffect(() => {
     async function load() {
@@ -1243,10 +1259,10 @@ function App() {
     if (filters.local_authority.length) r = r.filter(s => filters.local_authority.includes(s.local_authority));
     if (filters.score_band) r = r.filter(s => (s.score_band||s.quality_label) === filters.score_band);
     r = [...r];
-    if (sortBy === 'score') r.sort((a,b) => (b.ofsted_score??-1)-(a.ofsted_score??-1));
+    if (sortBy === 'score') r.sort((a,b) => { var d=(b.ofsted_score??-1)-(a.ofsted_score??-1); return d!==0?d:a.name.localeCompare(b.name); });
     else if (sortBy === 'name') r.sort((a,b) => a.name.localeCompare(b.name));
-    else if (sortBy === 'apps') r.sort((a,b) => (b.apps_per_place??-1)-(a.apps_per_place??-1));
-    else if (sortBy === 'pupils') r.sort((a,b) => (b.pupils??-1)-(a.pupils??-1));
+    else if (sortBy === 'apps') r.sort((a,b) => { var d=(b.apps_per_place??-1)-(a.apps_per_place??-1); return d!==0?d:a.name.localeCompare(b.name); });
+    else if (sortBy === 'pupils') r.sort((a,b) => { var d=(b.pupils??-1)-(a.pupils??-1); return d!==0?d:a.name.localeCompare(b.name); });
     return r;
   }, [schools, filters, sortBy]);
 
@@ -1492,6 +1508,7 @@ function App() {
                         <th>Ofsted</th>
                         <th className="hide-mobile">Admissions</th>
                         <th className="hide-mobile">Pupils</th>
+                        <th className="hide-mobile">Crime</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -1519,6 +1536,7 @@ function App() {
                               {adm==='Selective' ? <span style={{color:'#E65100',fontWeight:600}}>Selective</span> : adm==='Non-selective' ? <span style={{color:'#555'}}>Non-selective</span> : <span style={{color:'#bbb'}}>—</span>}
                             </td>
                             <td className="hide-mobile" style={{color:'#777'}}>{s.pupils??'—'}</td>
+                            <td className="hide-mobile" style={{fontSize:'0.78rem'}}>{s.crime_label ? (function(){ var low=s.crime_label.toLowerCase(); var col=low.indexOf('below')!==-1?'#27AE60':low.indexOf('above')!==-1?'#C0392B':'#888'; return <span style={{color:col,fontWeight:600}}>{s.crime_label}</span>; })() : <span style={{color:'#ccc'}}>—</span>}</td>
                           </tr>
                         );
                       })}

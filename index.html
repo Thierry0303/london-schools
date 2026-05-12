@@ -111,8 +111,8 @@
     .results-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
     .results-count { font-size: 0.88rem; color: #777; }
     .results-count strong { color: var(--ink); font-size: 0.95rem; }
-    .view-toggle { display: flex; border: 1.5px solid var(--border); border-radius: 7px; overflow: hidden; }
-    .view-btn { padding: 7px 13px; background: white; border: none; cursor: pointer; font-size: 0.78rem; font-weight: 600; font-family: 'DM Sans', sans-serif; color: #aaa; transition: all 0.15s; letter-spacing: 0.02em; }
+    .view-toggle { display: flex; border: 1.5px solid var(--border); border-radius: 8px; overflow: hidden; }
+    .view-btn { padding: 9px 18px; background: white; border: none; cursor: pointer; font-size: 0.85rem; font-weight: 600; font-family: 'DM Sans', sans-serif; color: #aaa; transition: all 0.15s; letter-spacing: 0.01em; min-width: 64px; }
     .view-btn.active { background: var(--ink); color: var(--cream); }
 
     .school-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; }
@@ -293,7 +293,10 @@
       .clear-btn { width: 100%; text-align: center; }
 
       /* Results header */
-      .results-header { flex-direction: column; gap: 8px; align-items: flex-start; }
+      .results-header { flex-direction: column; gap: 10px; align-items: stretch; }
+      .results-header > div:last-child { display: flex; align-items: center; gap: 8px; }
+      .results-header select { flex: 1; font-size: 0.85rem; padding: 9px 28px 9px 12px; }
+      .view-btn { padding: 9px 0; flex: 1; font-size: 0.85rem; }
 
       /* Grid */
       .school-grid { grid-template-columns: 1fr; gap: 12px; }
@@ -796,7 +799,7 @@ function StatsPage({ schools, onFilter }) {
   );
 }
 
-function SchoolListRow({ school, rank, compareList, toggleCompare }) {
+function SchoolListRow({ school, rank, compareList, toggleCompare, userCoords }) {
   var band = school.score_band || school.quality_label || 'Unknown';
   var color = BAND_COLORS[band] || '#ccc';
   var isSel = compareList && compareList.find(function(c){ return c.urn===school.urn; });
@@ -804,13 +807,15 @@ function SchoolListRow({ school, rank, compareList, toggleCompare }) {
   function handleClick() { window.location.href = schoolUrl(school); }
   var crimeCol = '#aaa';
   if (school.crime_label) { var cl=school.crime_label.toLowerCase(); crimeCol=cl.indexOf('below')!==-1?'#27AE60':cl.indexOf('above')!==-1?'#C0392B':'#888'; }
+  var distStr = null;
+  if (userCoords && school.lat && school.lng) { var d=haversineKm(userCoords.lat,userCoords.lng,school.lat,school.lng); distStr=d<1?(Math.round(d*1000)+'m'):(d.toFixed(1)+'km'); }
   return (
     <div className={isSel ? 'slr selected' : 'slr'} onClick={handleClick}>
       <div className={isSel ? 'slr-cmp checked' : 'slr-cmp'} onClick={handleCompare}>{isSel ? '✓' : '+'}</div>
       <div className="slr-body">
         <div className="slr-name">{school.name}</div>
         <div className="slr-sub">
-          {school.local_authority}{school.crime_label ? <span style={{color:crimeCol}}> · 🔒 {school.crime_label}</span> : null}
+          {school.local_authority}{distStr ? <span style={{color:'var(--gold)',fontWeight:600}}> · {distStr}</span> : null}{school.crime_label ? <span style={{color:crimeCol}}> · 🔒 {school.crime_label}</span> : null}
         </div>
       </div>
       <div className="slr-right">
@@ -824,7 +829,7 @@ function SchoolListRow({ school, rank, compareList, toggleCompare }) {
   );
 }
 
-function ScoreCard({ school, compareList, toggleCompare }) {
+function ScoreCard({ school, compareList, toggleCompare, userCoords }) {
   const band = school.score_band || school.quality_label || 'Unknown';
   const color = BAND_COLORS[band] || '#ccc';
   const admissions = school.admissions;
@@ -870,7 +875,7 @@ function ScoreCard({ school, compareList, toggleCompare }) {
         </span>
       </div>
       <div className="card-name">{school.name}</div>
-      <div className="card-la">📍 {school.local_authority} · {school.postcode}</div>
+      <div className="card-la">📍 {school.local_authority} · {school.postcode}{userCoords && school.lat && school.lng ? <span style={{color:'var(--gold)',fontWeight:600,marginLeft:4}}>· {(function(){ var d=haversineKm(userCoords.lat,userCoords.lng,school.lat,school.lng); return d<1?Math.round(d*1000)+'m':d.toFixed(1)+'km'; })()}</span> : null}</div>
       <div className="card-stats-row">
         <div className="card-stat-item">
           <div className="card-stat-num" style={{color: score != null ? 'var(--ink)' : '#ccc'}}>{score != null ? score : '—'}</div>
@@ -1255,7 +1260,7 @@ function AddressChecker({ schools, initialPostcode, initialCoords }) {
 
 function App() {
   const [view, setView] = useState('schools');
-  const [displayMode, setDisplayMode] = useState('table');
+  const [displayMode, setDisplayMode] = useState('grid');
   const [schools, setSchools] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -1299,8 +1304,21 @@ function App() {
     else if (sortBy === 'name') r.sort((a,b) => a.name.localeCompare(b.name));
     else if (sortBy === 'apps') r.sort((a,b) => { var d=(b.apps_per_place??-1)-(a.apps_per_place??-1); return d!==0?d:a.name.localeCompare(b.name); });
     else if (sortBy === 'pupils') r.sort((a,b) => { var d=(b.pupils??-1)-(a.pupils??-1); return d!==0?d:a.name.localeCompare(b.name); });
+    else if (sortBy === 'nearby' && userCoords) {
+      r.sort(function(a,b) {
+        var scoreA = a.ofsted_score != null ? a.ofsted_score : 50;
+        var scoreB = b.ofsted_score != null ? b.ofsted_score : 50;
+        var distA = (a.lat && a.lng) ? haversineKm(userCoords.lat, userCoords.lng, a.lat, a.lng) : 999;
+        var distB = (b.lat && b.lng) ? haversineKm(userCoords.lat, userCoords.lng, b.lat, b.lng) : 999;
+        var proxA = 100 / (1 + distA * 0.4);
+        var proxB = 100 / (1 + distB * 0.4);
+        var compositeA = scoreA * 0.5 + proxA * 0.5;
+        var compositeB = scoreB * 0.5 + proxB * 0.5;
+        return compositeB - compositeA;
+      });
+    }
     return r;
-  }, [schools, filters, sortBy]);
+  }, [schools, filters, sortBy, userCoords]);
 
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
   const paged = filtered.slice((page-1)*PAGE_SIZE, page*PAGE_SIZE);
@@ -1314,6 +1332,8 @@ function App() {
 
   const [heroPostcode, setHeroPostcode] = useState('');
   const [geoCoords, setGeoCoords] = useState(null);
+  const [userCoords, setUserCoords] = useState(null);
+  const [locationStatus, setLocationStatus] = useState('idle'); // idle | requesting | granted | denied
   const [compareList, setCompareList] = useState([]);
   const [showCompare, setShowCompare] = useState(false);
   const [showGuide, setShowGuide] = useState(() => {
@@ -1340,6 +1360,25 @@ function App() {
       },
       { enableHighAccuracy: true, timeout: 10000 }
     );
+  }
+
+  function requestLocation() {
+    if (!navigator.geolocation) { setLocationStatus('denied'); return; }
+    setLocationStatus('requesting');
+    navigator.geolocation.getCurrentPosition(
+      function(pos) {
+        setUserCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        setLocationStatus('granted');
+      },
+      function() { setLocationStatus('denied'); setSortBy('score'); },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  }
+
+  function handleSortChange(val) {
+    setSortBy(val);
+    if (val === 'nearby' && locationStatus === 'idle') requestLocation();
+    setPage(1);
   }
 
   function toggleCompare(school, e) {
@@ -1517,12 +1556,18 @@ function App() {
                 <div className="results-header">
                   <div className="results-count">Showing <strong>{filtered.length}</strong> school{filtered.length!==1?'s':''}{schools.length!==filtered.length?` of ${schools.length}`:''}</div>
                   <div style={{display:'flex',alignItems:'center',gap:8}}>
-                    <select value={sortBy} onChange={function(e){setSortBy(e.target.value);setPage(1);}} style={{minWidth:'unset',padding:'6px 28px 6px 10px',fontSize:'0.78rem',border:'1.5px solid var(--border)',borderRadius:6,background:'white'}}>
-                      <option value="score">Top score</option>
-                      <option value="name">A–Z</option>
-                      <option value="apps">Oversubscribed</option>
-                      <option value="pupils">Largest</option>
-                    </select>
+                    <div style={{display:'flex',flexDirection:'column',gap:3}}>
+                      <select value={sortBy} onChange={function(e){handleSortChange(e.target.value);}} style={{minWidth:'unset',padding:'6px 28px 6px 10px',fontSize:'0.78rem',border:'1.5px solid var(--border)',borderRadius:6,background:'white'}}>
+                        <option value="name">A–Z</option>
+                        <option value="score">Top score</option>
+                        <option value="apps">Oversubscribed</option>
+                        <option value="pupils">Largest</option>
+                        <option value="nearby">📍 Near me + score</option>
+                      </select>
+                      {sortBy === 'nearby' && locationStatus === 'requesting' && <span style={{fontSize:'0.65rem',color:'#aaa',paddingLeft:2}}>Getting location…</span>}
+                      {sortBy === 'nearby' && locationStatus === 'granted' && <span style={{fontSize:'0.65rem',color:'#27AE60',paddingLeft:2}}>📍 Sorting by proximity + score</span>}
+                      {sortBy === 'nearby' && locationStatus === 'denied' && <span style={{fontSize:'0.65rem',color:'#C0392B',paddingLeft:2}}>Location denied — enable in browser</span>}
+                    </div>
                     <div className="view-toggle">
                       <button className={displayMode==='table'?'view-btn active':'view-btn'} onClick={() => setDisplayMode('table')}>List</button>
                       <button className={displayMode==='grid'?'view-btn active':'view-btn'} onClick={() => setDisplayMode('grid')}>Cards</button>
@@ -1532,11 +1577,11 @@ function App() {
                 {filtered.length === 0 ? (
                   <div className="empty-state"><h3>No schools found</h3><p>Try adjusting your filters.</p></div>
                 ) : displayMode === 'grid' ? (
-                  <div className="school-grid">{paged.map(s => <ScoreCard key={s.urn} school={s} compareList={compareList} toggleCompare={toggleCompare} />)}</div>
+                  <div className="school-grid">{paged.map(s => <ScoreCard key={s.urn} school={s} compareList={compareList} toggleCompare={toggleCompare} userCoords={userCoords} />)}</div>
                 ) : (
                   <>
                   <div className="school-list">
-                    {paged.map(function(s,i){ return <SchoolListRow key={s.urn} school={s} rank={(page-1)*PAGE_SIZE+i+1} compareList={compareList} toggleCompare={toggleCompare} />; })}
+                    {paged.map(function(s,i){ return <SchoolListRow key={s.urn} school={s} rank={(page-1)*PAGE_SIZE+i+1} compareList={compareList} toggleCompare={toggleCompare} userCoords={userCoords} />; })}
                   </div>
                   <div className="school-table-wrap">
                   <table className="school-table">

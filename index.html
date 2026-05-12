@@ -207,6 +207,20 @@
     .qb-chip { display: inline-flex; align-items: center; padding: 6px 14px; border-radius: 22px; font-size: 0.79rem; font-weight: 600; text-decoration: none; border: 1.5px solid var(--border); background: white; color: var(--ink); transition: all 0.18s; flex-shrink: 0; }
     .qb-chip:hover { border-color: var(--gold); color: #7a5500; transform: translateY(-1px); box-shadow: 0 3px 10px rgba(212,168,67,0.18); }
     .qb-divider { width: 1px; height: 22px; background: var(--border); flex-shrink: 0; margin: 0 6px; }
+    /* Mobile school list rows */
+    .school-list { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: white; }
+    .slr { display: flex; align-items: center; gap: 10px; padding: 11px 13px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.15s; text-decoration: none; }
+    .slr:last-child { border-bottom: none; }
+    .slr:hover { background: #FFFBF0; }
+    .slr.selected { background: rgba(212,168,67,0.06); }
+    .slr-cmp { width: 22px; height: 22px; border-radius: 5px; border: 1.5px solid #ddd; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; flex-shrink: 0; cursor: pointer; transition: all 0.15s; color: #ccc; background: white; }
+    .slr-cmp.checked { background: var(--gold); border-color: var(--gold); color: var(--ink); }
+    .slr-body { flex: 1; min-width: 0; }
+    .slr-name { font-weight: 700; font-size: 0.88rem; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .slr-sub { font-size: 0.71rem; color: #aaa; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .slr-right { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex-shrink: 0; }
+    /* On desktop, hide the list rows and show the table */
+    @media (min-width: 769px) { .school-list { display: none; } .school-table-wrap { display: block; } }
     .school-table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); font-size: 0.865rem; }
     .school-table th { background: var(--ink); color: var(--cream); padding: 11px 14px; text-align: left; font-weight: 600; font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap; }
     .school-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
@@ -286,15 +300,9 @@
       .school-card { padding: 16px 16px 12px 20px; }
       .card-meta { flex-wrap: wrap; gap: 6px; font-size: 0.72rem; }
 
-      /* Table — hide less important columns */
-      .school-table { font-size: 0.78rem; }
-      .school-table th, .school-table td { padding: 8px 8px; }
-      .school-table th:nth-child(3),
-      .school-table td:nth-child(3),
-      .school-table th:nth-child(6),
-      .school-table td:nth-child(6),
-      .school-table th:nth-child(8),
-      .school-table td:nth-child(8) { display: none; }
+      /* Table — desktop only; mobile uses .school-list */
+      .school-table-wrap { display: none; }
+      .school-list { display: flex; flex-direction: column; }
 
       /* Map */
       #school-map { height: 380px; }
@@ -784,6 +792,34 @@ function StatsPage({ schools, onFilter }) {
         })}
       </div>
 
+    </div>
+  );
+}
+
+function SchoolListRow({ school, rank, compareList, toggleCompare }) {
+  var band = school.score_band || school.quality_label || 'Unknown';
+  var color = BAND_COLORS[band] || '#ccc';
+  var isSel = compareList && compareList.find(function(c){ return c.urn===school.urn; });
+  function handleCompare(e) { e.stopPropagation(); if(toggleCompare) toggleCompare(school, e); }
+  function handleClick() { window.location.href = schoolUrl(school); }
+  var crimeCol = '#aaa';
+  if (school.crime_label) { var cl=school.crime_label.toLowerCase(); crimeCol=cl.indexOf('below')!==-1?'#27AE60':cl.indexOf('above')!==-1?'#C0392B':'#888'; }
+  return (
+    <div className={isSel ? 'slr selected' : 'slr'} onClick={handleClick}>
+      <div className={isSel ? 'slr-cmp checked' : 'slr-cmp'} onClick={handleCompare}>{isSel ? '✓' : '+'}</div>
+      <div className="slr-body">
+        <div className="slr-name">{school.name}</div>
+        <div className="slr-sub">
+          {school.local_authority}{school.crime_label ? <span style={{color:crimeCol}}> · 🔒 {school.crime_label}</span> : null}
+        </div>
+      </div>
+      <div className="slr-right">
+        <span style={{display:'inline-flex',alignItems:'center',gap:4,padding:'3px 8px',borderRadius:20,background:color+'1a',color:color,border:'1px solid '+color+'55',fontSize:'0.68rem',fontWeight:700,whiteSpace:'nowrap'}}>
+          <span style={{width:6,height:6,borderRadius:'50%',background:color,display:'inline-block',flexShrink:0}} />
+          {band}
+        </span>
+        {school.ofsted_score != null && <span style={{fontFamily:"'Playfair Display',serif",fontWeight:700,fontSize:'0.92rem',color:'var(--ink)'}}>{school.ofsted_score}</span>}
+      </div>
     </div>
   );
 }
@@ -1498,6 +1534,11 @@ function App() {
                 ) : displayMode === 'grid' ? (
                   <div className="school-grid">{paged.map(s => <ScoreCard key={s.urn} school={s} compareList={compareList} toggleCompare={toggleCompare} />)}</div>
                 ) : (
+                  <>
+                  <div className="school-list">
+                    {paged.map(function(s,i){ return <SchoolListRow key={s.urn} school={s} rank={(page-1)*PAGE_SIZE+i+1} compareList={compareList} toggleCompare={toggleCompare} />; })}
+                  </div>
+                  <div className="school-table-wrap">
                   <table className="school-table">
                     <thead>
                       <tr>
@@ -1542,6 +1583,8 @@ function App() {
                       })}
                     </tbody>
                   </table>
+                  </div>
+                  </>
                 )}
                 {totalPages > 1 && (
                   <div className="pagination">

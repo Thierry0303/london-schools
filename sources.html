@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Data sources — London School Directory</title>
+<meta name="description" content="Every dataset that powers London School Directory, with direct links to the source publication, the licence under which we use it, and how often we refresh.">
+<link rel="canonical" href="https://londonschool.directory/sources.html">
+<meta name="theme-color" content="#0b2545">
+<style>
+  :root { --ink:#0b2545; --ink-2:#1e3a5f; --muted:#5b6b85; --line:#e3e8ef; --bg:#fff; --bg-2:#f6f8fb; --accent:#0b6efd; --radius:10px; }
+  *{box-sizing:border-box}html,body{margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Inter","Segoe UI",Roboto,sans-serif;color:var(--ink);line-height:1.6}
+  a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+  header.site{border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:50}
+  header.site .inner{max-width:880px;margin:0 auto;padding:14px 20px;display:flex;justify-content:space-between;align-items:center}
+  header.site a.brand{color:var(--ink);font-weight:700}
+  header.site nav a{margin-left:18px;color:var(--ink-2);font-size:14px}
+  main{max-width:880px;margin:0 auto;padding:32px 20px 80px}
+  .crumbs{font-size:13px;color:var(--muted);margin-bottom:14px}
+  .crumbs a{color:var(--muted)}
+  h1{font-size:32px;letter-spacing:-0.02em;margin:0 0 8px}
+  .lede{color:var(--ink-2);font-size:18px;margin:0 0 24px}
+  table{width:100%;border-collapse:collapse;font-size:14px;margin:18px 0}
+  th,td{text-align:left;padding:12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted);font-weight:600}
+  td a{word-break:break-word}
+  .badge{display:inline-block;background:var(--bg-2);border:1px solid var(--line);padding:2px 8px;border-radius:999px;font-size:12px;color:var(--ink-2)}
+  footer{border-top:1px solid var(--line);padding:28px 20px;color:var(--muted);font-size:13px}
+  footer .inner{max-width:880px;margin:0 auto;display:flex;gap:24px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="inner">
+    <a class="brand" href="/">London School Directory</a>
+    <nav>
+      <a href="/">Search</a>
+      <a href="/schools/">Boroughs</a>
+      <a href="/methodology.html">Methodology</a>
+      <a href="/about.html">About</a>
+    </nav>
+  </div>
+</header>
+<main>
+  <div class="crumbs"><a href="/">Home</a> &rsaquo; Sources</div>
+
+  <h1>Data sources</h1>
+  <p class="lede">Every dataset that powers this directory, with direct links to the source, the licence under which we use it, and how often we refresh.</p>
+
+  <table>
+    <thead>
+      <tr><th>Dataset</th><th>Source</th><th>Refresh</th><th>Licence</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Schools register (URN, name, phase, type, address, postcode)</td>
+        <td><a href="https://get-information-schools.service.gov.uk/">DfE — Get Information About Schools (GIAS)</a></td>
+        <td>Monthly</td>
+        <td><span class="badge">OGL v3.0</span></td>
+      </tr>
+      <tr>
+        <td>Ofsted overall effectiveness ratings and inspection dates</td>
+        <td><a href="https://www.gov.uk/government/statistical-data-sets/monthly-management-information-ofsteds-school-inspections-outcomes">Ofsted — Monthly Management Information</a></td>
+        <td>Monthly</td>
+        <td><span class="badge">OGL v3.0</span></td>
+      </tr>
+      <tr>
+        <td>Key Stage 2 attainment and progress</td>
+        <td><a href="https://explore-education-statistics.service.gov.uk/find-statistics/key-stage-2-attainment">DfE Explore Education Statistics — KS2</a></td>
+        <td>Annual</td>
+        <td><span class="badge">OGL v3.0</span></td>
+      </tr>
+      <tr>
+        <td>Key Stage 4 (GCSE) Attainment 8 and Progress 8</td>
+        <td><a href="https://explore-education-statistics.service.gov.uk/find-statistics/key-stage-4-performance-revised">DfE EES — KS4 (revised)</a></td>
+        <td>Annual</td>
+        <td><span class="badge">OGL v3.0</span></td>
+      </tr>
+      <tr>
+        <td>Admissions — applications and offers per place</td>
+        <td><a href="https://explore-education-statistics.service.gov.uk/find-statistics/secondary-and-primary-school-applications-and-offers">DfE EES — Applications and offers</a></td>
+        <td>Annual</td>
+        <td><span class="badge">OGL v3.0</span></td>
+      </tr>
+      <tr>
+        <td>Admissions appeals outcomes (by local authority)</td>
+        <td><a href="https://explore-education-statistics.service.gov.uk/find-statistics/admission-appeals-in-england">DfE EES — Admission appeals</a></td>
+        <td>Annual</td>
+        <td><span class="badge">OGL v3.0</span></td>
+      </tr>
+      <tr>
+        <td>Crime within 500m of school location</td>
+        <td><a href="https://data.police.uk/docs/">Metropolitan Police — open data API</a></td>
+        <td>Monthly</td>
+        <td><span class="badge">OGL v3.0</span></td>
+      </tr>
+      <tr>
+        <td>Index of Multiple Deprivation (LSOA-level)</td>
+        <td><a href="https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019">MHCLG — English Indices of Deprivation 2019</a></td>
+        <td>Static (next release pending)</td>
+        <td><span class="badge">OGL v3.0</span></td>
+      </tr>
+      <tr>
+        <td>Postcode to LSOA / coordinate lookups</td>
+        <td><a href="https://www.ons.gov.uk/methodology/geography/geographicalproducts/postcodeproducts">ONS Postcode Directory</a></td>
+        <td>Quarterly</td>
+        <td><span class="badge">OGL v3.0</span></td>
+      </tr>
+      <tr>
+        <td>External school profile links</td>
+        <td><a href="https://snobe.co.uk/">Snobe</a> (third-party school profiles)</td>
+        <td>Monthly verification</td>
+        <td><span class="badge">Third-party</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>All UK government data on this site is reused under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/">Open Government Licence v3.0</a>. Third-party links are clearly attributed; we link to them but do not republish their data.</p>
+
+  <p>If you spot an upstream source we should be using and aren't, or notice that a source has changed, please email <a href="mailto:hello@londonschool.directory">hello@londonschool.directory</a>.</p>
+</main>
+<footer>
+  <div class="inner">
+    <div>&copy; London School Directory. Independent. Free to use.</div>
+    <div><a href="/about.html">About</a> &middot; <a href="/methodology.html">Methodology</a> &middot; <a href="/sources.html">Sources</a> &middot; <a href="/appeals.html">Appeals</a></div>
+  </div>
+</footer>
+</body>
+</html>

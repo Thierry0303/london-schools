@@ -7,6 +7,12 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# Shared concurrency lock with data_refresh.yml. Any combination of these
+# workflows queues against this single group, so they never race.
+concurrency:
+  group: site-write
+  cancel-in-progress: false
+
 permissions:
   contents: write
 
@@ -18,18 +24,15 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
       - name: Install dependencies
         run: pip install requests pandas numpy --break-system-packages -q
-
       - name: Run test suite
         run: python3 scripts/test_site.py
 
-  # ── JOB 2: Build (only after tests pass, only on main) ────
+  # ── JOB 2: Build & deploy (only after tests pass, only on main) ────
   build:
     name: Build & deploy
     needs: test
@@ -38,6 +41,8 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -46,13 +51,34 @@ jobs:
       - name: Install dependencies
         run: pip install requests pandas numpy pyyaml --break-system-packages -q
 
-      - name: Build static pages
+      - name: Build school pages
         run: python3 scripts/build_school_pages.py
 
-      - name: Commit built pages
+      - name: Build borough hub pages
+        run: python3 scripts/build_borough_hubs.py
+
+      - name: Commit and push (with retry)
         run: |
-          git config user.name "github-actions[bot]"
+          set -e
+          git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add schools/ sitemap_data.txt robots.txt
-          git diff --staged --quiet || git commit -m "chore: rebuild pages [skip ci]"
-          git push
+          if git diff --cached --quiet; then
+            echo "No build changes to commit."
+            exit 0
+          fi
+          # [skip ci] keeps this commit from re-triggering CI in an infinite loop.
+          git commit -m "chore: rebuild pages [skip ci]"
+
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then
+              echo "Push succeeded on attempt $attempt."
+              exit 0
+            fi
+            echo "Push attempt $attempt rejected — pulling and rebasing..."
+            git pull --rebase --autostash origin main
+            sleep $((attempt * 3))
+          done
+
+          echo "Push failed after 5 attempts." >&2
+          exit 1

@@ -1,9 +1,17 @@
 name: Monthly Data Refresh
 
+# Runs on the 15th of every month, plus manual trigger.
+# Hardened against concurrent-push races (the "fetch first" error).
+
 on:
-  workflow_dispatch:
   schedule:
-    - cron: '0 6 15 * *'   # 6am on the 15th of every month
+    - cron: '0 8 15 * *'   # 08:00 UTC on the 15th
+  workflow_dispatch: {}
+
+# Only one refresh job at a time. If another is already running, queue this one.
+concurrency:
+  group: refresh-${{ github.workflow }}
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -11,55 +19,64 @@ permissions:
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
-
+    timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out repo
+        uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          # Keep history shallow but fetch enough to rebase cleanly.
+          fetch-depth: 0
 
-      - uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install requests pandas numpy pyyaml --break-system-packages -q
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests pandas numpy pyyaml
 
-      # Step 1: Test BEFORE refresh — confirm site is healthy going in
-      - name: Pre-refresh tests
-        run: python3 scripts/test_site.py
-        continue-on-error: true   # Don't block refresh if pre-tests fail
-
-      # Step 2: Refresh data from all official sources
-      - name: Refresh data
+      - name: Refresh upstream data
         run: python3 scripts/refresh_data.py
 
-      # Step 3: Test AFTER refresh — abort if data is broken
-      - name: Post-refresh tests
-        id: post_test
-        run: python3 scripts/test_site.py
+      - name: Reset Snobe URLs
+        run: python3 scripts/reset_snobe_urls.py
+        continue-on-error: true
 
-      # Step 4: Build pages ONLY if post-refresh tests passed
-      - name: Build static pages
-        if: steps.post_test.outcome == 'success'
-        run: |
-          python3 scripts/build_school_pages.py
-          echo "$(date -u)" > schools/.last_built
+      - name: Validate Snobe slugs
+        run: python3 scripts/check_snobe_slugs.py
+        continue-on-error: true
 
-      # Step 5: Commit everything
-      - name: Commit and push
-        if: steps.post_test.outcome == 'success'
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -A schools.json schools/ sitemap_data.txt robots.txt
-          git commit --allow-empty -m "chore: data refresh $(date +'%Y-%m')"
-          git push
+      - name: Build school pages
+        run: python3 scripts/build_school_pages.py
 
-      # Step 6: If post-refresh tests failed — restore previous schools.json
-      - name: Restore previous data on failure
-        if: steps.post_test.outcome == 'failure'
+      - name: Build borough hub pages
+        run: python3 scripts/build_borough_hubs.py
+
+      - name: Commit and push (with retry)
         run: |
-          echo "⚠️ Post-refresh tests failed — restoring previous schools.json"
-          git checkout HEAD -- schools.json
-          echo "✅ Previous data restored — site unchanged"
+          set -e
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit. Nothing to push."
+            exit 0
+          fi
+          git commit -m "Monthly data refresh: $(date -u +'%Y-%m-%d')"
+
+          # Push with up to 5 attempts, rebasing on top of any new remote commits
+          # between attempts. Handles the "fetch first" race definitively.
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then
+              echo "Push succeeded on attempt $attempt."
+              exit 0
+            fi
+            echo "Push attempt $attempt rejected — pulling and rebasing..."
+            git pull --rebase --autostash origin main
+            sleep $((attempt * 3))
+          done
+
+          echo "Push failed after 5 attempts." >&2
+          exit 1

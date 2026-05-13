@@ -43,6 +43,8 @@ SCHOOLS_JSON = REPO_ROOT / "schools.json"
 OUTPUT_DIR = REPO_ROOT / "schools"
 SITE_URL = "https://londonschool.directory"
 
+# Map our internal logical names to the keys actually present in schools.json.
+# Override here once if your keys differ.
 FIELD_MAP = {
     "name": ["name"],
     "borough": ["local_authority", "borough"],
@@ -58,10 +60,10 @@ FIELD_MAP = {
     "postcode": ["postcode"],
     "address": ["street", "address"],
     "lat": ["lat", "latitude"],
-    "lng": ["lng", "longitude"],
-    "slug": ["slug"],
-    "url_path": ["url_path"],
-    "snobe_url": ["snobe_url"],
+    "lng": ["lng", "lon", "longitude"],
+    "slug": ["slug", "school_slug"],
+    "url_path": ["url_path", "page_path"],
+    "snobe_url": ["snobe_url", "snobe", "profile_url"],
 }
 
 # London boroughs in canonical form. We normalise borough strings against this list
@@ -224,37 +226,60 @@ def compute_borough_stats(schools: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
-def rank_top_schools(schools: list[dict[str, Any]], n: int = 10) -> list[dict[str, Any]]:
-    """
-    Composite ranking: Outstanding first, then by KS2 progress (or KS4 Att8 for secondaries),
-    then by apps-per-place as a tie-breaker. Stable, transparent.
-    """
-    ofsted_rank = {"Outstanding": 4, "Good": 3, "Requires Improvement": 2, "Requires improvement": 2, "Inadequate": 1}
+OFSTED_RANK = {
+    "Outstanding": 4, "Good": 3,
+    "Requires Improvement": 2, "Requires improvement": 2,
+    "Inadequate": 1,
+}
 
-    def sort_key(s: dict[str, Any]):
-        ofsted = pick(s, "ofsted") or ""
-        ks2 = pick(s, "ks2_progress")
-        ks4 = pick(s, "ks4_attainment_8")
-        apps = pick(s, "apps_per_place")
-        try:
-            ks2_val = float(ks2) if ks2 not in (None, "") else -999
-        except (TypeError, ValueError):
-            ks2_val = -999
-        try:
-            ks4_val = float(ks4) if ks4 not in (None, "") else -999
-        except (TypeError, ValueError):
-            ks4_val = -999
-        try:
-            apps_val = float(apps) if apps not in (None, "") else 0
-        except (TypeError, ValueError):
-            apps_val = 0
+
+def _phase_of(s: dict[str, Any]) -> str:
+    p = str(pick(s, "phase") or "").lower()
+    if "primary" in p or "infant" in p or "junior" in p or "first" in p:
+        return "primary"
+    if "secondary" in p or "middle" in p or "high" in p or "all-through" in p or "all through" in p:
+        return "secondary"
+    return "other"
+
+
+def _num(v: Any, default: float = -999.0) -> float:
+    try:
+        return float(v) if v not in (None, "") else default
+    except (TypeError, ValueError):
+        return default
+
+
+def rank_primary(schools: list[dict[str, Any]], n: int = 7) -> list[dict[str, Any]]:
+    """Top N primary schools by Ofsted rank, then KS2 expected %, then apps-per-place."""
+    primaries = [s for s in schools if _phase_of(s) == "primary"]
+
+    def key(s):
         return (
-            ofsted_rank.get(ofsted, 0),
-            ks4_val if ks4_val > -999 else ks2_val,
-            apps_val,
+            OFSTED_RANK.get(pick(s, "ofsted") or "", 0),
+            _num(pick(s, "ks2_progress")),
+            _num(pick(s, "apps_per_place"), 0),
         )
 
-    return sorted(schools, key=sort_key, reverse=True)[:n]
+    return sorted(primaries, key=key, reverse=True)[:n]
+
+
+def rank_secondary(schools: list[dict[str, Any]], n: int = 7) -> list[dict[str, Any]]:
+    """Top N secondary schools by Ofsted rank, then KS4 Attainment 8, then apps-per-place."""
+    secondaries = [s for s in schools if _phase_of(s) == "secondary"]
+
+    def key(s):
+        return (
+            OFSTED_RANK.get(pick(s, "ofsted") or "", 0),
+            _num(pick(s, "ks4_attainment_8")),
+            _num(pick(s, "apps_per_place"), 0),
+        )
+
+    return sorted(secondaries, key=key, reverse=True)[:n]
+
+
+def all_schools_sorted(schools: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Every school in the borough, alphabetically by name."""
+    return sorted(schools, key=lambda s: (pick(s, "name") or "").lower())
 
 
 # ---------------------------------------------------------------------------
@@ -402,17 +427,29 @@ PAGE_TEMPLATE = """<!doctype html>
   <section>
     <div class="twocol">
       <div>
-        <h2>Top schools in {borough}</h2>
-        <p class="sources">Ranked by Ofsted rating, then by latest KS2 progress (primary) or Attainment 8 (secondary), with applications-per-place as a tie-breaker. See <a href="/methodology.html">methodology</a>.</p>
+        <h2>Top primary schools in {borough}</h2>
+        <p class="sources">Ranked by Ofsted rating, then by latest KS2 performance. See <a href="/methodology.html">methodology</a>.</p>
         <table class="schools">
           <thead>
-            <tr><th>School</th><th>Phase</th><th>Ofsted</th><th>KS2 / Att8</th></tr>
+            <tr><th>School</th><th>Ofsted</th><th>KS2 %</th></tr>
           </thead>
           <tbody>
-            {top_rows}
+            {top_primary_rows}
           </tbody>
         </table>
-        <p style="margin-top:14px"><a class="cta" href="/?borough={borough_slug}">See all {total} schools in {borough}</a></p>
+
+        <h2 style="margin-top:28px">Top secondary schools in {borough}</h2>
+        <p class="sources">Ranked by Ofsted rating, then by latest KS4 Attainment 8.</p>
+        <table class="schools">
+          <thead>
+            <tr><th>School</th><th>Ofsted</th><th>Att 8</th></tr>
+          </thead>
+          <tbody>
+            {top_secondary_rows}
+          </tbody>
+        </table>
+
+        <p style="margin-top:14px"><a class="cta" href="#all-schools">Jump to all {total} schools in {borough}</a></p>
       </div>
       <div>
         <h2>Map</h2>
@@ -424,6 +461,19 @@ PAGE_TEMPLATE = """<!doctype html>
   <section>
     <h2>What the data says about {borough}</h2>
     <p>{narrative}</p>
+  </section>
+
+  <section id="all-schools">
+    <h2>All schools in {borough}</h2>
+    <p class="sources">Every school in {borough}, listed alphabetically. Click any school for the full record.</p>
+    <table class="schools">
+      <thead>
+        <tr><th>School</th><th>Phase</th><th>Ofsted</th></tr>
+      </thead>
+      <tbody>
+        {all_rows}
+      </tbody>
+    </table>
   </section>
 
   <section>
@@ -537,29 +587,62 @@ def make_narrative(borough: str, stats: dict[str, Any]) -> str:
     return " ".join(parts)
 
 
-def make_top_rows(top: list[dict[str, Any]]) -> str:
+def _school_url(s: dict[str, Any]) -> str:
+    url = pick(s, "url_path")
+    if url:
+        return url
+    borough_slug = slugify(pick(s, "borough") or "")
+    school_slug = pick(s, "slug") or slugify(pick(s, "name") or "")
+    return f"/schools/{borough_slug}/{school_slug}/"
+
+
+def _ofsted_cell(ofsted: str) -> str:
+    cls = re.sub(r"\s+", "", ofsted) if ofsted else ""
+    return f'<td class="rating {cls}">{ofsted or "—"}</td>'
+
+
+def make_primary_rows(top: list[dict[str, Any]]) -> str:
     rows = []
     for s in top:
         name = pick(s, "name") or "Unnamed school"
-        phase = pick(s, "phase") or "—"
-        ofsted = pick(s, "ofsted") or "—"
+        ofsted = pick(s, "ofsted") or ""
         ks2 = pick(s, "ks2_progress")
-        ks4 = pick(s, "ks4_attainment_8")
-        metric = ks4 if ks4 not in (None, "") else ks2
-        metric_display = "—" if metric in (None, "") else metric
-        url = pick(s, "url_path")
-        if not url:
-            borough_slug = slugify(pick(s, "borough") or "")
-            school_slug = pick(s, "slug") or slugify(name)
-            url = f"/schools/{borough_slug}/{school_slug}/"
-        ofsted_class = re.sub(r"\s+", "", ofsted) if ofsted else ""
+        ks2_display = "—" if ks2 in (None, "") else ks2
         rows.append(
-            f'<tr><td><a href="{url}">{name}</a></td>'
-            f"<td>{phase}</td>"
-            f'<td class="rating {ofsted_class}">{ofsted}</td>'
-            f"<td>{metric_display}</td></tr>"
+            f'<tr><td><a href="{_school_url(s)}">{name}</a></td>'
+            f"{_ofsted_cell(ofsted)}"
+            f"<td>{ks2_display}</td></tr>"
         )
-    return "\n            ".join(rows) if rows else "<tr><td colspan='4'>No schools listed yet.</td></tr>"
+    return "\n            ".join(rows) if rows else "<tr><td colspan='3'>No primary schools to list.</td></tr>"
+
+
+def make_secondary_rows(top: list[dict[str, Any]]) -> str:
+    rows = []
+    for s in top:
+        name = pick(s, "name") or "Unnamed school"
+        ofsted = pick(s, "ofsted") or ""
+        ks4 = pick(s, "ks4_attainment_8")
+        ks4_display = "—" if ks4 in (None, "") else ks4
+        rows.append(
+            f'<tr><td><a href="{_school_url(s)}">{name}</a></td>'
+            f"{_ofsted_cell(ofsted)}"
+            f"<td>{ks4_display}</td></tr>"
+        )
+    return "\n            ".join(rows) if rows else "<tr><td colspan='3'>No secondary schools to list.</td></tr>"
+
+
+def make_all_rows(all_s: list[dict[str, Any]]) -> str:
+    rows = []
+    for s in all_s:
+        name = pick(s, "name") or "Unnamed school"
+        phase = pick(s, "phase") or "—"
+        ofsted = pick(s, "ofsted") or ""
+        rows.append(
+            f'<tr><td><a href="{_school_url(s)}">{name}</a></td>'
+            f"<td>{phase}</td>"
+            f"{_ofsted_cell(ofsted)}</tr>"
+        )
+    return "\n        ".join(rows) if rows else "<tr><td colspan='3'>No schools listed yet.</td></tr>"
 
 
 def make_schema_jsonld(
@@ -660,7 +743,9 @@ def build():
             "mean_crime_500m": None, "mean_imd_decile": None,
             "primary_count": 0, "secondary_count": 0, "phases": {}, "types": {},
         }
-        top = rank_top_schools(b_schools, n=10)
+        top_primary = rank_primary(b_schools, n=7)
+        top_secondary = rank_secondary(b_schools, n=7)
+        all_in_borough = all_schools_sorted(b_schools)
 
         # Map points
         map_points: list[list[Any]] = []
@@ -681,9 +766,11 @@ def build():
 
         faq_html, faq_jsonld = make_faq(borough, stats)
         narrative = make_narrative(borough, stats)
-        top_rows = make_top_rows(top)
+        top_primary_rows = make_primary_rows(top_primary)
+        top_secondary_rows = make_secondary_rows(top_secondary)
+        all_rows = make_all_rows(all_in_borough)
         canonical = f"{SITE_URL}/schools/{slug}/"
-        schema_json = make_schema_jsonld(borough, canonical, top, faq_jsonld)
+        schema_json = make_schema_jsonld(borough, canonical, top_primary + top_secondary, faq_jsonld)
 
         lede = BOROUGH_BLURBS.get(borough,
             f"{borough} is one of the 33 London boroughs. This page lists every school in {borough} from the Department for Education register, with Ofsted rating, performance data, admissions competitiveness and local context. Data is refreshed monthly.")
@@ -709,7 +796,9 @@ def build():
             primary_count=stats["primary_count"],
             secondary_count=stats["secondary_count"],
             appeal_success=appeal_success,
-            top_rows=top_rows,
+            top_primary_rows=top_primary_rows,
+            top_secondary_rows=top_secondary_rows,
+            all_rows=all_rows,
             narrative=narrative,
             faq_html=faq_html,
             map_points_json=json.dumps(map_points),

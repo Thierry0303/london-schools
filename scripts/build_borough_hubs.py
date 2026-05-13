@@ -49,6 +49,8 @@ FIELD_MAP = {
     "name": ["name"],
     "borough": ["local_authority", "borough"],
     "phase": ["phase"],
+    "age_from": ["age_from", "statutory_low_age"],
+    "age_to": ["age_to", "statutory_high_age"],
     "type": ["school_type", "type"],
     "ofsted": ["quality_label", "ofsted_rating", "ofsted"],
     "ofsted_date": ["inspection_date", "ofsted_date"],
@@ -259,8 +261,8 @@ def compute_borough_stats(schools: list[dict[str, Any]]) -> dict[str, Any]:
         "mean_apps_per_place": safe_mean(pick(s, "apps_per_place") for s in schools),
         "mean_crime_500m": safe_mean(pick(s, "crime_500m") for s in schools),
         "mean_imd_decile": safe_mean(pick(s, "imd_decile") for s in schools),
-        "primary_count": sum(1 for p, c in phases.items() if p and "primary" in p.lower() for _ in range(c)),
-        "secondary_count": sum(1 for p, c in phases.items() if p and "secondary" in p.lower() for _ in range(c)),
+        "primary_count": sum(1 for s in schools if _is_primary(s)),
+        "secondary_count": sum(1 for s in schools if _is_secondary(s)),
         "phases": dict(phases),
         "types": dict(types),
     }
@@ -274,12 +276,56 @@ OFSTED_RANK = {
 
 
 def _phase_of(s: dict[str, Any]) -> str:
+    """
+    Classify school by age range first, falling back to phase string.
+    Returns one of: 'primary', 'secondary', 'all-through', 'nursery', 'sixth-form', 'other'.
+    """
+    af = pick(s, "age_from")
+    at = pick(s, "age_to")
+    try:
+        af = int(af) if af not in (None, "") else None
+        at = int(at) if at not in (None, "") else None
+    except (TypeError, ValueError):
+        af = at = None
+
+    if af is not None and at is not None:
+        if at <= 5:
+            return "nursery"
+        if af >= 16:
+            return "sixth-form"
+        # is_p: school substantively serves primary years (covers Year 2 to Year 6)
+        # is_s: school substantively serves secondary years (reaches at least Year 9)
+        is_p = (af <= 7 and at >= 11)
+        is_s = (at >= 14 and af <= 14)
+        if is_p and is_s:
+            return "all-through"
+        if is_p:
+            return "primary"
+        if is_s:
+            return "secondary"
+        return "other"
+
+    # Fallback: parse the phase string when ages are missing
     p = str(pick(s, "phase") or "").lower()
     if "primary" in p or "infant" in p or "junior" in p or "first" in p:
         return "primary"
-    if "secondary" in p or "middle" in p or "high" in p or "all-through" in p or "all through" in p:
+    if "secondary" in p or "middle" in p or "high" in p:
         return "secondary"
+    if "all" in p and "through" in p:
+        return "all-through"
+    if "nursery" in p:
+        return "nursery"
     return "other"
+
+
+def _is_primary(s: dict[str, Any]) -> bool:
+    """Primary OR all-through (which serves primary years too)."""
+    return _phase_of(s) in {"primary", "all-through"}
+
+
+def _is_secondary(s: dict[str, Any]) -> bool:
+    """Secondary OR all-through (which serves secondary years too)."""
+    return _phase_of(s) in {"secondary", "all-through"}
 
 
 def _num(v: Any, default: float = -999.0) -> float:
@@ -291,7 +337,7 @@ def _num(v: Any, default: float = -999.0) -> float:
 
 def rank_primary(schools: list[dict[str, Any]], n: int = 7) -> list[dict[str, Any]]:
     """Top N primary schools by Ofsted rank, then KS2 expected %, then apps-per-place."""
-    primaries = [s for s in schools if _phase_of(s) == "primary"]
+    primaries = [s for s in schools if _is_primary(s)]
 
     def key(s):
         return (
@@ -305,7 +351,7 @@ def rank_primary(schools: list[dict[str, Any]], n: int = 7) -> list[dict[str, An
 
 def rank_secondary(schools: list[dict[str, Any]], n: int = 7) -> list[dict[str, Any]]:
     """Top N secondary schools by Ofsted rank, then KS4 Attainment 8, then apps-per-place."""
-    secondaries = [s for s in schools if _phase_of(s) == "secondary"]
+    secondaries = [s for s in schools if _is_secondary(s)]
 
     def key(s):
         return (

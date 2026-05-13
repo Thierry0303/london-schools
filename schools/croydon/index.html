@@ -1,2164 +1,363 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en-GB">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Schools in Croydon, London | Ofsted Ratings &amp; Results | London Schools Explorer</title>
-  <meta name="description" content="156 schools in Croydon, London. 19 Outstanding, 94 Good-rated by Ofsted. Compare admissions oversubscription, exam results and crime data. Free.">
-  <script type="application/ld+json">{
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Schools in Croydon, London — Ofsted, Performance & Admissions</title>
+<meta name="description" content="All 156 schools in Croydon, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
+<link rel="canonical" href="https://londonschool.directory/schools/croydon/">
+<meta property="og:title" content="Schools in Croydon, London — Ofsted, Performance & Admissions">
+<meta property="og:description" content="All 156 schools in Croydon, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://londonschool.directory/schools/croydon/">
+<meta property="og:site_name" content="London School Directory">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0b2545">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="preconnect" href="https://unpkg.com">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+  :root {
+    --ink: #0b2545;
+    --ink-2: #1e3a5f;
+    --muted: #5b6b85;
+    --line: #e3e8ef;
+    --bg: #ffffff;
+    --bg-2: #f6f8fb;
+    --accent: #0b6efd;
+    --good: #137333;
+    --warn: #a85b00;
+    --bad: #b3261e;
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  header.site {
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+    position: sticky; top: 0; z-index: 50;
+  }
+  header.site .inner {
+    max-width: 1100px; margin: 0 auto; padding: 14px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  header.site a.brand { color: var(--ink); font-weight: 700; letter-spacing: -0.01em; }
+  header.site nav a { margin-left: 18px; color: var(--ink-2); font-size: 14px; }
+  main { max-width: 1100px; margin: 0 auto; padding: 28px 20px 80px; }
+  .crumbs { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+  .crumbs a { color: var(--muted); }
+  h1 { font-size: 32px; line-height: 1.2; margin: 0 0 8px; letter-spacing: -0.02em; }
+  .lede { color: var(--ink-2); font-size: 17px; max-width: 720px; }
+  .stamp { font-size: 12px; color: var(--muted); margin-top: 8px; }
+  .stamp .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--good); vertical-align: middle; margin-right: 6px; }
+  .grid-stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px; margin: 24px 0 8px;
+  }
+  .stat {
+    background: var(--bg-2); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 14px 16px;
+  }
+  .stat .v { font-size: 24px; font-weight: 700; color: var(--ink); }
+  .stat .l { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  section { margin-top: 36px; }
+  h2 { font-size: 22px; margin: 0 0 12px; letter-spacing: -0.01em; }
+  .twocol { display: grid; grid-template-columns: 1.4fr 1fr; gap: 28px; }
+  @media (max-width: 820px) { .twocol { grid-template-columns: 1fr; } }
+  table.schools { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table.schools th, table.schools td {
+    text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line);
+  }
+  table.schools th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); font-weight: 600; }
+  .rating { font-weight: 600; }
+  .rating.Outstanding { color: var(--good); }
+  .rating.Good { color: var(--ink-2); }
+  .rating.RequiresImprovement, .rating.Requires { color: var(--warn); }
+  .rating.Inadequate { color: var(--bad); }
+  #map { height: 380px; border-radius: var(--radius); border: 1px solid var(--line); }
+  .pills { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pill { background: var(--bg-2); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; font-size: 12px; color: var(--ink-2); }
+  details.faq { border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 8px; background: var(--bg); }
+  details.faq summary { cursor: pointer; font-weight: 600; color: var(--ink); }
+  details.faq[open] { background: var(--bg-2); }
+  footer { border-top: 1px solid var(--line); padding: 28px 20px; color: var(--muted); font-size: 13px; }
+  footer .inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 24px; flex-wrap: wrap; }
+  .sources { font-size: 13px; color: var(--muted); }
+  .sources a { color: var(--muted); text-decoration: underline; }
+  .cta {
+    display: inline-block; background: var(--ink); color: #fff; padding: 10px 14px;
+    border-radius: var(--radius); font-size: 14px; font-weight: 600;
+  }
+  .cta:hover { background: var(--ink-2); text-decoration: none; }
+</style>
+<script type="application/ld+json">
+[
+  {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "name": "Schools in Croydon, London",
-    "description": "156 schools in Croydon, London rated by Ofsted",
-    "numberOfItems": 156,
-    "url": "https://londonschool.directory/schools/croydon"
-  }</script>
-  <script type="application/ld+json">{
+    "name": "Top schools in Croydon, London",
+    "itemListOrder": "http://schema.org/ItemListOrderDescending",
+    "numberOfItems": 10,
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "url": "https://londonschool.directory/schools/croydon/harris-city-academy-crystal-palace/",
+        "name": "Harris City Academy Crystal Palace"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "url": "https://londonschool.directory/schools/croydon/coombe-wood-school/",
+        "name": "Coombe Wood School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "url": "https://londonschool.directory/schools/croydon/st-johns-cofe-primary-school/",
+        "name": "St John's CofE Primary School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "url": "https://londonschool.directory/schools/croydon/greenvale-primary-school/",
+        "name": "Greenvale Primary School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 5,
+        "url": "https://londonschool.directory/schools/croydon/christ-church-cofe-primary-school-purley/",
+        "name": "Christ Church CofE Primary School (Purley)"
+      },
+      {
+        "@type": "ListItem",
+        "position": 6,
+        "url": "https://londonschool.directory/schools/croydon/beaumont-primary-school/",
+        "name": "Beaumont Primary School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 7,
+        "url": "https://londonschool.directory/schools/croydon/ridgeway-primary-school/",
+        "name": "Ridgeway Primary School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 8,
+        "url": "https://londonschool.directory/schools/croydon/harris-academy-south-norwood/",
+        "name": "Harris Academy South Norwood"
+      },
+      {
+        "@type": "ListItem",
+        "position": 9,
+        "url": "https://londonschool.directory/schools/croydon/harris-academy-purley/",
+        "name": "Harris Academy Purley"
+      },
+      {
+        "@type": "ListItem",
+        "position": 10,
+        "url": "https://londonschool.directory/schools/croydon/chipstead-valley-primary-school/",
+        "name": "Chipstead Valley Primary School"
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How many schools are there in Croydon?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Croydon has 156 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 87 are primary, 23 are secondary, and the remainder are special, all-through, or post-16."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What proportion of Croydon schools are Outstanding?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "As of the latest Ofsted Management Information release, 0 schools in Croydon (0.0%) are rated Outstanding, and 0.0% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "When do I apply for a Reception or Year 7 place in Croydon?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Croydon's applications are coordinated by the local authority through the eAdmissions system. See our full Reception timeline guide."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does the school appeals process work in Croydon?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "If you are refused your preferred school place, you have a statutory right of appeal. Croydon appeals are typically heard in May (Reception) and June\u2013July (secondary). See our appeals tracker for Croydon-level success rates by year."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How can I tell which Croydon schools are over-subscribed?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release."
+        }
+      }
+    ]
+  },
+  {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      {"@type": "ListItem", "position": 1, "name": "London Schools Explorer", "item": "https://londonschool.directory/"},
-      {"@type": "ListItem", "position": 2, "name": "Schools in Croydon", "item": "https://londonschool.directory/schools/croydon"}
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://londonschool.directory/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Boroughs",
+        "item": "https://londonschool.directory/schools/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Croydon",
+        "item": "https://londonschool.directory/schools/croydon/"
+      }
     ]
-  }</script>
-  <link rel="canonical" href="https://londonschool.directory/schools/croydon">
-  <meta property="og:title" content="Schools in Croydon | London Schools Explorer">
-  <meta property="og:description" content="156 schools in Croydon. 19 Outstanding-rated. Compare Ofsted ratings, exam results and admissions.">
-  <meta property="og:url" content="https://londonschool.directory/schools/croydon">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, -apple-system, sans-serif; color: #1a1a1a; background: #f8f9fa; line-height: 1.6; }
-    a { color: #1565C0; }
-    .topbar { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 12px 20px; }
-    .topbar a { text-decoration: none; font-weight: 600; color: #1a1a1a; font-size: 15px; }
-    .topbar span { color: #888; margin: 0 8px; }
-    .container { max-width: 900px; margin: 0 auto; padding: 32px 20px; }
-    h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
-    .intro { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; font-size: 15px; color: #333; line-height: 1.7; }
-    .stats-row { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
-    .stat-box { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 14px 18px; flex: 1; min-width: 120px; }
-    .stat-num { font-size: 24px; font-weight: 700; color: #1a1a1a; line-height: 1; }
-    .stat-lbl { font-size: 12px; color: #888; margin-top: 4px; }
-    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #e0e0e0; }
-    th { background: #f5f5f5; padding: 12px 16px; text-align: left; font-size: 13px; color: #555; font-weight: 600; border-bottom: 1px solid #e0e0e0; }
-    td { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
-    tr:last-child td { border-bottom: none; }
-    tr:hover td { background: #fafafa; }
-    .back { display: inline-block; margin-bottom: 20px; font-size: 14px; color: #555; text-decoration: none; }
-    .back:hover { color: #111; }
-    footer { text-align: center; padding: 32px 20px; font-size: 13px; color: #888; }
-    @media (max-width: 600px) {
-      .container { padding: 16px 12px; }
-      h1 { font-size: 22px; }
-      .stats-row { grid-template-columns: 1fr 1fr; }
-      .intro { padding: 14px 16px; font-size: 14px; }
-      table { font-size: 13px; }
-      th, td { padding: 10px 10px; }
-      .topbar { padding: 10px 12px; font-size: 13px; }
-    }
-    @media (max-width: 600px) { .stats-row { flex-direction: column; } }
-  </style>
+  }
+]
+</script>
 </head>
 <body>
-<div class="topbar">
-  <div style="max-width:900px;margin:0 auto">
-    <a href="/">London Schools Explorer</a>
-    <span>/</span>
-    Croydon
+<header class="site">
+  <div class="inner">
+    <a class="brand" href="/">London School Directory</a>
+    <nav>
+      <a href="/">Search</a>
+      <a href="/appeals.html">Appeals</a>
+      <a href="/methodology.html">Methodology</a>
+      <a href="/about.html">About</a>
+    </nav>
   </div>
-</div>
-<div class="container">
-  <a class="back" href="/">&#8592; All boroughs</a>
-  <h1>Schools in Croydon</h1>
-
-  <div class="stats-row">
-    <div class="stat-box"><div class="stat-num">156</div><div class="stat-lbl">Total schools</div></div>
-    <div class="stat-box"><div class="stat-num">19</div><div class="stat-lbl">Outstanding</div></div>
-    <div class="stat-box"><div class="stat-num">94</div><div class="stat-lbl">Good</div></div>
-    <div class="stat-box"><div class="stat-num">4</div><div class="stat-lbl">School phases</div></div>
+</header>
+<main>
+  <div class="crumbs">
+    <a href="/">Home</a> &rsaquo; <a href="/schools/">Boroughs</a> &rsaquo; Croydon
   </div>
 
-  <div class="intro">Croydon is south London's largest borough and has one of the most varied school landscapes in the capital, ranging from Outstanding independents to schools requiring improvement. The borough is undergoing significant regeneration and has seen investment in its educational infrastructure. Selective and faith school options are available alongside a full range of comprehensive schools.</div>
+  <h1>Schools in Croydon, London</h1>
+  <p class="lede">Croydon's schools serve the largest population of any London borough and stretch from central Croydon out to Coulsdon, Purley, Norbury and South Norwood. The borough has a wide range of state and faith provision and a small number of grammar schools accepting Croydon applicants. Admissions are coordinated by the council.</p>
+  <p class="stamp"><span class="dot"></span>Data last verified 13 May 2026. Sources: Ofsted, DfE GIAS, DfE Performance Tables, Metropolitan Police, MHCLG IMD. See <a href="/sources.html">all sources</a>.</p>
 
-  
-<div style="display:flex;gap:16px;flex-wrap:wrap;margin:20px 0;">
-
-<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fdf4ff 0%,#ede9fe 100%);
-     border:1px solid #d8b4fe;border-radius:12px;padding:14px 20px;">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-    <span style="font-size:22px;">🎓</span>
-    <strong style="font-size:15px;color:#5b21b6;">11+ &amp; 13+ Exam Prep</strong>
-  </div>
-  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
-    PiAcademy resources for grammar school entrance, SATs &amp; GCSE.
-    Use code <strong>THIERR25</strong> for 25% off.
-  </p>
-  <a href="https://piacademy.co.uk/?aff=28"
-     target="_blank" rel="noopener sponsored"
-     style="display:inline-block;padding:9px 18px;background:#7e22ce;color:#fff;
-            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
-    Get 25% OFF →
-  </a>
-  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
-</div>
-<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%);
-     border:1px solid #fcd34d;border-radius:12px;padding:14px 20px;">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-    <span style="font-size:22px;">📚</span>
-    <strong style="font-size:15px;color:#92400e;">Children's Books</strong>
-  </div>
-  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
-    Great books at low prices. At checkout, choose your school — Scholastic donates
-    <strong>20p for every £1 spent</strong> back to the school in free books.
-  </p>
-  <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&ued=https%3A%2F%2Fwww.scholastic.co.uk%2Fteachers"
-     target="_blank" rel="noopener sponsored"
-     style="display:inline-block;padding:9px 18px;background:#d97706;color:#fff;
-            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
-    Shop at Scholastic →
-  </a>
-  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
-</div>
-<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fff8f0 0%,#fff3e0 100%);
-     border:1px solid #fed7aa;border-radius:12px;padding:14px 20px;">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-    <span style="font-size:22px;">🛒</span>
-    <strong style="font-size:15px;color:#92400e;">School Supplies</strong>
-  </div>
-  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
-    Stationery, bags, PE kit, lunchboxes and more — fast delivery from Amazon.
-  </p>
-  <a href="https://www.amazon.co.uk/s?k=school+supplies+stationery&tag=londonparents-21"
-     target="_blank" rel="noopener sponsored"
-     style="display:inline-block;padding:9px 18px;background:#FF9900;color:#111;
-            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
-    Shop on Amazon →
-  </a>
-  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
-</div>
-</div>
-
-  <!-- Borough share buttons -->
-  <div style="display:flex;gap:10px;margin:16px 0 8px;flex-wrap:wrap;align-items:center;">
-    <span style="font-size:13px;color:#555;font-weight:600;">Share Croydon schools:</span>
-    <button onclick="shareBoroughWhatsApp()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 WhatsApp</button>
-    <button onclick="shareBoroughEmail()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#1565C0;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Email</button>
-    <span style="font-size:12px;color:#999;margin-left:4px;">Or tick schools below to share a shortlist</span>
-  </div>
-
-  <!-- Sticky compare bar (appears when schools are ticked) -->
-  <div id="cmp-bar" style="display:none;position:sticky;top:0;z-index:100;background:#1A1A2E;color:#fff;padding:12px 16px;border-radius:10px;margin-bottom:12px;display:none;align-items:center;gap:10px;flex-wrap:wrap;">
-    <span id="cmp-count" style="font-weight:700;font-size:14px;">0 schools selected</span>
-    <button onclick="shareCompareWhatsApp()" style="padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 Share via WhatsApp</button>
-    <button onclick="shareCompareEmail()" style="padding:8px 16px;background:#fff;color:#1A1A2E;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Share via Email</button>
-    <button onclick="clearSelection()" style="padding:8px 12px;background:transparent;color:#aaa;border:1px solid #555;border-radius:8px;font-size:12px;cursor:pointer;">✕ Clear</button>
-  </div>
-
-  <table>
-    <thead><tr><th style="width:36px"></th><th>School</th><th>Phase</th><th>Ofsted</th><th>Pupils</th></tr></thead>
-    <tbody><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Abingdon House School Purley"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/abingdon-house-school-purley"></td>
-          <td><a href="/schools/croydon/abingdon-house-school-purley">Abingdon House School Purley</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>54</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Addington Valley Academy"
-            data-ofsted="Good"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/addington-valley-academy"></td>
-          <td><a href="/schools/croydon/addington-valley-academy">Addington Valley Academy</a></td>
-          <td>N/A</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>132</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Aerodrome Primary Academy"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="81.0"
-            data-url="https://londonschool.directory/schools/croydon/aerodrome-primary-academy"></td>
-          <td><a href="/schools/croydon/aerodrome-primary-academy">Aerodrome Primary Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>466</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Al-Khair School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="35.8"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/al-khair-school"></td>
-          <td><a href="/schools/croydon/al-khair-school">Al-Khair School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>96</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Al-Khair School Preparatory School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/al-khair-school-preparatory-school"></td>
-          <td><a href="/schools/croydon/al-khair-school-preparatory-school">Al-Khair School Preparatory School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>276</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Al-Khair Secondary Girls"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="52.8"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/al-khair-secondary-girls"></td>
-          <td><a href="/schools/croydon/al-khair-secondary-girls">Al-Khair Secondary Girls</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>97</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="All Saints CofE Primary School"
-            data-ofsted="Requires improvement"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="47.0"
-            data-url="https://londonschool.directory/schools/croydon/all-saints-cofe-primary-school"></td>
-          <td><a href="/schools/croydon/all-saints-cofe-primary-school">All Saints CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
-          <td>207</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Applegarth Academy"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="100.0"
-            data-url="https://londonschool.directory/schools/croydon/applegarth-academy"></td>
-          <td><a href="/schools/croydon/applegarth-academy">Applegarth Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>422</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Archbishop Tenison's CofE High School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="45.3"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/archbishop-tenisons-cofe-high-school"></td>
-          <td><a href="/schools/croydon/archbishop-tenisons-cofe-high-school">Archbishop Tenison's CofE High School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>784</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Arise Academy"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/arise-academy"></td>
-          <td><a href="/schools/croydon/arise-academy">Arise Academy</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>24</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Ark Blake Academy"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="45.6"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/ark-blake-academy"></td>
-          <td><a href="/schools/croydon/ark-blake-academy">Ark Blake Academy</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>782</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Ark Oval Primary Academy"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="75.0"
-            data-url="https://londonschool.directory/schools/croydon/ark-oval-primary-academy"></td>
-          <td><a href="/schools/croydon/ark-oval-primary-academy">Ark Oval Primary Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>601</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Aspire Learning"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/aspire-learning"></td>
-          <td><a href="/schools/croydon/aspire-learning">Aspire Learning</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>38</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Atwood Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="65.0"
-            data-url="https://londonschool.directory/schools/croydon/atwood-primary-school"></td>
-          <td><a href="/schools/croydon/atwood-primary-school">Atwood Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>437</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Aya College (Educational Provision)"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/aya-college-educational-provision"></td>
-          <td><a href="/schools/croydon/aya-college-educational-provision">Aya College (Educational Provision)</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>0</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="BRIT School for Performing Arts and Technology"
-            data-ofsted="Outstanding"
-            data-phase="N/A"
-            data-att8="50.1"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/brit-school-for-performing-arts-and-technology"></td>
-          <td><a href="/schools/croydon/brit-school-for-performing-arts-and-technology">BRIT School for Performing Arts and Technology</a></td>
-          <td>N/A</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>1447</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Beaumont Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="84.0"
-            data-url="https://londonschool.directory/schools/croydon/beaumont-primary-school"></td>
-          <td><a href="/schools/croydon/beaumont-primary-school">Beaumont Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>212</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Beckmead College"
-            data-ofsted="Good"
-            data-phase="N/A"
-            data-att8="7.1"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/beckmead-college"></td>
-          <td><a href="/schools/croydon/beckmead-college">Beckmead College</a></td>
-          <td>N/A</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>84</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Beckmead Park Academy"
-            data-ofsted="Good"
-            data-phase="N/A"
-            data-att8="10.3"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/beckmead-park-academy"></td>
-          <td><a href="/schools/croydon/beckmead-park-academy">Beckmead Park Academy</a></td>
-          <td>N/A</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>120</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Bensham Manor School"
-            data-ofsted="Outstanding"
-            data-phase="N/A"
-            data-att8="3.5"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/bensham-manor-school"></td>
-          <td><a href="/schools/croydon/bensham-manor-school">Bensham Manor School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>242</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Beulah Infants' School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/beulah-infants-school"></td>
-          <td><a href="/schools/croydon/beulah-infants-school">Beulah Infants' School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>200</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Beulah Junior School"
-            data-ofsted="Requires improvement"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="25.0"
-            data-url="https://londonschool.directory/schools/croydon/beulah-junior-school"></td>
-          <td><a href="/schools/croydon/beulah-junior-school">Beulah Junior School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
-          <td>223</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Bright Minds Creative Academy"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/bright-minds-creative-academy"></td>
-          <td><a href="/schools/croydon/bright-minds-creative-academy">Bright Minds Creative Academy</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>34</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Broadmead Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="58.0"
-            data-url="https://londonschool.directory/schools/croydon/broadmead-primary-school"></td>
-          <td><a href="/schools/croydon/broadmead-primary-school">Broadmead Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>381</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Castle Hill Academy"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="87.0"
-            data-url="https://londonschool.directory/schools/croydon/castle-hill-academy"></td>
-          <td><a href="/schools/croydon/castle-hill-academy">Castle Hill Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>275</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Chaffinch Brook School"
-            data-ofsted="Good"
-            data-phase="N/A"
-            data-att8="21.5"
-            data-ks2="25.0"
-            data-url="https://londonschool.directory/schools/croydon/chaffinch-brook-school"></td>
-          <td><a href="/schools/croydon/chaffinch-brook-school">Chaffinch Brook School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>93</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Chestnut Park Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="47.0"
-            data-url="https://londonschool.directory/schools/croydon/chestnut-park-primary-school"></td>
-          <td><a href="/schools/croydon/chestnut-park-primary-school">Chestnut Park Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>599</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Chipstead Valley Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="69.0"
-            data-url="https://londonschool.directory/schools/croydon/chipstead-valley-primary-school"></td>
-          <td><a href="/schools/croydon/chipstead-valley-primary-school">Chipstead Valley Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>674</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Christ Church CofE Primary School (Purley)"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="45.0"
-            data-url="https://londonschool.directory/schools/croydon/christ-church-cofe-primary-school-purley"></td>
-          <td><a href="/schools/croydon/christ-church-cofe-primary-school-purley">Christ Church CofE Primary School (Purley)</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>403</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Coloma Convent Girls' School"
-            data-ofsted="Requires improvement"
-            data-phase="Secondary"
-            data-att8="57.4"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/coloma-convent-girls-school"></td>
-          <td><a href="/schools/croydon/coloma-convent-girls-school">Coloma Convent Girls' School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
-          <td>924</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Coombe Wood School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="52.6"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/coombe-wood-school"></td>
-          <td><a href="/schools/croydon/coombe-wood-school">Coombe Wood School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1136</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Coulsdon CofE Primary School"
-            data-ofsted="Requires improvement"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="43.0"
-            data-url="https://londonschool.directory/schools/croydon/coulsdon-cofe-primary-school"></td>
-          <td><a href="/schools/croydon/coulsdon-cofe-primary-school">Coulsdon CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
-          <td>197</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Courtwood Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="59.0"
-            data-url="https://londonschool.directory/schools/croydon/courtwood-primary-school"></td>
-          <td><a href="/schools/croydon/courtwood-primary-school">Courtwood Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>221</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Crosfield Nursery School"
-            data-ofsted="Good"
-            data-phase="Nursery"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/crosfield-nursery-school"></td>
-          <td><a href="/schools/croydon/crosfield-nursery-school">Crosfield Nursery School</a></td>
-          <td>Nursery</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>74</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Croydon High School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="23.2"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/croydon-high-school"></td>
-          <td><a href="/schools/croydon/croydon-high-school">Croydon High School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>823</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Croydon Metropolitan College"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="13.8"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/croydon-metropolitan-college"></td>
-          <td><a href="/schools/croydon/croydon-metropolitan-college">Croydon Metropolitan College</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>9</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Cumnor House School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/cumnor-house-school"></td>
-          <td><a href="/schools/croydon/cumnor-house-school">Cumnor House School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>370</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Cumnor House School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/cumnor-house-school"></td>
-          <td><a href="/schools/croydon/cumnor-house-school">Cumnor House School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>143</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Cypress Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="69.0"
-            data-url="https://londonschool.directory/schools/croydon/cypress-primary-school"></td>
-          <td><a href="/schools/croydon/cypress-primary-school">Cypress Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>680</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="David Livingstone Academy"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="58.0"
-            data-url="https://londonschool.directory/schools/croydon/david-livingstone-academy"></td>
-          <td><a href="/schools/croydon/david-livingstone-academy">David Livingstone Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>196</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Downsview Primary and Nursery School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="69.0"
-            data-url="https://londonschool.directory/schools/croydon/downsview-primary-and-nursery-school"></td>
-          <td><a href="/schools/croydon/downsview-primary-and-nursery-school">Downsview Primary and Nursery School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>632</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Ecclesbourne Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="85.0"
-            data-url="https://londonschool.directory/schools/croydon/ecclesbourne-primary-school"></td>
-          <td><a href="/schools/croydon/ecclesbourne-primary-school">Ecclesbourne Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>443</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Elmhurst School Ltd"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/elmhurst-school-ltd"></td>
-          <td><a href="/schools/croydon/elmhurst-school-ltd">Elmhurst School Ltd</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>101</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Elmwood Infant School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/elmwood-infant-school"></td>
-          <td><a href="/schools/croydon/elmwood-infant-school">Elmwood Infant School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>380</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Elmwood Junior School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="64.0"
-            data-url="https://londonschool.directory/schools/croydon/elmwood-junior-school"></td>
-          <td><a href="/schools/croydon/elmwood-junior-school">Elmwood Junior School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>476</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Fairchildes Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="72.0"
-            data-url="https://londonschool.directory/schools/croydon/fairchildes-primary-school"></td>
-          <td><a href="/schools/croydon/fairchildes-primary-school">Fairchildes Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>486</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Fidelis College"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="50.8"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/fidelis-college"></td>
-          <td><a href="/schools/croydon/fidelis-college">Fidelis College</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>192</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Forest Academy"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="71.0"
-            data-url="https://londonschool.directory/schools/croydon/forest-academy"></td>
-          <td><a href="/schools/croydon/forest-academy">Forest Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>190</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Forestdale Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="88.0"
-            data-url="https://londonschool.directory/schools/croydon/forestdale-primary-school"></td>
-          <td><a href="/schools/croydon/forestdale-primary-school">Forestdale Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>418</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Gonville Academy"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="85.0"
-            data-url="https://londonschool.directory/schools/croydon/gonville-academy"></td>
-          <td><a href="/schools/croydon/gonville-academy">Gonville Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>442</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Good Shepherd Catholic Primary and Nursery School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="47.0"
-            data-url="https://londonschool.directory/schools/croydon/good-shepherd-catholic-primary-and-nursery-school"></td>
-          <td><a href="/schools/croydon/good-shepherd-catholic-primary-and-nursery-school">Good Shepherd Catholic Primary and Nursery School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>216</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Greenvale Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="75.0"
-            data-url="https://londonschool.directory/schools/croydon/greenvale-primary-school"></td>
-          <td><a href="/schools/croydon/greenvale-primary-school">Greenvale Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>214</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Gresham Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="75.0"
-            data-url="https://londonschool.directory/schools/croydon/gresham-primary-school"></td>
-          <td><a href="/schools/croydon/gresham-primary-school">Gresham Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>238</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Harris Academy Beulah Hill"
-            data-ofsted="Not yet rated"
-            data-phase="Secondary"
-            data-att8="44.4"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/harris-academy-beulah-hill"></td>
-          <td><a href="/schools/croydon/harris-academy-beulah-hill">Harris Academy Beulah Hill</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>1029</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Harris Academy Purley"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="46.8"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/harris-academy-purley"></td>
-          <td><a href="/schools/croydon/harris-academy-purley">Harris Academy Purley</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1022</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Harris Academy South Norwood"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="48.2"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/harris-academy-south-norwood"></td>
-          <td><a href="/schools/croydon/harris-academy-south-norwood">Harris Academy South Norwood</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1018</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Harris Aspire Academy"
-            data-ofsted="Outstanding"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/harris-aspire-academy"></td>
-          <td><a href="/schools/croydon/harris-aspire-academy">Harris Aspire Academy</a></td>
-          <td>N/A</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>0</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Harris City Academy Crystal Palace"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="52.3"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/harris-city-academy-crystal-palace"></td>
-          <td><a href="/schools/croydon/harris-city-academy-crystal-palace">Harris City Academy Crystal Palace</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>1162</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Harris Federation Post 16"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/harris-federation-post-16"></td>
-          <td><a href="/schools/croydon/harris-federation-post-16">Harris Federation Post 16</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Harris Invictus Academy Croydon"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="45.0"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/harris-invictus-academy-croydon"></td>
-          <td><a href="/schools/croydon/harris-invictus-academy-croydon">Harris Invictus Academy Croydon</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>980</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Harris Primary Academy Benson"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="75.0"
-            data-url="https://londonschool.directory/schools/croydon/harris-primary-academy-benson"></td>
-          <td><a href="/schools/croydon/harris-primary-academy-benson">Harris Primary Academy Benson</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>238</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Harris Primary Academy Croydon"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="71.0"
-            data-url="https://londonschool.directory/schools/croydon/harris-primary-academy-croydon"></td>
-          <td><a href="/schools/croydon/harris-primary-academy-croydon">Harris Primary Academy Croydon</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>406</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Harris Primary Academy Haling Park"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="89.0"
-            data-url="https://londonschool.directory/schools/croydon/harris-primary-academy-haling-park"></td>
-          <td><a href="/schools/croydon/harris-primary-academy-haling-park">Harris Primary Academy Haling Park</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>423</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Harris Primary Academy Kenley"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="86.0"
-            data-url="https://londonschool.directory/schools/croydon/harris-primary-academy-kenley"></td>
-          <td><a href="/schools/croydon/harris-primary-academy-kenley">Harris Primary Academy Kenley</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>430</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Harris Primary Academy Purley Way"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="73.0"
-            data-url="https://londonschool.directory/schools/croydon/harris-primary-academy-purley-way"></td>
-          <td><a href="/schools/croydon/harris-primary-academy-purley-way">Harris Primary Academy Purley Way</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>547</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Harris Professional Skills Sixth Form"
-            data-ofsted="Not yet rated"
-            data-phase="16 plus"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/harris-professional-skills-sixth-form"></td>
-          <td><a href="/schools/croydon/harris-professional-skills-sixth-form">Harris Professional Skills Sixth Form</a></td>
-          <td>16 plus</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>259</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Heathfield Academy"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="94.0"
-            data-url="https://londonschool.directory/schools/croydon/heathfield-academy"></td>
-          <td><a href="/schools/croydon/heathfield-academy">Heathfield Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>416</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Heavers Farm Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="55.0"
-            data-url="https://londonschool.directory/schools/croydon/heavers-farm-primary-school"></td>
-          <td><a href="/schools/croydon/heavers-farm-primary-school">Heavers Farm Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>291</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Hillcrest"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/hillcrest"></td>
-          <td><a href="/schools/croydon/hillcrest">Hillcrest</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Howard Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="71.0"
-            data-url="https://londonschool.directory/schools/croydon/howard-primary-school"></td>
-          <td><a href="/schools/croydon/howard-primary-school">Howard Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>408</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="John Wood School & Nursery"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="59.0"
-            data-url="https://londonschool.directory/schools/croydon/john-wood-school-nursery"></td>
-          <td><a href="/schools/croydon/john-wood-school-nursery">John Wood School & Nursery</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>325</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Kenley Primary School"
-            data-ofsted="Requires improvement"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="47.0"
-            data-url="https://londonschool.directory/schools/croydon/kenley-primary-school"></td>
-          <td><a href="/schools/croydon/kenley-primary-school">Kenley Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
-          <td>164</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Kensington Avenue Primary School"
-            data-ofsted="Requires improvement"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="64.0"
-            data-url="https://londonschool.directory/schools/croydon/kensington-avenue-primary-school"></td>
-          <td><a href="/schools/croydon/kensington-avenue-primary-school">Kensington Avenue Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
-          <td>513</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Keston Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="82.0"
-            data-url="https://londonschool.directory/schools/croydon/keston-primary-school"></td>
-          <td><a href="/schools/croydon/keston-primary-school">Keston Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>449</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Krishna Avanti Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="84.0"
-            data-url="https://londonschool.directory/schools/croydon/krishna-avanti-primary-school"></td>
-          <td><a href="/schools/croydon/krishna-avanti-primary-school">Krishna Avanti Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>202</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Laleham Lea School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/laleham-lea-school"></td>
-          <td><a href="/schools/croydon/laleham-lea-school">Laleham Lea School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>127</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Margaret Roper Catholic Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="84.0"
-            data-url="https://londonschool.directory/schools/croydon/margaret-roper-catholic-primary-school"></td>
-          <td><a href="/schools/croydon/margaret-roper-catholic-primary-school">Margaret Roper Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>214</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Maypole School - Melville"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/maypole-school-melville"></td>
-          <td><a href="/schools/croydon/maypole-school-melville">Maypole School - Melville</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Meridian High School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="34.2"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/meridian-high-school"></td>
-          <td><a href="/schools/croydon/meridian-high-school">Meridian High School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>537</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Monks Orchard Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="76.0"
-            data-url="https://londonschool.directory/schools/croydon/monks-orchard-primary-school"></td>
-          <td><a href="/schools/croydon/monks-orchard-primary-school">Monks Orchard Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>201</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="New Valley Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="71.0"
-            data-url="https://londonschool.directory/schools/croydon/new-valley-primary-school"></td>
-          <td><a href="/schools/croydon/new-valley-primary-school">New Valley Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>194</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Norbury High School for Girls"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="46.4"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/norbury-high-school-for-girls"></td>
-          <td><a href="/schools/croydon/norbury-high-school-for-girls">Norbury High School for Girls</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1173</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Norbury Manor Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="71.0"
-            data-url="https://londonschool.directory/schools/croydon/norbury-manor-primary-school"></td>
-          <td><a href="/schools/croydon/norbury-manor-primary-school">Norbury Manor Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>417</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Oasis Academy Arena"
-            data-ofsted="Requires improvement"
-            data-phase="Secondary"
-            data-att8="37.6"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/oasis-academy-arena"></td>
-          <td><a href="/schools/croydon/oasis-academy-arena">Oasis Academy Arena</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
-          <td>369</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Oasis Academy Byron"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="92.0"
-            data-url="https://londonschool.directory/schools/croydon/oasis-academy-byron"></td>
-          <td><a href="/schools/croydon/oasis-academy-byron">Oasis Academy Byron</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>227</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Oasis Academy Coulsdon"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="44.8"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/oasis-academy-coulsdon"></td>
-          <td><a href="/schools/croydon/oasis-academy-coulsdon">Oasis Academy Coulsdon</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>934</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Oasis Academy Ryelands"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="78.0"
-            data-url="https://londonschool.directory/schools/croydon/oasis-academy-ryelands"></td>
-          <td><a href="/schools/croydon/oasis-academy-ryelands">Oasis Academy Ryelands</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>442</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Oasis Academy Shirley Park"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="42.6"
-            data-ks2="62.0"
-            data-url="https://londonschool.directory/schools/croydon/oasis-academy-shirley-park"></td>
-          <td><a href="/schools/croydon/oasis-academy-shirley-park">Oasis Academy Shirley Park</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1659</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Oasis Academy Shirley Park Primary"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/oasis-academy-shirley-park-primary"></td>
-          <td><a href="/schools/croydon/oasis-academy-shirley-park-primary">Oasis Academy Shirley Park Primary</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Olympus"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/olympus"></td>
-          <td><a href="/schools/croydon/olympus">Olympus</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>45</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Orchard Park High School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="44.8"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/orchard-park-high-school"></td>
-          <td><a href="/schools/croydon/orchard-park-high-school">Orchard Park High School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>634</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Orchard Way Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="75.0"
-            data-url="https://londonschool.directory/schools/croydon/orchard-way-primary-school"></td>
-          <td><a href="/schools/croydon/orchard-way-primary-school">Orchard Way Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>200</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Park Hill Infant School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/park-hill-infant-school"></td>
-          <td><a href="/schools/croydon/park-hill-infant-school">Park Hill Infant School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>268</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Park Hill Junior School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="88.0"
-            data-url="https://londonschool.directory/schools/croydon/park-hill-junior-school"></td>
-          <td><a href="/schools/croydon/park-hill-junior-school">Park Hill Junior School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>371</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Paxton Academy Sports And Science"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="83.0"
-            data-url="https://londonschool.directory/schools/croydon/paxton-academy-sports-and-science"></td>
-          <td><a href="/schools/croydon/paxton-academy-sports-and-science">Paxton Academy Sports And Science</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>275</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Priory School"
-            data-ofsted="Good"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/priory-school"></td>
-          <td><a href="/schools/croydon/priory-school">Priory School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>138</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Purley Nursery School"
-            data-ofsted="Outstanding"
-            data-phase="Nursery"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/purley-nursery-school"></td>
-          <td><a href="/schools/croydon/purley-nursery-school">Purley Nursery School</a></td>
-          <td>Nursery</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>85</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Purley Oaks Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="80.0"
-            data-url="https://londonschool.directory/schools/croydon/purley-oaks-primary-school"></td>
-          <td><a href="/schools/croydon/purley-oaks-primary-school">Purley Oaks Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>651</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Quest Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="44.0"
-            data-url="https://londonschool.directory/schools/croydon/quest-primary-school"></td>
-          <td><a href="/schools/croydon/quest-primary-school">Quest Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>210</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Red Gates School"
-            data-ofsted="Outstanding"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/red-gates-school"></td>
-          <td><a href="/schools/croydon/red-gates-school">Red Gates School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>160</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Regina Coeli Catholic Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/regina-coeli-catholic-primary-school"></td>
-          <td><a href="/schools/croydon/regina-coeli-catholic-primary-school">Regina Coeli Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Riddlesdown Collegiate"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="50.7"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/riddlesdown-collegiate"></td>
-          <td><a href="/schools/croydon/riddlesdown-collegiate">Riddlesdown Collegiate</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>2067</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Ridgeway Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="73.0"
-            data-url="https://londonschool.directory/schools/croydon/ridgeway-primary-school"></td>
-          <td><a href="/schools/croydon/ridgeway-primary-school">Ridgeway Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>642</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Robert Fitzroy Academy"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="70.0"
-            data-url="https://londonschool.directory/schools/croydon/robert-fitzroy-academy"></td>
-          <td><a href="/schools/croydon/robert-fitzroy-academy">Robert Fitzroy Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>599</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Rockmount Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="83.0"
-            data-url="https://londonschool.directory/schools/croydon/rockmount-primary-school"></td>
-          <td><a href="/schools/croydon/rockmount-primary-school">Rockmount Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>449</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Rowdown Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="80.0"
-            data-url="https://londonschool.directory/schools/croydon/rowdown-primary-school"></td>
-          <td><a href="/schools/croydon/rowdown-primary-school">Rowdown Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>323</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Royal Russell School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="20.3"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/royal-russell-school"></td>
-          <td><a href="/schools/croydon/royal-russell-school">Royal Russell School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>1263</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Rutherford School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/rutherford-school"></td>
-          <td><a href="/schools/croydon/rutherford-school">Rutherford School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>32</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Saffron Valley Collegiate"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/saffron-valley-collegiate"></td>
-          <td><a href="/schools/croydon/saffron-valley-collegiate">Saffron Valley Collegiate</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>79</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Selhurst Nursery School and Children's Centre"
-            data-ofsted="Good"
-            data-phase="Nursery"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/selhurst-nursery-school-and-childrens-centre"></td>
-          <td><a href="/schools/croydon/selhurst-nursery-school-and-childrens-centre">Selhurst Nursery School and Children's Centre</a></td>
-          <td>Nursery</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>82</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Selsdon Primary and Nursery School"
-            data-ofsted="Requires improvement"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="56.0"
-            data-url="https://londonschool.directory/schools/croydon/selsdon-primary-and-nursery-school"></td>
-          <td><a href="/schools/croydon/selsdon-primary-and-nursery-school">Selsdon Primary and Nursery School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
-          <td>319</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Serenity School, Old Palace Croydon"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/serenity-school-old-palace-croydon"></td>
-          <td><a href="/schools/croydon/serenity-school-old-palace-croydon">Serenity School, Old Palace Croydon</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Shirley High School Performing Arts College"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="37.7"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/shirley-high-school-performing-arts-college"></td>
-          <td><a href="/schools/croydon/shirley-high-school-performing-arts-college">Shirley High School Performing Arts College</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>785</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Smitham Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="80.0"
-            data-url="https://londonschool.directory/schools/croydon/smitham-primary-school"></td>
-          <td><a href="/schools/croydon/smitham-primary-school">Smitham Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>637</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="South Norwood Primary"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="53.0"
-            data-url="https://londonschool.directory/schools/croydon/south-norwood-primary"></td>
-          <td><a href="/schools/croydon/south-norwood-primary">South Norwood Primary</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>326</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Aidan's Catholic Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="77.0"
-            data-url="https://londonschool.directory/schools/croydon/st-aidans-catholic-primary-school"></td>
-          <td><a href="/schools/croydon/st-aidans-catholic-primary-school">St Aidan's Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>216</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Chad's Catholic Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="92.0"
-            data-url="https://londonschool.directory/schools/croydon/st-chads-catholic-primary-school"></td>
-          <td><a href="/schools/croydon/st-chads-catholic-primary-school">St Chad's Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>346</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Cyprian's Greek Orthodox Primary Academy"
-            data-ofsted="Requires improvement"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="46.0"
-            data-url="https://londonschool.directory/schools/croydon/st-cyprians-greek-orthodox-primary-academy"></td>
-          <td><a href="/schools/croydon/st-cyprians-greek-orthodox-primary-academy">St Cyprian's Greek Orthodox Primary Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
-          <td>275</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St David's School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/st-davids-school"></td>
-          <td><a href="/schools/croydon/st-davids-school">St David's School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>146</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Giles School"
-            data-ofsted="Good"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/st-giles-school"></td>
-          <td><a href="/schools/croydon/st-giles-school">St Giles School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>115</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St James the Great RC Primary and Nursery School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="51.0"
-            data-url="https://londonschool.directory/schools/croydon/st-james-the-great-rc-primary-and-nursery-school"></td>
-          <td><a href="/schools/croydon/st-james-the-great-rc-primary-and-nursery-school">St James the Great RC Primary and Nursery School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>448</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St John's CofE Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="89.0"
-            data-url="https://londonschool.directory/schools/croydon/st-johns-cofe-primary-school"></td>
-          <td><a href="/schools/croydon/st-johns-cofe-primary-school">St John's CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>419</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Joseph's College"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="45.5"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/st-josephs-college"></td>
-          <td><a href="/schools/croydon/st-josephs-college">St Joseph's College</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>807</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Joseph's RC Infant School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/st-josephs-rc-infant-school"></td>
-          <td><a href="/schools/croydon/st-josephs-rc-infant-school">St Joseph's RC Infant School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>153</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Joseph's RC Junior School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="76.0"
-            data-url="https://londonschool.directory/schools/croydon/st-josephs-rc-junior-school"></td>
-          <td><a href="/schools/croydon/st-josephs-rc-junior-school">St Joseph's RC Junior School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>194</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Mark's Church of England Primary Academy"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="40.0"
-            data-url="https://londonschool.directory/schools/croydon/st-marks-church-of-england-primary-academy"></td>
-          <td><a href="/schools/croydon/st-marks-church-of-england-primary-academy">St Mark's Church of England Primary Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>173</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Mary's Catholic High School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="36.5"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/st-marys-catholic-high-school"></td>
-          <td><a href="/schools/croydon/st-marys-catholic-high-school">St Mary's Catholic High School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>564</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Mary's Catholic Infant School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/st-marys-catholic-infant-school"></td>
-          <td><a href="/schools/croydon/st-marys-catholic-infant-school">St Mary's Catholic Infant School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>209</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Nicholas School"
-            data-ofsted="Requires improvement"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/st-nicholas-school"></td>
-          <td><a href="/schools/croydon/st-nicholas-school">St Nicholas School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
-          <td>274</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Peter's Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="69.0"
-            data-url="https://londonschool.directory/schools/croydon/st-peters-primary-school"></td>
-          <td><a href="/schools/croydon/st-peters-primary-school">St Peter's Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>417</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Thomas Becket Catholic Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="70.0"
-            data-url="https://londonschool.directory/schools/croydon/st-thomas-becket-catholic-primary-school"></td>
-          <td><a href="/schools/croydon/st-thomas-becket-catholic-primary-school">St Thomas Becket Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>411</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St. Mary's Catholic Junior School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="77.0"
-            data-url="https://londonschool.directory/schools/croydon/st-marys-catholic-junior-school"></td>
-          <td><a href="/schools/croydon/st-marys-catholic-junior-school">St. Mary's Catholic Junior School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>231</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Supreme Education AP"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/supreme-education-ap"></td>
-          <td><a href="/schools/croydon/supreme-education-ap">Supreme Education AP</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>38</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Archbishop Lanfranc Academy"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="39.1"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/the-archbishop-lanfranc-academy"></td>
-          <td><a href="/schools/croydon/the-archbishop-lanfranc-academy">The Archbishop Lanfranc Academy</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>777</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Crescent Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="58.0"
-            data-url="https://londonschool.directory/schools/croydon/the-crescent-primary-school"></td>
-          <td><a href="/schools/croydon/the-crescent-primary-school">The Crescent Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>389</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Hayes Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="61.0"
-            data-url="https://londonschool.directory/schools/croydon/the-hayes-primary-school"></td>
-          <td><a href="/schools/croydon/the-hayes-primary-school">The Hayes Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>416</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Minster Junior School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="56.0"
-            data-url="https://londonschool.directory/schools/croydon/the-minster-junior-school"></td>
-          <td><a href="/schools/croydon/the-minster-junior-school">The Minster Junior School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>339</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Minster Nursery and Infants Church of England Academy"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/the-minster-nursery-and-infants-church-of-england-academy"></td>
-          <td><a href="/schools/croydon/the-minster-nursery-and-infants-church-of-england-academy">The Minster Nursery and Infants Church of England Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>221</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The New School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/the-new-school"></td>
-          <td><a href="/schools/croydon/the-new-school">The New School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>102</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Quest Academy"
-            data-ofsted="Requires improvement"
-            data-phase="Secondary"
-            data-att8="37.5"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/the-quest-academy"></td>
-          <td><a href="/schools/croydon/the-quest-academy">The Quest Academy</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
-          <td>903</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Write Time"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="2.6"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/the-write-time"></td>
-          <td><a href="/schools/croydon/the-write-time">The Write Time</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>56</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Thomas More Catholic School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="42.1"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/thomas-more-catholic-school"></td>
-          <td><a href="/schools/croydon/thomas-more-catholic-school">Thomas More Catholic School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>631</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Thornton Heath Nursery School"
-            data-ofsted="Good"
-            data-phase="Nursery"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/thornton-heath-nursery-school"></td>
-          <td><a href="/schools/croydon/thornton-heath-nursery-school">Thornton Heath Nursery School</a></td>
-          <td>Nursery</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>103</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Trinity School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="16.1"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/trinity-school"></td>
-          <td><a href="/schools/croydon/trinity-school">Trinity School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>1049</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Tudor Academy"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="78.0"
-            data-url="https://londonschool.directory/schools/croydon/tudor-academy"></td>
-          <td><a href="/schools/croydon/tudor-academy">Tudor Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>451</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Tunstall Nursery School"
-            data-ofsted="Good"
-            data-phase="Nursery"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/tunstall-nursery-school"></td>
-          <td><a href="/schools/croydon/tunstall-nursery-school">Tunstall Nursery School</a></td>
-          <td>Nursery</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>80</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="West Thornton Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="63.0"
-            data-url="https://londonschool.directory/schools/croydon/west-thornton-primary-school"></td>
-          <td><a href="/schools/croydon/west-thornton-primary-school">West Thornton Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>910</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Whitehorse Manor Infant School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/whitehorse-manor-infant-school"></td>
-          <td><a href="/schools/croydon/whitehorse-manor-infant-school">Whitehorse Manor Infant School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>377</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Whitehorse Manor Junior School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="72.0"
-            data-url="https://londonschool.directory/schools/croydon/whitehorse-manor-junior-school"></td>
-          <td><a href="/schools/croydon/whitehorse-manor-junior-school">Whitehorse Manor Junior School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>454</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Whitgift School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="13.2"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/whitgift-school"></td>
-          <td><a href="/schools/croydon/whitgift-school">Whitgift School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>1517</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Winterbourne Boys' Academy"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="85.0"
-            data-url="https://londonschool.directory/schools/croydon/winterbourne-boys-academy"></td>
-          <td><a href="/schools/croydon/winterbourne-boys-academy">Winterbourne Boys' Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>198</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Winterbourne Junior Girls' School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="94.0"
-            data-url="https://londonschool.directory/schools/croydon/winterbourne-junior-girls-school"></td>
-          <td><a href="/schools/croydon/winterbourne-junior-girls-school">Winterbourne Junior Girls' School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>255</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Winterbourne Nursery and Infants' School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/winterbourne-nursery-and-infants-school"></td>
-          <td><a href="/schools/croydon/winterbourne-nursery-and-infants-school">Winterbourne Nursery and Infants' School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>415</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Woodcote High School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="46.1"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/croydon/woodcote-high-school"></td>
-          <td><a href="/schools/croydon/woodcote-high-school">Woodcote High School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1273</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Woodcote Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="81.0"
-            data-url="https://londonschool.directory/schools/croydon/woodcote-primary-school"></td>
-          <td><a href="/schools/croydon/woodcote-primary-school">Woodcote Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>858</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Woodside Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="51.0"
-            data-url="https://londonschool.directory/schools/croydon/woodside-primary-school"></td>
-          <td><a href="/schools/croydon/woodside-primary-school">Woodside Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>472</td>
-        </tr></tbody>
-  </table>
-</div>
-<footer><a href="/">London Schools Explorer</a> &mdash; helping families find the right school in London.</footer>
-<script defer src="/_vercel/insights/script.js"></script>
-<script>
-(function(){
-  var borough="Croydon", boroughUrl="https://londonschool.directory/schools/croydon";
-  var outstanding=19, total=156;
-
-  // Borough-level share
-  window.shareBoroughWhatsApp=function(){
-    var t='🏙️ *Schools in '+borough+', London*\n'+
-        '📊 '+total+' schools · '+outstanding+' Outstanding\n\n'+
-        '🔗 '+boroughUrl;
-    window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank');
-  };
-  window.shareBoroughEmail=function(){
-    var s='Schools in '+borough+' — London Schools Explorer';
-    var b='Schools in '+borough+', London\n'+
-        total+' schools, '+outstanding+' rated Outstanding by Ofsted\n\n'+
-        'Browse them here: '+boroughUrl;
-    window.location.href='mailto:?subject='+encodeURIComponent(s)+'&body='+encodeURIComponent(b);
-  };
-
-  // Shortlist comparison share
-  function getSelected(){
-    return Array.from(document.querySelectorAll('.sch-sel:checked')).map(function(cb){
-      return {name:cb.dataset.name,ofsted:cb.dataset.ofsted,phase:cb.dataset.phase,
-               att8:cb.dataset.att8,ks2:cb.dataset.ks2,url:cb.dataset.url};
-    });
-  }
-  function updateBar(){
-    var sel=getSelected();
-    var bar=document.getElementById('cmp-bar');
-    document.getElementById('cmp-count').textContent=sel.length+' school'+(sel.length===1?'':' s')+' selected';
-    bar.style.display=sel.length>0?'flex':'none';
-  }
-  document.querySelectorAll('.sch-sel').forEach(function(cb){ cb.onchange=updateBar; });
-
-  function buildCompareText(sel,markdown){
-    var lines=['📋 *My '+borough+' school shortlist*',''];
-    sel.forEach(function(s,i){
-      lines.push((i+1)+'. '+(markdown?'*':'')+s.name+(markdown?'*':''));
-      lines.push('   ⭐ Ofsted: '+s.ofsted+(s.phase?' · '+s.phase:''));
-      if(s.att8)lines.push('   📊 Attainment 8: '+s.att8);
-      if(s.ks2)lines.push('   📝 KS2 expected: '+s.ks2+'%');
-      lines.push('   🔗 '+s.url);
-      lines.push('');
-    });
-    lines.push('via London Schools Explorer — '+boroughUrl);
-    return lines.join('\n');
-  }
-  window.shareCompareWhatsApp=function(){
-    var sel=getSelected();
-    if(!sel.length)return;
-    window.open('https://wa.me/?text='+encodeURIComponent(buildCompareText(sel,true)),'_blank');
-  };
-  window.shareCompareEmail=function(){
-    var sel=getSelected();
-    if(!sel.length)return;
-    var subj='My '+borough+' school shortlist — London Schools Explorer';
-    window.location.href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(buildCompareText(sel,false));
-  };
-  window.clearSelection=function(){
-    document.querySelectorAll('.sch-sel:checked').forEach(function(cb){cb.checked=false;});
-    updateBar();
-  };
-})();
-</script>
-</body>
-</html><style>
-  #fb-btn{position:fixed;bottom:24px;right:24px;z-index:9999;background:#1A1A2E;color:#D4A843;border:2px solid #D4A843;border-radius:24px;padding:10px 18px;font-family:system-ui,sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 4px 16px rgba(0,0,0,0.25);transition:all 0.2s;}
-  #fb-btn:hover{background:#D4A843;color:#1A1A2E;}
-  #fb-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:10000;display:none;align-items:flex-end;justify-content:center;padding:0 0 80px;}
-  #fb-overlay.open{display:flex;}
-  #fb-panel{background:#fff;border-radius:16px 16px 0 0;width:100%;max-width:480px;padding:28px 24px 24px;font-family:system-ui,sans-serif;animation:fbSlide 0.25s ease;position:relative;}
-  @keyframes fbSlide{from{transform:translateY(40px);opacity:0;}to{transform:translateY(0);opacity:1;}}
-  #fb-panel h3{font-size:1.1rem;font-weight:700;margin-bottom:4px;color:#1a1a1a;}
-  #fb-panel p{font-size:0.83rem;color:#888;margin-bottom:14px;}
-  .fb-stars{display:flex;gap:6px;margin-bottom:14px;}
-  .fb-star{font-size:28px;cursor:pointer;color:#ddd;transition:color 0.1s;line-height:1;}
-  .fb-star.active{color:#D4A843;}
-  .fb-inp{width:100%;padding:10px 12px;border:1.5px solid #ddd;border-radius:8px;font-family:system-ui,sans-serif;font-size:14px;color:#1a1a1a;background:white;margin-bottom:10px;outline:none;box-sizing:border-box;}
-  .fb-inp:focus{border-color:#D4A843;}
-  textarea.fb-inp{resize:vertical;min-height:80px;}
-  #fb-sub{width:100%;padding:12px;background:#1A1A2E;color:#D4A843;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;}
-  #fb-sub:disabled{opacity:0.5;cursor:not-allowed;}
-  #fb-close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:20px;cursor:pointer;color:#aaa;}
-  #fb-ok{text-align:center;padding:16px 0;display:none;}
-  @media(max-width:520px){#fb-btn{bottom:16px;right:16px;padding:8px 14px;font-size:13px;}}
-</style>
-<button id="fb-btn">&#128172; Feedback</button>
-<div id="fb-overlay">
-  <div id="fb-panel">
-    <button id="fb-close">&#10005;</button>
-    <div id="fb-wrap">
-      <h3>Share your feedback</h3>
-      <p>Help us improve London Schools Explorer.</p>
-      <div class="fb-stars">
-        <span class="fb-star" data-v="1">&#9733;</span>
-        <span class="fb-star" data-v="2">&#9733;</span>
-        <span class="fb-star" data-v="3">&#9733;</span>
-        <span class="fb-star" data-v="4">&#9733;</span>
-        <span class="fb-star" data-v="5">&#9733;</span>
-      </div>
-      <input id="fb-name" class="fb-inp" type="text" placeholder="Your name (optional)" />
-      <input id="fb-email" class="fb-inp" type="email" placeholder="Email (optional)" />
-      <textarea id="fb-comment" class="fb-inp" placeholder="What did you think? What's missing?"></textarea>
-      <button id="fb-sub">Send feedback</button>
+  <section>
+    <div class="grid-stats">
+      <div class="stat"><div class="v">156</div><div class="l">Schools in Croydon</div></div>
+      <div class="stat"><div class="v">0.0%</div><div class="l">Outstanding Ofsted</div></div>
+      <div class="stat"><div class="v">0.0%</div><div class="l">Good or Outstanding</div></div>
+      <div class="stat"><div class="v">87</div><div class="l">Primary schools</div></div>
+      <div class="stat"><div class="v">23</div><div class="l">Secondary schools</div></div>
+      <div class="stat"><div class="v">—</div><div class="l">Avg appeal success</div></div>
     </div>
-    <div id="fb-ok"><div style="font-size:2.5rem">&#9989;</div><h3 style="color:#27AE60;margin:8px 0 4px">Thank you!</h3><p>Your feedback helps London parents find the right school.</p></div>
+  </section>
+
+  <section>
+    <div class="twocol">
+      <div>
+        <h2>Top schools in Croydon</h2>
+        <p class="sources">Ranked by Ofsted rating, then by latest KS2 progress (primary) or Attainment 8 (secondary), with applications-per-place as a tie-breaker. See <a href="/methodology.html">methodology</a>.</p>
+        <table class="schools">
+          <thead>
+            <tr><th>School</th><th>Phase</th><th>Ofsted</th><th>KS2 / Att8</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><a href="/schools/croydon/harris-city-academy-crystal-palace/">Harris City Academy Crystal Palace</a></td><td>Secondary</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/croydon/coombe-wood-school/">Coombe Wood School</a></td><td>Secondary</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/croydon/st-johns-cofe-primary-school/">St John's CofE Primary School</a></td><td>Primary</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/croydon/greenvale-primary-school/">Greenvale Primary School</a></td><td>Primary</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/croydon/christ-church-cofe-primary-school-purley/">Christ Church CofE Primary School (Purley)</a></td><td>Primary</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/croydon/beaumont-primary-school/">Beaumont Primary School</a></td><td>Primary</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/croydon/ridgeway-primary-school/">Ridgeway Primary School</a></td><td>Primary</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/croydon/harris-academy-south-norwood/">Harris Academy South Norwood</a></td><td>Secondary</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/croydon/harris-academy-purley/">Harris Academy Purley</a></td><td>Secondary</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/croydon/chipstead-valley-primary-school/">Chipstead Valley Primary School</a></td><td>Primary</td><td class="rating —">—</td><td>—</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:14px"><a class="cta" href="/?borough=croydon">See all 156 schools in Croydon</a></p>
+      </div>
+      <div>
+        <h2>Map</h2>
+        <div id="map" aria-label="Map of schools in Croydon"></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>What the data says about Croydon</h2>
+    <p>The average number of applications per place across Croydon is <strong>1.24</strong>, a useful indicator of how competitive local admissions are. The mean IMD (Index of Multiple Deprivation) decile of Croydon's schools is <strong>5.08</strong> — 1 is most deprived, 10 is least deprived. All metrics on this page are recomputed from source data on the 15th of every month. See our <a href='/methodology.html'>methodology</a> for definitions and limitations.</p>
+  </section>
+
+  <section>
+    <h2>Frequently asked</h2>
+    <details class="faq"><summary>How many schools are there in Croydon?</summary><p>Croydon has 156 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 87 are primary, 23 are secondary, and the remainder are special, all-through, or post-16.</p></details>
+<details class="faq"><summary>What proportion of Croydon schools are Outstanding?</summary><p>As of the latest Ofsted Management Information release, 0 schools in Croydon (0.0%) are rated Outstanding, and 0.0% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication.</p></details>
+<details class="faq"><summary>When do I apply for a Reception or Year 7 place in Croydon?</summary><p>Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Croydon's applications are coordinated by the local authority through the eAdmissions system. See our <a href='/guides/london-reception-application-timeline/'>full Reception timeline guide</a>.</p></details>
+<details class="faq"><summary>How does the school appeals process work in Croydon?</summary><p>If you are refused your preferred school place, you have a statutory right of appeal. Croydon appeals are typically heard in May (Reception) and June–July (secondary). See our <a href='/appeals.html'>appeals tracker</a> for Croydon-level success rates by year.</p></details>
+<details class="faq"><summary>How can I tell which Croydon schools are over-subscribed?</summary><p>Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release.</p></details>
+  </section>
+
+  <section>
+    <h2>Sources</h2>
+    <p class="sources">
+      School list and phase from <a href="https://get-information-schools.service.gov.uk/" rel="nofollow">DfE Get Information About Schools</a> (refreshed monthly).
+      Ofsted ratings from <a href="https://www.gov.uk/government/statistical-data-sets/monthly-management-information-ofsteds-school-inspections-outcomes" rel="nofollow">Ofsted Management Information</a> (refreshed monthly).
+      Performance data from <a href="https://explore-education-statistics.service.gov.uk/" rel="nofollow">DfE Explore Education Statistics</a>.
+      Crime data within 500m from the <a href="https://data.police.uk/" rel="nofollow">Metropolitan Police open data API</a>.
+      Deprivation deciles from <a href="https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019" rel="nofollow">MHCLG English Indices of Deprivation 2019</a>.
+      Read our full <a href="/methodology.html">methodology</a> for how each metric is calculated.
+    </p>
+  </section>
+</main>
+<footer>
+  <div class="inner">
+    <div>&copy; London School Directory. Independent. Free to use.</div>
+    <div><a href="/about.html">About</a> &middot; <a href="/methodology.html">Methodology</a> &middot; <a href="/sources.html">Sources</a> &middot; <a href="/appeals.html">Appeals</a></div>
   </div>
-</div>
+</footer>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-(function(){
-  var SUPA_URL='https://kwqyogicwbubzbrjwues.supabase.co',SUPA_KEY='sb_publishable_488SMcDgCgQx14JB6ngw7A_qay_j9cd',rating=0;
-  document.getElementById('fb-btn').onclick=function(){document.getElementById('fb-overlay').classList.add('open');};
-  document.getElementById('fb-close').onclick=function(){document.getElementById('fb-overlay').classList.remove('open');};
-  document.getElementById('fb-overlay').onclick=function(e){if(e.target===document.getElementById('fb-overlay'))document.getElementById('fb-overlay').classList.remove('open');};
-  document.querySelectorAll('.fb-star').forEach(function(s){s.onclick=function(){rating=parseInt(s.dataset.v);document.querySelectorAll('.fb-star').forEach(function(x){x.classList.toggle('active',parseInt(x.dataset.v)<=rating);});};}); 
-  document.getElementById('fb-sub').onclick=async function(){
-    var comment=document.getElementById('fb-comment').value.trim();
-    if(!comment){document.getElementById('fb-comment').focus();return;}
-    var btn=document.getElementById('fb-sub');btn.disabled=true;btn.textContent='Sending…';
-    try{
-      var res=await fetch(SUPA_URL+'/rest/v1/feedback',{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Prefer':'return=minimal'},body:JSON.stringify({page_url:window.location.href,name:document.getElementById('fb-name').value.trim()||null,email:document.getElementById('fb-email').value.trim()||null,rating:rating||null,comment:document.getElementById('fb-comment').value.trim()})});
-      if(res.ok||res.status===201){document.getElementById('fb-wrap').style.display='none';document.getElementById('fb-ok').style.display='block';setTimeout(function(){document.getElementById('fb-overlay').classList.remove('open');document.getElementById('fb-wrap').style.display='block';document.getElementById('fb-ok').style.display='none';document.getElementById('fb-comment').value='';document.getElementById('fb-name').value='';document.getElementById('fb-email').value='';rating=0;document.querySelectorAll('.fb-star').forEach(function(s){s.classList.remove('active');});btn.disabled=false;btn.textContent='Send feedback';},3000);}else{throw new Error();}
-    }catch(e){btn.disabled=false;btn.textContent='Try again';alert('Something went wrong. Please try again.');}
-  };
-})();
+  (function() {
+    var points = [[51.393833, -0.071865, "/schools/croydon/crosfield-nursery-school/", "Crosfield Nursery School"], [51.341122, -0.11474, "/schools/croydon/purley-nursery-school/", "Purley Nursery School"], [51.378364, -0.083868, "/schools/croydon/tunstall-nursery-school/", "Tunstall Nursery School"], [51.403949, -0.099908, "/schools/croydon/beulah-junior-school/", "Beulah Junior School"], [51.387342, -0.105598, "/schools/croydon/elmwood-junior-school/", "Elmwood Junior School"], [51.387342, -0.105598, "/schools/croydon/elmwood-infant-school/", "Elmwood Infant School"], [51.364875, -0.101569, "/schools/croydon/howard-primary-school/", "Howard Primary School"], [51.352361, -0.09568, "/schools/croydon/purley-oaks-primary-school/", "Purley Oaks Primary School"], [51.399283, -0.113917, "/schools/croydon/winterbourne-junior-girls-school/", "Winterbourne Junior Girls' School"], [51.399283, -0.113917, "/schools/croydon/winterbourne-nursery-and-infants-school/", "Winterbourne Nursery and Infants' School"], [51.325833, -0.12029, "/schools/croydon/beaumont-primary-school/", "Beaumont Primary School"], [51.33481, -0.077716, "/schools/croydon/gresham-primary-school/", "Gresham Primary School"], [51.31486, -0.151289, "/schools/croydon/smitham-primary-school/", "Smitham Primary School"], [51.317338, -0.108726, "/schools/croydon/the-hayes-primary-school/", "The Hayes Primary School"], [51.348517, -0.04094, "/schools/croydon/forestdale-primary-school/", "Forestdale Primary School"], [51.394513, -0.082647, "/schools/croydon/heavers-farm-primary-school/", "Heavers Farm Primary School"], [51.414487, -0.10203, "/schools/croydon/downsview-primary-and-nursery-school/", "Downsview Primary and Nursery School"], [51.368767, -0.089282, "/schools/croydon/park-hill-infant-school/", "Park Hill Infant School"], [51.339559, -0.052736, "/schools/croydon/greenvale-primary-school/", "Greenvale Primary School"], [51.419396, -0.089803, "/schools/croydon/rockmount-primary-school/", "Rockmount Primary School"], [51.410077, -0.128096, "/schools/croydon/norbury-manor-primary-school/", "Norbury Manor Primary School"], [51.41283, -0.086985, "/schools/croydon/all-saints-cofe-primary-school/", "All Saints CofE Primary School"], [51.372717, -0.049576, "/schools/croydon/st-johns-cofe-primary-school/", "St John's CofE Primary School"], [51.308099, -0.123654, "/schools/croydon/coulsdon-cofe-primary-school/", "Coulsdon CofE Primary School"], [51.343765, -0.110195, "/schools/croydon/christ-church-cofe-primary-school-purley/", "Christ Church CofE Primary School (Purley)"], [51.421829, -0.100029, "/schools/croydon/st-josephs-rc-junior-school/", "St Joseph's RC Junior School"], [51.34406, -0.120148, "/schools/croydon/margaret-roper-catholic-primary-school/", "Margaret Roper Catholic Primary School"], [51.42238, -0.099632, "/schools/croydon/st-josephs-rc-infant-school/", "St Joseph's RC Infant School"], [51.369108, -0.083722, "/schools/croydon/archbishop-tenisons-cofe-high-school/", "Archbishop Tenison's CofE High School"], [51.380618, -0.098, "/schools/croydon/st-marys-catholic-high-school/", "St Mary's Catholic High School"], [51.346949, -0.055869, "/schools/croydon/selsdon-primary-and-nursery-school/", "Selsdon Primary and Nursery School"], [51.34406, -0.120148, "/schools/croydon/thomas-more-catholic-school/", "Thomas More Catholic School"], [51.347391, -0.109787, "/schools/croydon/cumnor-house-school/", "Cumnor House School"], [51.363045, -0.092422, "/schools/croydon/elmhurst-school-ltd/", "Elmhurst School Ltd"], [51.344177, -0.134244, "/schools/croydon/laleham-lea-school/", "Laleham Lea School"], [51.357606, -0.065687, "/schools/croydon/royal-russell-school/", "Royal Russell School"], [51.359912, -0.101027, "/schools/croydon/whitgift-school/", "Whitgift School"], [51.337862, -0.122842, "/schools/croydon/st-davids-school/", "St David's School"], [51.375048, -0.059981, "/schools/croydon/trinity-school/", "Trinity School"], [51.361293, -0.079308, "/schools/croydon/rutherford-school/", "Rutherford School"], [51.341245, -0.061681, "/schools/croydon/croydon-high-school/", "Croydon High School"], [51.390395, -0.092593, "/schools/croydon/brit-school-for-performing-arts-and-technology/", "BRIT School for Performing Arts and Technology"], [51.39561, -0.099693, "/schools/croydon/bensham-manor-school/", "Bensham Manor School"], [51.355893, -0.106091, "/schools/croydon/st-giles-school/", "St Giles School"], [51.329062, -0.119182, "/schools/croydon/st-nicholas-school/", "St Nicholas School"], [51.350981, -0.046881, "/schools/croydon/red-gates-school/", "Red Gates School"], [51.42024, -0.094687, "/schools/croydon/priory-school/", "Priory School"], [51.345062, -0.083763, "/schools/croydon/ridgeway-primary-school/", "Ridgeway Primary School"], [51.39674, -0.095664, "/schools/croydon/thornton-heath-nursery-school/", "Thornton Heath Nursery School"], [51.390293, -0.089593, "/schools/croydon/selhurst-nursery-school-and-childrens-centre/", "Selhurst Nursery School and Children's Centre"], [51.420977, -0.090255, "/schools/croydon/hillcrest/", "Hillcrest"], [51.379143, -0.089138, "/schools/croydon/al-khair-school/", "Al-Khair School"], [51.400129, -0.074691, "/schools/croydon/harris-academy-south-norwood/", "Harris Academy South Norwood"], [51.411674, -0.076795, "/schools/croydon/harris-city-academy-crystal-palace/", "Harris City Academy Crystal Palace"], [51.374895, -0.096671, "/schools/croydon/harris-federation-post-16/", "Harris Federation Post 16"], [51.3002, -0.113905, "/schools/croydon/oasis-academy-coulsdon/", "Oasis Academy Coulsdon"], [51.353061, -0.107802, "/schools/croydon/harris-academy-purley/", "Harris Academy Purley"], [51.382905, -0.063084, "/schools/croydon/oasis-academy-shirley-park/", "Oasis Academy Shirley Park"], [51.350981, -0.046881, "/schools/croydon/the-quest-academy/", "The Quest Academy"], [51.337981, -0.138788, "/schools/croydon/cumnor-house-school/", "Cumnor House School"], [51.397038, -0.092403, "/schools/croydon/whitehorse-manor-infant-school/", "Whitehorse Manor Infant School"], [51.397038, -0.092403, "/schools/croydon/whitehorse-manor-junior-school/", "Whitehorse Manor Junior School"], [51.391087, -0.103646, "/schools/croydon/ecclesbourne-primary-school/", "Ecclesbourne Primary School"], [51.394355, -0.121724, "/schools/croydon/gonville-academy/", "Gonville Academy"], [51.377955, -0.089604, "/schools/croydon/ark-oval-primary-academy/", "Ark Oval Primary Academy"], [51.408725, -0.098315, "/schools/croydon/david-livingstone-academy/", "David Livingstone Academy"], [51.366531, -0.099403, "/schools/croydon/croydon-metropolitan-college/", "Croydon Metropolitan College"], [51.410837, -0.112089, "/schools/croydon/norbury-high-school-for-girls/", "Norbury High School for Girls"], [51.371389, -0.053009, "/schools/croydon/shirley-high-school-performing-arts-college/", "Shirley High School Performing Arts College"], [51.406255, -0.105678, "/schools/croydon/st-james-the-great-rc-primary-and-nursery-school/", "St James the Great RC Primary and Nursery School"], [51.325078, -0.089146, "/schools/croydon/riddlesdown-collegiate/", "Riddlesdown Collegiate"], [51.331074, -0.139326, "/schools/croydon/woodcote-high-school/", "Woodcote High School"], [51.420714, -0.107281, "/schools/croydon/st-josephs-college/", "St Joseph's College"], [51.410853, -0.100872, "/schools/croydon/st-cyprians-greek-orthodox-primary-academy/", "St Cyprian's Greek Orthodox Primary Academy"], [51.386473, -0.082063, "/schools/croydon/robert-fitzroy-academy/", "Robert Fitzroy Academy"], [51.389162, -0.070567, "/schools/croydon/st-thomas-becket-catholic-primary-school/", "St Thomas Becket Catholic Primary School"], [51.313373, -0.127831, "/schools/croydon/oasis-academy-byron/", "Oasis Academy Byron"], [51.360374, -0.109583, "/schools/croydon/aerodrome-primary-academy/", "Aerodrome Primary Academy"], [51.354843, -0.026135, "/schools/croydon/applegarth-academy/", "Applegarth Academy"], [51.326668, -0.105658, "/schools/croydon/harris-primary-academy-kenley/", "Harris Primary Academy Kenley"], [51.399034, -0.078073, "/schools/croydon/harris-aspire-academy/", "Harris Aspire Academy"], [51.372077, -0.044086, "/schools/croydon/harris-primary-academy-benson/", "Harris Primary Academy Benson"], [51.348653, -0.013706, "/schools/croydon/tudor-academy/", "Tudor Academy"], [51.372336, -0.03054, "/schools/croydon/forest-academy/", "Forest Academy"], [51.358676, -0.09641, "/schools/croydon/harris-primary-academy-haling-park/", "Harris Primary Academy Haling Park"], [51.392572, -0.059829, "/schools/croydon/oasis-academy-arena/", "Oasis Academy Arena"], [51.422248, -0.092662, "/schools/croydon/fidelis-college/", "Fidelis College"], [51.363507, -0.117054, "/schools/croydon/harris-primary-academy-purley-way/", "Harris Primary Academy Purley Way"], [51.384014, -0.105045, "/schools/croydon/chestnut-park-primary-school/", "Chestnut Park Primary School"], [51.36503, -0.097813, "/schools/croydon/heathfield-academy/", "Heathfield Academy"], [51.329248, -0.074159, "/schools/croydon/atwood-primary-school/", "Atwood Primary School"], [51.393703, -0.065129, "/schools/croydon/oasis-academy-ryelands/", "Oasis Academy Ryelands"], [51.399283, -0.113917, "/schools/croydon/winterbourne-boys-academy/", "Winterbourne Boys' Academy"], [51.317057, -0.159453, "/schools/croydon/chipstead-valley-primary-school/", "Chipstead Valley Primary School"], [51.33455, -0.002455, "/schools/croydon/fairchildes-primary-school/", "Fairchildes Primary School"], [51.388193, -0.090989, "/schools/croydon/broadmead-primary-school/", "Broadmead Primary School"], [51.341824, -0.008213, "/schools/croydon/rowdown-primary-school/", "Rowdown Primary School"], [51.37966, -0.103788, "/schools/croydon/harris-invictus-academy-croydon/", "Harris Invictus Academy Croydon"], [51.394807, -0.115165, "/schools/croydon/paxton-academy-sports-and-science/", "Paxton Academy Sports And Science"], [51.316131, -0.11532, "/schools/croydon/new-valley-primary-school/", "New Valley Primary School"], [51.399168, -0.070965, "/schools/croydon/st-marks-church-of-england-primary-academy/", "St Mark's Church of England Primary Academy"], [51.403922, -0.098241, "/schools/croydon/beulah-infants-school/", "Beulah Infants' School"], [51.391213, -0.130534, "/schools/croydon/the-archbishop-lanfranc-academy/", "The Archbishop Lanfranc Academy"], [51.384523, -0.040308, "/schools/croydon/orchard-park-high-school/", "Orchard Park High School"], [51.379973, -0.095397, "/schools/croydon/st-marys-catholic-junior-school/", "St. Mary's Catholic Junior School"], [51.379295, -0.095699, "/schools/croydon/st-marys-catholic-infant-school/", "St Mary's Catholic Infant School"], [51.390395, -0.092593, "/schools/croydon/the-crescent-primary-school/", "The Crescent Primary School"], [51.352799, -0.020664, "/schools/croydon/good-shepherd-catholic-primary-and-nursery-school/", "Good Shepherd Catholic Primary and Nursery School"], [51.384297, -0.080401, "/schools/croydon/john-wood-school-nursery/", "John Wood School & Nursery"], [51.369799, -0.109052, "/schools/croydon/the-write-time/", "The Write Time"], [51.31486, -0.151289, "/schools/croydon/st-aidans-catholic-primary-school/", "St Aidan's Catholic Primary School"], [51.394463, -0.083382, "/schools/croydon/st-chads-catholic-primary-school/", "St Chad's Catholic Primary School"], [51.367827, -0.103875, "/schools/croydon/krishna-avanti-primary-school/", "Krishna Avanti Primary School"], [51.384849, -0.074586, "/schools/croydon/woodside-primary-school/", "Woodside Primary School"], [51.33455, -0.002455, "/schools/croydon/meridian-high-school/", "Meridian High School"], [51.359526, -0.090011, "/schools/croydon/st-peters-primary-school/", "St Peter's Primary School"], [51.368767, -0.089282, "/schools/croydon/park-hill-junior-school/", "Park Hill Junior School"], [51.407317, -0.081981, "/schools/croydon/cypress-primary-school/", "Cypress Primary School"], [51.354634, -0.016951, "/schools/croydon/castle-hill-academy/", "Castle Hill Academy"], [51.399034, -0.078073, "/schools/croydon/harris-professional-skills-sixth-form/", "Harris Professional Skills Sixth Form"], [51.378711, -0.027277, "/schools/croydon/beckmead-park-academy/", "Beckmead Park Academy"], [51.362237, -0.078205, "/schools/croydon/coombe-wood-school/", "Coombe Wood School"], [51.344586, -0.037647, "/schools/croydon/courtwood-primary-school/", "Courtwood Primary School"], [51.350981, -0.046881, "/schools/croydon/quest-primary-school/", "Quest Primary School"], [51.39077, -0.04878, "/schools/croydon/monks-orchard-primary-school/", "Monks Orchard Primary School"], [51.304603, -0.112578, "/schools/croydon/keston-primary-school/", "Keston Primary School"], [51.395412, -0.072733, "/schools/croydon/south-norwood-primary/", "South Norwood Primary"], [51.410837, -0.112089, "/schools/croydon/kensington-avenue-primary-school/", "Kensington Avenue Primary School"], [51.379143, -0.089138, "/schools/croydon/al-khair-secondary-girls/", "Al-Khair Secondary Girls"], [51.376993, -0.106844, "/schools/croydon/al-khair-school-preparatory-school/", "Al-Khair School Preparatory School"], [51.381266, -0.083675, "/schools/croydon/ark-blake-academy/", "Ark Blake Academy"], [51.357932, -0.022109, "/schools/croydon/addington-valley-academy/", "Addington Valley Academy"], [51.387793, -0.123042, "/schools/croydon/west-thornton-primary-school/", "West Thornton Primary School"], [51.422248, -0.092662, "/schools/croydon/the-new-school/", "The New School"], [51.392165, -0.091384, "/schools/croydon/aya-college-educational-provision/", "Aya College (Educational Provision)"], [51.329419, -0.139321, "/schools/croydon/woodcote-primary-school/", "Woodcote Primary School"], [51.380184, -0.116211, "/schools/croydon/harris-primary-academy-croydon/", "Harris Primary Academy Croydon"], [51.315022, -0.086291, "/schools/croydon/kenley-primary-school/", "Kenley Primary School"], [51.381266, -0.083675, "/schools/croydon/chaffinch-brook-school/", "Chaffinch Brook School"], [51.395889, -0.08154, "/schools/croydon/beckmead-college/", "Beckmead College"], [51.384523, -0.040308, "/schools/croydon/orchard-way-primary-school/", "Orchard Way Primary School"], [51.369799, -0.109052, "/schools/croydon/the-minster-junior-school/", "The Minster Junior School"], [51.369799, -0.109052, "/schools/croydon/the-minster-nursery-and-infants-church-of-england-academy/", "The Minster Nursery and Infants Church of England Academy"], [51.369328, -0.05291, "/schools/croydon/coloma-convent-girls-school/", "Coloma Convent Girls' School"], [51.368368, -0.096798, "/schools/croydon/bright-minds-creative-academy/", "Bright Minds Creative Academy"], [51.366522, -0.091128, "/schools/croydon/aspire-learning/", "Aspire Learning"], [51.325505, -0.065316, "/schools/croydon/olympus/", "Olympus"], [51.384749, -0.099281, "/schools/croydon/arise-academy/", "Arise Academy"], [51.331118, -0.10892, "/schools/croydon/abingdon-house-school-purley/", "Abingdon House School Purley"], [51.368287, -0.098985, "/schools/croydon/saffron-valley-collegiate/", "Saffron Valley Collegiate"], [51.413627, -0.094487, "/schools/croydon/harris-academy-beulah-hill/", "Harris Academy Beulah Hill"], [51.380218, -0.094439, "/schools/croydon/supreme-education-ap/", "Supreme Education AP"], [51.355893, -0.106091, "/schools/croydon/regina-coeli-catholic-primary-school/", "Regina Coeli Catholic Primary School"], [51.372783, -0.104489, "/schools/croydon/serenity-school-old-palace-croydon/", "Serenity School, Old Palace Croydon"], [51.387244, -0.06119, "/schools/croydon/oasis-academy-shirley-park-primary/", "Oasis Academy Shirley Park Primary"], [51.362237, -0.078205, "/schools/croydon/maypole-school---melville/", "Maypole School - Melville"]];
+    if (!points.length) return;
+    var lats = points.map(function(p) { return p[0]; });
+    var lngs = points.map(function(p) { return p[1]; });
+    var avgLat = lats.reduce(function(a,b) { return a+b; }, 0) / lats.length;
+    var avgLng = lngs.reduce(function(a,b) { return a+b; }, 0) / lngs.length;
+    var map = L.map('map', { scrollWheelZoom: false }).setView([avgLat, avgLng], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+    points.forEach(function(p) {
+      L.circleMarker([p[0], p[1]], {
+        radius: 5, color: '#0b2545', fillColor: '#0b6efd', fillOpacity: 0.8, weight: 1
+      }).addTo(map).bindPopup('<a href="' + p[2] + '">' + p[3] + '</a>');
+    });
+  })();
 </script>
 </body>
 </html>

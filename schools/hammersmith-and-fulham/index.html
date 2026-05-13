@@ -1,1264 +1,363 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en-GB">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Schools in Hammersmith and Fulham, London | Ofsted Ratings &amp; Results | London Schools Explorer</title>
-  <meta name="description" content="81 schools in Hammersmith and Fulham, London. 22 Outstanding, 36 Good-rated by Ofsted. Compare admissions oversubscription, exam results and crime data. Free.">
-  <script type="application/ld+json">{
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Schools in Hammersmith and Fulham, London — Ofsted, Performance & Admissions</title>
+<meta name="description" content="All 81 schools in Hammersmith and Fulham, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
+<link rel="canonical" href="https://londonschool.directory/schools/hammersmith-and-fulham/">
+<meta property="og:title" content="Schools in Hammersmith and Fulham, London — Ofsted, Performance & Admissions">
+<meta property="og:description" content="All 81 schools in Hammersmith and Fulham, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://londonschool.directory/schools/hammersmith-and-fulham/">
+<meta property="og:site_name" content="London School Directory">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0b2545">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="preconnect" href="https://unpkg.com">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+  :root {
+    --ink: #0b2545;
+    --ink-2: #1e3a5f;
+    --muted: #5b6b85;
+    --line: #e3e8ef;
+    --bg: #ffffff;
+    --bg-2: #f6f8fb;
+    --accent: #0b6efd;
+    --good: #137333;
+    --warn: #a85b00;
+    --bad: #b3261e;
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  header.site {
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+    position: sticky; top: 0; z-index: 50;
+  }
+  header.site .inner {
+    max-width: 1100px; margin: 0 auto; padding: 14px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  header.site a.brand { color: var(--ink); font-weight: 700; letter-spacing: -0.01em; }
+  header.site nav a { margin-left: 18px; color: var(--ink-2); font-size: 14px; }
+  main { max-width: 1100px; margin: 0 auto; padding: 28px 20px 80px; }
+  .crumbs { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+  .crumbs a { color: var(--muted); }
+  h1 { font-size: 32px; line-height: 1.2; margin: 0 0 8px; letter-spacing: -0.02em; }
+  .lede { color: var(--ink-2); font-size: 17px; max-width: 720px; }
+  .stamp { font-size: 12px; color: var(--muted); margin-top: 8px; }
+  .stamp .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--good); vertical-align: middle; margin-right: 6px; }
+  .grid-stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px; margin: 24px 0 8px;
+  }
+  .stat {
+    background: var(--bg-2); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 14px 16px;
+  }
+  .stat .v { font-size: 24px; font-weight: 700; color: var(--ink); }
+  .stat .l { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  section { margin-top: 36px; }
+  h2 { font-size: 22px; margin: 0 0 12px; letter-spacing: -0.01em; }
+  .twocol { display: grid; grid-template-columns: 1.4fr 1fr; gap: 28px; }
+  @media (max-width: 820px) { .twocol { grid-template-columns: 1fr; } }
+  table.schools { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table.schools th, table.schools td {
+    text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line);
+  }
+  table.schools th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); font-weight: 600; }
+  .rating { font-weight: 600; }
+  .rating.Outstanding { color: var(--good); }
+  .rating.Good { color: var(--ink-2); }
+  .rating.RequiresImprovement, .rating.Requires { color: var(--warn); }
+  .rating.Inadequate { color: var(--bad); }
+  #map { height: 380px; border-radius: var(--radius); border: 1px solid var(--line); }
+  .pills { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pill { background: var(--bg-2); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; font-size: 12px; color: var(--ink-2); }
+  details.faq { border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 8px; background: var(--bg); }
+  details.faq summary { cursor: pointer; font-weight: 600; color: var(--ink); }
+  details.faq[open] { background: var(--bg-2); }
+  footer { border-top: 1px solid var(--line); padding: 28px 20px; color: var(--muted); font-size: 13px; }
+  footer .inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 24px; flex-wrap: wrap; }
+  .sources { font-size: 13px; color: var(--muted); }
+  .sources a { color: var(--muted); text-decoration: underline; }
+  .cta {
+    display: inline-block; background: var(--ink); color: #fff; padding: 10px 14px;
+    border-radius: var(--radius); font-size: 14px; font-weight: 600;
+  }
+  .cta:hover { background: var(--ink-2); text-decoration: none; }
+</style>
+<script type="application/ld+json">
+[
+  {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "name": "Schools in Hammersmith and Fulham, London",
-    "description": "81 schools in Hammersmith and Fulham, London rated by Ofsted",
-    "numberOfItems": 81,
-    "url": "https://londonschool.directory/schools/hammersmith-and-fulham"
-  }</script>
-  <script type="application/ld+json">{
+    "name": "Top schools in Hammersmith and Fulham, London",
+    "itemListOrder": "http://schema.org/ItemListOrderDescending",
+    "numberOfItems": 10,
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "url": "https://londonschool.directory/schools/hammersmith-and-fulham/west-london-free-school/",
+        "name": "West London Free School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "url": "https://londonschool.directory/schools/hammersmith-and-fulham/holy-cross-rc-school/",
+        "name": "Holy Cross RC School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "url": "https://londonschool.directory/schools/hammersmith-and-fulham/john-betts-primary-school/",
+        "name": "John Betts Primary School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "url": "https://londonschool.directory/schools/hammersmith-and-fulham/lady-margaret-school/",
+        "name": "Lady Margaret School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 5,
+        "url": "https://londonschool.directory/schools/hammersmith-and-fulham/the-london-oratory-school/",
+        "name": "The London Oratory School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 6,
+        "url": "https://londonschool.directory/schools/hammersmith-and-fulham/west-london-free-school-primary/",
+        "name": "West London Free School Primary"
+      },
+      {
+        "@type": "ListItem",
+        "position": 7,
+        "url": "https://londonschool.directory/schools/hammersmith-and-fulham/hammersmith-academy/",
+        "name": "Hammersmith Academy"
+      },
+      {
+        "@type": "ListItem",
+        "position": 8,
+        "url": "https://londonschool.directory/schools/hammersmith-and-fulham/all-saints-cofe-primary-school/",
+        "name": "All Saints CofE Primary School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 9,
+        "url": "https://londonschool.directory/schools/hammersmith-and-fulham/sacred-heart-high-school/",
+        "name": "Sacred Heart High School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 10,
+        "url": "https://londonschool.directory/schools/hammersmith-and-fulham/ark-burlington-danes-academy/",
+        "name": "Ark Burlington Danes Academy"
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How many schools are there in Hammersmith and Fulham?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Hammersmith and Fulham has 81 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 36 are primary, 11 are secondary, and the remainder are special, all-through, or post-16."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What proportion of Hammersmith and Fulham schools are Outstanding?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "As of the latest Ofsted Management Information release, 0 schools in Hammersmith and Fulham (0.0%) are rated Outstanding, and 0.0% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "When do I apply for a Reception or Year 7 place in Hammersmith and Fulham?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Hammersmith and Fulham's applications are coordinated by the local authority through the eAdmissions system. See our full Reception timeline guide."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does the school appeals process work in Hammersmith and Fulham?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "If you are refused your preferred school place, you have a statutory right of appeal. Hammersmith and Fulham appeals are typically heard in May (Reception) and June\u2013July (secondary). See our appeals tracker for Hammersmith and Fulham-level success rates by year."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How can I tell which Hammersmith and Fulham schools are over-subscribed?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release."
+        }
+      }
+    ]
+  },
+  {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      {"@type": "ListItem", "position": 1, "name": "London Schools Explorer", "item": "https://londonschool.directory/"},
-      {"@type": "ListItem", "position": 2, "name": "Schools in Hammersmith and Fulham", "item": "https://londonschool.directory/schools/hammersmith-and-fulham"}
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://londonschool.directory/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Boroughs",
+        "item": "https://londonschool.directory/schools/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Hammersmith and Fulham",
+        "item": "https://londonschool.directory/schools/hammersmith-and-fulham/"
+      }
     ]
-  }</script>
-  <link rel="canonical" href="https://londonschool.directory/schools/hammersmith-and-fulham">
-  <meta property="og:title" content="Schools in Hammersmith and Fulham | London Schools Explorer">
-  <meta property="og:description" content="81 schools in Hammersmith and Fulham. 22 Outstanding-rated. Compare Ofsted ratings, exam results and admissions.">
-  <meta property="og:url" content="https://londonschool.directory/schools/hammersmith-and-fulham">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, -apple-system, sans-serif; color: #1a1a1a; background: #f8f9fa; line-height: 1.6; }
-    a { color: #1565C0; }
-    .topbar { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 12px 20px; }
-    .topbar a { text-decoration: none; font-weight: 600; color: #1a1a1a; font-size: 15px; }
-    .topbar span { color: #888; margin: 0 8px; }
-    .container { max-width: 900px; margin: 0 auto; padding: 32px 20px; }
-    h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
-    .intro { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; font-size: 15px; color: #333; line-height: 1.7; }
-    .stats-row { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
-    .stat-box { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 14px 18px; flex: 1; min-width: 120px; }
-    .stat-num { font-size: 24px; font-weight: 700; color: #1a1a1a; line-height: 1; }
-    .stat-lbl { font-size: 12px; color: #888; margin-top: 4px; }
-    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #e0e0e0; }
-    th { background: #f5f5f5; padding: 12px 16px; text-align: left; font-size: 13px; color: #555; font-weight: 600; border-bottom: 1px solid #e0e0e0; }
-    td { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
-    tr:last-child td { border-bottom: none; }
-    tr:hover td { background: #fafafa; }
-    .back { display: inline-block; margin-bottom: 20px; font-size: 14px; color: #555; text-decoration: none; }
-    .back:hover { color: #111; }
-    footer { text-align: center; padding: 32px 20px; font-size: 13px; color: #888; }
-    @media (max-width: 600px) {
-      .container { padding: 16px 12px; }
-      h1 { font-size: 22px; }
-      .stats-row { grid-template-columns: 1fr 1fr; }
-      .intro { padding: 14px 16px; font-size: 14px; }
-      table { font-size: 13px; }
-      th, td { padding: 10px 10px; }
-      .topbar { padding: 10px 12px; font-size: 13px; }
-    }
-    @media (max-width: 600px) { .stats-row { flex-direction: column; } }
-  </style>
+  }
+]
+</script>
 </head>
 <body>
-<div class="topbar">
-  <div style="max-width:900px;margin:0 auto">
-    <a href="/">London Schools Explorer</a>
-    <span>/</span>
-    Hammersmith and Fulham
+<header class="site">
+  <div class="inner">
+    <a class="brand" href="/">London School Directory</a>
+    <nav>
+      <a href="/">Search</a>
+      <a href="/appeals.html">Appeals</a>
+      <a href="/methodology.html">Methodology</a>
+      <a href="/about.html">About</a>
+    </nav>
   </div>
-</div>
-<div class="container">
-  <a class="back" href="/">&#8592; All boroughs</a>
-  <h1>Schools in Hammersmith and Fulham</h1>
-
-  <div class="stats-row">
-    <div class="stat-box"><div class="stat-num">81</div><div class="stat-lbl">Total schools</div></div>
-    <div class="stat-box"><div class="stat-num">22</div><div class="stat-lbl">Outstanding</div></div>
-    <div class="stat-box"><div class="stat-num">36</div><div class="stat-lbl">Good</div></div>
-    <div class="stat-box"><div class="stat-num">4</div><div class="stat-lbl">School phases</div></div>
+</header>
+<main>
+  <div class="crumbs">
+    <a href="/">Home</a> &rsaquo; <a href="/schools/">Boroughs</a> &rsaquo; Hammersmith and Fulham
   </div>
 
-  <div class="intro">Hammersmith and Fulham is a compact west London borough with a strong concentration of Good and Outstanding schools. The borough is one of the most densely populated in London, making school places highly competitive. It borders Kensington and Chelsea to the east and has a mix of state, faith and independent school options.</div>
+  <h1>Schools in Hammersmith and Fulham, London</h1>
+  <p class="lede">Hammersmith and Fulham combines a relatively small geographic area with a strong concentration of high-performing primaries and secondaries. The borough has a notable independent and grammar presence alongside its state schools. Several of the most competitive primaries draw applicants from across west London.</p>
+  <p class="stamp"><span class="dot"></span>Data last verified 13 May 2026. Sources: Ofsted, DfE GIAS, DfE Performance Tables, Metropolitan Police, MHCLG IMD. See <a href="/sources.html">all sources</a>.</p>
 
-  
-<div style="display:flex;gap:16px;flex-wrap:wrap;margin:20px 0;">
-
-<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fdf4ff 0%,#ede9fe 100%);
-     border:1px solid #d8b4fe;border-radius:12px;padding:14px 20px;">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-    <span style="font-size:22px;">🎓</span>
-    <strong style="font-size:15px;color:#5b21b6;">11+ &amp; 13+ Exam Prep</strong>
-  </div>
-  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
-    PiAcademy resources for grammar school entrance, SATs &amp; GCSE.
-    Use code <strong>THIERR25</strong> for 25% off.
-  </p>
-  <a href="https://piacademy.co.uk/?aff=28"
-     target="_blank" rel="noopener sponsored"
-     style="display:inline-block;padding:9px 18px;background:#7e22ce;color:#fff;
-            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
-    Get 25% OFF →
-  </a>
-  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
-</div>
-<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%);
-     border:1px solid #fcd34d;border-radius:12px;padding:14px 20px;">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-    <span style="font-size:22px;">📚</span>
-    <strong style="font-size:15px;color:#92400e;">Children's Books</strong>
-  </div>
-  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
-    Great books at low prices. At checkout, choose your school — Scholastic donates
-    <strong>20p for every £1 spent</strong> back to the school in free books.
-  </p>
-  <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&ued=https%3A%2F%2Fwww.scholastic.co.uk%2Fteachers"
-     target="_blank" rel="noopener sponsored"
-     style="display:inline-block;padding:9px 18px;background:#d97706;color:#fff;
-            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
-    Shop at Scholastic →
-  </a>
-  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
-</div>
-<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fff8f0 0%,#fff3e0 100%);
-     border:1px solid #fed7aa;border-radius:12px;padding:14px 20px;">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-    <span style="font-size:22px;">🛒</span>
-    <strong style="font-size:15px;color:#92400e;">School Supplies</strong>
-  </div>
-  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
-    Stationery, bags, PE kit, lunchboxes and more — fast delivery from Amazon.
-  </p>
-  <a href="https://www.amazon.co.uk/s?k=school+supplies+stationery&tag=londonparents-21"
-     target="_blank" rel="noopener sponsored"
-     style="display:inline-block;padding:9px 18px;background:#FF9900;color:#111;
-            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
-    Shop on Amazon →
-  </a>
-  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
-</div>
-</div>
-
-  <!-- Borough share buttons -->
-  <div style="display:flex;gap:10px;margin:16px 0 8px;flex-wrap:wrap;align-items:center;">
-    <span style="font-size:13px;color:#555;font-weight:600;">Share Hammersmith and Fulham schools:</span>
-    <button onclick="shareBoroughWhatsApp()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 WhatsApp</button>
-    <button onclick="shareBoroughEmail()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#1565C0;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Email</button>
-    <span style="font-size:12px;color:#999;margin-left:4px;">Or tick schools below to share a shortlist</span>
-  </div>
-
-  <!-- Sticky compare bar (appears when schools are ticked) -->
-  <div id="cmp-bar" style="display:none;position:sticky;top:0;z-index:100;background:#1A1A2E;color:#fff;padding:12px 16px;border-radius:10px;margin-bottom:12px;display:none;align-items:center;gap:10px;flex-wrap:wrap;">
-    <span id="cmp-count" style="font-weight:700;font-size:14px;">0 schools selected</span>
-    <button onclick="shareCompareWhatsApp()" style="padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 Share via WhatsApp</button>
-    <button onclick="shareCompareEmail()" style="padding:8px 16px;background:#fff;color:#1A1A2E;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Share via Email</button>
-    <button onclick="clearSelection()" style="padding:8px 12px;background:transparent;color:#aaa;border:1px solid #555;border-radius:8px;font-size:12px;cursor:pointer;">✕ Clear</button>
-  </div>
-
-  <table>
-    <thead><tr><th style="width:36px"></th><th>School</th><th>Phase</th><th>Ofsted</th><th>Pupils</th></tr></thead>
-    <tbody><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Addison Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="88.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/addison-primary-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/addison-primary-school">Addison Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>200</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="All Saints CofE Primary School"
-            data-ofsted="Requires improvement"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="80.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/all-saints-cofe-primary-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/all-saints-cofe-primary-school">All Saints CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
-          <td>213</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Ark Bentworth Primary Academy"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="88.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/ark-bentworth-primary-academy"></td>
-          <td><a href="/schools/hammersmith-and-fulham/ark-bentworth-primary-academy">Ark Bentworth Primary Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>169</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Ark Burlington Danes Academy"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="48.1"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/ark-burlington-danes-academy"></td>
-          <td><a href="/schools/hammersmith-and-fulham/ark-burlington-danes-academy">Ark Burlington Danes Academy</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>819</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Ark Conway Primary Academy"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="90.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/ark-conway-primary-academy"></td>
-          <td><a href="/schools/hammersmith-and-fulham/ark-conway-primary-academy">Ark Conway Primary Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>207</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Ark White City Primary Academy"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="85.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/ark-white-city-primary-academy"></td>
-          <td><a href="/schools/hammersmith-and-fulham/ark-white-city-primary-academy">Ark White City Primary Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>283</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Avonmore Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="73.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/avonmore-primary-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/avonmore-primary-school">Avonmore Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>184</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Azbuka Russian-English Bilingual School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/azbuka-russian-english-bilingual-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/azbuka-russian-english-bilingual-school">Azbuka Russian-English Bilingual School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>59</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Bayonne Nursery School"
-            data-ofsted="Outstanding"
-            data-phase="Nursery"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/bayonne-nursery-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/bayonne-nursery-school">Bayonne Nursery School</a></td>
-          <td>Nursery</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>64</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="BeyondAutism Post-19"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/beyondautism-post-19"></td>
-          <td><a href="/schools/hammersmith-and-fulham/beyondautism-post-19">BeyondAutism Post-19</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Brackenbury Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="71.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/brackenbury-primary-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/brackenbury-primary-school">Brackenbury Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>318</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Burlington House School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="20.2"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/burlington-house-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/burlington-house-school">Burlington House School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>186</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Bute House Preparatory School for Girls"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/bute-house-preparatory-school-for-girls"></td>
-          <td><a href="/schools/hammersmith-and-fulham/bute-house-preparatory-school-for-girls">Bute House Preparatory School for Girls</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>328</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Cambridge School"
-            data-ofsted="Good"
-            data-phase="N/A"
-            data-att8="0.6"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/cambridge-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/cambridge-school">Cambridge School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>143</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Earl's Court Free School Primary"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="91.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/earls-court-free-school-primary"></td>
-          <td><a href="/schools/hammersmith-and-fulham/earls-court-free-school-primary">Earl's Court Free School Primary</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>204</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Ecole Française de Londres Jacques Prévert"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/ecole-fran-aise-de-londres-jacques-pr-vert"></td>
-          <td><a href="/schools/hammersmith-and-fulham/ecole-fran-aise-de-londres-jacques-pr-vert">Ecole Française de Londres Jacques Prévert</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>262</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Evergreen Primary School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/evergreen-primary-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/evergreen-primary-school">Evergreen Primary School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>73</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="First Bridge School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/first-bridge-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/first-bridge-school">First Bridge School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>21</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Flora Gardens Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="62.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/flora-gardens-primary-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/flora-gardens-primary-school">Flora Gardens Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>186</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Fulham Cross Academy"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="45.7"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/fulham-cross-academy"></td>
-          <td><a href="/schools/hammersmith-and-fulham/fulham-cross-academy">Fulham Cross Academy</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>596</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Fulham Cross Girls' School and Language College"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="57.1"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/fulham-cross-girls-school-and-language-college"></td>
-          <td><a href="/schools/hammersmith-and-fulham/fulham-cross-girls-school-and-language-college">Fulham Cross Girls' School and Language College</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>470</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Fulham Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="44.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/fulham-primary-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/fulham-primary-school">Fulham Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>183</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Good Shepherd RC Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="100.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/good-shepherd-rc-primary-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/good-shepherd-rc-primary-school">Good Shepherd RC Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>227</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Greenside Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="87.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/greenside-primary-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/greenside-primary-school">Greenside Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>218</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Hammersmith Academy"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="52.0"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/hammersmith-academy"></td>
-          <td><a href="/schools/hammersmith-and-fulham/hammersmith-academy">Hammersmith Academy</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>950</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Holy Cross RC School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="86.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/holy-cross-rc-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/holy-cross-rc-school">Holy Cross RC School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>622</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Jack Tizard School"
-            data-ofsted="Outstanding"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/jack-tizard-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/jack-tizard-school">Jack Tizard School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>73</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="James Lee Nursery School"
-            data-ofsted="Outstanding"
-            data-phase="Nursery"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/james-lee-nursery-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/james-lee-nursery-school">James Lee Nursery School</a></td>
-          <td>Nursery</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>33</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="John Betts Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="91.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/john-betts-primary-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/john-betts-primary-school">John Betts Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>202</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Kenmont Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="83.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/kenmont-primary-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/kenmont-primary-school">Kenmont Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>218</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Kensington Prep School GDST"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/kensington-prep-school-gdst"></td>
-          <td><a href="/schools/hammersmith-and-fulham/kensington-prep-school-gdst">Kensington Prep School GDST</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>298</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Kensington Wade"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/kensington-wade"></td>
-          <td><a href="/schools/hammersmith-and-fulham/kensington-wade">Kensington Wade</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>128</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="L'Ecole des Petits School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/lecole-des-petits-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/lecole-des-petits-school">L'Ecole des Petits School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>107</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Lady Margaret School"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="66.3"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/lady-margaret-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/lady-margaret-school">Lady Margaret School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>780</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Langford Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="89.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/langford-primary-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/langford-primary-school">Langford Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>338</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Larmenier & Sacred Heart Catholic Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="90.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/larmenier-sacred-heart-catholic-primary-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/larmenier-sacred-heart-catholic-primary-school">Larmenier & Sacred Heart Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>440</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Latymer Upper School and Latymer Prep"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="13.5"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/latymer-upper-school-and-latymer-prep"></td>
-          <td><a href="/schools/hammersmith-and-fulham/latymer-upper-school-and-latymer-prep">Latymer Upper School and Latymer Prep</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>1428</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="London Vocational Ballet School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="12.4"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/london-vocational-ballet-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/london-vocational-ballet-school">London Vocational Ballet School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>47</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Melcombe Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="63.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/melcombe-primary-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/melcombe-primary-school">Melcombe Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>136</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Miles Coverdale Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="92.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/miles-coverdale-primary-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/miles-coverdale-primary-school">Miles Coverdale Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>225</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Normand Croft Community School for Early Years and Primary Education"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="88.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/normand-croft-community-school-for-early-years-and-primary-education"></td>
-          <td><a href="/schools/hammersmith-and-fulham/normand-croft-community-school-for-early-years-and-primary-education">Normand Croft Community School for Early Years and Primary Education</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>214</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Old Oak Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="45.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/old-oak-primary-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/old-oak-primary-school">Old Oak Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>205</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Ormiston Bridge Academy"
-            data-ofsted="Good"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/ormiston-bridge-academy"></td>
-          <td><a href="/schools/hammersmith-and-fulham/ormiston-bridge-academy">Ormiston Bridge Academy</a></td>
-          <td>N/A</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>46</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Ormiston Queensmill Academy"
-            data-ofsted="Good"
-            data-phase="N/A"
-            data-att8="2.0"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/ormiston-queensmill-academy"></td>
-          <td><a href="/schools/hammersmith-and-fulham/ormiston-queensmill-academy">Ormiston Queensmill Academy</a></td>
-          <td>N/A</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>242</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Parayhouse School"
-            data-ofsted="Good"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/parayhouse-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/parayhouse-school">Parayhouse School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>52</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Parsons Green Prep School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/parsons-green-prep-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/parsons-green-prep-school">Parsons Green Prep School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>130</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Phoenix Academy"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="49.6"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/phoenix-academy"></td>
-          <td><a href="/schools/hammersmith-and-fulham/phoenix-academy">Phoenix Academy</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>538</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Q+ Queensmill College"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/q-queensmill-college"></td>
-          <td><a href="/schools/hammersmith-and-fulham/q-queensmill-college">Q+ Queensmill College</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Queen's Manor School and Special Needs Unit"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="67.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/queens-manor-school-and-special-needs-unit"></td>
-          <td><a href="/schools/hammersmith-and-fulham/queens-manor-school-and-special-needs-unit">Queen's Manor School and Special Needs Unit</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>147</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Randolph Beresford Early Years Centre"
-            data-ofsted="Outstanding"
-            data-phase="Nursery"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/randolph-beresford-early-years-centre"></td>
-          <td><a href="/schools/hammersmith-and-fulham/randolph-beresford-early-years-centre">Randolph Beresford Early Years Centre</a></td>
-          <td>Nursery</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>130</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Ravenscourt Park Preparatory School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/ravenscourt-park-preparatory-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/ravenscourt-park-preparatory-school">Ravenscourt Park Preparatory School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>418</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Sacred Heart High School"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="60.9"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/sacred-heart-high-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/sacred-heart-high-school">Sacred Heart High School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>1123</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Sir John Lillie Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="88.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/sir-john-lillie-primary-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/sir-john-lillie-primary-school">Sir John Lillie Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>191</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Augustine's RC Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="95.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/st-augustines-rc-primary-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/st-augustines-rc-primary-school">St Augustine's RC Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>192</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St James Preparatory School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/st-james-preparatory-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/st-james-preparatory-school">St James Preparatory School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>157</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St James Senior Girls' School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="39.2"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/st-james-senior-girls-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/st-james-senior-girls-school">St James Senior Girls' School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>225</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St John XXIII Catholic Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="95.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/st-john-xxiii-catholic-primary-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/st-john-xxiii-catholic-primary-school">St John XXIII Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>298</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St John's Walham Green Church of England Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="79.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/st-johns-walham-green-church-of-england-primary-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/st-johns-walham-green-church-of-england-primary-school">St John's Walham Green Church of England Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>394</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Mary's Catholic Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="88.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/st-marys-catholic-primary-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/st-marys-catholic-primary-school">St Mary's Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>177</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Paul's CofE Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="50.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/st-pauls-cofe-primary-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/st-pauls-cofe-primary-school">St Paul's CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>159</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Paul's Girls' School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="22.6"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/st-pauls-girls-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/st-pauls-girls-school">St Paul's Girls' School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>824</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Peter's Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="83.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/st-peters-primary-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/st-peters-primary-school">St Peter's Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>209</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Stephen's CofE Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="98.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/st-stephens-cofe-primary-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/st-stephens-cofe-primary-school">St Stephen's CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>440</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Thomas of Canterbury Catholic Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="69.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/st-thomas-of-canterbury-catholic-primary-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/st-thomas-of-canterbury-catholic-primary-school">St Thomas of Canterbury Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>75</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Sulivan Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="94.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/sulivan-primary-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/sulivan-primary-school">Sulivan Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>163</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Fulham Boys School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="61.4"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/the-fulham-boys-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/the-fulham-boys-school">The Fulham Boys School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>808</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Fulham Prep School Ltd"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="47.6"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/the-fulham-prep-school-ltd"></td>
-          <td><a href="/schools/hammersmith-and-fulham/the-fulham-prep-school-ltd">The Fulham Prep School Ltd</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>377</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Godolphin and Latymer School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="40.6"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/the-godolphin-and-latymer-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/the-godolphin-and-latymer-school">The Godolphin and Latymer School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>804</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Hurlingham Academy"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="58.4"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/the-hurlingham-academy"></td>
-          <td><a href="/schools/hammersmith-and-fulham/the-hurlingham-academy">The Hurlingham Academy</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>728</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The London Oratory School"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="62.3"
-            data-ks2="100.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/the-london-oratory-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/the-london-oratory-school">The London Oratory School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>1398</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Thomas's Academy"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="81.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/thomass-academy"></td>
-          <td><a href="/schools/hammersmith-and-fulham/thomass-academy">Thomas's Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>165</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Thomas's Fulham"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/thomass-fulham"></td>
-          <td><a href="/schools/hammersmith-and-fulham/thomass-fulham">Thomas's Fulham</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>420</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Vanessa Nursery School"
-            data-ofsted="Outstanding"
-            data-phase="Nursery"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/vanessa-nursery-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/vanessa-nursery-school">Vanessa Nursery School</a></td>
-          <td>Nursery</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>79</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Wendell Park Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="89.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/wendell-park-primary-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/wendell-park-primary-school">Wendell Park Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>396</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="West London Free School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="69.2"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/west-london-free-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/west-london-free-school">West London Free School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>921</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="West London Free School Primary"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="90.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/west-london-free-school-primary"></td>
-          <td><a href="/schools/hammersmith-and-fulham/west-london-free-school-primary">West London Free School Primary</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>416</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Westside School"
-            data-ofsted="Outstanding"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/westside-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/westside-school">Westside School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>11</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Wetherby Pembridge"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/wetherby-pembridge"></td>
-          <td><a href="/schools/hammersmith-and-fulham/wetherby-pembridge">Wetherby Pembridge</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>98</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="William Morris Sixth Form"
-            data-ofsted="Good"
-            data-phase="16 plus"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/william-morris-sixth-form"></td>
-          <td><a href="/schools/hammersmith-and-fulham/william-morris-sixth-form">William Morris Sixth Form</a></td>
-          <td>16 plus</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>801</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Woodlane High School"
-            data-ofsted="Good"
-            data-phase="N/A"
-            data-att8="11.1"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/woodlane-high-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/woodlane-high-school">Woodlane High School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>106</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Wormholt Park Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="93.0"
-            data-url="https://londonschool.directory/schools/hammersmith-and-fulham/wormholt-park-primary-school"></td>
-          <td><a href="/schools/hammersmith-and-fulham/wormholt-park-primary-school">Wormholt Park Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>310</td>
-        </tr></tbody>
-  </table>
-</div>
-<footer><a href="/">London Schools Explorer</a> &mdash; helping families find the right school in London.</footer>
-<script defer src="/_vercel/insights/script.js"></script>
-<script>
-(function(){
-  var borough="Hammersmith and Fulham", boroughUrl="https://londonschool.directory/schools/hammersmith-and-fulham";
-  var outstanding=22, total=81;
-
-  // Borough-level share
-  window.shareBoroughWhatsApp=function(){
-    var t='🏙️ *Schools in '+borough+', London*\n'+
-        '📊 '+total+' schools · '+outstanding+' Outstanding\n\n'+
-        '🔗 '+boroughUrl;
-    window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank');
-  };
-  window.shareBoroughEmail=function(){
-    var s='Schools in '+borough+' — London Schools Explorer';
-    var b='Schools in '+borough+', London\n'+
-        total+' schools, '+outstanding+' rated Outstanding by Ofsted\n\n'+
-        'Browse them here: '+boroughUrl;
-    window.location.href='mailto:?subject='+encodeURIComponent(s)+'&body='+encodeURIComponent(b);
-  };
-
-  // Shortlist comparison share
-  function getSelected(){
-    return Array.from(document.querySelectorAll('.sch-sel:checked')).map(function(cb){
-      return {name:cb.dataset.name,ofsted:cb.dataset.ofsted,phase:cb.dataset.phase,
-               att8:cb.dataset.att8,ks2:cb.dataset.ks2,url:cb.dataset.url};
-    });
-  }
-  function updateBar(){
-    var sel=getSelected();
-    var bar=document.getElementById('cmp-bar');
-    document.getElementById('cmp-count').textContent=sel.length+' school'+(sel.length===1?'':' s')+' selected';
-    bar.style.display=sel.length>0?'flex':'none';
-  }
-  document.querySelectorAll('.sch-sel').forEach(function(cb){ cb.onchange=updateBar; });
-
-  function buildCompareText(sel,markdown){
-    var lines=['📋 *My '+borough+' school shortlist*',''];
-    sel.forEach(function(s,i){
-      lines.push((i+1)+'. '+(markdown?'*':'')+s.name+(markdown?'*':''));
-      lines.push('   ⭐ Ofsted: '+s.ofsted+(s.phase?' · '+s.phase:''));
-      if(s.att8)lines.push('   📊 Attainment 8: '+s.att8);
-      if(s.ks2)lines.push('   📝 KS2 expected: '+s.ks2+'%');
-      lines.push('   🔗 '+s.url);
-      lines.push('');
-    });
-    lines.push('via London Schools Explorer — '+boroughUrl);
-    return lines.join('\n');
-  }
-  window.shareCompareWhatsApp=function(){
-    var sel=getSelected();
-    if(!sel.length)return;
-    window.open('https://wa.me/?text='+encodeURIComponent(buildCompareText(sel,true)),'_blank');
-  };
-  window.shareCompareEmail=function(){
-    var sel=getSelected();
-    if(!sel.length)return;
-    var subj='My '+borough+' school shortlist — London Schools Explorer';
-    window.location.href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(buildCompareText(sel,false));
-  };
-  window.clearSelection=function(){
-    document.querySelectorAll('.sch-sel:checked').forEach(function(cb){cb.checked=false;});
-    updateBar();
-  };
-})();
-</script>
-</body>
-</html><style>
-  #fb-btn{position:fixed;bottom:24px;right:24px;z-index:9999;background:#1A1A2E;color:#D4A843;border:2px solid #D4A843;border-radius:24px;padding:10px 18px;font-family:system-ui,sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 4px 16px rgba(0,0,0,0.25);transition:all 0.2s;}
-  #fb-btn:hover{background:#D4A843;color:#1A1A2E;}
-  #fb-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:10000;display:none;align-items:flex-end;justify-content:center;padding:0 0 80px;}
-  #fb-overlay.open{display:flex;}
-  #fb-panel{background:#fff;border-radius:16px 16px 0 0;width:100%;max-width:480px;padding:28px 24px 24px;font-family:system-ui,sans-serif;animation:fbSlide 0.25s ease;position:relative;}
-  @keyframes fbSlide{from{transform:translateY(40px);opacity:0;}to{transform:translateY(0);opacity:1;}}
-  #fb-panel h3{font-size:1.1rem;font-weight:700;margin-bottom:4px;color:#1a1a1a;}
-  #fb-panel p{font-size:0.83rem;color:#888;margin-bottom:14px;}
-  .fb-stars{display:flex;gap:6px;margin-bottom:14px;}
-  .fb-star{font-size:28px;cursor:pointer;color:#ddd;transition:color 0.1s;line-height:1;}
-  .fb-star.active{color:#D4A843;}
-  .fb-inp{width:100%;padding:10px 12px;border:1.5px solid #ddd;border-radius:8px;font-family:system-ui,sans-serif;font-size:14px;color:#1a1a1a;background:white;margin-bottom:10px;outline:none;box-sizing:border-box;}
-  .fb-inp:focus{border-color:#D4A843;}
-  textarea.fb-inp{resize:vertical;min-height:80px;}
-  #fb-sub{width:100%;padding:12px;background:#1A1A2E;color:#D4A843;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;}
-  #fb-sub:disabled{opacity:0.5;cursor:not-allowed;}
-  #fb-close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:20px;cursor:pointer;color:#aaa;}
-  #fb-ok{text-align:center;padding:16px 0;display:none;}
-  @media(max-width:520px){#fb-btn{bottom:16px;right:16px;padding:8px 14px;font-size:13px;}}
-</style>
-<button id="fb-btn">&#128172; Feedback</button>
-<div id="fb-overlay">
-  <div id="fb-panel">
-    <button id="fb-close">&#10005;</button>
-    <div id="fb-wrap">
-      <h3>Share your feedback</h3>
-      <p>Help us improve London Schools Explorer.</p>
-      <div class="fb-stars">
-        <span class="fb-star" data-v="1">&#9733;</span>
-        <span class="fb-star" data-v="2">&#9733;</span>
-        <span class="fb-star" data-v="3">&#9733;</span>
-        <span class="fb-star" data-v="4">&#9733;</span>
-        <span class="fb-star" data-v="5">&#9733;</span>
-      </div>
-      <input id="fb-name" class="fb-inp" type="text" placeholder="Your name (optional)" />
-      <input id="fb-email" class="fb-inp" type="email" placeholder="Email (optional)" />
-      <textarea id="fb-comment" class="fb-inp" placeholder="What did you think? What's missing?"></textarea>
-      <button id="fb-sub">Send feedback</button>
+  <section>
+    <div class="grid-stats">
+      <div class="stat"><div class="v">81</div><div class="l">Schools in Hammersmith and Fulham</div></div>
+      <div class="stat"><div class="v">0.0%</div><div class="l">Outstanding Ofsted</div></div>
+      <div class="stat"><div class="v">0.0%</div><div class="l">Good or Outstanding</div></div>
+      <div class="stat"><div class="v">36</div><div class="l">Primary schools</div></div>
+      <div class="stat"><div class="v">11</div><div class="l">Secondary schools</div></div>
+      <div class="stat"><div class="v">—</div><div class="l">Avg appeal success</div></div>
     </div>
-    <div id="fb-ok"><div style="font-size:2.5rem">&#9989;</div><h3 style="color:#27AE60;margin:8px 0 4px">Thank you!</h3><p>Your feedback helps London parents find the right school.</p></div>
+  </section>
+
+  <section>
+    <div class="twocol">
+      <div>
+        <h2>Top schools in Hammersmith and Fulham</h2>
+        <p class="sources">Ranked by Ofsted rating, then by latest KS2 progress (primary) or Attainment 8 (secondary), with applications-per-place as a tie-breaker. See <a href="/methodology.html">methodology</a>.</p>
+        <table class="schools">
+          <thead>
+            <tr><th>School</th><th>Phase</th><th>Ofsted</th><th>KS2 / Att8</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><a href="/schools/hammersmith-and-fulham/west-london-free-school/">West London Free School</a></td><td>Secondary</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/hammersmith-and-fulham/holy-cross-rc-school/">Holy Cross RC School</a></td><td>Primary</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/hammersmith-and-fulham/john-betts-primary-school/">John Betts Primary School</a></td><td>Primary</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/hammersmith-and-fulham/lady-margaret-school/">Lady Margaret School</a></td><td>Secondary</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/hammersmith-and-fulham/the-london-oratory-school/">The London Oratory School</a></td><td>Secondary</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/hammersmith-and-fulham/west-london-free-school-primary/">West London Free School Primary</a></td><td>Primary</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/hammersmith-and-fulham/hammersmith-academy/">Hammersmith Academy</a></td><td>Secondary</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/hammersmith-and-fulham/all-saints-cofe-primary-school/">All Saints CofE Primary School</a></td><td>Primary</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/hammersmith-and-fulham/sacred-heart-high-school/">Sacred Heart High School</a></td><td>Secondary</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/hammersmith-and-fulham/ark-burlington-danes-academy/">Ark Burlington Danes Academy</a></td><td>Secondary</td><td class="rating —">—</td><td>—</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:14px"><a class="cta" href="/?borough=hammersmith-and-fulham">See all 81 schools in Hammersmith and Fulham</a></p>
+      </div>
+      <div>
+        <h2>Map</h2>
+        <div id="map" aria-label="Map of schools in Hammersmith and Fulham"></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>What the data says about Hammersmith and Fulham</h2>
+    <p>The average number of applications per place across Hammersmith and Fulham is <strong>1.4</strong>, a useful indicator of how competitive local admissions are. The mean IMD (Index of Multiple Deprivation) decile of Hammersmith and Fulham's schools is <strong>5.12</strong> — 1 is most deprived, 10 is least deprived. All metrics on this page are recomputed from source data on the 15th of every month. See our <a href='/methodology.html'>methodology</a> for definitions and limitations.</p>
+  </section>
+
+  <section>
+    <h2>Frequently asked</h2>
+    <details class="faq"><summary>How many schools are there in Hammersmith and Fulham?</summary><p>Hammersmith and Fulham has 81 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 36 are primary, 11 are secondary, and the remainder are special, all-through, or post-16.</p></details>
+<details class="faq"><summary>What proportion of Hammersmith and Fulham schools are Outstanding?</summary><p>As of the latest Ofsted Management Information release, 0 schools in Hammersmith and Fulham (0.0%) are rated Outstanding, and 0.0% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication.</p></details>
+<details class="faq"><summary>When do I apply for a Reception or Year 7 place in Hammersmith and Fulham?</summary><p>Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Hammersmith and Fulham's applications are coordinated by the local authority through the eAdmissions system. See our <a href='/guides/london-reception-application-timeline/'>full Reception timeline guide</a>.</p></details>
+<details class="faq"><summary>How does the school appeals process work in Hammersmith and Fulham?</summary><p>If you are refused your preferred school place, you have a statutory right of appeal. Hammersmith and Fulham appeals are typically heard in May (Reception) and June–July (secondary). See our <a href='/appeals.html'>appeals tracker</a> for Hammersmith and Fulham-level success rates by year.</p></details>
+<details class="faq"><summary>How can I tell which Hammersmith and Fulham schools are over-subscribed?</summary><p>Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release.</p></details>
+  </section>
+
+  <section>
+    <h2>Sources</h2>
+    <p class="sources">
+      School list and phase from <a href="https://get-information-schools.service.gov.uk/" rel="nofollow">DfE Get Information About Schools</a> (refreshed monthly).
+      Ofsted ratings from <a href="https://www.gov.uk/government/statistical-data-sets/monthly-management-information-ofsteds-school-inspections-outcomes" rel="nofollow">Ofsted Management Information</a> (refreshed monthly).
+      Performance data from <a href="https://explore-education-statistics.service.gov.uk/" rel="nofollow">DfE Explore Education Statistics</a>.
+      Crime data within 500m from the <a href="https://data.police.uk/" rel="nofollow">Metropolitan Police open data API</a>.
+      Deprivation deciles from <a href="https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019" rel="nofollow">MHCLG English Indices of Deprivation 2019</a>.
+      Read our full <a href="/methodology.html">methodology</a> for how each metric is calculated.
+    </p>
+  </section>
+</main>
+<footer>
+  <div class="inner">
+    <div>&copy; London School Directory. Independent. Free to use.</div>
+    <div><a href="/about.html">About</a> &middot; <a href="/methodology.html">Methodology</a> &middot; <a href="/sources.html">Sources</a> &middot; <a href="/appeals.html">Appeals</a></div>
   </div>
-</div>
+</footer>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-(function(){
-  var SUPA_URL='https://kwqyogicwbubzbrjwues.supabase.co',SUPA_KEY='sb_publishable_488SMcDgCgQx14JB6ngw7A_qay_j9cd',rating=0;
-  document.getElementById('fb-btn').onclick=function(){document.getElementById('fb-overlay').classList.add('open');};
-  document.getElementById('fb-close').onclick=function(){document.getElementById('fb-overlay').classList.remove('open');};
-  document.getElementById('fb-overlay').onclick=function(e){if(e.target===document.getElementById('fb-overlay'))document.getElementById('fb-overlay').classList.remove('open');};
-  document.querySelectorAll('.fb-star').forEach(function(s){s.onclick=function(){rating=parseInt(s.dataset.v);document.querySelectorAll('.fb-star').forEach(function(x){x.classList.toggle('active',parseInt(x.dataset.v)<=rating);});};}); 
-  document.getElementById('fb-sub').onclick=async function(){
-    var comment=document.getElementById('fb-comment').value.trim();
-    if(!comment){document.getElementById('fb-comment').focus();return;}
-    var btn=document.getElementById('fb-sub');btn.disabled=true;btn.textContent='Sending…';
-    try{
-      var res=await fetch(SUPA_URL+'/rest/v1/feedback',{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Prefer':'return=minimal'},body:JSON.stringify({page_url:window.location.href,name:document.getElementById('fb-name').value.trim()||null,email:document.getElementById('fb-email').value.trim()||null,rating:rating||null,comment:document.getElementById('fb-comment').value.trim()})});
-      if(res.ok||res.status===201){document.getElementById('fb-wrap').style.display='none';document.getElementById('fb-ok').style.display='block';setTimeout(function(){document.getElementById('fb-overlay').classList.remove('open');document.getElementById('fb-wrap').style.display='block';document.getElementById('fb-ok').style.display='none';document.getElementById('fb-comment').value='';document.getElementById('fb-name').value='';document.getElementById('fb-email').value='';rating=0;document.querySelectorAll('.fb-star').forEach(function(s){s.classList.remove('active');});btn.disabled=false;btn.textContent='Send feedback';},3000);}else{throw new Error();}
-    }catch(e){btn.disabled=false;btn.textContent='Try again';alert('Something went wrong. Please try again.');}
-  };
-})();
+  (function() {
+    var points = [[51.510667, -0.231644, "/schools/hammersmith-and-fulham/randolph-beresford-early-years-centre/", "Randolph Beresford Early Years Centre"], [51.502621, -0.23478, "/schools/hammersmith-and-fulham/vanessa-nursery-school/", "Vanessa Nursery School"], [51.492131, -0.213073, "/schools/hammersmith-and-fulham/james-lee-nursery-school/", "James Lee Nursery School"], [51.483979, -0.21453, "/schools/hammersmith-and-fulham/bayonne-nursery-school/", "Bayonne Nursery School"], [51.500295, -0.218329, "/schools/hammersmith-and-fulham/addison-primary-school/", "Addison Primary School"], [51.489595, -0.203118, "/schools/hammersmith-and-fulham/avonmore-primary-school/", "Avonmore Primary School"], [51.49984, -0.232251, "/schools/hammersmith-and-fulham/brackenbury-primary-school/", "Brackenbury Primary School"], [51.504863, -0.22903, "/schools/hammersmith-and-fulham/miles-coverdale-primary-school/", "Miles Coverdale Primary School"], [51.498671, -0.22394, "/schools/hammersmith-and-fulham/flora-gardens-primary-school/", "Flora Gardens Primary School"], [51.531695, -0.235472, "/schools/hammersmith-and-fulham/kenmont-primary-school/", "Kenmont Primary School"], [51.486183, -0.221141, "/schools/hammersmith-and-fulham/melcombe-primary-school/", "Melcombe Primary School"], [51.519434, -0.24654, "/schools/hammersmith-and-fulham/old-oak-primary-school/", "Old Oak Primary School"], [51.483268, -0.2092, "/schools/hammersmith-and-fulham/sir-john-lillie-primary-school/", "Sir John Lillie Primary School"], [51.503751, -0.248382, "/schools/hammersmith-and-fulham/wendell-park-primary-school/", "Wendell Park Primary School"], [51.511443, -0.24016, "/schools/hammersmith-and-fulham/wormholt-park-primary-school/", "Wormholt Park Primary School"], [51.472859, -0.21361, "/schools/hammersmith-and-fulham/all-saints-cofe-primary-school/", "All Saints CofE Primary School"], [51.475948, -0.197476, "/schools/hammersmith-and-fulham/holy-cross-rc-school/", "Holy Cross RC School"], [51.498552, -0.237502, "/schools/hammersmith-and-fulham/john-betts-primary-school/", "John Betts Primary School"], [51.48187, -0.213633, "/schools/hammersmith-and-fulham/st-johns-walham-green-church-of-england-primary-school/", "St John's Walham Green Church of England Primary School"], [51.498937, -0.215933, "/schools/hammersmith-and-fulham/st-marys-catholic-primary-school/", "St Mary's Catholic Primary School"], [51.490636, -0.227176, "/schools/hammersmith-and-fulham/st-pauls-cofe-primary-school/", "St Paul's CofE Primary School"], [51.492048, -0.240936, "/schools/hammersmith-and-fulham/st-peters-primary-school/", "St Peter's Primary School"], [51.50557, -0.227576, "/schools/hammersmith-and-fulham/st-stephens-cofe-primary-school/", "St Stephen's CofE Primary School"], [51.502829, -0.245622, "/schools/hammersmith-and-fulham/good-shepherd-rc-primary-school/", "Good Shepherd RC Primary School"], [51.481763, -0.206652, "/schools/hammersmith-and-fulham/st-thomas-of-canterbury-catholic-primary-school/", "St Thomas of Canterbury Catholic Primary School"], [51.495132, -0.218833, "/schools/hammersmith-and-fulham/st-pauls-girls-school/", "St Paul's Girls' School"], [51.495322, -0.221304, "/schools/hammersmith-and-fulham/bute-house-preparatory-school-for-girls/", "Bute House Preparatory School for Girls"], [51.495309, -0.22992, "/schools/hammersmith-and-fulham/the-godolphin-and-latymer-school/", "The Godolphin and Latymer School"], [51.492736, -0.237064, "/schools/hammersmith-and-fulham/latymer-upper-school-and-latymer-prep/", "Latymer Upper School and Latymer Prep"], [51.49612, -0.218795, "/schools/hammersmith-and-fulham/ecole-francaise-de-londres-jacques-prevert/", "Ecole Fran\u00e7aise de Londres Jacques Pr\u00e9vert"], [51.476185, -0.201211, "/schools/hammersmith-and-fulham/evergreen-primary-school/", "Evergreen Primary School"], [51.493754, -0.237759, "/schools/hammersmith-and-fulham/ravenscourt-park-preparatory-school/", "Ravenscourt Park Preparatory School"], [51.471923, -0.190737, "/schools/hammersmith-and-fulham/lecole-des-petits-school/", "L'Ecole des Petits School"], [51.516849, -0.231304, "/schools/hammersmith-and-fulham/woodlane-high-school/", "Woodlane High School"], [51.510232, -0.230796, "/schools/hammersmith-and-fulham/jack-tizard-school/", "Jack Tizard School"], [51.511684, -0.236476, "/schools/hammersmith-and-fulham/cambridge-school/", "Cambridge School"], [51.477046, -0.202776, "/schools/hammersmith-and-fulham/kensington-prep-school-gdst/", "Kensington Prep School GDST"], [51.494897, -0.209334, "/schools/hammersmith-and-fulham/st-james-senior-girls-school/", "St James Senior Girls' School"], [51.467041, -0.193104, "/schools/hammersmith-and-fulham/thomass-fulham/", "Thomas's Fulham"], [51.486642, -0.210508, "/schools/hammersmith-and-fulham/the-fulham-prep-school-ltd/", "The Fulham Prep School Ltd"], [51.494897, -0.209334, "/schools/hammersmith-and-fulham/st-james-preparatory-school/", "St James Preparatory School"], [51.472642, -0.214727, "/schools/hammersmith-and-fulham/burlington-house-school/", "Burlington House School"], [51.518923, -0.229868, "/schools/hammersmith-and-fulham/ark-burlington-danes-academy/", "Ark Burlington Danes Academy"], [51.489433, -0.217212, "/schools/hammersmith-and-fulham/william-morris-sixth-form/", "William Morris Sixth Form"], [51.495292, -0.218121, "/schools/hammersmith-and-fulham/larmenier-sacred-heart-catholic-primary-school/", "Larmenier & Sacred Heart Catholic Primary School"], [51.472149, -0.207792, "/schools/hammersmith-and-fulham/parsons-green-prep-school/", "Parsons Green Prep School"], [51.485581, -0.203477, "/schools/hammersmith-and-fulham/normand-croft-community-school-for-early-years-and-primary-education/", "Normand Croft Community School for Early Years and Primary Education"], [51.491866, -0.214005, "/schools/hammersmith-and-fulham/parayhouse-school/", "Parayhouse School"], [51.505897, -0.223068, "/schools/hammersmith-and-fulham/london-vocational-ballet-school/", "London Vocational Ballet School"], [51.501642, -0.23489, "/schools/hammersmith-and-fulham/hammersmith-academy/", "Hammersmith Academy"], [51.492875, -0.236712, "/schools/hammersmith-and-fulham/west-london-free-school/", "West London Free School"], [51.486225, -0.196193, "/schools/hammersmith-and-fulham/the-london-oratory-school/", "The London Oratory School"], [51.513252, -0.243304, "/schools/hammersmith-and-fulham/ark-conway-primary-academy/", "Ark Conway Primary Academy"], [51.493572, -0.223331, "/schools/hammersmith-and-fulham/sacred-heart-high-school/", "Sacred Heart High School"], [51.474182, -0.199619, "/schools/hammersmith-and-fulham/lady-margaret-school/", "Lady Margaret School"], [51.515346, -0.231823, "/schools/hammersmith-and-fulham/ark-bentworth-primary-academy/", "Ark Bentworth Primary Academy"], [51.477784, -0.215203, "/schools/hammersmith-and-fulham/fulham-cross-academy/", "Fulham Cross Academy"], [51.481374, -0.214185, "/schools/hammersmith-and-fulham/fulham-cross-girls-school-and-language-college/", "Fulham Cross Girls' School and Language College"], [51.475103, -0.219844, "/schools/hammersmith-and-fulham/ormiston-bridge-academy/", "Ormiston Bridge Academy"], [51.494763, -0.230704, "/schools/hammersmith-and-fulham/west-london-free-school-primary/", "West London Free School Primary"], [51.512569, -0.229553, "/schools/hammersmith-and-fulham/ark-white-city-primary-academy/", "Ark White City Primary Academy"], [51.493364, -0.232732, "/schools/hammersmith-and-fulham/westside-school/", "Westside School"], [51.494763, -0.230704, "/schools/hammersmith-and-fulham/earls-court-free-school-primary/", "Earl's Court Free School Primary"], [51.479238, -0.199708, "/schools/hammersmith-and-fulham/the-fulham-boys-school/", "The Fulham Boys School"], [51.467822, -0.1965, "/schools/hammersmith-and-fulham/the-hurlingham-academy/", "The Hurlingham Academy"], [51.472219, -0.188911, "/schools/hammersmith-and-fulham/langford-primary-school/", "Langford Primary School"], [51.503908, -0.236618, "/schools/hammersmith-and-fulham/greenside-primary-school/", "Greenside Primary School"], [51.472094, -0.20418, "/schools/hammersmith-and-fulham/thomass-academy/", "Thomas's Academy"], [51.493508, -0.23398, "/schools/hammersmith-and-fulham/azbuka-russian-english-bilingual-school/", "Azbuka Russian-English Bilingual School"], [51.513162, -0.237875, "/schools/hammersmith-and-fulham/phoenix-academy/", "Phoenix Academy"], [51.479844, -0.221762, "/schools/hammersmith-and-fulham/queens-manor-school-and-special-needs-unit/", "Queen's Manor School and Special Needs Unit"], [51.483536, -0.197955, "/schools/hammersmith-and-fulham/fulham-primary-school/", "Fulham Primary School"], [51.472291, -0.199406, "/schools/hammersmith-and-fulham/sulivan-primary-school/", "Sulivan Primary School"], [51.486183, -0.221141, "/schools/hammersmith-and-fulham/kensington-wade/", "Kensington Wade"], [51.486637, -0.214901, "/schools/hammersmith-and-fulham/beyondautism-post-19/", "BeyondAutism Post-19"], [51.508632, -0.232069, "/schools/hammersmith-and-fulham/q-queensmill-college/", "Q+ Queensmill College"], [51.507064, -0.242606, "/schools/hammersmith-and-fulham/ormiston-queensmill-academy/", "Ormiston Queensmill Academy"], [51.511498, -0.233673, "/schools/hammersmith-and-fulham/st-john-xxiii-catholic-primary-school/", "St John XXIII Catholic Primary School"], [51.474723, -0.183326, "/schools/hammersmith-and-fulham/first-bridge-school/", "First Bridge School"], [51.484281, -0.209592, "/schools/hammersmith-and-fulham/st-augustines-rc-primary-school/", "St Augustine's RC Primary School"], [51.496633, -0.210549, "/schools/hammersmith-and-fulham/wetherby-pembridge/", "Wetherby Pembridge"]];
+    if (!points.length) return;
+    var lats = points.map(function(p) { return p[0]; });
+    var lngs = points.map(function(p) { return p[1]; });
+    var avgLat = lats.reduce(function(a,b) { return a+b; }, 0) / lats.length;
+    var avgLng = lngs.reduce(function(a,b) { return a+b; }, 0) / lngs.length;
+    var map = L.map('map', { scrollWheelZoom: false }).setView([avgLat, avgLng], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+    points.forEach(function(p) {
+      L.circleMarker([p[0], p[1]], {
+        radius: 5, color: '#0b2545', fillColor: '#0b6efd', fillOpacity: 0.8, weight: 1
+      }).addTo(map).bindPopup('<a href="' + p[2] + '">' + p[3] + '</a>');
+    });
+  })();
 </script>
 </body>
 </html>

@@ -1,1720 +1,363 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en-GB">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Schools in Bromley, London | Ofsted Ratings &amp; Results | London Schools Explorer</title>
-  <meta name="description" content="119 schools in Bromley, London. 27 Outstanding, 67 Good-rated by Ofsted. Compare admissions oversubscription, exam results and crime data. Free.">
-  <script type="application/ld+json">{
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Schools in Bromley, London — Ofsted, Performance & Admissions</title>
+<meta name="description" content="All 119 schools in Bromley, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
+<link rel="canonical" href="https://londonschool.directory/schools/bromley/">
+<meta property="og:title" content="Schools in Bromley, London — Ofsted, Performance & Admissions">
+<meta property="og:description" content="All 119 schools in Bromley, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://londonschool.directory/schools/bromley/">
+<meta property="og:site_name" content="London School Directory">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0b2545">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="preconnect" href="https://unpkg.com">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+  :root {
+    --ink: #0b2545;
+    --ink-2: #1e3a5f;
+    --muted: #5b6b85;
+    --line: #e3e8ef;
+    --bg: #ffffff;
+    --bg-2: #f6f8fb;
+    --accent: #0b6efd;
+    --good: #137333;
+    --warn: #a85b00;
+    --bad: #b3261e;
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  header.site {
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+    position: sticky; top: 0; z-index: 50;
+  }
+  header.site .inner {
+    max-width: 1100px; margin: 0 auto; padding: 14px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  header.site a.brand { color: var(--ink); font-weight: 700; letter-spacing: -0.01em; }
+  header.site nav a { margin-left: 18px; color: var(--ink-2); font-size: 14px; }
+  main { max-width: 1100px; margin: 0 auto; padding: 28px 20px 80px; }
+  .crumbs { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+  .crumbs a { color: var(--muted); }
+  h1 { font-size: 32px; line-height: 1.2; margin: 0 0 8px; letter-spacing: -0.02em; }
+  .lede { color: var(--ink-2); font-size: 17px; max-width: 720px; }
+  .stamp { font-size: 12px; color: var(--muted); margin-top: 8px; }
+  .stamp .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--good); vertical-align: middle; margin-right: 6px; }
+  .grid-stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px; margin: 24px 0 8px;
+  }
+  .stat {
+    background: var(--bg-2); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 14px 16px;
+  }
+  .stat .v { font-size: 24px; font-weight: 700; color: var(--ink); }
+  .stat .l { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  section { margin-top: 36px; }
+  h2 { font-size: 22px; margin: 0 0 12px; letter-spacing: -0.01em; }
+  .twocol { display: grid; grid-template-columns: 1.4fr 1fr; gap: 28px; }
+  @media (max-width: 820px) { .twocol { grid-template-columns: 1fr; } }
+  table.schools { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table.schools th, table.schools td {
+    text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line);
+  }
+  table.schools th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); font-weight: 600; }
+  .rating { font-weight: 600; }
+  .rating.Outstanding { color: var(--good); }
+  .rating.Good { color: var(--ink-2); }
+  .rating.RequiresImprovement, .rating.Requires { color: var(--warn); }
+  .rating.Inadequate { color: var(--bad); }
+  #map { height: 380px; border-radius: var(--radius); border: 1px solid var(--line); }
+  .pills { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pill { background: var(--bg-2); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; font-size: 12px; color: var(--ink-2); }
+  details.faq { border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 8px; background: var(--bg); }
+  details.faq summary { cursor: pointer; font-weight: 600; color: var(--ink); }
+  details.faq[open] { background: var(--bg-2); }
+  footer { border-top: 1px solid var(--line); padding: 28px 20px; color: var(--muted); font-size: 13px; }
+  footer .inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 24px; flex-wrap: wrap; }
+  .sources { font-size: 13px; color: var(--muted); }
+  .sources a { color: var(--muted); text-decoration: underline; }
+  .cta {
+    display: inline-block; background: var(--ink); color: #fff; padding: 10px 14px;
+    border-radius: var(--radius); font-size: 14px; font-weight: 600;
+  }
+  .cta:hover { background: var(--ink-2); text-decoration: none; }
+</style>
+<script type="application/ld+json">
+[
+  {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "name": "Schools in Bromley, London",
-    "description": "119 schools in Bromley, London rated by Ofsted",
-    "numberOfItems": 119,
-    "url": "https://londonschool.directory/schools/bromley"
-  }</script>
-  <script type="application/ld+json">{
+    "name": "Top schools in Bromley, London",
+    "itemListOrder": "http://schema.org/ItemListOrderDescending",
+    "numberOfItems": 10,
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "url": "https://londonschool.directory/schools/bromley/perry-hall-primary-school/",
+        "name": "Perry Hall Primary School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "url": "https://londonschool.directory/schools/bromley/alexandra-infant-school/",
+        "name": "Alexandra Infant School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "url": "https://londonschool.directory/schools/bromley/newstead-wood-school/",
+        "name": "Newstead Wood School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "url": "https://londonschool.directory/schools/bromley/valley-primary-school/",
+        "name": "Valley Primary School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 5,
+        "url": "https://londonschool.directory/schools/bromley/farnborough-primary-school/",
+        "name": "Farnborough Primary School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 6,
+        "url": "https://londonschool.directory/schools/bromley/st-olaves-and-st-saviours-grammar-school/",
+        "name": "St Olave's and St Saviour's Grammar School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 7,
+        "url": "https://londonschool.directory/schools/bromley/st-james-roman-catholic-primary-school/",
+        "name": "St James' Roman Catholic Primary School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 8,
+        "url": "https://londonschool.directory/schools/bromley/orion-mead-road/",
+        "name": "Orion Mead Road"
+      },
+      {
+        "@type": "ListItem",
+        "position": 9,
+        "url": "https://londonschool.directory/schools/bromley/st-vincents-catholic-primary-school/",
+        "name": "St Vincent's Catholic Primary School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 10,
+        "url": "https://londonschool.directory/schools/bromley/st-nicholas-church-of-england-primary/",
+        "name": "St Nicholas Church of England Primary"
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How many schools are there in Bromley?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Bromley has 119 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 76 are primary, 19 are secondary, and the remainder are special, all-through, or post-16."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What proportion of Bromley schools are Outstanding?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "As of the latest Ofsted Management Information release, 0 schools in Bromley (0.0%) are rated Outstanding, and 0.0% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "When do I apply for a Reception or Year 7 place in Bromley?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Bromley's applications are coordinated by the local authority through the eAdmissions system. See our full Reception timeline guide."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does the school appeals process work in Bromley?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "If you are refused your preferred school place, you have a statutory right of appeal. Bromley appeals are typically heard in May (Reception) and June\u2013July (secondary). See our appeals tracker for Bromley-level success rates by year."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How can I tell which Bromley schools are over-subscribed?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release."
+        }
+      }
+    ]
+  },
+  {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      {"@type": "ListItem", "position": 1, "name": "London Schools Explorer", "item": "https://londonschool.directory/"},
-      {"@type": "ListItem", "position": 2, "name": "Schools in Bromley", "item": "https://londonschool.directory/schools/bromley"}
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://londonschool.directory/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Boroughs",
+        "item": "https://londonschool.directory/schools/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Bromley",
+        "item": "https://londonschool.directory/schools/bromley/"
+      }
     ]
-  }</script>
-  <link rel="canonical" href="https://londonschool.directory/schools/bromley">
-  <meta property="og:title" content="Schools in Bromley | London Schools Explorer">
-  <meta property="og:description" content="119 schools in Bromley. 27 Outstanding-rated. Compare Ofsted ratings, exam results and admissions.">
-  <meta property="og:url" content="https://londonschool.directory/schools/bromley">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, -apple-system, sans-serif; color: #1a1a1a; background: #f8f9fa; line-height: 1.6; }
-    a { color: #1565C0; }
-    .topbar { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 12px 20px; }
-    .topbar a { text-decoration: none; font-weight: 600; color: #1a1a1a; font-size: 15px; }
-    .topbar span { color: #888; margin: 0 8px; }
-    .container { max-width: 900px; margin: 0 auto; padding: 32px 20px; }
-    h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
-    .intro { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; font-size: 15px; color: #333; line-height: 1.7; }
-    .stats-row { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
-    .stat-box { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 14px 18px; flex: 1; min-width: 120px; }
-    .stat-num { font-size: 24px; font-weight: 700; color: #1a1a1a; line-height: 1; }
-    .stat-lbl { font-size: 12px; color: #888; margin-top: 4px; }
-    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #e0e0e0; }
-    th { background: #f5f5f5; padding: 12px 16px; text-align: left; font-size: 13px; color: #555; font-weight: 600; border-bottom: 1px solid #e0e0e0; }
-    td { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
-    tr:last-child td { border-bottom: none; }
-    tr:hover td { background: #fafafa; }
-    .back { display: inline-block; margin-bottom: 20px; font-size: 14px; color: #555; text-decoration: none; }
-    .back:hover { color: #111; }
-    footer { text-align: center; padding: 32px 20px; font-size: 13px; color: #888; }
-    @media (max-width: 600px) {
-      .container { padding: 16px 12px; }
-      h1 { font-size: 22px; }
-      .stats-row { grid-template-columns: 1fr 1fr; }
-      .intro { padding: 14px 16px; font-size: 14px; }
-      table { font-size: 13px; }
-      th, td { padding: 10px 10px; }
-      .topbar { padding: 10px 12px; font-size: 13px; }
-    }
-    @media (max-width: 600px) { .stats-row { flex-direction: column; } }
-  </style>
+  }
+]
+</script>
 </head>
 <body>
-<div class="topbar">
-  <div style="max-width:900px;margin:0 auto">
-    <a href="/">London Schools Explorer</a>
-    <span>/</span>
-    Bromley
+<header class="site">
+  <div class="inner">
+    <a class="brand" href="/">London School Directory</a>
+    <nav>
+      <a href="/">Search</a>
+      <a href="/appeals.html">Appeals</a>
+      <a href="/methodology.html">Methodology</a>
+      <a href="/about.html">About</a>
+    </nav>
   </div>
-</div>
-<div class="container">
-  <a class="back" href="/">&#8592; All boroughs</a>
-  <h1>Schools in Bromley</h1>
-
-  <div class="stats-row">
-    <div class="stat-box"><div class="stat-num">119</div><div class="stat-lbl">Total schools</div></div>
-    <div class="stat-box"><div class="stat-num">27</div><div class="stat-lbl">Outstanding</div></div>
-    <div class="stat-box"><div class="stat-num">67</div><div class="stat-lbl">Good</div></div>
-    <div class="stat-box"><div class="stat-num">2</div><div class="stat-lbl">School phases</div></div>
+</header>
+<main>
+  <div class="crumbs">
+    <a href="/">Home</a> &rsaquo; <a href="/schools/">Boroughs</a> &rsaquo; Bromley
   </div>
 
-  <div class="intro">Bromley is one of London's largest boroughs and benefits from a strong educational landscape with numerous Outstanding-rated schools. Like Bexley, it operates grammar schools alongside comprehensive and faith schools. The borough has a suburban feel with good green space and is popular with families seeking larger homes within commuting distance of central London.</div>
+  <h1>Schools in Bromley, London</h1>
+  <p class="lede">Bromley is one of London's largest boroughs by area and has a distinctive mix of grammar, foundation and community schools. The borough operates a partially selective system, and 11+ test preparation is a significant feature of secondary admissions. Reception applications tend to be most competitive in the north of the borough.</p>
+  <p class="stamp"><span class="dot"></span>Data last verified 13 May 2026. Sources: Ofsted, DfE GIAS, DfE Performance Tables, Metropolitan Police, MHCLG IMD. See <a href="/sources.html">all sources</a>.</p>
 
-  
-<div style="display:flex;gap:16px;flex-wrap:wrap;margin:20px 0;">
-
-<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fdf4ff 0%,#ede9fe 100%);
-     border:1px solid #d8b4fe;border-radius:12px;padding:14px 20px;">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-    <span style="font-size:22px;">🎓</span>
-    <strong style="font-size:15px;color:#5b21b6;">11+ &amp; 13+ Exam Prep</strong>
-  </div>
-  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
-    PiAcademy resources for grammar school entrance, SATs &amp; GCSE.
-    Use code <strong>THIERR25</strong> for 25% off.
-  </p>
-  <a href="https://piacademy.co.uk/?aff=28"
-     target="_blank" rel="noopener sponsored"
-     style="display:inline-block;padding:9px 18px;background:#7e22ce;color:#fff;
-            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
-    Get 25% OFF →
-  </a>
-  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
-</div>
-<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%);
-     border:1px solid #fcd34d;border-radius:12px;padding:14px 20px;">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-    <span style="font-size:22px;">📚</span>
-    <strong style="font-size:15px;color:#92400e;">Children's Books</strong>
-  </div>
-  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
-    Great books at low prices. At checkout, choose your school — Scholastic donates
-    <strong>20p for every £1 spent</strong> back to the school in free books.
-  </p>
-  <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&ued=https%3A%2F%2Fwww.scholastic.co.uk%2Fteachers"
-     target="_blank" rel="noopener sponsored"
-     style="display:inline-block;padding:9px 18px;background:#d97706;color:#fff;
-            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
-    Shop at Scholastic →
-  </a>
-  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
-</div>
-<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fff8f0 0%,#fff3e0 100%);
-     border:1px solid #fed7aa;border-radius:12px;padding:14px 20px;">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-    <span style="font-size:22px;">🛒</span>
-    <strong style="font-size:15px;color:#92400e;">School Supplies</strong>
-  </div>
-  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
-    Stationery, bags, PE kit, lunchboxes and more — fast delivery from Amazon.
-  </p>
-  <a href="https://www.amazon.co.uk/s?k=school+supplies+stationery&tag=londonparents-21"
-     target="_blank" rel="noopener sponsored"
-     style="display:inline-block;padding:9px 18px;background:#FF9900;color:#111;
-            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
-    Shop on Amazon →
-  </a>
-  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
-</div>
-</div>
-
-  <!-- Borough share buttons -->
-  <div style="display:flex;gap:10px;margin:16px 0 8px;flex-wrap:wrap;align-items:center;">
-    <span style="font-size:13px;color:#555;font-weight:600;">Share Bromley schools:</span>
-    <button onclick="shareBoroughWhatsApp()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 WhatsApp</button>
-    <button onclick="shareBoroughEmail()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#1565C0;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Email</button>
-    <span style="font-size:12px;color:#999;margin-left:4px;">Or tick schools below to share a shortlist</span>
-  </div>
-
-  <!-- Sticky compare bar (appears when schools are ticked) -->
-  <div id="cmp-bar" style="display:none;position:sticky;top:0;z-index:100;background:#1A1A2E;color:#fff;padding:12px 16px;border-radius:10px;margin-bottom:12px;display:none;align-items:center;gap:10px;flex-wrap:wrap;">
-    <span id="cmp-count" style="font-weight:700;font-size:14px;">0 schools selected</span>
-    <button onclick="shareCompareWhatsApp()" style="padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 Share via WhatsApp</button>
-    <button onclick="shareCompareEmail()" style="padding:8px 16px;background:#fff;color:#1A1A2E;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Share via Email</button>
-    <button onclick="clearSelection()" style="padding:8px 12px;background:transparent;color:#aaa;border:1px solid #555;border-radius:8px;font-size:12px;cursor:pointer;">✕ Clear</button>
-  </div>
-
-  <table>
-    <thead><tr><th style="width:36px"></th><th>School</th><th>Phase</th><th>Ofsted</th><th>Pupils</th></tr></thead>
-    <tbody><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Alexandra Infant School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/alexandra-infant-school"></td>
-          <td><a href="/schools/bromley/alexandra-infant-school">Alexandra Infant School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>199</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Alexandra Junior School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="75.0"
-            data-url="https://londonschool.directory/schools/bromley/alexandra-junior-school"></td>
-          <td><a href="/schools/bromley/alexandra-junior-school">Alexandra Junior School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>232</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Babington House School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="59.8"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/babington-house-school"></td>
-          <td><a href="/schools/bromley/babington-house-school">Babington House School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>488</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Balgowan Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="79.0"
-            data-url="https://londonschool.directory/schools/bromley/balgowan-primary-school"></td>
-          <td><a href="/schools/bromley/balgowan-primary-school">Balgowan Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>618</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Baston House School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="5.8"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/baston-house-school"></td>
-          <td><a href="/schools/bromley/baston-house-school">Baston House School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>120</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Bickley Park School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/bickley-park-school"></td>
-          <td><a href="/schools/bromley/bickley-park-school">Bickley Park School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>304</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Bickley Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="73.0"
-            data-url="https://londonschool.directory/schools/bromley/bickley-primary-school"></td>
-          <td><a href="/schools/bromley/bickley-primary-school">Bickley Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>412</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Biggin Hill Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="47.0"
-            data-url="https://londonschool.directory/schools/bromley/biggin-hill-primary-school"></td>
-          <td><a href="/schools/bromley/biggin-hill-primary-school">Biggin Hill Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>461</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Bishop Justus CofE School"
-            data-ofsted="Requires improvement"
-            data-phase="Secondary"
-            data-att8="37.8"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/bishop-justus-cofe-school"></td>
-          <td><a href="/schools/bromley/bishop-justus-cofe-school">Bishop Justus CofE School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
-          <td>1171</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Breaside Preparatory School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/breaside-preparatory-school"></td>
-          <td><a href="/schools/bromley/breaside-preparatory-school">Breaside Preparatory School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>444</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Bromley Beacon Academy"
-            data-ofsted="Good"
-            data-phase="N/A"
-            data-att8="3.6"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/bromley-beacon-academy"></td>
-          <td><a href="/schools/bromley/bromley-beacon-academy">Bromley Beacon Academy</a></td>
-          <td>N/A</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>173</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Bromley High School GDST"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="32.8"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/bromley-high-school-gdst"></td>
-          <td><a href="/schools/bromley/bromley-high-school-gdst">Bromley High School GDST</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>917</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Bromley Mencap"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/bromley-mencap"></td>
-          <td><a href="/schools/bromley/bromley-mencap">Bromley Mencap</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Bromley Trust Alternative Provision Academy"
-            data-ofsted="Good"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/bromley-trust-alternative-provision-academy"></td>
-          <td><a href="/schools/bromley/bromley-trust-alternative-provision-academy">Bromley Trust Alternative Provision Academy</a></td>
-          <td>N/A</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>53</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Browns School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="4.8"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/browns-school"></td>
-          <td><a href="/schools/bromley/browns-school">Browns School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>96</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Bullers Wood School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="56.3"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/bullers-wood-school"></td>
-          <td><a href="/schools/bromley/bullers-wood-school">Bullers Wood School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1571</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Bullers Wood School for Boys"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="49.0"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/bullers-wood-school-for-boys"></td>
-          <td><a href="/schools/bromley/bullers-wood-school-for-boys">Bullers Wood School for Boys</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>894</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Burnt Ash Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="86.0"
-            data-url="https://londonschool.directory/schools/bromley/burnt-ash-primary-school"></td>
-          <td><a href="/schools/bromley/burnt-ash-primary-school">Burnt Ash Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>430</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Charles Darwin School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="38.9"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/charles-darwin-school"></td>
-          <td><a href="/schools/bromley/charles-darwin-school">Charles Darwin School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1314</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Chelsfield Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="83.0"
-            data-url="https://londonschool.directory/schools/bromley/chelsfield-primary-school"></td>
-          <td><a href="/schools/bromley/chelsfield-primary-school">Chelsfield Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>97</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Chislehurst School for Girls"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="50.3"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/chislehurst-school-for-girls"></td>
-          <td><a href="/schools/bromley/chislehurst-school-for-girls">Chislehurst School for Girls</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1165</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Churchfields Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="85.0"
-            data-url="https://londonschool.directory/schools/bromley/churchfields-primary-school"></td>
-          <td><a href="/schools/bromley/churchfields-primary-school">Churchfields Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>489</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Clannad Education Centre"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/clannad-education-centre"></td>
-          <td><a href="/schools/bromley/clannad-education-centre">Clannad Education Centre</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>3</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Clare House Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="78.0"
-            data-url="https://londonschool.directory/schools/bromley/clare-house-primary-school"></td>
-          <td><a href="/schools/bromley/clare-house-primary-school">Clare House Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>406</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Crofton Infant School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/crofton-infant-school"></td>
-          <td><a href="/schools/bromley/crofton-infant-school">Crofton Infant School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>590</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Crofton Junior School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="87.0"
-            data-url="https://londonschool.directory/schools/bromley/crofton-junior-school"></td>
-          <td><a href="/schools/bromley/crofton-junior-school">Crofton Junior School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>715</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Cudham Church of England Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="75.0"
-            data-url="https://londonschool.directory/schools/bromley/cudham-church-of-england-primary-school"></td>
-          <td><a href="/schools/bromley/cudham-church-of-england-primary-school">Cudham Church of England Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>49</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Darrick Wood Infant & Nursery School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/darrick-wood-infant-nursery-school"></td>
-          <td><a href="/schools/bromley/darrick-wood-infant-nursery-school">Darrick Wood Infant & Nursery School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>306</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Darrick Wood Junior School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="75.0"
-            data-url="https://londonschool.directory/schools/bromley/darrick-wood-junior-school"></td>
-          <td><a href="/schools/bromley/darrick-wood-junior-school">Darrick Wood Junior School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>377</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Darrick Wood School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="51.5"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/darrick-wood-school"></td>
-          <td><a href="/schools/bromley/darrick-wood-school">Darrick Wood School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1687</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Darul Uloom London School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/darul-uloom-london-school"></td>
-          <td><a href="/schools/bromley/darul-uloom-london-school">Darul Uloom London School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>137</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Downe Primary School"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/downe-primary-school"></td>
-          <td><a href="/schools/bromley/downe-primary-school">Downe Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>66</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Edgebury Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="76.0"
-            data-url="https://londonschool.directory/schools/bromley/edgebury-primary-school"></td>
-          <td><a href="/schools/bromley/edgebury-primary-school">Edgebury Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>404</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Elmstead Wood Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="67.0"
-            data-url="https://londonschool.directory/schools/bromley/elmstead-wood-primary-school"></td>
-          <td><a href="/schools/bromley/elmstead-wood-primary-school">Elmstead Wood Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>294</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Eltham College"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="17.1"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/eltham-college"></td>
-          <td><a href="/schools/bromley/eltham-college">Eltham College</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>1075</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Farnborough Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="65.0"
-            data-url="https://londonschool.directory/schools/bromley/farnborough-primary-school"></td>
-          <td><a href="/schools/bromley/farnborough-primary-school">Farnborough Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>210</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Farringtons School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="27.3"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/farringtons-school"></td>
-          <td><a href="/schools/bromley/farringtons-school">Farringtons School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>660</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Glebe School"
-            data-ofsted="Good"
-            data-phase="N/A"
-            data-att8="6.7"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/glebe-school"></td>
-          <td><a href="/schools/bromley/glebe-school">Glebe School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>289</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Gray's Farm Primary Academy"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="76.0"
-            data-url="https://londonschool.directory/schools/bromley/grays-farm-primary-academy"></td>
-          <td><a href="/schools/bromley/grays-farm-primary-academy">Gray's Farm Primary Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>427</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Green Street Green Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="69.0"
-            data-url="https://londonschool.directory/schools/bromley/green-street-green-primary-school"></td>
-          <td><a href="/schools/bromley/green-street-green-primary-school">Green Street Green Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>444</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Harris Academy Beckenham"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="51.6"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/harris-academy-beckenham"></td>
-          <td><a href="/schools/bromley/harris-academy-beckenham">Harris Academy Beckenham</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>1264</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Harris Academy Orpington"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="42.7"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/harris-academy-orpington"></td>
-          <td><a href="/schools/bromley/harris-academy-orpington">Harris Academy Orpington</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>501</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Harris Girls Academy Bromley"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="58.3"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/harris-girls-academy-bromley"></td>
-          <td><a href="/schools/bromley/harris-girls-academy-bromley">Harris Girls Academy Bromley</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>1096</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Harris Primary Academy Beckenham"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="88.0"
-            data-url="https://londonschool.directory/schools/bromley/harris-primary-academy-beckenham"></td>
-          <td><a href="/schools/bromley/harris-primary-academy-beckenham">Harris Primary Academy Beckenham</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>417</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Harris Primary Academy Beckenham Green"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="97.0"
-            data-url="https://londonschool.directory/schools/bromley/harris-primary-academy-beckenham-green"></td>
-          <td><a href="/schools/bromley/harris-primary-academy-beckenham-green">Harris Primary Academy Beckenham Green</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>210</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Harris Primary Academy Crystal Palace"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="79.0"
-            data-url="https://londonschool.directory/schools/bromley/harris-primary-academy-crystal-palace"></td>
-          <td><a href="/schools/bromley/harris-primary-academy-crystal-palace">Harris Primary Academy Crystal Palace</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>378</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Harris Primary Academy Kent House"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="78.0"
-            data-url="https://londonschool.directory/schools/bromley/harris-primary-academy-kent-house"></td>
-          <td><a href="/schools/bromley/harris-primary-academy-kent-house">Harris Primary Academy Kent House</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>410</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Harris Primary Academy Orpington"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="67.0"
-            data-url="https://londonschool.directory/schools/bromley/harris-primary-academy-orpington"></td>
-          <td><a href="/schools/bromley/harris-primary-academy-orpington">Harris Primary Academy Orpington</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>276</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Harris Primary Academy Shortlands"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="78.0"
-            data-url="https://londonschool.directory/schools/bromley/harris-primary-academy-shortlands"></td>
-          <td><a href="/schools/bromley/harris-primary-academy-shortlands">Harris Primary Academy Shortlands</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>391</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Hawes Down Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="73.0"
-            data-url="https://londonschool.directory/schools/bromley/hawes-down-primary-school"></td>
-          <td><a href="/schools/bromley/hawes-down-primary-school">Hawes Down Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>443</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Hayes Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="74.0"
-            data-url="https://londonschool.directory/schools/bromley/hayes-primary-school"></td>
-          <td><a href="/schools/bromley/hayes-primary-school">Hayes Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>601</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Hayes School"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="54.8"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/hayes-school"></td>
-          <td><a href="/schools/bromley/hayes-school">Hayes School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>1771</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Highfield Infants' School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/highfield-infants-school"></td>
-          <td><a href="/schools/bromley/highfield-infants-school">Highfield Infants' School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>254</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Highfield Junior School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="86.0"
-            data-url="https://londonschool.directory/schools/bromley/highfield-junior-school"></td>
-          <td><a href="/schools/bromley/highfield-junior-school">Highfield Junior School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>367</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Holy Innocents Catholic Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="67.0"
-            data-url="https://londonschool.directory/schools/bromley/holy-innocents-catholic-primary-school"></td>
-          <td><a href="/schools/bromley/holy-innocents-catholic-primary-school">Holy Innocents Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>275</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="James Dixon Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="59.0"
-            data-url="https://londonschool.directory/schools/bromley/james-dixon-primary-school"></td>
-          <td><a href="/schools/bromley/james-dixon-primary-school">James Dixon Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>434</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Kemnal Technology College"
-            data-ofsted="Requires improvement"
-            data-phase="Secondary"
-            data-att8="29.3"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/kemnal-technology-college"></td>
-          <td><a href="/schools/bromley/kemnal-technology-college">Kemnal Technology College</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
-          <td>509</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Keston Church of England Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="46.0"
-            data-url="https://londonschool.directory/schools/bromley/keston-church-of-england-primary-school"></td>
-          <td><a href="/schools/bromley/keston-church-of-england-primary-school">Keston Church of England Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>173</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Kings London"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/kings-london"></td>
-          <td><a href="/schools/bromley/kings-london">Kings London</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>100</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="La Fontaine Academy"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="95.0"
-            data-url="https://londonschool.directory/schools/bromley/la-fontaine-academy"></td>
-          <td><a href="/schools/bromley/la-fontaine-academy">La Fontaine Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>451</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Langley Park Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="74.0"
-            data-url="https://londonschool.directory/schools/bromley/langley-park-primary-school"></td>
-          <td><a href="/schools/bromley/langley-park-primary-school">Langley Park Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>400</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Langley Park School for Boys"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="54.4"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/langley-park-school-for-boys"></td>
-          <td><a href="/schools/bromley/langley-park-school-for-boys">Langley Park School for Boys</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1820</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Langley Park School for Girls"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="55.8"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/langley-park-school-for-girls"></td>
-          <td><a href="/schools/bromley/langley-park-school-for-girls">Langley Park School for Girls</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1707</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Leesons Primary School"
-            data-ofsted="Requires improvement"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="42.0"
-            data-url="https://londonschool.directory/schools/bromley/leesons-primary-school"></td>
-          <td><a href="/schools/bromley/leesons-primary-school">Leesons Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
-          <td>319</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Manor Oak Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="55.0"
-            data-url="https://londonschool.directory/schools/bromley/manor-oak-primary-school"></td>
-          <td><a href="/schools/bromley/manor-oak-primary-school">Manor Oak Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>194</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Marian Vian Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="84.0"
-            data-url="https://londonschool.directory/schools/bromley/marian-vian-primary-school"></td>
-          <td><a href="/schools/bromley/marian-vian-primary-school">Marian Vian Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>623</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Marjorie McClure School"
-            data-ofsted="Outstanding"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/marjorie-mcclure-school"></td>
-          <td><a href="/schools/bromley/marjorie-mcclure-school">Marjorie McClure School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>119</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Midfield Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="64.0"
-            data-url="https://londonschool.directory/schools/bromley/midfield-primary-school"></td>
-          <td><a href="/schools/bromley/midfield-primary-school">Midfield Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>474</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Newstead Wood School"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="82.8"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/newstead-wood-school"></td>
-          <td><a href="/schools/bromley/newstead-wood-school">Newstead Wood School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>1262</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Oak Lodge Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="77.0"
-            data-url="https://londonschool.directory/schools/bromley/oak-lodge-primary-school"></td>
-          <td><a href="/schools/bromley/oak-lodge-primary-school">Oak Lodge Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>541</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Oaklands Primary Academy"
-            data-ofsted="Requires improvement"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="53.0"
-            data-url="https://londonschool.directory/schools/bromley/oaklands-primary-academy"></td>
-          <td><a href="/schools/bromley/oaklands-primary-academy">Oaklands Primary Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
-          <td>448</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Orion Blenheim"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="75.0"
-            data-url="https://londonschool.directory/schools/bromley/orion-blenheim"></td>
-          <td><a href="/schools/bromley/orion-blenheim">Orion Blenheim</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>205</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Orion Coopers"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="48.5"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/orion-coopers"></td>
-          <td><a href="/schools/bromley/orion-coopers">Orion Coopers</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1318</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Orion Eden Park"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="45.5"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/orion-eden-park"></td>
-          <td><a href="/schools/bromley/orion-eden-park">Orion Eden Park</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1274</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Orion Mead Road"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/orion-mead-road"></td>
-          <td><a href="/schools/bromley/orion-mead-road">Orion Mead Road</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>79</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Orion Ravensworth"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="57.0"
-            data-url="https://londonschool.directory/schools/bromley/orion-ravensworth"></td>
-          <td><a href="/schools/bromley/orion-ravensworth">Orion Ravensworth</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>275</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Orion Scotts Park"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="81.0"
-            data-url="https://londonschool.directory/schools/bromley/orion-scotts-park"></td>
-          <td><a href="/schools/bromley/orion-scotts-park">Orion Scotts Park</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>361</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Parish Church of England Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="79.0"
-            data-url="https://londonschool.directory/schools/bromley/parish-church-of-england-primary-school"></td>
-          <td><a href="/schools/bromley/parish-church-of-england-primary-school">Parish Church of England Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>584</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Perry Hall Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="91.0"
-            data-url="https://londonschool.directory/schools/bromley/perry-hall-primary-school"></td>
-          <td><a href="/schools/bromley/perry-hall-primary-school">Perry Hall Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>437</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Pickhurst Academy"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="73.0"
-            data-url="https://londonschool.directory/schools/bromley/pickhurst-academy"></td>
-          <td><a href="/schools/bromley/pickhurst-academy">Pickhurst Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>512</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Pickhurst Infant Academy"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/pickhurst-infant-academy"></td>
-          <td><a href="/schools/bromley/pickhurst-infant-academy">Pickhurst Infant Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>327</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Poverest Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="56.0"
-            data-url="https://londonschool.directory/schools/bromley/poverest-primary-school"></td>
-          <td><a href="/schools/bromley/poverest-primary-school">Poverest Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>435</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Pratts Bottom Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="56.0"
-            data-url="https://londonschool.directory/schools/bromley/pratts-bottom-primary-school"></td>
-          <td><a href="/schools/bromley/pratts-bottom-primary-school">Pratts Bottom Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>69</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Raglan Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="69.0"
-            data-url="https://londonschool.directory/schools/bromley/raglan-primary-school"></td>
-          <td><a href="/schools/bromley/raglan-primary-school">Raglan Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>456</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Ravens Wood School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="48.1"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/ravens-wood-school"></td>
-          <td><a href="/schools/bromley/ravens-wood-school">Ravens Wood School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1592</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Red Hill Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="76.0"
-            data-url="https://londonschool.directory/schools/bromley/red-hill-primary-school"></td>
-          <td><a href="/schools/bromley/red-hill-primary-school">Red Hill Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>649</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Riverside School"
-            data-ofsted="Good"
-            data-phase="N/A"
-            data-att8="0.1"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/riverside-school"></td>
-          <td><a href="/schools/bromley/riverside-school">Riverside School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>357</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Shaftesbury Nash College"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/shaftesbury-nash-college"></td>
-          <td><a href="/schools/bromley/shaftesbury-nash-college">Shaftesbury Nash College</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Southborough Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/southborough-primary-school"></td>
-          <td><a href="/schools/bromley/southborough-primary-school">Southborough Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Anthony's Catholic Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="80.0"
-            data-url="https://londonschool.directory/schools/bromley/st-anthonys-catholic-primary-school"></td>
-          <td><a href="/schools/bromley/st-anthonys-catholic-primary-school">St Anthony's Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>176</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Christophers The Hall School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/st-christophers-the-hall-school"></td>
-          <td><a href="/schools/bromley/st-christophers-the-hall-school">St Christophers The Hall School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>220</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St David's Prep"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/st-davids-prep"></td>
-          <td><a href="/schools/bromley/st-davids-prep">St David's Prep</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>207</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St George's, Bickley, Church of England Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="68.0"
-            data-url="https://londonschool.directory/schools/bromley/st-georges-bickley-church-of-england-primary-school"></td>
-          <td><a href="/schools/bromley/st-georges-bickley-church-of-england-primary-school">St George's, Bickley, Church of England Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>412</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St James' Roman Catholic Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="94.0"
-            data-url="https://londonschool.directory/schools/bromley/st-james-roman-catholic-primary-school"></td>
-          <td><a href="/schools/bromley/st-james-roman-catholic-primary-school">St James' Roman Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>218</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St John's Church of England Primary School"
-            data-ofsted="Requires improvement"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="47.0"
-            data-url="https://londonschool.directory/schools/bromley/st-johns-church-of-england-primary-school"></td>
-          <td><a href="/schools/bromley/st-johns-church-of-england-primary-school">St John's Church of England Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
-          <td>148</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Joseph's Catholic Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="62.0"
-            data-url="https://londonschool.directory/schools/bromley/st-josephs-catholic-primary-school"></td>
-          <td><a href="/schools/bromley/st-josephs-catholic-primary-school">St Joseph's Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>189</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Mark's Church of England Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="80.0"
-            data-url="https://londonschool.directory/schools/bromley/st-marks-church-of-england-primary-school"></td>
-          <td><a href="/schools/bromley/st-marks-church-of-england-primary-school">St Mark's Church of England Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>387</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Mary's Catholic Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="65.0"
-            data-url="https://londonschool.directory/schools/bromley/st-marys-catholic-primary-school"></td>
-          <td><a href="/schools/bromley/st-marys-catholic-primary-school">St Mary's Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>411</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Nicholas Church of England Primary"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="78.0"
-            data-url="https://londonschool.directory/schools/bromley/st-nicholas-church-of-england-primary"></td>
-          <td><a href="/schools/bromley/st-nicholas-church-of-england-primary">St Nicholas Church of England Primary</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>215</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Olave's and St Saviour's Grammar School"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="83.6"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/st-olaves-and-st-saviours-grammar-school"></td>
-          <td><a href="/schools/bromley/st-olaves-and-st-saviours-grammar-school">St Olave's and St Saviour's Grammar School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>1085</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Paul's Cray Church of England Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="54.0"
-            data-url="https://londonschool.directory/schools/bromley/st-pauls-cray-church-of-england-primary-school"></td>
-          <td><a href="/schools/bromley/st-pauls-cray-church-of-england-primary-school">St Paul's Cray Church of England Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>206</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Peter and St Paul Catholic Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="92.0"
-            data-url="https://londonschool.directory/schools/bromley/st-peter-and-st-paul-catholic-primary-school"></td>
-          <td><a href="/schools/bromley/st-peter-and-st-paul-catholic-primary-school">St Peter and St Paul Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>231</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Philomena's Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="86.0"
-            data-url="https://londonschool.directory/schools/bromley/st-philomenas-primary-school"></td>
-          <td><a href="/schools/bromley/st-philomenas-primary-school">St Philomena's Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>202</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Vincent's Catholic Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="85.0"
-            data-url="https://londonschool.directory/schools/bromley/st-vincents-catholic-primary-school"></td>
-          <td><a href="/schools/bromley/st-vincents-catholic-primary-school">St Vincent's Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>209</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St. Mary Cray Primary Academy"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="62.0"
-            data-url="https://londonschool.directory/schools/bromley/st-mary-cray-primary-academy"></td>
-          <td><a href="/schools/bromley/st-mary-cray-primary-academy">St. Mary Cray Primary Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>228</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Stewart Fleming Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="77.0"
-            data-url="https://londonschool.directory/schools/bromley/stewart-fleming-primary-school"></td>
-          <td><a href="/schools/bromley/stewart-fleming-primary-school">Stewart Fleming Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>547</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="TLC The Learning Centre"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="8.6"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/tlc-the-learning-centre"></td>
-          <td><a href="/schools/bromley/tlc-the-learning-centre">TLC The Learning Centre</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>38</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Highway Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="67.0"
-            data-url="https://londonschool.directory/schools/bromley/the-highway-primary-school"></td>
-          <td><a href="/schools/bromley/the-highway-primary-school">The Highway Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>212</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Ravensbourne School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="45.0"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/the-ravensbourne-school"></td>
-          <td><a href="/schools/bromley/the-ravensbourne-school">The Ravensbourne School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1531</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Tutorial Foundation"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="6.2"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/the-tutorial-foundation"></td>
-          <td><a href="/schools/bromley/the-tutorial-foundation">The Tutorial Foundation</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>34</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Trinity Church of England Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="77.0"
-            data-url="https://londonschool.directory/schools/bromley/trinity-church-of-england-primary-school"></td>
-          <td><a href="/schools/bromley/trinity-church-of-england-primary-school">Trinity Church of England Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>341</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Tubbenden Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="83.0"
-            data-url="https://londonschool.directory/schools/bromley/tubbenden-primary-school"></td>
-          <td><a href="/schools/bromley/tubbenden-primary-school">Tubbenden Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>667</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Unicorn Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="61.0"
-            data-url="https://londonschool.directory/schools/bromley/unicorn-primary-school"></td>
-          <td><a href="/schools/bromley/unicorn-primary-school">Unicorn Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>420</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Valley Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="83.0"
-            data-url="https://londonschool.directory/schools/bromley/valley-primary-school"></td>
-          <td><a href="/schools/bromley/valley-primary-school">Valley Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>460</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Warren Road Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="76.0"
-            data-url="https://londonschool.directory/schools/bromley/warren-road-primary-school"></td>
-          <td><a href="/schools/bromley/warren-road-primary-school">Warren Road Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>840</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Wickham Common Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="63.0"
-            data-url="https://londonschool.directory/schools/bromley/wickham-common-primary-school"></td>
-          <td><a href="/schools/bromley/wickham-common-primary-school">Wickham Common Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>422</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Woodside Park School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/woodside-park-school"></td>
-          <td><a href="/schools/bromley/woodside-park-school">Woodside Park School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Woodview"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/bromley/woodview"></td>
-          <td><a href="/schools/bromley/woodview">Woodview</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>18</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Worsley Bridge Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="62.0"
-            data-url="https://londonschool.directory/schools/bromley/worsley-bridge-primary-school"></td>
-          <td><a href="/schools/bromley/worsley-bridge-primary-school">Worsley Bridge Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>367</td>
-        </tr></tbody>
-  </table>
-</div>
-<footer><a href="/">London Schools Explorer</a> &mdash; helping families find the right school in London.</footer>
-<script defer src="/_vercel/insights/script.js"></script>
-<script>
-(function(){
-  var borough="Bromley", boroughUrl="https://londonschool.directory/schools/bromley";
-  var outstanding=27, total=119;
-
-  // Borough-level share
-  window.shareBoroughWhatsApp=function(){
-    var t='🏙️ *Schools in '+borough+', London*\n'+
-        '📊 '+total+' schools · '+outstanding+' Outstanding\n\n'+
-        '🔗 '+boroughUrl;
-    window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank');
-  };
-  window.shareBoroughEmail=function(){
-    var s='Schools in '+borough+' — London Schools Explorer';
-    var b='Schools in '+borough+', London\n'+
-        total+' schools, '+outstanding+' rated Outstanding by Ofsted\n\n'+
-        'Browse them here: '+boroughUrl;
-    window.location.href='mailto:?subject='+encodeURIComponent(s)+'&body='+encodeURIComponent(b);
-  };
-
-  // Shortlist comparison share
-  function getSelected(){
-    return Array.from(document.querySelectorAll('.sch-sel:checked')).map(function(cb){
-      return {name:cb.dataset.name,ofsted:cb.dataset.ofsted,phase:cb.dataset.phase,
-               att8:cb.dataset.att8,ks2:cb.dataset.ks2,url:cb.dataset.url};
-    });
-  }
-  function updateBar(){
-    var sel=getSelected();
-    var bar=document.getElementById('cmp-bar');
-    document.getElementById('cmp-count').textContent=sel.length+' school'+(sel.length===1?'':' s')+' selected';
-    bar.style.display=sel.length>0?'flex':'none';
-  }
-  document.querySelectorAll('.sch-sel').forEach(function(cb){ cb.onchange=updateBar; });
-
-  function buildCompareText(sel,markdown){
-    var lines=['📋 *My '+borough+' school shortlist*',''];
-    sel.forEach(function(s,i){
-      lines.push((i+1)+'. '+(markdown?'*':'')+s.name+(markdown?'*':''));
-      lines.push('   ⭐ Ofsted: '+s.ofsted+(s.phase?' · '+s.phase:''));
-      if(s.att8)lines.push('   📊 Attainment 8: '+s.att8);
-      if(s.ks2)lines.push('   📝 KS2 expected: '+s.ks2+'%');
-      lines.push('   🔗 '+s.url);
-      lines.push('');
-    });
-    lines.push('via London Schools Explorer — '+boroughUrl);
-    return lines.join('\n');
-  }
-  window.shareCompareWhatsApp=function(){
-    var sel=getSelected();
-    if(!sel.length)return;
-    window.open('https://wa.me/?text='+encodeURIComponent(buildCompareText(sel,true)),'_blank');
-  };
-  window.shareCompareEmail=function(){
-    var sel=getSelected();
-    if(!sel.length)return;
-    var subj='My '+borough+' school shortlist — London Schools Explorer';
-    window.location.href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(buildCompareText(sel,false));
-  };
-  window.clearSelection=function(){
-    document.querySelectorAll('.sch-sel:checked').forEach(function(cb){cb.checked=false;});
-    updateBar();
-  };
-})();
-</script>
-</body>
-</html><style>
-  #fb-btn{position:fixed;bottom:24px;right:24px;z-index:9999;background:#1A1A2E;color:#D4A843;border:2px solid #D4A843;border-radius:24px;padding:10px 18px;font-family:system-ui,sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 4px 16px rgba(0,0,0,0.25);transition:all 0.2s;}
-  #fb-btn:hover{background:#D4A843;color:#1A1A2E;}
-  #fb-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:10000;display:none;align-items:flex-end;justify-content:center;padding:0 0 80px;}
-  #fb-overlay.open{display:flex;}
-  #fb-panel{background:#fff;border-radius:16px 16px 0 0;width:100%;max-width:480px;padding:28px 24px 24px;font-family:system-ui,sans-serif;animation:fbSlide 0.25s ease;position:relative;}
-  @keyframes fbSlide{from{transform:translateY(40px);opacity:0;}to{transform:translateY(0);opacity:1;}}
-  #fb-panel h3{font-size:1.1rem;font-weight:700;margin-bottom:4px;color:#1a1a1a;}
-  #fb-panel p{font-size:0.83rem;color:#888;margin-bottom:14px;}
-  .fb-stars{display:flex;gap:6px;margin-bottom:14px;}
-  .fb-star{font-size:28px;cursor:pointer;color:#ddd;transition:color 0.1s;line-height:1;}
-  .fb-star.active{color:#D4A843;}
-  .fb-inp{width:100%;padding:10px 12px;border:1.5px solid #ddd;border-radius:8px;font-family:system-ui,sans-serif;font-size:14px;color:#1a1a1a;background:white;margin-bottom:10px;outline:none;box-sizing:border-box;}
-  .fb-inp:focus{border-color:#D4A843;}
-  textarea.fb-inp{resize:vertical;min-height:80px;}
-  #fb-sub{width:100%;padding:12px;background:#1A1A2E;color:#D4A843;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;}
-  #fb-sub:disabled{opacity:0.5;cursor:not-allowed;}
-  #fb-close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:20px;cursor:pointer;color:#aaa;}
-  #fb-ok{text-align:center;padding:16px 0;display:none;}
-  @media(max-width:520px){#fb-btn{bottom:16px;right:16px;padding:8px 14px;font-size:13px;}}
-</style>
-<button id="fb-btn">&#128172; Feedback</button>
-<div id="fb-overlay">
-  <div id="fb-panel">
-    <button id="fb-close">&#10005;</button>
-    <div id="fb-wrap">
-      <h3>Share your feedback</h3>
-      <p>Help us improve London Schools Explorer.</p>
-      <div class="fb-stars">
-        <span class="fb-star" data-v="1">&#9733;</span>
-        <span class="fb-star" data-v="2">&#9733;</span>
-        <span class="fb-star" data-v="3">&#9733;</span>
-        <span class="fb-star" data-v="4">&#9733;</span>
-        <span class="fb-star" data-v="5">&#9733;</span>
-      </div>
-      <input id="fb-name" class="fb-inp" type="text" placeholder="Your name (optional)" />
-      <input id="fb-email" class="fb-inp" type="email" placeholder="Email (optional)" />
-      <textarea id="fb-comment" class="fb-inp" placeholder="What did you think? What's missing?"></textarea>
-      <button id="fb-sub">Send feedback</button>
+  <section>
+    <div class="grid-stats">
+      <div class="stat"><div class="v">119</div><div class="l">Schools in Bromley</div></div>
+      <div class="stat"><div class="v">0.0%</div><div class="l">Outstanding Ofsted</div></div>
+      <div class="stat"><div class="v">0.0%</div><div class="l">Good or Outstanding</div></div>
+      <div class="stat"><div class="v">76</div><div class="l">Primary schools</div></div>
+      <div class="stat"><div class="v">19</div><div class="l">Secondary schools</div></div>
+      <div class="stat"><div class="v">—</div><div class="l">Avg appeal success</div></div>
     </div>
-    <div id="fb-ok"><div style="font-size:2.5rem">&#9989;</div><h3 style="color:#27AE60;margin:8px 0 4px">Thank you!</h3><p>Your feedback helps London parents find the right school.</p></div>
+  </section>
+
+  <section>
+    <div class="twocol">
+      <div>
+        <h2>Top schools in Bromley</h2>
+        <p class="sources">Ranked by Ofsted rating, then by latest KS2 progress (primary) or Attainment 8 (secondary), with applications-per-place as a tie-breaker. See <a href="/methodology.html">methodology</a>.</p>
+        <table class="schools">
+          <thead>
+            <tr><th>School</th><th>Phase</th><th>Ofsted</th><th>KS2 / Att8</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><a href="/schools/bromley/perry-hall-primary-school/">Perry Hall Primary School</a></td><td>Primary</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/bromley/alexandra-infant-school/">Alexandra Infant School</a></td><td>Primary</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/bromley/newstead-wood-school/">Newstead Wood School</a></td><td>Secondary</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/bromley/valley-primary-school/">Valley Primary School</a></td><td>Primary</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/bromley/farnborough-primary-school/">Farnborough Primary School</a></td><td>Primary</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/bromley/st-olaves-and-st-saviours-grammar-school/">St Olave's and St Saviour's Grammar School</a></td><td>Secondary</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/bromley/st-james-roman-catholic-primary-school/">St James' Roman Catholic Primary School</a></td><td>Primary</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/bromley/orion-mead-road/">Orion Mead Road</a></td><td>Primary</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/bromley/st-vincents-catholic-primary-school/">St Vincent's Catholic Primary School</a></td><td>Primary</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/bromley/st-nicholas-church-of-england-primary/">St Nicholas Church of England Primary</a></td><td>Primary</td><td class="rating —">—</td><td>—</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:14px"><a class="cta" href="/?borough=bromley">See all 119 schools in Bromley</a></p>
+      </div>
+      <div>
+        <h2>Map</h2>
+        <div id="map" aria-label="Map of schools in Bromley"></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>What the data says about Bromley</h2>
+    <p>The average number of applications per place across Bromley is <strong>1.27</strong>, a useful indicator of how competitive local admissions are. The mean IMD (Index of Multiple Deprivation) decile of Bromley's schools is <strong>7.56</strong> — 1 is most deprived, 10 is least deprived. All metrics on this page are recomputed from source data on the 15th of every month. See our <a href='/methodology.html'>methodology</a> for definitions and limitations.</p>
+  </section>
+
+  <section>
+    <h2>Frequently asked</h2>
+    <details class="faq"><summary>How many schools are there in Bromley?</summary><p>Bromley has 119 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 76 are primary, 19 are secondary, and the remainder are special, all-through, or post-16.</p></details>
+<details class="faq"><summary>What proportion of Bromley schools are Outstanding?</summary><p>As of the latest Ofsted Management Information release, 0 schools in Bromley (0.0%) are rated Outstanding, and 0.0% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication.</p></details>
+<details class="faq"><summary>When do I apply for a Reception or Year 7 place in Bromley?</summary><p>Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Bromley's applications are coordinated by the local authority through the eAdmissions system. See our <a href='/guides/london-reception-application-timeline/'>full Reception timeline guide</a>.</p></details>
+<details class="faq"><summary>How does the school appeals process work in Bromley?</summary><p>If you are refused your preferred school place, you have a statutory right of appeal. Bromley appeals are typically heard in May (Reception) and June–July (secondary). See our <a href='/appeals.html'>appeals tracker</a> for Bromley-level success rates by year.</p></details>
+<details class="faq"><summary>How can I tell which Bromley schools are over-subscribed?</summary><p>Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release.</p></details>
+  </section>
+
+  <section>
+    <h2>Sources</h2>
+    <p class="sources">
+      School list and phase from <a href="https://get-information-schools.service.gov.uk/" rel="nofollow">DfE Get Information About Schools</a> (refreshed monthly).
+      Ofsted ratings from <a href="https://www.gov.uk/government/statistical-data-sets/monthly-management-information-ofsteds-school-inspections-outcomes" rel="nofollow">Ofsted Management Information</a> (refreshed monthly).
+      Performance data from <a href="https://explore-education-statistics.service.gov.uk/" rel="nofollow">DfE Explore Education Statistics</a>.
+      Crime data within 500m from the <a href="https://data.police.uk/" rel="nofollow">Metropolitan Police open data API</a>.
+      Deprivation deciles from <a href="https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019" rel="nofollow">MHCLG English Indices of Deprivation 2019</a>.
+      Read our full <a href="/methodology.html">methodology</a> for how each metric is calculated.
+    </p>
+  </section>
+</main>
+<footer>
+  <div class="inner">
+    <div>&copy; London School Directory. Independent. Free to use.</div>
+    <div><a href="/about.html">About</a> &middot; <a href="/methodology.html">Methodology</a> &middot; <a href="/sources.html">Sources</a> &middot; <a href="/appeals.html">Appeals</a></div>
   </div>
-</div>
+</footer>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-(function(){
-  var SUPA_URL='https://kwqyogicwbubzbrjwues.supabase.co',SUPA_KEY='sb_publishable_488SMcDgCgQx14JB6ngw7A_qay_j9cd',rating=0;
-  document.getElementById('fb-btn').onclick=function(){document.getElementById('fb-overlay').classList.add('open');};
-  document.getElementById('fb-close').onclick=function(){document.getElementById('fb-overlay').classList.remove('open');};
-  document.getElementById('fb-overlay').onclick=function(e){if(e.target===document.getElementById('fb-overlay'))document.getElementById('fb-overlay').classList.remove('open');};
-  document.querySelectorAll('.fb-star').forEach(function(s){s.onclick=function(){rating=parseInt(s.dataset.v);document.querySelectorAll('.fb-star').forEach(function(x){x.classList.toggle('active',parseInt(x.dataset.v)<=rating);});};}); 
-  document.getElementById('fb-sub').onclick=async function(){
-    var comment=document.getElementById('fb-comment').value.trim();
-    if(!comment){document.getElementById('fb-comment').focus();return;}
-    var btn=document.getElementById('fb-sub');btn.disabled=true;btn.textContent='Sending…';
-    try{
-      var res=await fetch(SUPA_URL+'/rest/v1/feedback',{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Prefer':'return=minimal'},body:JSON.stringify({page_url:window.location.href,name:document.getElementById('fb-name').value.trim()||null,email:document.getElementById('fb-email').value.trim()||null,rating:rating||null,comment:document.getElementById('fb-comment').value.trim()})});
-      if(res.ok||res.status===201){document.getElementById('fb-wrap').style.display='none';document.getElementById('fb-ok').style.display='block';setTimeout(function(){document.getElementById('fb-overlay').classList.remove('open');document.getElementById('fb-wrap').style.display='block';document.getElementById('fb-ok').style.display='none';document.getElementById('fb-comment').value='';document.getElementById('fb-name').value='';document.getElementById('fb-email').value='';rating=0;document.querySelectorAll('.fb-star').forEach(function(s){s.classList.remove('active');});btn.disabled=false;btn.textContent='Send feedback';},3000);}else{throw new Error();}
-    }catch(e){btn.disabled=false;btn.textContent='Try again';alert('Something went wrong. Please try again.');}
-  };
-})();
+  (function() {
+    var points = [[51.423679, 0.071534, "/schools/bromley/edgebury-primary-school/", "Edgebury Primary School"], [51.391199, 0.097205, "/schools/bromley/poverest-primary-school/", "Poverest Primary School"], [51.36685, 0.104052, "/schools/bromley/st-olaves-and-st-saviours-grammar-school/", "St Olave's and St Saviour's Grammar School"], [51.418147, 0.048071, "/schools/bromley/babington-house-school/", "Babington House School"], [51.400569, 0.039622, "/schools/bromley/bickley-park-school/", "Bickley Park School"], [51.410101, 0.030858, "/schools/bromley/breaside-preparatory-school/", "Breaside Preparatory School"], [51.414257, 0.083087, "/schools/bromley/farringtons-school/", "Farringtons School"], [51.406638, -0.013193, "/schools/bromley/st-christophers-the-hall-school/", "St Christophers The Hall School"], [51.381975, -0.018184, "/schools/bromley/st-davids-prep/", "St David's Prep"], [51.3953, 0.057127, "/schools/bromley/bromley-high-school-gdst/", "Bromley High School GDST"], [51.43797, 0.03867, "/schools/bromley/eltham-college/", "Eltham College"], [51.418846, 0.08495, "/schools/bromley/darul-uloom-london-school/", "Darul Uloom London School"], [51.357201, 0.136761, "/schools/bromley/browns-school/", "Browns School"], [51.37167, 0.005567, "/schools/bromley/shaftesbury-nash-college/", "Shaftesbury Nash College"], [51.403905, 0.117715, "/schools/bromley/riverside-school/", "Riverside School"], [51.410428, 0.024948, "/schools/bromley/the-tutorial-foundation/", "The Tutorial Foundation"], [51.380847, 0.044883, "/schools/bromley/tlc-the-learning-centre/", "TLC The Learning Centre"], [51.371882, 0.023061, "/schools/bromley/baston-house-school/", "Baston House School"], [51.412062, 0.111246, "/schools/bromley/kemnal-technology-college/", "Kemnal Technology College"], [51.365843, 0.06358, "/schools/bromley/darrick-wood-school/", "Darrick Wood School"], [51.407743, 0.073632, "/schools/bromley/orion-coopers/", "Orion Coopers"], [51.382453, 0.045098, "/schools/bromley/bishop-justus-cofe-school/", "Bishop Justus CofE School"], [51.418617, 0.089212, "/schools/bromley/chislehurst-school-for-girls/", "Chislehurst School for Girls"], [51.369443, 0.035669, "/schools/bromley/ravens-wood-school/", "Ravens Wood School"], [51.394017, 0.02073, "/schools/bromley/the-ravensbourne-school/", "The Ravensbourne School"], [51.314945, 0.045483, "/schools/bromley/charles-darwin-school/", "Charles Darwin School"], [51.367848, 0.077864, "/schools/bromley/newstead-wood-school/", "Newstead Wood School"], [51.388921, -0.018948, "/schools/bromley/langley-park-school-for-boys/", "Langley Park School for Boys"], [51.373976, 0.018958, "/schools/bromley/hayes-school/", "Hayes School"], [51.408913, 0.048003, "/schools/bromley/bullers-wood-school/", "Bullers Wood School"], [51.360151, 0.091967, "/schools/bromley/warren-road-primary-school/", "Warren Road Primary School"], [51.379362, 0.022112, "/schools/bromley/hayes-primary-school/", "Hayes Primary School"], [51.388304, -0.018098, "/schools/bromley/langley-park-school-for-girls/", "Langley Park School for Girls"], [51.365843, 0.06358, "/schools/bromley/darrick-wood-infant-nursery-school/", "Darrick Wood Infant & Nursery School"], [51.402941, -0.058226, "/schools/bromley/stewart-fleming-primary-school/", "Stewart Fleming Primary School"], [51.385319, 0.003058, "/schools/bromley/pickhurst-infant-academy/", "Pickhurst Infant Academy"], [51.385319, 0.003058, "/schools/bromley/pickhurst-academy/", "Pickhurst Academy"], [51.4005, -0.026758, "/schools/bromley/harris-academy-beckenham/", "Harris Academy Beckenham"], [51.403832, -0.038821, "/schools/bromley/balgowan-primary-school/", "Balgowan Primary School"], [51.406051, 0.008622, "/schools/bromley/valley-primary-school/", "Valley Primary School"], [51.314677, 0.040204, "/schools/bromley/biggin-hill-primary-school/", "Biggin Hill Primary School"], [51.416894, -0.043382, "/schools/bromley/harris-girls-academy-bromley/", "Harris Girls Academy Bromley"], [51.384132, 0.077451, "/schools/bromley/crofton-junior-school/", "Crofton Junior School"], [51.366186, 0.080289, "/schools/bromley/tubbenden-primary-school/", "Tubbenden Primary School"], [51.389382, 0.066348, "/schools/bromley/st-james-roman-catholic-primary-school/", "St James' Roman Catholic Primary School"], [51.382635, 0.09437, "/schools/bromley/clannad-education-centre/", "Clannad Education Centre"], [51.408278, -0.038458, "/schools/bromley/kings-london/", "Kings London"], [51.384132, 0.077451, "/schools/bromley/crofton-infant-school/", "Crofton Infant School"], [51.407882, 0.11114, "/schools/bromley/grays-farm-primary-academy/", "Gray's Farm Primary Academy"], [51.412332, -0.048596, "/schools/bromley/harris-primary-academy-kent-house/", "Harris Primary Academy Kent House"], [51.415104, 0.013981, "/schools/bromley/parish-church-of-england-primary-school/", "Parish Church of England Primary School"], [51.420284, -0.047107, "/schools/bromley/alexandra-junior-school/", "Alexandra Junior School"], [51.397684, 0.004115, "/schools/bromley/highfield-infants-school/", "Highfield Infants' School"], [51.394843, 0.032784, "/schools/bromley/raglan-primary-school/", "Raglan Primary School"], [51.395567, 0.002226, "/schools/bromley/highfield-junior-school/", "Highfield Junior School"], [51.383187, 0.097198, "/schools/bromley/perry-hall-primary-school/", "Perry Hall Primary School"], [51.359051, 0.073904, "/schools/bromley/farnborough-primary-school/", "Farnborough Primary School"], [51.391636, 0.124321, "/schools/bromley/manor-oak-primary-school/", "Manor Oak Primary School"], [51.413739, -0.046681, "/schools/bromley/alexandra-infant-school/", "Alexandra Infant School"], [51.42439, 0.043344, "/schools/bromley/elmstead-wood-primary-school/", "Elmstead Wood Primary School"], [51.41522, -0.055174, "/schools/bromley/st-johns-church-of-england-primary-school/", "St John's Church of England Primary School"], [51.361948, 0.029677, "/schools/bromley/keston-church-of-england-primary-school/", "Keston Church of England Primary School"], [51.410101, 0.030858, "/schools/bromley/orion-scotts-park/", "Orion Scotts Park"], [51.4005, -0.026758, "/schools/bromley/harris-primary-academy-beckenham/", "Harris Primary Academy Beckenham"], [51.401967, 0.001829, "/schools/bromley/harris-primary-academy-shortlands/", "Harris Primary Academy Shortlands"], [51.402514, 0.031729, "/schools/bromley/la-fontaine-academy/", "La Fontaine Academy"], [51.394059, 0.024038, "/schools/bromley/bromley-trust-alternative-provision-academy/", "Bromley Trust Alternative Provision Academy"], [51.386837, 0.113751, "/schools/bromley/st-mary-cray-primary-academy/", "St. Mary Cray Primary Academy"], [51.403371, 0.089868, "/schools/bromley/st-peter-and-st-paul-catholic-primary-school/", "St Peter and St Paul Catholic Primary School"], [51.398683, 0.105124, "/schools/bromley/leesons-primary-school/", "Leesons Primary School"], [51.380847, 0.044883, "/schools/bromley/trinity-church-of-england-primary-school/", "Trinity Church of England Primary School"], [51.429105, 0.044174, "/schools/bromley/st-vincents-catholic-primary-school/", "St Vincent's Catholic Primary School"], [51.382246, 0.115508, "/schools/bromley/st-philomenas-primary-school/", "St Philomena's Primary School"], [51.41065, 0.072958, "/schools/bromley/st-nicholas-church-of-england-primary/", "St Nicholas Church of England Primary"], [51.413755, -0.014481, "/schools/bromley/st-marys-catholic-primary-school/", "St Mary's Catholic Primary School"], [51.411985, 0.025937, "/schools/bromley/st-josephs-catholic-primary-school/", "St Joseph's Catholic Primary School"], [51.399129, 0.012646, "/schools/bromley/st-marks-church-of-england-primary-school/", "St Mark's Church of England Primary School"], [51.410939, 0.104651, "/schools/bromley/midfield-primary-school/", "Midfield Primary School"], [51.377548, -0.006908, "/schools/bromley/hawes-down-primary-school/", "Hawes Down Primary School"], [51.314861, 0.052324, "/schools/bromley/cudham-church-of-england-primary-school/", "Cudham Church of England Primary School"], [51.366273, 0.09157, "/schools/bromley/holy-innocents-catholic-primary-school/", "Holy Innocents Catholic Primary School"], [51.369832, 0.121185, "/schools/bromley/bromley-beacon-academy/", "Bromley Beacon Academy"], [51.418756, 0.071757, "/schools/bromley/orion-mead-road/", "Orion Mead Road"], [51.429983, 0.049564, "/schools/bromley/orion-ravensworth/", "Orion Ravensworth"], [51.316136, 0.026105, "/schools/bromley/oaklands-primary-academy/", "Oaklands Primary Academy"], [51.380631, -0.024881, "/schools/bromley/oak-lodge-primary-school/", "Oak Lodge Primary School"], [51.395173, -0.045861, "/schools/bromley/marian-vian-primary-school/", "Marian Vian Primary School"], [51.391969, -0.02103, "/schools/bromley/unicorn-primary-school/", "Unicorn Primary School"], [51.366079, 0.009618, "/schools/bromley/wickham-common-primary-school/", "Wickham Common Primary School"], [51.416226, -0.026613, "/schools/bromley/worsley-bridge-primary-school/", "Worsley Bridge Primary School"], [51.421611, 0.011102, "/schools/bromley/burnt-ash-primary-school/", "Burnt Ash Primary School"], [51.357848, 0.125946, "/schools/bromley/chelsfield-primary-school/", "Chelsfield Primary School"], [51.365843, 0.06358, "/schools/bromley/darrick-wood-junior-school/", "Darrick Wood Junior School"], [51.333249, 0.115176, "/schools/bromley/pratts-bottom-primary-school/", "Pratts Bottom Primary School"], [51.359915, 0.111103, "/schools/bromley/the-highway-primary-school/", "The Highway Primary School"], [51.387336, -0.017234, "/schools/bromley/langley-park-primary-school/", "Langley Park Primary School"], [51.402652, -0.015192, "/schools/bromley/clare-house-primary-school/", "Clare House Primary School"], [51.404033, 0.034385, "/schools/bromley/st-georges-bickley-church-of-england-primary-school/", "St George's, Bickley, Church of England Primary School"], [51.421218, 0.062721, "/schools/bromley/red-hill-primary-school/", "Red Hill Primary School"], [51.38038, 0.113238, "/schools/bromley/harris-primary-academy-orpington/", "Harris Primary Academy Orpington"], [51.373091, 0.114037, "/schools/bromley/harris-academy-orpington/", "Harris Academy Orpington"], [51.410946, -0.069189, "/schools/bromley/james-dixon-primary-school/", "James Dixon Primary School"], [51.40883, -0.024213, "/schools/bromley/harris-primary-academy-beckenham-green/", "Harris Primary Academy Beckenham Green"], [51.39716, -0.03994, "/schools/bromley/orion-eden-park/", "Orion Eden Park"], [51.352595, 0.093547, "/schools/bromley/green-street-green-primary-school/", "Green Street Green Primary School"], [51.409987, -0.05902, "/schools/bromley/st-anthonys-catholic-primary-school/", "St Anthony's Catholic Primary School"], [51.374765, -0.003968, "/schools/bromley/glebe-school/", "Glebe School"], [51.372835, 0.116223, "/schools/bromley/orion-blenheim/", "Orion Blenheim"], [51.405598, -0.046539, "/schools/bromley/churchfields-primary-school/", "Churchfields Primary School"], [51.402514, 0.031729, "/schools/bromley/bickley-primary-school/", "Bickley Primary School"], [51.405605, 0.0438, "/schools/bromley/bullers-wood-school-for-boys/", "Bullers Wood School for Boys"], [51.396094, 0.120977, "/schools/bromley/st-pauls-cray-church-of-england-primary-school/", "St Paul's Cray Church of England Primary School"], [51.336551, 0.055016, "/schools/bromley/downe-primary-school/", "Downe Primary School"], [51.409019, 0.015899, "/schools/bromley/bromley-mencap/", "Bromley Mencap"], [51.388543, 0.12481, "/schools/bromley/woodview/", "Woodview"], [51.426668, 0.069814, "/schools/bromley/marjorie-mcclure-school/", "Marjorie McClure School"], [51.414624, -0.057731, "/schools/bromley/woodside-park-school/", "Woodside Park School"], [51.389874, 0.056812, "/schools/bromley/southborough-primary-school/", "Southborough Primary School"]];
+    if (!points.length) return;
+    var lats = points.map(function(p) { return p[0]; });
+    var lngs = points.map(function(p) { return p[1]; });
+    var avgLat = lats.reduce(function(a,b) { return a+b; }, 0) / lats.length;
+    var avgLng = lngs.reduce(function(a,b) { return a+b; }, 0) / lngs.length;
+    var map = L.map('map', { scrollWheelZoom: false }).setView([avgLat, avgLng], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+    points.forEach(function(p) {
+      L.circleMarker([p[0], p[1]], {
+        radius: 5, color: '#0b2545', fillColor: '#0b6efd', fillOpacity: 0.8, weight: 1
+      }).addTo(map).bindPopup('<a href="' + p[2] + '">' + p[3] + '</a>');
+    });
+  })();
 </script>
 </body>
 </html>

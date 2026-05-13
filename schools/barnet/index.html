@@ -1,2368 +1,363 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en-GB">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Schools in Barnet, London | Ofsted Ratings &amp; Results | London Schools Explorer</title>
-  <meta name="description" content="173 schools in Barnet, London. 22 Outstanding, 105 Good-rated by Ofsted. Compare admissions oversubscription, exam results and crime data. Free.">
-  <script type="application/ld+json">{
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Schools in Barnet, London — Ofsted, Performance & Admissions</title>
+<meta name="description" content="All 173 schools in Barnet, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
+<link rel="canonical" href="https://londonschool.directory/schools/barnet/">
+<meta property="og:title" content="Schools in Barnet, London — Ofsted, Performance & Admissions">
+<meta property="og:description" content="All 173 schools in Barnet, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://londonschool.directory/schools/barnet/">
+<meta property="og:site_name" content="London School Directory">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0b2545">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="preconnect" href="https://unpkg.com">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+  :root {
+    --ink: #0b2545;
+    --ink-2: #1e3a5f;
+    --muted: #5b6b85;
+    --line: #e3e8ef;
+    --bg: #ffffff;
+    --bg-2: #f6f8fb;
+    --accent: #0b6efd;
+    --good: #137333;
+    --warn: #a85b00;
+    --bad: #b3261e;
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  header.site {
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+    position: sticky; top: 0; z-index: 50;
+  }
+  header.site .inner {
+    max-width: 1100px; margin: 0 auto; padding: 14px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  header.site a.brand { color: var(--ink); font-weight: 700; letter-spacing: -0.01em; }
+  header.site nav a { margin-left: 18px; color: var(--ink-2); font-size: 14px; }
+  main { max-width: 1100px; margin: 0 auto; padding: 28px 20px 80px; }
+  .crumbs { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+  .crumbs a { color: var(--muted); }
+  h1 { font-size: 32px; line-height: 1.2; margin: 0 0 8px; letter-spacing: -0.02em; }
+  .lede { color: var(--ink-2); font-size: 17px; max-width: 720px; }
+  .stamp { font-size: 12px; color: var(--muted); margin-top: 8px; }
+  .stamp .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--good); vertical-align: middle; margin-right: 6px; }
+  .grid-stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px; margin: 24px 0 8px;
+  }
+  .stat {
+    background: var(--bg-2); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 14px 16px;
+  }
+  .stat .v { font-size: 24px; font-weight: 700; color: var(--ink); }
+  .stat .l { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  section { margin-top: 36px; }
+  h2 { font-size: 22px; margin: 0 0 12px; letter-spacing: -0.01em; }
+  .twocol { display: grid; grid-template-columns: 1.4fr 1fr; gap: 28px; }
+  @media (max-width: 820px) { .twocol { grid-template-columns: 1fr; } }
+  table.schools { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table.schools th, table.schools td {
+    text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line);
+  }
+  table.schools th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); font-weight: 600; }
+  .rating { font-weight: 600; }
+  .rating.Outstanding { color: var(--good); }
+  .rating.Good { color: var(--ink-2); }
+  .rating.RequiresImprovement, .rating.Requires { color: var(--warn); }
+  .rating.Inadequate { color: var(--bad); }
+  #map { height: 380px; border-radius: var(--radius); border: 1px solid var(--line); }
+  .pills { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pill { background: var(--bg-2); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; font-size: 12px; color: var(--ink-2); }
+  details.faq { border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 8px; background: var(--bg); }
+  details.faq summary { cursor: pointer; font-weight: 600; color: var(--ink); }
+  details.faq[open] { background: var(--bg-2); }
+  footer { border-top: 1px solid var(--line); padding: 28px 20px; color: var(--muted); font-size: 13px; }
+  footer .inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 24px; flex-wrap: wrap; }
+  .sources { font-size: 13px; color: var(--muted); }
+  .sources a { color: var(--muted); text-decoration: underline; }
+  .cta {
+    display: inline-block; background: var(--ink); color: #fff; padding: 10px 14px;
+    border-radius: var(--radius); font-size: 14px; font-weight: 600;
+  }
+  .cta:hover { background: var(--ink-2); text-decoration: none; }
+</style>
+<script type="application/ld+json">
+[
+  {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "name": "Schools in Barnet, London",
-    "description": "173 schools in Barnet, London rated by Ofsted",
-    "numberOfItems": 173,
-    "url": "https://londonschool.directory/schools/barnet"
-  }</script>
-  <script type="application/ld+json">{
+    "name": "Top schools in Barnet, London",
+    "itemListOrder": "http://schema.org/ItemListOrderDescending",
+    "numberOfItems": 10,
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "url": "https://londonschool.directory/schools/barnet/the-henrietta-barnett-school/",
+        "name": "The Henrietta Barnett School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "url": "https://londonschool.directory/schools/barnet/courtland-school/",
+        "name": "Courtland School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "url": "https://londonschool.directory/schools/barnet/northside-primary-school/",
+        "name": "Northside Primary School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "url": "https://londonschool.directory/schools/barnet/queen-elizabeths-school-barnet/",
+        "name": "Queen Elizabeth's School, Barnet"
+      },
+      {
+        "@type": "ListItem",
+        "position": 5,
+        "url": "https://londonschool.directory/schools/barnet/wren-academy-finchley/",
+        "name": "Wren Academy Finchley"
+      },
+      {
+        "@type": "ListItem",
+        "position": 6,
+        "url": "https://londonschool.directory/schools/barnet/st-michaels-catholic-grammar-school/",
+        "name": "St Michael's Catholic Grammar School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 7,
+        "url": "https://londonschool.directory/schools/barnet/rimon-jewish-primary-school/",
+        "name": "Rimon Jewish Primary School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 8,
+        "url": "https://londonschool.directory/schools/barnet/the-archer-academy/",
+        "name": "The Archer Academy"
+      },
+      {
+        "@type": "ListItem",
+        "position": 9,
+        "url": "https://londonschool.directory/schools/barnet/menorah-high-school-for-girls/",
+        "name": "Menorah High School for Girls"
+      },
+      {
+        "@type": "ListItem",
+        "position": 10,
+        "url": "https://londonschool.directory/schools/barnet/sunnyfields-primary-school/",
+        "name": "Sunnyfields Primary School"
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How many schools are there in Barnet?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Barnet has 173 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 91 are primary, 25 are secondary, and the remainder are special, all-through, or post-16."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What proportion of Barnet schools are Outstanding?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "As of the latest Ofsted Management Information release, 0 schools in Barnet (0.0%) are rated Outstanding, and 0.0% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "When do I apply for a Reception or Year 7 place in Barnet?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Barnet's applications are coordinated by the local authority through the eAdmissions system. See our full Reception timeline guide."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does the school appeals process work in Barnet?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "If you are refused your preferred school place, you have a statutory right of appeal. Barnet appeals are typically heard in May (Reception) and June\u2013July (secondary). See our appeals tracker for Barnet-level success rates by year."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How can I tell which Barnet schools are over-subscribed?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release."
+        }
+      }
+    ]
+  },
+  {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      {"@type": "ListItem", "position": 1, "name": "London Schools Explorer", "item": "https://londonschool.directory/"},
-      {"@type": "ListItem", "position": 2, "name": "Schools in Barnet", "item": "https://londonschool.directory/schools/barnet"}
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://londonschool.directory/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Boroughs",
+        "item": "https://londonschool.directory/schools/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Barnet",
+        "item": "https://londonschool.directory/schools/barnet/"
+      }
     ]
-  }</script>
-  <link rel="canonical" href="https://londonschool.directory/schools/barnet">
-  <meta property="og:title" content="Schools in Barnet | London Schools Explorer">
-  <meta property="og:description" content="173 schools in Barnet. 22 Outstanding-rated. Compare Ofsted ratings, exam results and admissions.">
-  <meta property="og:url" content="https://londonschool.directory/schools/barnet">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, -apple-system, sans-serif; color: #1a1a1a; background: #f8f9fa; line-height: 1.6; }
-    a { color: #1565C0; }
-    .topbar { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 12px 20px; }
-    .topbar a { text-decoration: none; font-weight: 600; color: #1a1a1a; font-size: 15px; }
-    .topbar span { color: #888; margin: 0 8px; }
-    .container { max-width: 900px; margin: 0 auto; padding: 32px 20px; }
-    h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
-    .intro { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; font-size: 15px; color: #333; line-height: 1.7; }
-    .stats-row { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
-    .stat-box { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 14px 18px; flex: 1; min-width: 120px; }
-    .stat-num { font-size: 24px; font-weight: 700; color: #1a1a1a; line-height: 1; }
-    .stat-lbl { font-size: 12px; color: #888; margin-top: 4px; }
-    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #e0e0e0; }
-    th { background: #f5f5f5; padding: 12px 16px; text-align: left; font-size: 13px; color: #555; font-weight: 600; border-bottom: 1px solid #e0e0e0; }
-    td { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
-    tr:last-child td { border-bottom: none; }
-    tr:hover td { background: #fafafa; }
-    .back { display: inline-block; margin-bottom: 20px; font-size: 14px; color: #555; text-decoration: none; }
-    .back:hover { color: #111; }
-    footer { text-align: center; padding: 32px 20px; font-size: 13px; color: #888; }
-    @media (max-width: 600px) {
-      .container { padding: 16px 12px; }
-      h1 { font-size: 22px; }
-      .stats-row { grid-template-columns: 1fr 1fr; }
-      .intro { padding: 14px 16px; font-size: 14px; }
-      table { font-size: 13px; }
-      th, td { padding: 10px 10px; }
-      .topbar { padding: 10px 12px; font-size: 13px; }
-    }
-    @media (max-width: 600px) { .stats-row { flex-direction: column; } }
-  </style>
+  }
+]
+</script>
 </head>
 <body>
-<div class="topbar">
-  <div style="max-width:900px;margin:0 auto">
-    <a href="/">London Schools Explorer</a>
-    <span>/</span>
-    Barnet
+<header class="site">
+  <div class="inner">
+    <a class="brand" href="/">London School Directory</a>
+    <nav>
+      <a href="/">Search</a>
+      <a href="/appeals.html">Appeals</a>
+      <a href="/methodology.html">Methodology</a>
+      <a href="/about.html">About</a>
+    </nav>
   </div>
-</div>
-<div class="container">
-  <a class="back" href="/">&#8592; All boroughs</a>
-  <h1>Schools in Barnet</h1>
-
-  <div class="stats-row">
-    <div class="stat-box"><div class="stat-num">173</div><div class="stat-lbl">Total schools</div></div>
-    <div class="stat-box"><div class="stat-num">22</div><div class="stat-lbl">Outstanding</div></div>
-    <div class="stat-box"><div class="stat-num">105</div><div class="stat-lbl">Good</div></div>
-    <div class="stat-box"><div class="stat-num">5</div><div class="stat-lbl">School phases</div></div>
+</header>
+<main>
+  <div class="crumbs">
+    <a href="/">Home</a> &rsaquo; <a href="/schools/">Boroughs</a> &rsaquo; Barnet
   </div>
 
-  <div class="intro">Barnet is one of London's highest-performing boroughs for education, with a large number of Outstanding and Good schools across both primary and secondary phases. The borough includes several selective grammar schools and is consistently popular with families relocating from central London. Areas such as Finchley, East Barnet and Hendon are particularly sought after for their school catchments.</div>
+  <h1>Schools in Barnet, London</h1>
+  <p class="lede">Barnet has the highest school-age population in London and is one of the strongest-performing local authority areas for both KS2 and KS4 results. The borough's school mix includes a substantial faith and academy element. Reception and Year 7 applications are competitive across much of the borough.</p>
+  <p class="stamp"><span class="dot"></span>Data last verified 13 May 2026. Sources: Ofsted, DfE GIAS, DfE Performance Tables, Metropolitan Police, MHCLG IMD. See <a href="/sources.html">all sources</a>.</p>
 
-  
-<div style="display:flex;gap:16px;flex-wrap:wrap;margin:20px 0;">
-
-<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fdf4ff 0%,#ede9fe 100%);
-     border:1px solid #d8b4fe;border-radius:12px;padding:14px 20px;">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-    <span style="font-size:22px;">🎓</span>
-    <strong style="font-size:15px;color:#5b21b6;">11+ &amp; 13+ Exam Prep</strong>
-  </div>
-  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
-    PiAcademy resources for grammar school entrance, SATs &amp; GCSE.
-    Use code <strong>THIERR25</strong> for 25% off.
-  </p>
-  <a href="https://piacademy.co.uk/?aff=28"
-     target="_blank" rel="noopener sponsored"
-     style="display:inline-block;padding:9px 18px;background:#7e22ce;color:#fff;
-            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
-    Get 25% OFF →
-  </a>
-  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
-</div>
-<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%);
-     border:1px solid #fcd34d;border-radius:12px;padding:14px 20px;">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-    <span style="font-size:22px;">📚</span>
-    <strong style="font-size:15px;color:#92400e;">Children's Books</strong>
-  </div>
-  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
-    Great books at low prices. At checkout, choose your school — Scholastic donates
-    <strong>20p for every £1 spent</strong> back to the school in free books.
-  </p>
-  <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&ued=https%3A%2F%2Fwww.scholastic.co.uk%2Fteachers"
-     target="_blank" rel="noopener sponsored"
-     style="display:inline-block;padding:9px 18px;background:#d97706;color:#fff;
-            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
-    Shop at Scholastic →
-  </a>
-  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
-</div>
-<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fff8f0 0%,#fff3e0 100%);
-     border:1px solid #fed7aa;border-radius:12px;padding:14px 20px;">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-    <span style="font-size:22px;">🛒</span>
-    <strong style="font-size:15px;color:#92400e;">School Supplies</strong>
-  </div>
-  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
-    Stationery, bags, PE kit, lunchboxes and more — fast delivery from Amazon.
-  </p>
-  <a href="https://www.amazon.co.uk/s?k=school+supplies+stationery&tag=londonparents-21"
-     target="_blank" rel="noopener sponsored"
-     style="display:inline-block;padding:9px 18px;background:#FF9900;color:#111;
-            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
-    Shop on Amazon →
-  </a>
-  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
-</div>
-</div>
-
-  <!-- Borough share buttons -->
-  <div style="display:flex;gap:10px;margin:16px 0 8px;flex-wrap:wrap;align-items:center;">
-    <span style="font-size:13px;color:#555;font-weight:600;">Share Barnet schools:</span>
-    <button onclick="shareBoroughWhatsApp()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 WhatsApp</button>
-    <button onclick="shareBoroughEmail()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#1565C0;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Email</button>
-    <span style="font-size:12px;color:#999;margin-left:4px;">Or tick schools below to share a shortlist</span>
-  </div>
-
-  <!-- Sticky compare bar (appears when schools are ticked) -->
-  <div id="cmp-bar" style="display:none;position:sticky;top:0;z-index:100;background:#1A1A2E;color:#fff;padding:12px 16px;border-radius:10px;margin-bottom:12px;display:none;align-items:center;gap:10px;flex-wrap:wrap;">
-    <span id="cmp-count" style="font-weight:700;font-size:14px;">0 schools selected</span>
-    <button onclick="shareCompareWhatsApp()" style="padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 Share via WhatsApp</button>
-    <button onclick="shareCompareEmail()" style="padding:8px 16px;background:#fff;color:#1A1A2E;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Share via Email</button>
-    <button onclick="clearSelection()" style="padding:8px 12px;background:transparent;color:#aaa;border:1px solid #555;border-radius:8px;font-size:12px;cursor:pointer;">✕ Clear</button>
-  </div>
-
-  <table>
-    <thead><tr><th style="width:36px"></th><th>School</th><th>Phase</th><th>Ofsted</th><th>Pupils</th></tr></thead>
-    <tbody><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Akiva School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="86.0"
-            data-url="https://londonschool.directory/schools/barnet/akiva-school"></td>
-          <td><a href="/schools/barnet/akiva-school">Akiva School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>420</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="All Saints' CofE Nursery and Primary School N20"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="67.0"
-            data-url="https://londonschool.directory/schools/barnet/all-saints-cofe-nursery-and-primary-school-n20"></td>
-          <td><a href="/schools/barnet/all-saints-cofe-nursery-and-primary-school-n20">All Saints' CofE Nursery and Primary School N20</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>238</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="All Saints' CofE Primary School NW2"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="64.0"
-            data-url="https://londonschool.directory/schools/barnet/all-saints-cofe-primary-school-nw2"></td>
-          <td><a href="/schools/barnet/all-saints-cofe-primary-school-nw2">All Saints' CofE Primary School NW2</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>175</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Alma Primary"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="78.0"
-            data-url="https://londonschool.directory/schools/barnet/alma-primary"></td>
-          <td><a href="/schools/barnet/alma-primary">Alma Primary</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>185</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Annemount School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/annemount-school"></td>
-          <td><a href="/schools/barnet/annemount-school">Annemount School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>76</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Ark Pioneer Academy"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="56.0"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/ark-pioneer-academy"></td>
-          <td><a href="/schools/barnet/ark-pioneer-academy">Ark Pioneer Academy</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>998</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Ashmole Academy"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="59.9"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/ashmole-academy"></td>
-          <td><a href="/schools/barnet/ashmole-academy">Ashmole Academy</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1823</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Ashmole Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="80.0"
-            data-url="https://londonschool.directory/schools/barnet/ashmole-primary-school"></td>
-          <td><a href="/schools/barnet/ashmole-primary-school">Ashmole Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>421</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Ateres Beis Yaakov"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/ateres-beis-yaakov"></td>
-          <td><a href="/schools/barnet/ateres-beis-yaakov">Ateres Beis Yaakov</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>78</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Barnet Hill Academy"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/barnet-hill-academy"></td>
-          <td><a href="/schools/barnet/barnet-hill-academy">Barnet Hill Academy</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>175</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Barnfield Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="66.0"
-            data-url="https://londonschool.directory/schools/barnet/barnfield-primary-school"></td>
-          <td><a href="/schools/barnet/barnfield-primary-school">Barnfield Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>462</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Beis Medrash Elyon"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="16.5"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/beis-medrash-elyon"></td>
-          <td><a href="/schools/barnet/beis-medrash-elyon">Beis Medrash Elyon</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>119</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Beis Soroh Schneirer"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/beis-soroh-schneirer"></td>
-          <td><a href="/schools/barnet/beis-soroh-schneirer">Beis Soroh Schneirer</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>352</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Beis Yaakov Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="74.0"
-            data-url="https://londonschool.directory/schools/barnet/beis-yaakov-primary-school"></td>
-          <td><a href="/schools/barnet/beis-yaakov-primary-school">Beis Yaakov Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>456</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Beit Shvidler Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="77.0"
-            data-url="https://londonschool.directory/schools/barnet/beit-shvidler-primary-school"></td>
-          <td><a href="/schools/barnet/beit-shvidler-primary-school">Beit Shvidler Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>230</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Beth Jacob Grammar School for Girls"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="53.6"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/beth-jacob-grammar-school-for-girls"></td>
-          <td><a href="/schools/barnet/beth-jacob-grammar-school-for-girls">Beth Jacob Grammar School for Girls</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>337</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Bishop Douglass School Finchley"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="52.5"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/bishop-douglass-school-finchley"></td>
-          <td><a href="/schools/barnet/bishop-douglass-school-finchley">Bishop Douglass School Finchley</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1013</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Blessed Dominic Catholic Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="75.0"
-            data-url="https://londonschool.directory/schools/barnet/blessed-dominic-catholic-primary-school"></td>
-          <td><a href="/schools/barnet/blessed-dominic-catholic-primary-school">Blessed Dominic Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>448</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Brampton College"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="6.7"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/brampton-college"></td>
-          <td><a href="/schools/barnet/brampton-college">Brampton College</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>210</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Brookhill Nursery School"
-            data-ofsted="Outstanding"
-            data-phase="Nursery"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/brookhill-nursery-school"></td>
-          <td><a href="/schools/barnet/brookhill-nursery-school">Brookhill Nursery School</a></td>
-          <td>Nursery</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>123</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Brookland Infant and Nursery School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/brookland-infant-and-nursery-school"></td>
-          <td><a href="/schools/barnet/brookland-infant-and-nursery-school">Brookland Infant and Nursery School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>304</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Brookland Junior School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="79.0"
-            data-url="https://londonschool.directory/schools/barnet/brookland-junior-school"></td>
-          <td><a href="/schools/barnet/brookland-junior-school">Brookland Junior School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>353</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Brunswick Park Primary and Nursery School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="78.0"
-            data-url="https://londonschool.directory/schools/barnet/brunswick-park-primary-and-nursery-school"></td>
-          <td><a href="/schools/barnet/brunswick-park-primary-and-nursery-school">Brunswick Park Primary and Nursery School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>447</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Chalgrove Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="74.0"
-            data-url="https://londonschool.directory/schools/barnet/chalgrove-primary-school"></td>
-          <td><a href="/schools/barnet/chalgrove-primary-school">Chalgrove Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>216</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Childs Hill Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="70.0"
-            data-url="https://londonschool.directory/schools/barnet/childs-hill-primary-school"></td>
-          <td><a href="/schools/barnet/childs-hill-primary-school">Childs Hill Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>458</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Christ Church Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="91.0"
-            data-url="https://londonschool.directory/schools/barnet/christ-church-primary-school"></td>
-          <td><a href="/schools/barnet/christ-church-primary-school">Christ Church Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>214</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Christ's College Finchley"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="56.8"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/christs-college-finchley"></td>
-          <td><a href="/schools/barnet/christs-college-finchley">Christ's College Finchley</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>990</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Church Hill School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="76.0"
-            data-url="https://londonschool.directory/schools/barnet/church-hill-school"></td>
-          <td><a href="/schools/barnet/church-hill-school">Church Hill School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>200</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Claremont Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="71.0"
-            data-url="https://londonschool.directory/schools/barnet/claremont-primary-school"></td>
-          <td><a href="/schools/barnet/claremont-primary-school">Claremont Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>280</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Clarion"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="44.8"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/clarion"></td>
-          <td><a href="/schools/barnet/clarion">Clarion</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>688</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Colindale Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="64.0"
-            data-url="https://londonschool.directory/schools/barnet/colindale-primary-school"></td>
-          <td><a href="/schools/barnet/colindale-primary-school">Colindale Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>723</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Coppetts Wood Primary School"
-            data-ofsted="Requires improvement"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="50.0"
-            data-url="https://londonschool.directory/schools/barnet/coppetts-wood-primary-school"></td>
-          <td><a href="/schools/barnet/coppetts-wood-primary-school">Coppetts Wood Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
-          <td>227</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Copthall School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="47.4"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/copthall-school"></td>
-          <td><a href="/schools/barnet/copthall-school">Copthall School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>861</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Courtland School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="97.0"
-            data-url="https://londonschool.directory/schools/barnet/courtland-school"></td>
-          <td><a href="/schools/barnet/courtland-school">Courtland School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>207</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Cromer Road Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="69.0"
-            data-url="https://londonschool.directory/schools/barnet/cromer-road-primary-school"></td>
-          <td><a href="/schools/barnet/cromer-road-primary-school">Cromer Road Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>404</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Danegrove Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="78.0"
-            data-url="https://londonschool.directory/schools/barnet/danegrove-primary-school"></td>
-          <td><a href="/schools/barnet/danegrove-primary-school">Danegrove Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>616</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Deansbrook Infant School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/deansbrook-infant-school"></td>
-          <td><a href="/schools/barnet/deansbrook-infant-school">Deansbrook Infant School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>218</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Deansbrook Junior School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="77.0"
-            data-url="https://londonschool.directory/schools/barnet/deansbrook-junior-school"></td>
-          <td><a href="/schools/barnet/deansbrook-junior-school">Deansbrook Junior School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>258</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Dollis Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="52.0"
-            data-url="https://londonschool.directory/schools/barnet/dollis-primary-school"></td>
-          <td><a href="/schools/barnet/dollis-primary-school">Dollis Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>410</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Dwight School London"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/dwight-school-london"></td>
-          <td><a href="/schools/barnet/dwight-school-london">Dwight School London</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>283</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="East Barnet School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="53.0"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/east-barnet-school"></td>
-          <td><a href="/schools/barnet/east-barnet-school">East Barnet School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1427</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Edgware Jewish Girls - Beis Chinuch"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/edgware-jewish-girls-beis-chinuch"></td>
-          <td><a href="/schools/barnet/edgware-jewish-girls-beis-chinuch">Edgware Jewish Girls - Beis Chinuch</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>286</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Edgware Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="56.0"
-            data-url="https://londonschool.directory/schools/barnet/edgware-primary-school"></td>
-          <td><a href="/schools/barnet/edgware-primary-school">Edgware Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>448</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Etz Chaim Jewish Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="88.0"
-            data-url="https://londonschool.directory/schools/barnet/etz-chaim-jewish-primary-school"></td>
-          <td><a href="/schools/barnet/etz-chaim-jewish-primary-school">Etz Chaim Jewish Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>176</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Fairway Primary School and Children's Centre"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="92.0"
-            data-url="https://londonschool.directory/schools/barnet/fairway-primary-school-and-childrens-centre"></td>
-          <td><a href="/schools/barnet/fairway-primary-school-and-childrens-centre">Fairway Primary School and Children's Centre</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>270</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Finchley Catholic High School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="62.3"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/finchley-catholic-high-school"></td>
-          <td><a href="/schools/barnet/finchley-catholic-high-school">Finchley Catholic High School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1192</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Finchley and Acton Yochien School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/finchley-and-acton-yochien-school"></td>
-          <td><a href="/schools/barnet/finchley-and-acton-yochien-school">Finchley and Acton Yochien School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>84</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Foulds School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="75.0"
-            data-url="https://londonschool.directory/schools/barnet/foulds-school"></td>
-          <td><a href="/schools/barnet/foulds-school">Foulds School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>313</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Friern Barnet School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="44.8"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/friern-barnet-school"></td>
-          <td><a href="/schools/barnet/friern-barnet-school">Friern Barnet School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>641</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Frith Manor Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="79.0"
-            data-url="https://londonschool.directory/schools/barnet/frith-manor-primary-school"></td>
-          <td><a href="/schools/barnet/frith-manor-primary-school">Frith Manor Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>509</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Garden Suburb Infant School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/garden-suburb-infant-school"></td>
-          <td><a href="/schools/barnet/garden-suburb-infant-school">Garden Suburb Infant School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>187</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Garden Suburb Junior School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="81.0"
-            data-url="https://londonschool.directory/schools/barnet/garden-suburb-junior-school"></td>
-          <td><a href="/schools/barnet/garden-suburb-junior-school">Garden Suburb Junior School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>346</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Goldbeaters Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="94.0"
-            data-url="https://londonschool.directory/schools/barnet/goldbeaters-primary-school"></td>
-          <td><a href="/schools/barnet/goldbeaters-primary-school">Goldbeaters Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>469</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Goodwyn School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/goodwyn-school"></td>
-          <td><a href="/schools/barnet/goodwyn-school">Goodwyn School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>172</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Hampden Way Nursery School"
-            data-ofsted="Outstanding"
-            data-phase="Nursery"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/hampden-way-nursery-school"></td>
-          <td><a href="/schools/barnet/hampden-way-nursery-school">Hampden Way Nursery School</a></td>
-          <td>Nursery</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>95</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Hasmonean High School for Boys"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="56.5"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/hasmonean-high-school-for-boys"></td>
-          <td><a href="/schools/barnet/hasmonean-high-school-for-boys">Hasmonean High School for Boys</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>772</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Hasmonean High School for Girls"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="63.7"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/hasmonean-high-school-for-girls"></td>
-          <td><a href="/schools/barnet/hasmonean-high-school-for-girls">Hasmonean High School for Girls</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>585</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Hasmonean Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="68.0"
-            data-url="https://londonschool.directory/schools/barnet/hasmonean-primary-school"></td>
-          <td><a href="/schools/barnet/hasmonean-primary-school">Hasmonean Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>198</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Hendon Preparatory School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/hendon-preparatory-school"></td>
-          <td><a href="/schools/barnet/hendon-preparatory-school">Hendon Preparatory School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>133</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Hendon School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="44.9"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/hendon-school"></td>
-          <td><a href="/schools/barnet/hendon-school">Hendon School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1222</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Holland House School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/holland-house-school"></td>
-          <td><a href="/schools/barnet/holland-house-school">Holland House School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>141</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Hollickwood Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="68.0"
-            data-url="https://londonschool.directory/schools/barnet/hollickwood-primary-school"></td>
-          <td><a href="/schools/barnet/hollickwood-primary-school">Hollickwood Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>196</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Holly Park Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="62.0"
-            data-url="https://londonschool.directory/schools/barnet/holly-park-primary-school"></td>
-          <td><a href="/schools/barnet/holly-park-primary-school">Holly Park Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>424</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Holy Trinity CofE Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="75.0"
-            data-url="https://londonschool.directory/schools/barnet/holy-trinity-cofe-primary-school"></td>
-          <td><a href="/schools/barnet/holy-trinity-cofe-primary-school">Holy Trinity CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>201</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Imperial College London Mathematics School"
-            data-ofsted="Not yet rated"
-            data-phase="16 plus"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/imperial-college-london-mathematics-school"></td>
-          <td><a href="/schools/barnet/imperial-college-london-mathematics-school">Imperial College London Mathematics School</a></td>
-          <td>16 plus</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Independent Jewish Day School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="83.0"
-            data-url="https://londonschool.directory/schools/barnet/independent-jewish-day-school"></td>
-          <td><a href="/schools/barnet/independent-jewish-day-school">Independent Jewish Day School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>222</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Ivy House School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/ivy-house-school"></td>
-          <td><a href="/schools/barnet/ivy-house-school">Ivy House School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>97</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="JCoSS"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="60.9"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/jcoss"></td>
-          <td><a href="/schools/barnet/jcoss">JCoSS</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1381</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Kerem School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/kerem-school"></td>
-          <td><a href="/schools/barnet/kerem-school">Kerem School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>143</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Kisharon College"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/kisharon-college"></td>
-          <td><a href="/schools/barnet/kisharon-college">Kisharon College</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Kisharon School"
-            data-ofsted="Good"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/kisharon-school"></td>
-          <td><a href="/schools/barnet/kisharon-school">Kisharon School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>77</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Langdon College"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/langdon-college"></td>
-          <td><a href="/schools/barnet/langdon-college">Langdon College</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Livingstone Primary and Nursery School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="83.0"
-            data-url="https://londonschool.directory/schools/barnet/livingstone-primary-and-nursery-school"></td>
-          <td><a href="/schools/barnet/livingstone-primary-and-nursery-school">Livingstone Primary and Nursery School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>249</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="London Academy"
-            data-ofsted="Good"
-            data-phase="All-through"
-            data-att8="51.7"
-            data-ks2="85.0"
-            data-url="https://londonschool.directory/schools/barnet/london-academy"></td>
-          <td><a href="/schools/barnet/london-academy">London Academy</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1736</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Lubavitch Yeshiva Ketanah of London"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/lubavitch-yeshiva-ketanah-of-london"></td>
-          <td><a href="/schools/barnet/lubavitch-yeshiva-ketanah-of-london">Lubavitch Yeshiva Ketanah of London</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>62</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Lyonsdown School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/lyonsdown-school"></td>
-          <td><a href="/schools/barnet/lyonsdown-school">Lyonsdown School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>154</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Manorside Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="73.0"
-            data-url="https://londonschool.directory/schools/barnet/manorside-primary-school"></td>
-          <td><a href="/schools/barnet/manorside-primary-school">Manorside Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>236</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Mapledown School"
-            data-ofsted="Good"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/mapledown-school"></td>
-          <td><a href="/schools/barnet/mapledown-school">Mapledown School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>114</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Martin Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="83.0"
-            data-url="https://londonschool.directory/schools/barnet/martin-primary-school"></td>
-          <td><a href="/schools/barnet/martin-primary-school">Martin Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>657</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Mathilda Marks-Kennedy Jewish Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="70.0"
-            data-url="https://londonschool.directory/schools/barnet/mathilda-marks-kennedy-jewish-primary-school"></td>
-          <td><a href="/schools/barnet/mathilda-marks-kennedy-jewish-primary-school">Mathilda Marks-Kennedy Jewish Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>218</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Menorah Foundation School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="96.0"
-            data-url="https://londonschool.directory/schools/barnet/menorah-foundation-school"></td>
-          <td><a href="/schools/barnet/menorah-foundation-school">Menorah Foundation School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>320</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Menorah Grammar School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="31.8"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/menorah-grammar-school"></td>
-          <td><a href="/schools/barnet/menorah-grammar-school">Menorah Grammar School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>232</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Menorah High School for Girls"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="66.7"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/menorah-high-school-for-girls"></td>
-          <td><a href="/schools/barnet/menorah-high-school-for-girls">Menorah High School for Girls</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>402</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Menorah Primary School for Boys"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="91.0"
-            data-url="https://londonschool.directory/schools/barnet/menorah-primary-school-for-boys"></td>
-          <td><a href="/schools/barnet/menorah-primary-school-for-boys">Menorah Primary School for Boys</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>209</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Menorah Primary School for Girls"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="90.0"
-            data-url="https://londonschool.directory/schools/barnet/menorah-primary-school-for-girls"></td>
-          <td><a href="/schools/barnet/menorah-primary-school-for-girls">Menorah Primary School for Girls</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>214</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Mill Hill County High School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="61.2"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/mill-hill-county-high-school"></td>
-          <td><a href="/schools/barnet/mill-hill-county-high-school">Mill Hill County High School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1651</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Mill Hill School Foundation"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="43.1"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/mill-hill-school-foundation"></td>
-          <td><a href="/schools/barnet/mill-hill-school-foundation">Mill Hill School Foundation</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>1767</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Millbrook Park Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="63.0"
-            data-url="https://londonschool.directory/schools/barnet/millbrook-park-primary-school"></td>
-          <td><a href="/schools/barnet/millbrook-park-primary-school">Millbrook Park Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>434</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Monken Hadley CofE Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="88.0"
-            data-url="https://londonschool.directory/schools/barnet/monken-hadley-cofe-primary-school"></td>
-          <td><a href="/schools/barnet/monken-hadley-cofe-primary-school">Monken Hadley CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>149</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Monkfrith Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="85.0"
-            data-url="https://londonschool.directory/schools/barnet/monkfrith-primary-school"></td>
-          <td><a href="/schools/barnet/monkfrith-primary-school">Monkfrith Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>415</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Moss Hall Infant School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/moss-hall-infant-school"></td>
-          <td><a href="/schools/barnet/moss-hall-infant-school">Moss Hall Infant School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>307</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Moss Hall Junior School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="85.0"
-            data-url="https://londonschool.directory/schools/barnet/moss-hall-junior-school"></td>
-          <td><a href="/schools/barnet/moss-hall-junior-school">Moss Hall Junior School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>468</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Moss Hall Nursery School"
-            data-ofsted="Outstanding"
-            data-phase="Nursery"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/moss-hall-nursery-school"></td>
-          <td><a href="/schools/barnet/moss-hall-nursery-school">Moss Hall Nursery School</a></td>
-          <td>Nursery</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>104</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Mount House School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="24.2"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/mount-house-school"></td>
-          <td><a href="/schools/barnet/mount-house-school">Mount House School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>244</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Nancy Reuben Primary School"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/nancy-reuben-primary-school"></td>
-          <td><a href="/schools/barnet/nancy-reuben-primary-school">Nancy Reuben Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="North London Grammar School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="55.5"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/north-london-grammar-school"></td>
-          <td><a href="/schools/barnet/north-london-grammar-school">North London Grammar School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>223</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Northgate School"
-            data-ofsted="Outstanding"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/northgate-school"></td>
-          <td><a href="/schools/barnet/northgate-school">Northgate School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>8</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Northside Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="72.0"
-            data-url="https://londonschool.directory/schools/barnet/northside-primary-school"></td>
-          <td><a href="/schools/barnet/northside-primary-school">Northside Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>263</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Northway School"
-            data-ofsted="Outstanding"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/northway-school"></td>
-          <td><a href="/schools/barnet/northway-school">Northway School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>163</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Oak Hill School"
-            data-ofsted="Good"
-            data-phase="N/A"
-            data-att8="3.6"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/oak-hill-school"></td>
-          <td><a href="/schools/barnet/oak-hill-school">Oak Hill School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>49</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Oak Lodge School"
-            data-ofsted="Good"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/oak-lodge-school"></td>
-          <td><a href="/schools/barnet/oak-lodge-school">Oak Lodge School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>188</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Oakbridge Special Education"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/oakbridge-special-education"></td>
-          <td><a href="/schools/barnet/oakbridge-special-education">Oakbridge Special Education</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Oakleigh School & Acorn Assessment Centre"
-            data-ofsted="Good"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/oakleigh-school-acorn-assessment-centre"></td>
-          <td><a href="/schools/barnet/oakleigh-school-acorn-assessment-centre">Oakleigh School & Acorn Assessment Centre</a></td>
-          <td>N/A</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>178</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Orange Tree School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="21.6"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/orange-tree-school"></td>
-          <td><a href="/schools/barnet/orange-tree-school">Orange Tree School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>63</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Osidge Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="61.0"
-            data-url="https://londonschool.directory/schools/barnet/osidge-primary-school"></td>
-          <td><a href="/schools/barnet/osidge-primary-school">Osidge Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>384</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Our Lady of Lourdes RC School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="66.0"
-            data-url="https://londonschool.directory/schools/barnet/our-lady-of-lourdes-rc-school"></td>
-          <td><a href="/schools/barnet/our-lady-of-lourdes-rc-school">Our Lady of Lourdes RC School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>206</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Pardes House Grammar School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="15.8"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/pardes-house-grammar-school"></td>
-          <td><a href="/schools/barnet/pardes-house-grammar-school">Pardes House Grammar School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>285</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Pardes House Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="62.0"
-            data-url="https://londonschool.directory/schools/barnet/pardes-house-primary-school"></td>
-          <td><a href="/schools/barnet/pardes-house-primary-school">Pardes House Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>355</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Parkfield Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="69.0"
-            data-url="https://londonschool.directory/schools/barnet/parkfield-primary-school"></td>
-          <td><a href="/schools/barnet/parkfield-primary-school">Parkfield Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>463</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Pavilion Study Centre"
-            data-ofsted="Good"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/pavilion-study-centre"></td>
-          <td><a href="/schools/barnet/pavilion-study-centre">Pavilion Study Centre</a></td>
-          <td>N/A</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>48</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Peninim"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/peninim"></td>
-          <td><a href="/schools/barnet/peninim">Peninim</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>135</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Queen Elizabeth's Girls' School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="58.6"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/queen-elizabeths-girls-school"></td>
-          <td><a href="/schools/barnet/queen-elizabeths-girls-school">Queen Elizabeth's Girls' School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1107</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Queen Elizabeth's School, Barnet"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="85.6"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/queen-elizabeths-school-barnet"></td>
-          <td><a href="/schools/barnet/queen-elizabeths-school-barnet">Queen Elizabeth's School, Barnet</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>1314</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Queenswell Infant & Nursery School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/queenswell-infant-nursery-school"></td>
-          <td><a href="/schools/barnet/queenswell-infant-nursery-school">Queenswell Infant & Nursery School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>193</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Queenswell Junior School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="61.0"
-            data-url="https://londonschool.directory/schools/barnet/queenswell-junior-school"></td>
-          <td><a href="/schools/barnet/queenswell-junior-school">Queenswell Junior School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>265</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Rimon Jewish Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="80.0"
-            data-url="https://londonschool.directory/schools/barnet/rimon-jewish-primary-school"></td>
-          <td><a href="/schools/barnet/rimon-jewish-primary-school">Rimon Jewish Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>209</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Rosh Pinah Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="75.0"
-            data-url="https://londonschool.directory/schools/barnet/rosh-pinah-primary-school"></td>
-          <td><a href="/schools/barnet/rosh-pinah-primary-school">Rosh Pinah Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>393</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Sacks Morasha Jewish Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="77.0"
-            data-url="https://londonschool.directory/schools/barnet/sacks-morasha-jewish-primary-school"></td>
-          <td><a href="/schools/barnet/sacks-morasha-jewish-primary-school">Sacks Morasha Jewish Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>201</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Sacred Heart Roman Catholic Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="86.0"
-            data-url="https://londonschool.directory/schools/barnet/sacred-heart-roman-catholic-primary-school"></td>
-          <td><a href="/schools/barnet/sacred-heart-roman-catholic-primary-school">Sacred Heart Roman Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>403</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Saracens Bell Lane"
-            data-ofsted="Requires improvement"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="39.0"
-            data-url="https://londonschool.directory/schools/barnet/saracens-bell-lane"></td>
-          <td><a href="/schools/barnet/saracens-bell-lane">Saracens Bell Lane</a></td>
-          <td>Primary</td>
-          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
-          <td>403</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Saracens Broadfields"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="75.0"
-            data-url="https://londonschool.directory/schools/barnet/saracens-broadfields"></td>
-          <td><a href="/schools/barnet/saracens-broadfields">Saracens Broadfields</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>704</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Saracens High School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="47.1"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/saracens-high-school"></td>
-          <td><a href="/schools/barnet/saracens-high-school">Saracens High School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1132</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Shalom Noam Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="74.0"
-            data-url="https://londonschool.directory/schools/barnet/shalom-noam-primary-school"></td>
-          <td><a href="/schools/barnet/shalom-noam-primary-school">Shalom Noam Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>231</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Shiras Devorah High School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="18.9"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/shiras-devorah-high-school"></td>
-          <td><a href="/schools/barnet/shiras-devorah-high-school">Shiras Devorah High School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>74</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Agnes' Catholic Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="82.0"
-            data-url="https://londonschool.directory/schools/barnet/st-agnes-catholic-primary-school"></td>
-          <td><a href="/schools/barnet/st-agnes-catholic-primary-school">St Agnes' Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>431</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Andrew the Apostle Greek Orthodox School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="51.6"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/st-andrew-the-apostle-greek-orthodox-school"></td>
-          <td><a href="/schools/barnet/st-andrew-the-apostle-greek-orthodox-school">St Andrew the Apostle Greek Orthodox School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>539</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Andrew's CofE Voluntary Aided Primary School, Totteridge"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="93.0"
-            data-url="https://londonschool.directory/schools/barnet/st-andrews-cofe-voluntary-aided-primary-school-totteridge"></td>
-          <td><a href="/schools/barnet/st-andrews-cofe-voluntary-aided-primary-school-totteridge">St Andrew's CofE Voluntary Aided Primary School, Totteridge</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>195</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Catherine's RC School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="69.0"
-            data-url="https://londonschool.directory/schools/barnet/st-catherines-rc-school"></td>
-          <td><a href="/schools/barnet/st-catherines-rc-school">St Catherine's RC School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>480</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St James' Catholic High School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="51.4"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/st-james-catholic-high-school"></td>
-          <td><a href="/schools/barnet/st-james-catholic-high-school">St James' Catholic High School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1254</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St John's CofE Junior Mixed and Infant School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="63.0"
-            data-url="https://londonschool.directory/schools/barnet/st-johns-cofe-junior-mixed-and-infant-school"></td>
-          <td><a href="/schools/barnet/st-johns-cofe-junior-mixed-and-infant-school">St John's CofE Junior Mixed and Infant School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>232</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St John's CofE Primary and Nursery School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="87.0"
-            data-url="https://londonschool.directory/schools/barnet/st-johns-cofe-primary-and-nursery-school"></td>
-          <td><a href="/schools/barnet/st-johns-cofe-primary-and-nursery-school">St John's CofE Primary and Nursery School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>248</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Joseph's Catholic Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="74.0"
-            data-url="https://londonschool.directory/schools/barnet/st-josephs-catholic-primary-school"></td>
-          <td><a href="/schools/barnet/st-josephs-catholic-primary-school">St Joseph's Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>458</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Margaret's Nursery School"
-            data-ofsted="Outstanding"
-            data-phase="Nursery"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/st-margarets-nursery-school"></td>
-          <td><a href="/schools/barnet/st-margarets-nursery-school">St Margaret's Nursery School</a></td>
-          <td>Nursery</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>92</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Martin's School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/st-martins-school"></td>
-          <td><a href="/schools/barnet/st-martins-school">St Martin's School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>95</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Mary's CofE Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="83.0"
-            data-url="https://londonschool.directory/schools/barnet/st-marys-cofe-primary-school"></td>
-          <td><a href="/schools/barnet/st-marys-cofe-primary-school">St Mary's CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>434</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Mary's CofE Primary School, East Barnet"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="77.0"
-            data-url="https://londonschool.directory/schools/barnet/st-marys-cofe-primary-school-east-barnet"></td>
-          <td><a href="/schools/barnet/st-marys-cofe-primary-school-east-barnet">St Mary's CofE Primary School, East Barnet</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>217</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Mary's and St John's CofE School"
-            data-ofsted="Good"
-            data-phase="All-through"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/st-marys-and-st-johns-cofe-school"></td>
-          <td><a href="/schools/barnet/st-marys-and-st-johns-cofe-school">St Mary's and St John's CofE School</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Michael's Catholic Grammar School"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="77.8"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/st-michaels-catholic-grammar-school"></td>
-          <td><a href="/schools/barnet/st-michaels-catholic-grammar-school">St Michael's Catholic Grammar School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>891</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Paul's CofE Primary School N11"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="63.0"
-            data-url="https://londonschool.directory/schools/barnet/st-pauls-cofe-primary-school-n11"></td>
-          <td><a href="/schools/barnet/st-pauls-cofe-primary-school-n11">St Paul's CofE Primary School N11</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>216</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Paul's CofE Primary School NW7"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="87.0"
-            data-url="https://londonschool.directory/schools/barnet/st-pauls-cofe-primary-school-nw7"></td>
-          <td><a href="/schools/barnet/st-pauls-cofe-primary-school-nw7">St Paul's CofE Primary School NW7</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>206</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Theresa's Catholic Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="68.0"
-            data-url="https://londonschool.directory/schools/barnet/st-theresas-catholic-primary-school"></td>
-          <td><a href="/schools/barnet/st-theresas-catholic-primary-school">St Theresa's Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>158</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Vincent's Catholic Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="56.0"
-            data-url="https://londonschool.directory/schools/barnet/st-vincents-catholic-primary-school"></td>
-          <td><a href="/schools/barnet/st-vincents-catholic-primary-school">St Vincent's Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>296</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Summerside Primary Academy"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="70.0"
-            data-url="https://londonschool.directory/schools/barnet/summerside-primary-academy"></td>
-          <td><a href="/schools/barnet/summerside-primary-academy">Summerside Primary Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>402</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Sunnyfields Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="80.0"
-            data-url="https://londonschool.directory/schools/barnet/sunnyfields-primary-school"></td>
-          <td><a href="/schools/barnet/sunnyfields-primary-school">Sunnyfields Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>253</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Susi Earnshaw Theatre School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="28.2"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/susi-earnshaw-theatre-school"></td>
-          <td><a href="/schools/barnet/susi-earnshaw-theatre-school">Susi Earnshaw Theatre School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>38</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Talmud Torah Tiferes Shlomo"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/talmud-torah-tiferes-shlomo"></td>
-          <td><a href="/schools/barnet/talmud-torah-tiferes-shlomo">Talmud Torah Tiferes Shlomo</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>307</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Tashbar of Edgware"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/tashbar-of-edgware"></td>
-          <td><a href="/schools/barnet/tashbar-of-edgware">Tashbar of Edgware</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>207</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Annunciation Catholic Infant School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/the-annunciation-catholic-infant-school"></td>
-          <td><a href="/schools/barnet/the-annunciation-catholic-infant-school">The Annunciation Catholic Infant School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>181</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Annunciation RC Junior School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="91.0"
-            data-url="https://londonschool.directory/schools/barnet/the-annunciation-rc-junior-school"></td>
-          <td><a href="/schools/barnet/the-annunciation-rc-junior-school">The Annunciation RC Junior School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>176</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Archer Academy"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="55.9"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/the-archer-academy"></td>
-          <td><a href="/schools/barnet/the-archer-academy">The Archer Academy</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>809</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Compton School"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="54.8"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/the-compton-school"></td>
-          <td><a href="/schools/barnet/the-compton-school">The Compton School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>1352</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Henrietta Barnett School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="87.3"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/the-henrietta-barnett-school"></td>
-          <td><a href="/schools/barnet/the-henrietta-barnett-school">The Henrietta Barnett School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>807</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Holmewood School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="11.7"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/the-holmewood-school"></td>
-          <td><a href="/schools/barnet/the-holmewood-school">The Holmewood School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>92</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Hyde School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="88.0"
-            data-url="https://londonschool.directory/schools/barnet/the-hyde-school"></td>
-          <td><a href="/schools/barnet/the-hyde-school">The Hyde School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>473</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The King Alfred School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="28.0"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/the-king-alfred-school"></td>
-          <td><a href="/schools/barnet/the-king-alfred-school">The King Alfred School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>705</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The London Mechina"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/the-london-mechina"></td>
-          <td><a href="/schools/barnet/the-london-mechina">The London Mechina</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>10</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Northgate School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/the-northgate-school"></td>
-          <td><a href="/schools/barnet/the-northgate-school">The Northgate School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Orion Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="88.0"
-            data-url="https://londonschool.directory/schools/barnet/the-orion-primary-school"></td>
-          <td><a href="/schools/barnet/the-orion-primary-school">The Orion Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>955</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Totteridge Academy"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="58.2"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/the-totteridge-academy"></td>
-          <td><a href="/schools/barnet/the-totteridge-academy">The Totteridge Academy</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1003</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Windmill School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/the-windmill-school"></td>
-          <td><a href="/schools/barnet/the-windmill-school">The Windmill School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>40</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Tiferes High School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="62.5"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/tiferes-high-school"></td>
-          <td><a href="/schools/barnet/tiferes-high-school">Tiferes High School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>149</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Torah Vodaas"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/torah-vodaas"></td>
-          <td><a href="/schools/barnet/torah-vodaas">Torah Vodaas</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>408</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Trent CofE Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="69.0"
-            data-url="https://londonschool.directory/schools/barnet/trent-cofe-primary-school"></td>
-          <td><a href="/schools/barnet/trent-cofe-primary-school">Trent CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>208</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Tudor Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="54.0"
-            data-url="https://londonschool.directory/schools/barnet/tudor-primary-school"></td>
-          <td><a href="/schools/barnet/tudor-primary-school">Tudor Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>196</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Underhill School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="84.0"
-            data-url="https://londonschool.directory/schools/barnet/underhill-school"></td>
-          <td><a href="/schools/barnet/underhill-school">Underhill School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>462</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="WENTWORTH COLLEGE"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8="20.0"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/wentworth-college"></td>
-          <td><a href="/schools/barnet/wentworth-college">WENTWORTH COLLEGE</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>47</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Watling Park School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="52.0"
-            data-url="https://londonschool.directory/schools/barnet/watling-park-school"></td>
-          <td><a href="/schools/barnet/watling-park-school">Watling Park School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>404</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Wessex Gardens Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="68.0"
-            data-url="https://londonschool.directory/schools/barnet/wessex-gardens-primary-school"></td>
-          <td><a href="/schools/barnet/wessex-gardens-primary-school">Wessex Gardens Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>239</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Whitings Hill Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="71.0"
-            data-url="https://londonschool.directory/schools/barnet/whitings-hill-primary-school"></td>
-          <td><a href="/schools/barnet/whitings-hill-primary-school">Whitings Hill Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>471</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Woodcroft Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="76.0"
-            data-url="https://londonschool.directory/schools/barnet/woodcroft-primary-school"></td>
-          <td><a href="/schools/barnet/woodcroft-primary-school">Woodcroft Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>414</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Woodhouse College"
-            data-ofsted="Not yet rated"
-            data-phase="16 plus"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/barnet/woodhouse-college"></td>
-          <td><a href="/schools/barnet/woodhouse-college">Woodhouse College</a></td>
-          <td>16 plus</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>0</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Woodridge Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="79.0"
-            data-url="https://londonschool.directory/schools/barnet/woodridge-primary-school"></td>
-          <td><a href="/schools/barnet/woodridge-primary-school">Woodridge Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>210</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Wren Academy Finchley"
-            data-ofsted="Good"
-            data-phase="All-through"
-            data-att8="59.8"
-            data-ks2="82.0"
-            data-url="https://londonschool.directory/schools/barnet/wren-academy-finchley"></td>
-          <td><a href="/schools/barnet/wren-academy-finchley">Wren Academy Finchley</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1639</td>
-        </tr></tbody>
-  </table>
-</div>
-<footer><a href="/">London Schools Explorer</a> &mdash; helping families find the right school in London.</footer>
-<script defer src="/_vercel/insights/script.js"></script>
-<script>
-(function(){
-  var borough="Barnet", boroughUrl="https://londonschool.directory/schools/barnet";
-  var outstanding=22, total=173;
-
-  // Borough-level share
-  window.shareBoroughWhatsApp=function(){
-    var t='🏙️ *Schools in '+borough+', London*\n'+
-        '📊 '+total+' schools · '+outstanding+' Outstanding\n\n'+
-        '🔗 '+boroughUrl;
-    window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank');
-  };
-  window.shareBoroughEmail=function(){
-    var s='Schools in '+borough+' — London Schools Explorer';
-    var b='Schools in '+borough+', London\n'+
-        total+' schools, '+outstanding+' rated Outstanding by Ofsted\n\n'+
-        'Browse them here: '+boroughUrl;
-    window.location.href='mailto:?subject='+encodeURIComponent(s)+'&body='+encodeURIComponent(b);
-  };
-
-  // Shortlist comparison share
-  function getSelected(){
-    return Array.from(document.querySelectorAll('.sch-sel:checked')).map(function(cb){
-      return {name:cb.dataset.name,ofsted:cb.dataset.ofsted,phase:cb.dataset.phase,
-               att8:cb.dataset.att8,ks2:cb.dataset.ks2,url:cb.dataset.url};
-    });
-  }
-  function updateBar(){
-    var sel=getSelected();
-    var bar=document.getElementById('cmp-bar');
-    document.getElementById('cmp-count').textContent=sel.length+' school'+(sel.length===1?'':' s')+' selected';
-    bar.style.display=sel.length>0?'flex':'none';
-  }
-  document.querySelectorAll('.sch-sel').forEach(function(cb){ cb.onchange=updateBar; });
-
-  function buildCompareText(sel,markdown){
-    var lines=['📋 *My '+borough+' school shortlist*',''];
-    sel.forEach(function(s,i){
-      lines.push((i+1)+'. '+(markdown?'*':'')+s.name+(markdown?'*':''));
-      lines.push('   ⭐ Ofsted: '+s.ofsted+(s.phase?' · '+s.phase:''));
-      if(s.att8)lines.push('   📊 Attainment 8: '+s.att8);
-      if(s.ks2)lines.push('   📝 KS2 expected: '+s.ks2+'%');
-      lines.push('   🔗 '+s.url);
-      lines.push('');
-    });
-    lines.push('via London Schools Explorer — '+boroughUrl);
-    return lines.join('\n');
-  }
-  window.shareCompareWhatsApp=function(){
-    var sel=getSelected();
-    if(!sel.length)return;
-    window.open('https://wa.me/?text='+encodeURIComponent(buildCompareText(sel,true)),'_blank');
-  };
-  window.shareCompareEmail=function(){
-    var sel=getSelected();
-    if(!sel.length)return;
-    var subj='My '+borough+' school shortlist — London Schools Explorer';
-    window.location.href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(buildCompareText(sel,false));
-  };
-  window.clearSelection=function(){
-    document.querySelectorAll('.sch-sel:checked').forEach(function(cb){cb.checked=false;});
-    updateBar();
-  };
-})();
-</script>
-</body>
-</html><style>
-  #fb-btn{position:fixed;bottom:24px;right:24px;z-index:9999;background:#1A1A2E;color:#D4A843;border:2px solid #D4A843;border-radius:24px;padding:10px 18px;font-family:system-ui,sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 4px 16px rgba(0,0,0,0.25);transition:all 0.2s;}
-  #fb-btn:hover{background:#D4A843;color:#1A1A2E;}
-  #fb-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:10000;display:none;align-items:flex-end;justify-content:center;padding:0 0 80px;}
-  #fb-overlay.open{display:flex;}
-  #fb-panel{background:#fff;border-radius:16px 16px 0 0;width:100%;max-width:480px;padding:28px 24px 24px;font-family:system-ui,sans-serif;animation:fbSlide 0.25s ease;position:relative;}
-  @keyframes fbSlide{from{transform:translateY(40px);opacity:0;}to{transform:translateY(0);opacity:1;}}
-  #fb-panel h3{font-size:1.1rem;font-weight:700;margin-bottom:4px;color:#1a1a1a;}
-  #fb-panel p{font-size:0.83rem;color:#888;margin-bottom:14px;}
-  .fb-stars{display:flex;gap:6px;margin-bottom:14px;}
-  .fb-star{font-size:28px;cursor:pointer;color:#ddd;transition:color 0.1s;line-height:1;}
-  .fb-star.active{color:#D4A843;}
-  .fb-inp{width:100%;padding:10px 12px;border:1.5px solid #ddd;border-radius:8px;font-family:system-ui,sans-serif;font-size:14px;color:#1a1a1a;background:white;margin-bottom:10px;outline:none;box-sizing:border-box;}
-  .fb-inp:focus{border-color:#D4A843;}
-  textarea.fb-inp{resize:vertical;min-height:80px;}
-  #fb-sub{width:100%;padding:12px;background:#1A1A2E;color:#D4A843;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;}
-  #fb-sub:disabled{opacity:0.5;cursor:not-allowed;}
-  #fb-close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:20px;cursor:pointer;color:#aaa;}
-  #fb-ok{text-align:center;padding:16px 0;display:none;}
-  @media(max-width:520px){#fb-btn{bottom:16px;right:16px;padding:8px 14px;font-size:13px;}}
-</style>
-<button id="fb-btn">&#128172; Feedback</button>
-<div id="fb-overlay">
-  <div id="fb-panel">
-    <button id="fb-close">&#10005;</button>
-    <div id="fb-wrap">
-      <h3>Share your feedback</h3>
-      <p>Help us improve London Schools Explorer.</p>
-      <div class="fb-stars">
-        <span class="fb-star" data-v="1">&#9733;</span>
-        <span class="fb-star" data-v="2">&#9733;</span>
-        <span class="fb-star" data-v="3">&#9733;</span>
-        <span class="fb-star" data-v="4">&#9733;</span>
-        <span class="fb-star" data-v="5">&#9733;</span>
-      </div>
-      <input id="fb-name" class="fb-inp" type="text" placeholder="Your name (optional)" />
-      <input id="fb-email" class="fb-inp" type="email" placeholder="Email (optional)" />
-      <textarea id="fb-comment" class="fb-inp" placeholder="What did you think? What's missing?"></textarea>
-      <button id="fb-sub">Send feedback</button>
+  <section>
+    <div class="grid-stats">
+      <div class="stat"><div class="v">173</div><div class="l">Schools in Barnet</div></div>
+      <div class="stat"><div class="v">0.0%</div><div class="l">Outstanding Ofsted</div></div>
+      <div class="stat"><div class="v">0.0%</div><div class="l">Good or Outstanding</div></div>
+      <div class="stat"><div class="v">91</div><div class="l">Primary schools</div></div>
+      <div class="stat"><div class="v">25</div><div class="l">Secondary schools</div></div>
+      <div class="stat"><div class="v">—</div><div class="l">Avg appeal success</div></div>
     </div>
-    <div id="fb-ok"><div style="font-size:2.5rem">&#9989;</div><h3 style="color:#27AE60;margin:8px 0 4px">Thank you!</h3><p>Your feedback helps London parents find the right school.</p></div>
+  </section>
+
+  <section>
+    <div class="twocol">
+      <div>
+        <h2>Top schools in Barnet</h2>
+        <p class="sources">Ranked by Ofsted rating, then by latest KS2 progress (primary) or Attainment 8 (secondary), with applications-per-place as a tie-breaker. See <a href="/methodology.html">methodology</a>.</p>
+        <table class="schools">
+          <thead>
+            <tr><th>School</th><th>Phase</th><th>Ofsted</th><th>KS2 / Att8</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><a href="/schools/barnet/the-henrietta-barnett-school/">The Henrietta Barnett School</a></td><td>Secondary</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/barnet/courtland-school/">Courtland School</a></td><td>Primary</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/barnet/northside-primary-school/">Northside Primary School</a></td><td>Primary</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/barnet/queen-elizabeths-school-barnet/">Queen Elizabeth's School, Barnet</a></td><td>Secondary</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/barnet/wren-academy-finchley/">Wren Academy Finchley</a></td><td>All-through</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/barnet/st-michaels-catholic-grammar-school/">St Michael's Catholic Grammar School</a></td><td>Secondary</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/barnet/rimon-jewish-primary-school/">Rimon Jewish Primary School</a></td><td>Primary</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/barnet/the-archer-academy/">The Archer Academy</a></td><td>Secondary</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/barnet/menorah-high-school-for-girls/">Menorah High School for Girls</a></td><td>Secondary</td><td class="rating —">—</td><td>—</td></tr>
+            <tr><td><a href="/schools/barnet/sunnyfields-primary-school/">Sunnyfields Primary School</a></td><td>Primary</td><td class="rating —">—</td><td>—</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:14px"><a class="cta" href="/?borough=barnet">See all 173 schools in Barnet</a></p>
+      </div>
+      <div>
+        <h2>Map</h2>
+        <div id="map" aria-label="Map of schools in Barnet"></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>What the data says about Barnet</h2>
+    <p>The average number of applications per place across Barnet is <strong>1.29</strong>, a useful indicator of how competitive local admissions are. The mean IMD (Index of Multiple Deprivation) decile of Barnet's schools is <strong>5.42</strong> — 1 is most deprived, 10 is least deprived. All metrics on this page are recomputed from source data on the 15th of every month. See our <a href='/methodology.html'>methodology</a> for definitions and limitations.</p>
+  </section>
+
+  <section>
+    <h2>Frequently asked</h2>
+    <details class="faq"><summary>How many schools are there in Barnet?</summary><p>Barnet has 173 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 91 are primary, 25 are secondary, and the remainder are special, all-through, or post-16.</p></details>
+<details class="faq"><summary>What proportion of Barnet schools are Outstanding?</summary><p>As of the latest Ofsted Management Information release, 0 schools in Barnet (0.0%) are rated Outstanding, and 0.0% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication.</p></details>
+<details class="faq"><summary>When do I apply for a Reception or Year 7 place in Barnet?</summary><p>Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Barnet's applications are coordinated by the local authority through the eAdmissions system. See our <a href='/guides/london-reception-application-timeline/'>full Reception timeline guide</a>.</p></details>
+<details class="faq"><summary>How does the school appeals process work in Barnet?</summary><p>If you are refused your preferred school place, you have a statutory right of appeal. Barnet appeals are typically heard in May (Reception) and June–July (secondary). See our <a href='/appeals.html'>appeals tracker</a> for Barnet-level success rates by year.</p></details>
+<details class="faq"><summary>How can I tell which Barnet schools are over-subscribed?</summary><p>Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release.</p></details>
+  </section>
+
+  <section>
+    <h2>Sources</h2>
+    <p class="sources">
+      School list and phase from <a href="https://get-information-schools.service.gov.uk/" rel="nofollow">DfE Get Information About Schools</a> (refreshed monthly).
+      Ofsted ratings from <a href="https://www.gov.uk/government/statistical-data-sets/monthly-management-information-ofsteds-school-inspections-outcomes" rel="nofollow">Ofsted Management Information</a> (refreshed monthly).
+      Performance data from <a href="https://explore-education-statistics.service.gov.uk/" rel="nofollow">DfE Explore Education Statistics</a>.
+      Crime data within 500m from the <a href="https://data.police.uk/" rel="nofollow">Metropolitan Police open data API</a>.
+      Deprivation deciles from <a href="https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019" rel="nofollow">MHCLG English Indices of Deprivation 2019</a>.
+      Read our full <a href="/methodology.html">methodology</a> for how each metric is calculated.
+    </p>
+  </section>
+</main>
+<footer>
+  <div class="inner">
+    <div>&copy; London School Directory. Independent. Free to use.</div>
+    <div><a href="/about.html">About</a> &middot; <a href="/methodology.html">Methodology</a> &middot; <a href="/sources.html">Sources</a> &middot; <a href="/appeals.html">Appeals</a></div>
   </div>
-</div>
+</footer>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-(function(){
-  var SUPA_URL='https://kwqyogicwbubzbrjwues.supabase.co',SUPA_KEY='sb_publishable_488SMcDgCgQx14JB6ngw7A_qay_j9cd',rating=0;
-  document.getElementById('fb-btn').onclick=function(){document.getElementById('fb-overlay').classList.add('open');};
-  document.getElementById('fb-close').onclick=function(){document.getElementById('fb-overlay').classList.remove('open');};
-  document.getElementById('fb-overlay').onclick=function(e){if(e.target===document.getElementById('fb-overlay'))document.getElementById('fb-overlay').classList.remove('open');};
-  document.querySelectorAll('.fb-star').forEach(function(s){s.onclick=function(){rating=parseInt(s.dataset.v);document.querySelectorAll('.fb-star').forEach(function(x){x.classList.toggle('active',parseInt(x.dataset.v)<=rating);});};}); 
-  document.getElementById('fb-sub').onclick=async function(){
-    var comment=document.getElementById('fb-comment').value.trim();
-    if(!comment){document.getElementById('fb-comment').focus();return;}
-    var btn=document.getElementById('fb-sub');btn.disabled=true;btn.textContent='Sending…';
-    try{
-      var res=await fetch(SUPA_URL+'/rest/v1/feedback',{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Prefer':'return=minimal'},body:JSON.stringify({page_url:window.location.href,name:document.getElementById('fb-name').value.trim()||null,email:document.getElementById('fb-email').value.trim()||null,rating:rating||null,comment:document.getElementById('fb-comment').value.trim()})});
-      if(res.ok||res.status===201){document.getElementById('fb-wrap').style.display='none';document.getElementById('fb-ok').style.display='block';setTimeout(function(){document.getElementById('fb-overlay').classList.remove('open');document.getElementById('fb-wrap').style.display='block';document.getElementById('fb-ok').style.display='none';document.getElementById('fb-comment').value='';document.getElementById('fb-name').value='';document.getElementById('fb-email').value='';rating=0;document.querySelectorAll('.fb-star').forEach(function(s){s.classList.remove('active');});btn.disabled=false;btn.textContent='Send feedback';},3000);}else{throw new Error();}
-    }catch(e){btn.disabled=false;btn.textContent='Try again';alert('Something went wrong. Please try again.');}
-  };
-})();
+  (function() {
+    var points = [[51.645399, -0.165323, "/schools/barnet/brookhill-nursery-school/", "Brookhill Nursery School"], [51.630931, -0.141921, "/schools/barnet/hampden-way-nursery-school/", "Hampden Way Nursery School"], [51.610667, -0.186511, "/schools/barnet/moss-hall-nursery-school/", "Moss Hall Nursery School"], [51.649398, -0.16746, "/schools/barnet/st-margarets-nursery-school/", "St Margaret's Nursery School"], [51.633897, -0.172781, "/schools/barnet/pavilion-study-centre/", "Pavilion Study Centre"], [51.601031, -0.264668, "/schools/barnet/barnfield-primary-school/", "Barnfield Primary School"], [51.589937, -0.188058, "/schools/barnet/brookland-junior-school/", "Brookland Junior School"], [51.589937, -0.188058, "/schools/barnet/brookland-infant-and-nursery-school/", "Brookland Infant and Nursery School"], [51.630876, -0.147558, "/schools/barnet/brunswick-park-primary-and-nursery-school/", "Brunswick Park Primary and Nursery School"], [51.635277, -0.159229, "/schools/barnet/church-hill-school/", "Church Hill School"], [51.590187, -0.246529, "/schools/barnet/colindale-primary-school/", "Colindale Primary School"], [51.60242, -0.152977, "/schools/barnet/coppetts-wood-primary-school/", "Coppetts Wood Primary School"], [51.627239, -0.252876, "/schools/barnet/courtland-school/", "Courtland School"], [51.653518, -0.176777, "/schools/barnet/cromer-road-primary-school/", "Cromer Road Primary School"], [51.612646, -0.26203, "/schools/barnet/deansbrook-infant-school/", "Deansbrook Infant School"], [51.609159, -0.273789, "/schools/barnet/edgware-primary-school/", "Edgware Primary School"], [51.627391, -0.256425, "/schools/barnet/fairway-primary-school-and-childrens-centre/", "Fairway Primary School and Children's Centre"], [51.656808, -0.211792, "/schools/barnet/foulds-school/", "Foulds School"], [51.614976, -0.20178, "/schools/barnet/frith-manor-primary-school/", "Frith Manor Primary School"], [51.585514, -0.198627, "/schools/barnet/garden-suburb-junior-school/", "Garden Suburb Junior School"], [51.585514, -0.198627, "/schools/barnet/garden-suburb-infant-school/", "Garden Suburb Infant School"], [51.60414, -0.256636, "/schools/barnet/goldbeaters-primary-school/", "Goldbeaters Primary School"], [51.604878, -0.144039, "/schools/barnet/hollickwood-primary-school/", "Hollickwood Primary School"], [51.616916, -0.151262, "/schools/barnet/holly-park-primary-school/", "Holly Park Primary School"], [51.654626, -0.167119, "/schools/barnet/livingstone-primary-and-nursery-school/", "Livingstone Primary and Nursery School"], [51.600899, -0.180503, "/schools/barnet/manorside-primary-school/", "Manorside Primary School"], [51.636764, -0.146307, "/schools/barnet/monkfrith-primary-school/", "Monkfrith Primary School"], [51.610667, -0.186511, "/schools/barnet/moss-hall-junior-school/", "Moss Hall Junior School"], [51.609791, -0.183888, "/schools/barnet/moss-hall-infant-school/", "Moss Hall Infant School"], [51.616097, -0.179404, "/schools/barnet/northside-primary-school/", "Northside Primary School"], [51.623925, -0.193683, "/schools/barnet/woodridge-primary-school/", "Woodridge Primary School"], [51.600605, -0.178392, "/schools/barnet/tudor-primary-school/", "Tudor Primary School"], [51.645003, -0.207197, "/schools/barnet/underhill-school/", "Underhill School"], [51.646177, -0.216966, "/schools/barnet/whitings-hill-primary-school/", "Whitings Hill Primary School"], [51.592511, -0.205742, "/schools/barnet/chalgrove-primary-school/", "Chalgrove Primary School"], [51.59153, -0.232315, "/schools/barnet/sunnyfields-primary-school/", "Sunnyfields Primary School"], [51.626682, -0.169676, "/schools/barnet/queenswell-infant-nursery-school/", "Queenswell Infant & Nursery School"], [51.626682, -0.169676, "/schools/barnet/queenswell-junior-school/", "Queenswell Junior School"], [51.643614, -0.15759, "/schools/barnet/danegrove-primary-school/", "Danegrove Primary School"], [51.562126, -0.199927, "/schools/barnet/all-saints-cofe-primary-school-nw2/", "All Saints' CofE Primary School NW2"], [51.657769, -0.213475, "/schools/barnet/christ-church-primary-school/", "Christ Church Primary School"], [51.591443, -0.169216, "/schools/barnet/holy-trinity-cofe-primary-school/", "Holy Trinity CofE Primary School"], [51.663454, -0.187788, "/schools/barnet/monken-hadley-cofe-primary-school/", "Monken Hadley CofE Primary School"], [51.616587, -0.153832, "/schools/barnet/st-johns-cofe-junior-mixed-and-infant-school/", "St John's CofE Junior Mixed and Infant School"], [51.626556, -0.178335, "/schools/barnet/st-johns-cofe-primary-and-nursery-school/", "St John's CofE Primary and Nursery School"], [51.603604, -0.200222, "/schools/barnet/st-marys-cofe-primary-school/", "St Mary's CofE Primary School"], [51.640977, -0.16144, "/schools/barnet/st-marys-cofe-primary-school-east-barnet/", "St Mary's CofE Primary School, East Barnet"], [51.61631, -0.144208, "/schools/barnet/st-pauls-cofe-primary-school-n11/", "St Paul's CofE Primary School N11"], [51.620561, -0.23139, "/schools/barnet/st-pauls-cofe-primary-school-nw7/", "St Paul's CofE Primary School NW7"], [51.629911, -0.196421, "/schools/barnet/st-andrews-cofe-voluntary-aided-primary-school-totteridge/", "St Andrew's CofE Voluntary Aided Primary School, Totteridge"], [51.650311, -0.152808, "/schools/barnet/trent-cofe-primary-school/", "Trent CofE Primary School"], [51.629603, -0.169009, "/schools/barnet/all-saints-cofe-nursery-and-primary-school-n20/", "All Saints' CofE Nursery and Primary School N20"], [51.602762, -0.260125, "/schools/barnet/the-annunciation-catholic-infant-school/", "The Annunciation Catholic Infant School"], [51.605087, -0.178039, "/schools/barnet/our-lady-of-lourdes-rc-school/", "Our Lady of Lourdes RC School"], [51.560495, -0.210884, "/schools/barnet/st-agnes-catholic-primary-school/", "St Agnes' Catholic Primary School"], [51.648831, -0.194702, "/schools/barnet/st-catherines-rc-school/", "St Catherine's RC School"], [51.617113, -0.223406, "/schools/barnet/st-vincents-catholic-primary-school/", "St Vincent's Catholic Primary School"], [51.594595, -0.18806, "/schools/barnet/st-theresas-catholic-primary-school/", "St Theresa's Catholic Primary School"], [51.58729, -0.231455, "/schools/barnet/st-josephs-catholic-primary-school/", "St Joseph's Catholic Primary School"], [51.630089, -0.163817, "/schools/barnet/sacred-heart-roman-catholic-primary-school/", "Sacred Heart Roman Catholic Primary School"], [51.600831, -0.240936, "/schools/barnet/blessed-dominic-catholic-primary-school/", "Blessed Dominic Catholic Primary School"], [51.626545, -0.270399, "/schools/barnet/rosh-pinah-primary-school/", "Rosh Pinah Primary School"], [51.574481, -0.2069, "/schools/barnet/menorah-primary-school-for-girls/", "Menorah Primary School for Girls"], [51.611879, -0.258232, "/schools/barnet/the-annunciation-rc-junior-school/", "The Annunciation RC Junior School"], [51.616079, -0.154705, "/schools/barnet/friern-barnet-school/", "Friern Barnet School"], [51.614398, -0.180642, "/schools/barnet/st-michaels-catholic-grammar-school/", "St Michael's Catholic Grammar School"], [51.622219, -0.181615, "/schools/barnet/finchley-catholic-high-school/", "Finchley Catholic High School"], [51.600831, -0.240936, "/schools/barnet/st-james-catholic-high-school/", "St James' Catholic High School"], [51.618981, -0.230426, "/schools/barnet/mill-hill-school-foundation/", "Mill Hill School Foundation"], [51.591505, -0.217042, "/schools/barnet/hendon-preparatory-school/", "Hendon Preparatory School"], [51.569411, -0.184806, "/schools/barnet/the-king-alfred-school/", "The King Alfred School"], [51.647077, -0.177773, "/schools/barnet/lyonsdown-school/", "Lyonsdown School"], [51.663454, -0.187788, "/schools/barnet/mount-house-school/", "Mount House School"], [51.579546, -0.175583, "/schools/barnet/annemount-school/", "Annemount School"], [51.615928, -0.255954, "/schools/barnet/mathilda-marks-kennedy-jewish-primary-school/", "Mathilda Marks-Kennedy Jewish Primary School"], [51.617438, -0.23664, "/schools/barnet/goodwyn-school/", "Goodwyn School"], [51.622243, -0.272557, "/schools/barnet/holland-house-school/", "Holland House School"], [51.583009, -0.1739, "/schools/barnet/kerem-school/", "Kerem School"], [51.615884, -0.247563, "/schools/barnet/st-martins-school/", "St Martin's School"], [51.599079, -0.197744, "/schools/barnet/pardes-house-grammar-school/", "Pardes House Grammar School"], [51.607821, -0.263557, "/schools/barnet/menorah-grammar-school/", "Menorah Grammar School"], [51.587129, -0.217849, "/schools/barnet/beth-jacob-grammar-school-for-girls/", "Beth Jacob Grammar School for Girls"], [51.614534, -0.159346, "/schools/barnet/dwight-school-london/", "Dwight School London"], [51.588633, -0.222135, "/schools/barnet/brampton-college/", "Brampton College"], [51.627391, -0.256425, "/schools/barnet/northway-school/", "Northway School"], [51.625218, -0.158841, "/schools/barnet/oakleigh-school-acorn-assessment-centre/", "Oakleigh School & Acorn Assessment Centre"], [51.573408, -0.219136, "/schools/barnet/mapledown-school/", "Mapledown School"], [51.622212, -0.276603, "/schools/barnet/tashbar-of-edgware/", "Tashbar of Edgware"], [51.582123, -0.216269, "/schools/barnet/hasmonean-primary-school/", "Hasmonean Primary School"], [51.580091, -0.239485, "/schools/barnet/beis-soroh-schneirer/", "Beis Soroh Schneirer"], [51.583398, -0.213159, "/schools/barnet/talmud-torah-tiferes-shlomo/", "Talmud Torah Tiferes Shlomo"], [51.599565, -0.203081, "/schools/barnet/finchley-and-acton-yochien-school/", "Finchley and Acton Yochien School"], [51.579892, -0.235812, "/schools/barnet/barnet-hill-academy/", "Barnet Hill Academy"], [51.580111, -0.213476, "/schools/barnet/wentworth-college/", "WENTWORTH COLLEGE"], [51.607821, -0.263557, "/schools/barnet/menorah-foundation-school/", "Menorah Foundation School"], [51.585143, -0.22383, "/schools/barnet/tiferes-high-school/", "Tiferes High School"], [51.572028, -0.208801, "/schools/barnet/wessex-gardens-primary-school/", "Wessex Gardens Primary School"], [51.653029, -0.19932, "/schools/barnet/susi-earnshaw-theatre-school/", "Susi Earnshaw Theatre School"], [51.593539, -0.218291, "/schools/barnet/kisharon-college/", "Kisharon College"], [51.613524, -0.277091, "/schools/barnet/langdon-college/", "Langdon College"], [51.608402, -0.246305, "/schools/barnet/the-orion-primary-school/", "The Orion Primary School"], [51.599079, -0.197744, "/schools/barnet/pardes-house-primary-school/", "Pardes House Primary School"], [51.591773, -0.257672, "/schools/barnet/beis-yaakov-primary-school/", "Beis Yaakov Primary School"], [51.573826, -0.234272, "/schools/barnet/torah-vodaas/", "Torah Vodaas"], [51.606478, -0.271248, "/schools/barnet/the-northgate-school/", "The Northgate School"], [51.606478, -0.271248, "/schools/barnet/northgate-school/", "Northgate School"], [51.608878, -0.252916, "/schools/barnet/woodcroft-primary-school/", "Woodcroft Primary School"], [51.589386, -0.239862, "/schools/barnet/north-london-grammar-school/", "North London Grammar School"], [51.622489, -0.289333, "/schools/barnet/london-academy/", "London Academy"], [51.631371, -0.167594, "/schools/barnet/orange-tree-school/", "Orange Tree School"], [51.59528, -0.189333, "/schools/barnet/akiva-school/", "Akiva School"], [51.594835, -0.168185, "/schools/barnet/martin-primary-school/", "Martin Primary School"], [51.612667, -0.168218, "/schools/barnet/wren-academy-finchley/", "Wren Academy Finchley"], [51.656336, -0.171778, "/schools/barnet/jcoss/", "JCoSS"], [51.61654, -0.274882, "/schools/barnet/edgware-jewish-girls---beis-chinuch/", "Edgware Jewish Girls - Beis Chinuch"], [51.617987, -0.185338, "/schools/barnet/the-holmewood-school/", "The Holmewood School"], [51.65586, -0.213333, "/schools/barnet/queen-elizabeths-school-barnet/", "Queen Elizabeth's School, Barnet"], [51.632683, -0.136127, "/schools/barnet/ashmole-academy/", "Ashmole Academy"], [51.618077, -0.271169, "/schools/barnet/beit-shvidler-primary-school/", "Beit Shvidler Primary School"], [51.608545, -0.161047, "/schools/barnet/the-compton-school/", "The Compton School"], [51.644449, -0.154593, "/schools/barnet/east-barnet-school/", "East Barnet School"], [51.6154, -0.24046, "/schools/barnet/etz-chaim-jewish-primary-school/", "Etz Chaim Jewish Primary School"], [51.65182, -0.196679, "/schools/barnet/queen-elizabeths-girls-school/", "Queen Elizabeth's Girls' School"], [51.585391, -0.214698, "/schools/barnet/independent-jewish-day-school/", "Independent Jewish Day School"], [51.573408, -0.219136, "/schools/barnet/clarion/", "Clarion"], [51.627753, -0.246311, "/schools/barnet/mill-hill-county-high-school/", "Mill Hill County High School"], [51.591119, -0.187131, "/schools/barnet/christs-college-finchley/", "Christ's College Finchley"], [51.574999, -0.20903, "/schools/barnet/peninim/", "Peninim"], [51.596474, -0.214407, "/schools/barnet/hasmonean-high-school-for-boys/", "Hasmonean High School for Boys"], [51.585708, -0.217818, "/schools/barnet/hendon-school/", "Hendon School"], [51.581087, -0.189161, "/schools/barnet/the-henrietta-barnett-school/", "The Henrietta Barnett School"], [51.568335, -0.201933, "/schools/barnet/rimon-jewish-primary-school/", "Rimon Jewish Primary School"], [51.608485, -0.232033, "/schools/barnet/copthall-school/", "Copthall School"], [51.612646, -0.26203, "/schools/barnet/deansbrook-junior-school/", "Deansbrook Junior School"], [51.627171, -0.173947, "/schools/barnet/alma-primary/", "Alma Primary"], [51.591443, -0.169216, "/schools/barnet/the-archer-academy/", "The Archer Academy"], [51.577068, -0.231, "/schools/barnet/parkfield-primary-school/", "Parkfield Primary School"], [51.582551, -0.248224, "/schools/barnet/the-hyde-school/", "The Hyde School"], [51.629624, -0.273663, "/schools/barnet/saracens-broadfields/", "Saracens Broadfields"], [51.609893, -0.207527, "/schools/barnet/millbrook-park-primary-school/", "Millbrook Park Primary School"], [51.60697, -0.267995, "/schools/barnet/watling-park-school/", "Watling Park School"], [51.562532, -0.237928, "/schools/barnet/menorah-high-school-for-girls/", "Menorah High School for Girls"], [51.565716, -0.217691, "/schools/barnet/claremont-primary-school/", "Claremont Primary School"], [51.628901, -0.136947, "/schools/barnet/ashmole-primary-school/", "Ashmole Primary School"], [51.56902, -0.18573, "/schools/barnet/ivy-house-school/", "Ivy House School"], [51.594066, -0.178293, "/schools/barnet/bishop-douglass-school-finchley/", "Bishop Douglass School Finchley"], [51.654137, -0.198828, "/schools/barnet/the-windmill-school/", "The Windmill School"], [51.589674, -0.177458, "/schools/barnet/oak-lodge-school/", "Oak Lodge School"], [51.638846, -0.200344, "/schools/barnet/the-totteridge-academy/", "The Totteridge Academy"], [51.609364, -0.168625, "/schools/barnet/summerside-primary-academy/", "Summerside Primary Academy"], [51.581693, -0.199284, "/schools/barnet/lubavitch-yeshiva-ketanah-of-london/", "Lubavitch Yeshiva Ketanah of London"], [51.593539, -0.218291, "/schools/barnet/kisharon-school/", "Kisharon School"], [51.635229, -0.156745, "/schools/barnet/oak-hill-school/", "Oak Hill School"], [51.602997, -0.243235, "/schools/barnet/saracens-high-school/", "Saracens High School"], [51.578083, -0.197839, "/schools/barnet/shiras-devorah-high-school/", "Shiras Devorah High School"], [51.610153, -0.277189, "/schools/barnet/oakbridge-special-education/", "Oakbridge Special Education"], [51.61472, -0.174736, "/schools/barnet/sacks-morasha-jewish-primary-school/", "Sacks Morasha Jewish Primary School"], [51.603474, -0.268748, "/schools/barnet/shalom-noam-primary-school/", "Shalom Noam Primary School"], [51.647157, -0.191661, "/schools/barnet/ark-pioneer-academy/", "Ark Pioneer Academy"], [51.603687, -0.233475, "/schools/barnet/hasmonean-high-school-for-girls/", "Hasmonean High School for Girls"], [51.562269, -0.206919, "/schools/barnet/childs-hill-primary-school/", "Childs Hill Primary School"], [51.61148, -0.168771, "/schools/barnet/woodhouse-college/", "Woodhouse College"], [51.584104, -0.215225, "/schools/barnet/ateres-beis-yaakov/", "Ateres Beis Yaakov"], [51.61148, -0.168771, "/schools/barnet/imperial-college-london-mathematics-school/", "Imperial College London Mathematics School"], [51.574481, -0.2069, "/schools/barnet/menorah-primary-school-for-boys/", "Menorah Primary School for Boys"], [51.587079, -0.215714, "/schools/barnet/saracens-bell-lane/", "Saracens Bell Lane"], [51.617607, -0.184602, "/schools/barnet/the-london-mechina/", "The London Mechina"], [51.608683, -0.224313, "/schools/barnet/dollis-primary-school/", "Dollis Primary School"], [51.634335, -0.134311, "/schools/barnet/osidge-primary-school/", "Osidge Primary School"], [51.592732, -0.226161, "/schools/barnet/st-marys-and-st-johns-cofe-school/", "St Mary's and St John's CofE School"]];
+    if (!points.length) return;
+    var lats = points.map(function(p) { return p[0]; });
+    var lngs = points.map(function(p) { return p[1]; });
+    var avgLat = lats.reduce(function(a,b) { return a+b; }, 0) / lats.length;
+    var avgLng = lngs.reduce(function(a,b) { return a+b; }, 0) / lngs.length;
+    var map = L.map('map', { scrollWheelZoom: false }).setView([avgLat, avgLng], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+    points.forEach(function(p) {
+      L.circleMarker([p[0], p[1]], {
+        radius: 5, color: '#0b2545', fillColor: '#0b6efd', fillOpacity: 0.8, weight: 1
+      }).addTo(map).bindPopup('<a href="' + p[2] + '">' + p[3] + '</a>');
+    });
+  })();
 </script>
 </body>
 </html>

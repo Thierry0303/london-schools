@@ -43,27 +43,25 @@ SCHOOLS_JSON = REPO_ROOT / "schools.json"
 OUTPUT_DIR = REPO_ROOT / "schools"
 SITE_URL = "https://londonschool.directory"
 
-# Map our internal logical names to the keys actually present in schools.json.
-# Override here once if your keys differ.
 FIELD_MAP = {
-    "name": ["name", "school_name", "establishmentName"],
-    "borough": ["borough", "local_authority", "la_name"],
-    "phase": ["phase", "phase_of_education", "phaseOfEducation"],
-    "type": ["type", "school_type", "type_of_establishment"],
-    "ofsted": ["ofsted_rating", "ofsted", "rating"],
-    "ofsted_date": ["ofsted_date", "last_inspection", "inspection_date"],
-    "ks2_progress": ["ks2_progress", "ks2_reading_progress", "progress_8"],
-    "ks4_attainment_8": ["ks4_attainment_8", "attainment_8", "att8"],
+    "name": ["name"],
+    "borough": ["local_authority", "borough"],
+    "phase": ["phase"],
+    "type": ["school_type", "type"],
+    "ofsted": ["quality_label", "ofsted_rating", "ofsted"],
+    "ofsted_date": ["inspection_date", "ofsted_date"],
+    "ks2_progress": ["ks2_expected_pct", "ks2_higher_pct", "ks2_progress"],
+    "ks4_attainment_8": ["ks4_att8", "ks4_attainment_8", "attainment_8"],
     "apps_per_place": ["apps_per_place", "applications_per_place"],
-    "crime_500m": ["crime_500m", "crime_within_500m", "crime"],
-    "imd_decile": ["imd_decile", "imd", "deprivation_decile"],
-    "postcode": ["postcode", "post_code"],
-    "address": ["address", "street", "street_address"],
+    "crime_500m": ["crime_count", "crime_500m", "crime"],
+    "imd_decile": ["imd_decile", "imd"],
+    "postcode": ["postcode"],
+    "address": ["street", "address"],
     "lat": ["lat", "latitude"],
-    "lng": ["lng", "lon", "longitude"],
-    "slug": ["slug", "school_slug"],
-    "url_path": ["url_path", "page_path"],
-    "snobe_url": ["snobe_url", "snobe", "profile_url"],
+    "lng": ["lng", "longitude"],
+    "slug": ["slug"],
+    "url_path": ["url_path"],
+    "snobe_url": ["snobe_url"],
 }
 
 # London boroughs in canonical form. We normalise borough strings against this list

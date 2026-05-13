@@ -122,6 +122,46 @@ BOROUGH_BLURBS = {
 # data so a single source of truth is enforced.
 DEFAULT_APPEAL_SUCCESS_PLACEHOLDER = None  # Set per-borough at runtime if available
 
+# Borough-level SECONDARY appeal success rates 2024.
+# Mirrors the BOROUGHS_SEC table in appeals.html so both pages stay in sync.
+# Update this dict annually when DfE publishes new data, then update appeals.html too.
+# Source: DfE Admission Appeals statistics via Explore Education Statistics.
+APPEAL_SUCCESS_2024 = {
+    "Camden": 24,
+    "Islington": 23,
+    "Hackney": 22,
+    "Westminster": 22,
+    "Tower Hamlets": 21,
+    "Southwark": 21,
+    "Lambeth": 20,
+    "Wandsworth": 20,
+    "Kensington and Chelsea": 19,
+    "Hammersmith and Fulham": 19,
+    "Haringey": 18,
+    "Lewisham": 18,
+    "Greenwich": 18,
+    "Newham": 17,
+    "Waltham Forest": 17,
+    "Enfield": 17,
+    "Brent": 16,
+    "Ealing": 16,
+    "Barnet": 16,
+    "Croydon": 15,
+    "Bromley": 15,
+    "Redbridge": 15,
+    "Harrow": 14,
+    "Havering": 14,
+    "Barking and Dagenham": 14,
+    "Hounslow": 13,
+    "Hillingdon": 13,
+    "Sutton": 13,
+    "Merton": 12,
+    "Kingston upon Thames": 12,
+    "Richmond upon Thames": 11,
+    "Bexley": 11,
+    # City of London — no LA-level data published; left out intentionally.
+}
+
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
@@ -420,7 +460,7 @@ PAGE_TEMPLATE = """<!doctype html>
       <div class="stat"><div class="v">{good_or_better_pct}%</div><div class="l">Good or Outstanding</div></div>
       <div class="stat"><div class="v">{primary_count}</div><div class="l">Primary schools</div></div>
       <div class="stat"><div class="v">{secondary_count}</div><div class="l">Secondary schools</div></div>
-      <div class="stat"><div class="v">{appeal_success}</div><div class="l">Avg appeal success</div></div>
+      <div class="stat"><div class="v">{appeal_success}</div><div class="l">Secondary appeal success (2024)</div></div>
     </div>
   </section>
 
@@ -780,7 +820,9 @@ def build():
             f"admissions competitiveness, appeal success rates and map. Updated monthly."
         )[:158]
 
-        appeal_success = "—"  # Wire up from appeals.html data when ready
+        # Appeal success rate (secondary, 2024) from APPEAL_SUCCESS_2024 dict
+        _ap = APPEAL_SUCCESS_2024.get(borough)
+        appeal_success = f"{_ap}%" if _ap is not None else "—"
 
         html = PAGE_TEMPLATE.format(
             title=f"Schools in {borough}, London — Ofsted, Performance & Admissions",

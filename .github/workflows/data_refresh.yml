@@ -8,9 +8,10 @@ on:
     - cron: '0 8 15 * *'   # 08:00 UTC on the 15th
   workflow_dispatch: {}
 
-# Only one refresh job at a time. If another is already running, queue this one.
+# Shared concurrency lock with Ci.yml. Any workflow that writes to the repo
+# uses the same group, so they queue and never race.
 concurrency:
-  group: refresh-${{ github.workflow }}
+  group: site-write
   cancel-in-progress: false
 
 permissions:

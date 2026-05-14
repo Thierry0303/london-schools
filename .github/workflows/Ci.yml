@@ -49,7 +49,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install requests pandas numpy pyyaml --break-system-packages -q
+        run: pip install requests pandas numpy pyyaml odfpy --break-system-packages -q
 
       - name: Build school pages
         run: python3 scripts/build_school_pages.py

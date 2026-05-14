@@ -316,7 +316,17 @@ def _phase_of(s: dict[str, Any]) -> str:
     if "nursery" in p:
         return "nursery"
     return "other"
-
+  
+def _phase_display(s: dict[str, Any]) -> str:
+    """Display-ready phase string, derived from age range when phase is missing."""
+    p = _phase_of(s)
+    return {
+        "primary":     "Primary",
+        "secondary":   "Secondary",
+        "all-through": "All-through",
+        "nursery":     "Nursery",
+        "sixth-form":  "Sixth form",
+    }.get(p, pick(s, "phase") or "—")
 
 def _is_primary(s: dict[str, Any]) -> bool:
     """Primary OR all-through (which serves primary years too)."""
@@ -721,7 +731,7 @@ def make_all_rows(all_s: list[dict[str, Any]]) -> str:
     rows = []
     for s in all_s:
         name = pick(s, "name") or "Unnamed school"
-        phase = pick(s, "phase") or "—"
+        phase = _phase_display(s)
         ofsted = pick(s, "ofsted") or ""
         rows.append(
             f'<tr><td><a href="{_school_url(s)}">{name}</a></td>'

@@ -498,19 +498,26 @@ def fetch_ofsted():
                 name_la_map[name_key] = data
 
     print(f"  Ofsted ratings mapped: {len(mapping):,} by URN, {len(name_la_map):,} by name+LA")
-  # ── Also fetch Ofsted-inspected independent schools (separate MI file) ──
-    # Ofsted publishes state-funded and non-association independent schools in
-    # SEPARATE CSVs on the same MI page. The block above only handled the
-    # state-funded file; this block adds independents like Ashbourne College.
-    indep_url = next(
-        (u for u in csv_links
-         if "independent" in u.lower() and ("non" in u.lower() or "non-association" in u.lower())),
-        None
-    )
-    if indep_url:
-        indep_url = _abs(indep_url)
-        print(f"  Downloading (non-association independents): {indep_url}")
-        try:
+# ── Also fetch Ofsted-inspected independent schools ─────────────────────
+    # Independents live on a DIFFERENT MI page from state-funded schools.
+    # We scrape that page, find the latest "standard inspections" CSV, and
+    # merge the ratings into the same mapping dict used for state schools.
+    OFSTED_INDEP_PAGE = "https://www.gov.uk/government/statistical-data-sets/non-association-independent-schools-inspections-and-outcomes"
+    try:
+        print(f"  Fetching independents MI page: {OFSTED_INDEP_PAGE}")
+        r_page = requests.get(OFSTED_INDEP_PAGE, timeout=30)
+        r_page.raise_for_status()
+        indep_links = re.findall(r'href="(https://[^"]+\.csv[^"]*)"', r_page.text)
+        if not indep_links:
+            indep_links = re.findall(r'href="([^"]+\.csv[^"]*)"', r_page.text)
+        # Prefer the "standard inspections" CSV (graded outcomes) over interim/welfare visits.
+        indep_url = (
+            next((u for u in indep_links if "standard" in u.lower() and "inspection" in u.lower()), None)
+            or (indep_links[0] if indep_links else None)
+        )
+        if indep_url:
+            indep_url = _abs(indep_url)
+            print(f"  Downloading (non-association independents): {indep_url}")
             r_i = requests.get(indep_url, timeout=90)
             r_i.raise_for_status()
             df_i = pd.read_csv(io.BytesIO(r_i.content), encoding="latin-1", low_memory=False)
@@ -520,6 +527,7 @@ def fetch_ofsted():
             date_col_i    = next((c for c in df_i.columns if "inspection" in c.lower() and "date" in c.lower()), None)
             url_col_i     = next((c for c in df_i.columns if "web" in c.lower() or "url" in c.lower() or "link" in c.lower()), None)
             added = 0
+            print(f"  Independents CSV columns: {list(df_i.columns[:12])}")
             if urn_col_i and overall_col_i:
                 for _, row in df_i.iterrows():
                     try:
@@ -556,10 +564,10 @@ def fetch_ofsted():
                         }
                         added += 1
             print(f"  Added Ofsted ratings for {added:,} independent schools")
-        except Exception as e:
-            print(f"  Could not fetch/parse independents file: {e}")
-    else:
-        print("  No 'non-association independent' CSV found on page — independents won't be refreshed")
+        else:
+            print("  No CSV link found on independents MI page")
+    except Exception as e:
+        print(f"  Could not fetch/parse independents data: {e}")
 
     # ── Overlay most-recent inspection dates from "all inspections" file ──────
     # The "latest inspections" file only records the last GRADED inspection.

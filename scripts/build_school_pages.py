@@ -765,12 +765,12 @@ for borough, borough_schools in by_borough.items():
           <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
             data-name="{safe(s.get('name')).replace('"','&quot;')}"
             data-ofsted="{label}"
-            data-phase="{safe(s.get('phase'))}"
+            data-phase="{derive_phase(s)}"
             data-att8="{s_att8}"
             data-ks2="{s_ks2}"
             data-url="{s_url}"></td>
           <td><a href="/schools/{borough_slug}/{s_slug}">{safe(s.get('name'))}</a></td>
-          <td>{safe(s.get('phase'))}</td>
+          <td>{derive_phase(s)}</td>
           <td><span style="background:{bc};color:{tc};padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">{label}</span></td>
           <td>{safe(s.get('pupils'))}</td>
         </tr>"""

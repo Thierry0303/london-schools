@@ -677,7 +677,7 @@ def _build_recent_from_annual(csv_url):
             return {}, {}
 
     # Build a composite "most recent across all historical files" map
-print("  Overlaying historical annual inspection files (2021-22, 2022-23, 2023-24, 2024-25)...")
+    print("  Overlaying historical annual inspection files (2021-22, 2022-23, 2023-24, 2024-25)...")
     hist_recent = {}
     hist_ratings = {}
     for hist_url in OFSTED_HISTORICAL_ANNUAL_URLS:

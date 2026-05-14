@@ -597,12 +597,12 @@ def fetch_ofsted():
                     try:
                         # Multi-row headers — try several header positions
                         df_o = None
-                        for header_row in (0, 1, 2, 3):
+                        for header_row in (0, 1, 2, 3, 4, 5, 6, 7, 8):
                             attempt = pd.read_excel(io.BytesIO(r_o.content), engine="odf", sheet_name=sheet_name, header=header_row)
                             attempt.columns = attempt.columns.astype(str).str.strip()
                             cols_lower = [c.lower() for c in attempt.columns]
                             has_urn      = any(c in cols_lower for c in ("urn", "school urn"))
-                            has_overall  = any("overall" in c and "effectiveness" in c for c in cols_lower)
+                            has_overall  = any(("overall" in c and "effectiveness" in c) or ("overall" in c and "judgement" in c) or c == "overall" for c in cols_lower)
                             if has_urn and has_overall:
                                 df_o = attempt
                                 print(f"  ODS sheet '{sheet_name}': using header row {header_row}")

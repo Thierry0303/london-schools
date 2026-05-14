@@ -507,57 +507,76 @@ def fetch_ofsted():
     # 3-4 months). When the run logs show 404, update the URL by finding the
     # latest "standard inspections" CSV at:
     # https://www.gov.uk/government/statistical-data-sets/non-association-independent-schools-inspections-and-outcomes-management-information
-    OFSTED_INDEP_CSV = "https://assets.publishing.service.gov.uk/media/697a302133bc3750e7652ffb/Management_information_-_non-association_independent_schools_standard_inspections_1_September_2025_to_31_December_2025.csv"
+# ── Also fetch Ofsted-inspected independent schools ─────────────────────
+    # Scrapes the gov.uk page each run to find the latest "standard inspections"
+    # CSV — auto-updates when Ofsted publishes a new release (every 3-4 months).
+    # No manual URL maintenance needed.
+    OFSTED_INDEP_PAGE = "https://www.gov.uk/government/statistical-data-sets/non-association-independent-schools-inspections-and-outcomes-management-information"
     try:
-        print(f"  Downloading (non-association independents): {OFSTED_INDEP_CSV}")
-        r_i = requests.get(OFSTED_INDEP_CSV, timeout=90)
-        r_i.raise_for_status()
-        df_i = pd.read_csv(io.BytesIO(r_i.content), encoding="latin-1", low_memory=False)
-        df_i.columns = df_i.columns.str.strip()
-        urn_col_i     = next((c for c in df_i.columns if c.strip().lower() in ("urn", "school urn")), None)
-        overall_col_i = next((c for c in df_i.columns if "overall" in c.lower() and "effectiveness" in c.lower()), None)
-        date_col_i    = next((c for c in df_i.columns if "inspection" in c.lower() and "date" in c.lower()), None)
-        url_col_i     = next((c for c in df_i.columns if "web" in c.lower() or "url" in c.lower() or "link" in c.lower()), None)
-        added = 0
-        print(f"  Independents CSV columns: {list(df_i.columns[:12])}")
-        if urn_col_i and overall_col_i:
-            for _, row in df_i.iterrows():
-                try:
-                    urn = int(float(str(row[urn_col_i]).strip()))
-                except (ValueError, TypeError):
-                    continue
-                overall = str(row.get(overall_col_i, "")).strip()
-                label, raw, score = None, None, None
-                if overall in GRADE_MAP:
-                    label, raw, score = GRADE_MAP[overall]
-                else:
-                    for text in ("Outstanding", "Good", "Requires improvement", "Inadequate"):
-                        if text.lower() in overall.lower():
-                            label = text
-                            for k, v in GRADE_MAP.items():
-                                if v[0] == text:
-                                    _, raw, score = v
-                                    break
-                            break
-                if label:
-                    mapping[urn] = {
-                        "quality_label":    label,
-                        "quality_raw":      raw,
-                        "ofsted_score":     score,
-                        "score_band":       label,
-                        "behaviour_raw":    None,
-                        "personal_dev_raw": None,
-                        "leadership_raw":   None,
-                        "safeguarding":     None,
-                        "inspection_date":  str(row.get(date_col_i, "")).strip() if date_col_i else None,
-                        "ofsted_url":       str(row.get(url_col_i, "")).strip() if url_col_i else None,
-                        "ofsted_pupils":    None,
-                        "ungraded_outcome": None,
-                    }
-                    added += 1
-        print(f"  Added Ofsted ratings for {added:,} independent schools")
+        print(f"  Fetching independents MI page: {OFSTED_INDEP_PAGE}")
+        r_page = requests.get(OFSTED_INDEP_PAGE, timeout=30)
+        r_page.raise_for_status()
+        indep_links = re.findall(r'href="(https://[^"]+\.csv[^"]*)"', r_page.text)
+        if not indep_links:
+            indep_links = re.findall(r'href="([^"]+\.csv[^"]*)"', r_page.text)
+        # Prefer the "standard inspections" CSV (graded outcomes).
+        indep_url = (
+            next((u for u in indep_links if "standard" in u.lower() and "inspection" in u.lower()), None)
+            or (indep_links[0] if indep_links else None)
+        )
+        if indep_url:
+            indep_url = _abs(indep_url)
+            print(f"  Downloading (non-association independents): {indep_url}")
+            r_i = requests.get(indep_url, timeout=90)
+            r_i.raise_for_status()
+            df_i = pd.read_csv(io.BytesIO(r_i.content), encoding="latin-1", low_memory=False)
+            df_i.columns = df_i.columns.str.strip()
+            urn_col_i     = next((c for c in df_i.columns if c.strip().lower() in ("urn", "school urn")), None)
+            overall_col_i = next((c for c in df_i.columns if "overall" in c.lower() and "effectiveness" in c.lower()), None)
+            date_col_i    = next((c for c in df_i.columns if "inspection" in c.lower() and "date" in c.lower()), None)
+            url_col_i     = next((c for c in df_i.columns if "web" in c.lower() or "url" in c.lower() or "link" in c.lower()), None)
+            added = 0
+            print(f"  Independents CSV columns: {list(df_i.columns[:12])}")
+            if urn_col_i and overall_col_i:
+                for _, row in df_i.iterrows():
+                    try:
+                        urn = int(float(str(row[urn_col_i]).strip()))
+                    except (ValueError, TypeError):
+                        continue
+                    overall = str(row.get(overall_col_i, "")).strip()
+                    label, raw, score = None, None, None
+                    if overall in GRADE_MAP:
+                        label, raw, score = GRADE_MAP[overall]
+                    else:
+                        for text in ("Outstanding", "Good", "Requires improvement", "Inadequate"):
+                            if text.lower() in overall.lower():
+                                label = text
+                                for k, v in GRADE_MAP.items():
+                                    if v[0] == text:
+                                        _, raw, score = v
+                                        break
+                                break
+                    if label:
+                        mapping[urn] = {
+                            "quality_label":    label,
+                            "quality_raw":      raw,
+                            "ofsted_score":     score,
+                            "score_band":       label,
+                            "behaviour_raw":    None,
+                            "personal_dev_raw": None,
+                            "leadership_raw":   None,
+                            "safeguarding":     None,
+                            "inspection_date":  str(row.get(date_col_i, "")).strip() if date_col_i else None,
+                            "ofsted_url":       str(row.get(url_col_i, "")).strip() if url_col_i else None,
+                            "ofsted_pupils":    None,
+                            "ungraded_outcome": None,
+                        }
+                        added += 1
+            print(f"  Added Ofsted ratings for {added:,} independent schools")
+        else:
+            print("  No CSV link found on independents MI page")
     except Exception as e:
-        print(f"  Could not fetch/parse independents CSV: {e}")
+        print(f"  Could not fetch/parse independents data: {e}")
 
     # ── Overlay most-recent inspection dates from "all inspections" file ──────
     # The "latest inspections" file only records the last GRADED inspection.

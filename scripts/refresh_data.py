@@ -609,6 +609,13 @@ def fetch_ofsted():
                                 break
                         if df_o is None:
                             print(f"  ODS sheet '{sheet_name}': no URN+effectiveness columns found at any header row")
+                            # Diagnostic — print what we DID find so we can adapt the column detection
+                            for h in (0, 1, 2, 3):
+                                try:
+                                    diag = pd.read_excel(io.BytesIO(r_o.content), engine="odf", sheet_name=sheet_name, header=h, nrows=0)
+                                    print(f"    [{sheet_name}] header={h}: {list(diag.columns)[:15]}")
+                                except Exception as e:
+                                    print(f"    [{sheet_name}] header={h}: error {e}")
                             continue
                         urn_col_o     = next((c for c in df_o.columns if c.strip().lower() in ("urn", "school urn")), None)
                         overall_col_o = next((c for c in df_o.columns if "overall" in c.lower() and "effectiveness" in c.lower()), None)

@@ -1053,6 +1053,24 @@ function AddressChecker({ schools, initialPostcode, initialCoords }) {
     const query = overridePostcode || address;
     if (!query.trim()) { setError('Please enter an address or postcode.'); return; }
     setError(null); setLoading(true); setResults(null);
+
+    // ── NAME SEARCH BRANCH ──
+      // If the input doesn't look like a UK postcode, treat it as a school name.
+      const ukPostcodeRe = /^[A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2}$/i;
+      if (!ukPostcodeRe.test(query.trim())) {
+        const q = query.trim().toLowerCase();
+        const matches = schools.filter(s => s.name && s.name.toLowerCase().includes(q));
+        if (matches.length === 0) {
+          setLoading(false);
+          setError(`No schools found matching "${query}". Try a postcode like SW1A 1AA.`);
+          return;
+        }
+        setResults({ schools: matches.slice(0, 25), lat: null, lng: null, formatted: `${matches.length} school${matches.length === 1 ? '' : 's'} matching "${query}"` });
+        setLoading(false);
+        return;
+      }
+      // ── END NAME SEARCH BRANCH ──
+    
     try {
       let lat, lng, formattedAddress;
       const postcode = query.trim().replace(/\s+/g, '').toUpperCase();
@@ -1117,7 +1135,7 @@ function AddressChecker({ schools, initialPostcode, initialCoords }) {
         <div className="ac-title">Address Checker</div>
         <div className="ac-sub">Enter a London postcode to see every nearby school ranked by Ofsted rating, exam results and admissions data.</div>
         <div className="ac-row">
-          <input className="ac-input" type="text" placeholder="London postcode (e.g. N1 2PL, SW1A 1AA)" value={address} onChange={e=>setAddress(e.target.value)} onKeyDown={e=>e.key==='Enter'&&doCheck()} />
+          <input className="ac-input" type="text" placeholder="Postcode or school name (e.g. SW1A 1AA or 'Parliament Hill')" value={address} onChange={e=>setAddress(e.target.value)} onKeyDown={e=>e.key==='Enter'&&doCheck()} />
           <select className="ac-select" value={radius} onChange={e=>setRadius(e.target.value)}>
             <option value="0.5">½ mile</option>
             <option value="1">1 mile</option>

@@ -498,6 +498,68 @@ def fetch_ofsted():
                 name_la_map[name_key] = data
 
     print(f"  Ofsted ratings mapped: {len(mapping):,} by URN, {len(name_la_map):,} by name+LA")
+  # ── Also fetch Ofsted-inspected independent schools (separate MI file) ──
+    # Ofsted publishes state-funded and non-association independent schools in
+    # SEPARATE CSVs on the same MI page. The block above only handled the
+    # state-funded file; this block adds independents like Ashbourne College.
+    indep_url = next(
+        (u for u in csv_links
+         if "independent" in u.lower() and ("non" in u.lower() or "non-association" in u.lower())),
+        None
+    )
+    if indep_url:
+        indep_url = _abs(indep_url)
+        print(f"  Downloading (non-association independents): {indep_url}")
+        try:
+            r_i = requests.get(indep_url, timeout=90)
+            r_i.raise_for_status()
+            df_i = pd.read_csv(io.BytesIO(r_i.content), encoding="latin-1", low_memory=False)
+            df_i.columns = df_i.columns.str.strip()
+            urn_col_i     = next((c for c in df_i.columns if c.strip().lower() in ("urn", "school urn")), None)
+            overall_col_i = next((c for c in df_i.columns if "overall" in c.lower() and "effectiveness" in c.lower()), None)
+            date_col_i    = next((c for c in df_i.columns if "inspection" in c.lower() and "date" in c.lower()), None)
+            url_col_i     = next((c for c in df_i.columns if "web" in c.lower() or "url" in c.lower() or "link" in c.lower()), None)
+            added = 0
+            if urn_col_i and overall_col_i:
+                for _, row in df_i.iterrows():
+                    try:
+                        urn = int(float(str(row[urn_col_i]).strip()))
+                    except (ValueError, TypeError):
+                        continue
+                    overall = str(row.get(overall_col_i, "")).strip()
+                    label, raw, score = None, None, None
+                    if overall in GRADE_MAP:
+                        label, raw, score = GRADE_MAP[overall]
+                    else:
+                        for text in ("Outstanding", "Good", "Requires improvement", "Inadequate"):
+                            if text.lower() in overall.lower():
+                                label = text
+                                for k, v in GRADE_MAP.items():
+                                    if v[0] == text:
+                                        _, raw, score = v
+                                        break
+                                break
+                    if label:
+                        mapping[urn] = {
+                            "quality_label":    label,
+                            "quality_raw":      raw,
+                            "ofsted_score":     score,
+                            "score_band":       label,
+                            "behaviour_raw":    None,
+                            "personal_dev_raw": None,
+                            "leadership_raw":   None,
+                            "safeguarding":     None,
+                            "inspection_date":  str(row.get(date_col_i, "")).strip() if date_col_i else None,
+                            "ofsted_url":       str(row.get(url_col_i, "")).strip() if url_col_i else None,
+                            "ofsted_pupils":    None,
+                            "ungraded_outcome": None,
+                        }
+                        added += 1
+            print(f"  Added Ofsted ratings for {added:,} independent schools")
+        except Exception as e:
+            print(f"  Could not fetch/parse independents file: {e}")
+    else:
+        print("  No 'non-association independent' CSV found on page — independents won't be refreshed")
 
     # ── Overlay most-recent inspection dates from "all inspections" file ──────
     # The "latest inspections" file only records the last GRADED inspection.

@@ -578,7 +578,7 @@ def fetch_ofsted():
         else:
             print("  No CSV link found on independents MI page")
 
-        # ── B. ODS snapshot: ALL independents with current rating (catches historical ratings) ──
+# ── B. ODS snapshot: ALL independents with current rating (catches historical ratings) ──
         ods_links = re.findall(r'href="(https://[^"]+\.ods[^"]*)"', r_page.text)
         ods_url = (
             next((u for u in ods_links if "as_at" in u.lower() or "as at" in u.lower()), None)
@@ -590,54 +590,69 @@ def fetch_ofsted():
             try:
                 r_o = requests.get(ods_url, timeout=120)
                 r_o.raise_for_status()
-                sheets = pd.read_excel(io.BytesIO(r_o.content), engine="odf", sheet_name=None)
-                print(f"  ODS sheets found: {list(sheets.keys())}")
+                # Target the raw data sheets ("D" prefix). Skip metadata/display sheets.
+                target_sheets = ["D2_Most_recent_inspections", "D1a_In-year_standard_inspects", "D1b_In-year_additional"]
                 ods_added = 0
-                for sheet_name, df_o in sheets.items():
-                    df_o.columns = df_o.columns.astype(str).str.strip()
-                    urn_col_o     = next((c for c in df_o.columns if c.strip().lower() in ("urn", "school urn")), None)
-                    overall_col_o = next((c for c in df_o.columns if "overall" in c.lower() and "effectiveness" in c.lower()), None)
-                    date_col_o    = next((c for c in df_o.columns if "inspection" in c.lower() and "date" in c.lower()), None)
-                    url_col_o     = next((c for c in df_o.columns if "web" in c.lower() or "url" in c.lower() or "link" in c.lower()), None)
-                    if not (urn_col_o and overall_col_o):
-                        continue
-                    print(f"  Processing ODS sheet '{sheet_name}' ({len(df_o)} rows)")
-                    for _, row in df_o.iterrows():
-                        try:
-                            urn = int(float(str(row[urn_col_o]).strip()))
-                        except (ValueError, TypeError):
+                for sheet_name in target_sheets:
+                    try:
+                        # Multi-row headers — try several header positions
+                        df_o = None
+                        for header_row in (0, 1, 2, 3):
+                            attempt = pd.read_excel(io.BytesIO(r_o.content), engine="odf", sheet_name=sheet_name, header=header_row)
+                            attempt.columns = attempt.columns.astype(str).str.strip()
+                            cols_lower = [c.lower() for c in attempt.columns]
+                            has_urn      = any(c in cols_lower for c in ("urn", "school urn"))
+                            has_overall  = any("overall" in c and "effectiveness" in c for c in cols_lower)
+                            if has_urn and has_overall:
+                                df_o = attempt
+                                print(f"  ODS sheet '{sheet_name}': using header row {header_row}")
+                                break
+                        if df_o is None:
+                            print(f"  ODS sheet '{sheet_name}': no URN+effectiveness columns found at any header row")
                             continue
-                        if urn in mapping:
-                            continue  # CSV (more recent) already won
-                        overall = str(row.get(overall_col_o, "")).strip()
-                        label, raw, score = None, None, None
-                        if overall in GRADE_MAP:
-                            label, raw, score = GRADE_MAP[overall]
-                        else:
-                            for text in ("Outstanding", "Good", "Requires improvement", "Inadequate"):
-                                if text.lower() in overall.lower():
-                                    label = text
-                                    for k, v in GRADE_MAP.items():
-                                        if v[0] == text:
-                                            _, raw, score = v
-                                            break
-                                    break
-                        if label:
-                            mapping[urn] = {
-                                "quality_label":    label,
-                                "quality_raw":      raw,
-                                "ofsted_score":     score,
-                                "score_band":       label,
-                                "behaviour_raw":    None,
-                                "personal_dev_raw": None,
-                                "leadership_raw":   None,
-                                "safeguarding":     None,
-                                "inspection_date":  str(row.get(date_col_o, "")).strip() if date_col_o else None,
-                                "ofsted_url":       str(row.get(url_col_o, "")).strip() if url_col_o else None,
-                                "ofsted_pupils":    None,
-                                "ungraded_outcome": None,
-                            }
-                            ods_added += 1
+                        urn_col_o     = next((c for c in df_o.columns if c.strip().lower() in ("urn", "school urn")), None)
+                        overall_col_o = next((c for c in df_o.columns if "overall" in c.lower() and "effectiveness" in c.lower()), None)
+                        date_col_o    = next((c for c in df_o.columns if "inspection" in c.lower() and "date" in c.lower()), None)
+                        url_col_o     = next((c for c in df_o.columns if "web" in c.lower() or "url" in c.lower() or "link" in c.lower()), None)
+                        print(f"  Processing ODS sheet '{sheet_name}' ({len(df_o)} rows, cols: {list(df_o.columns[:10])})")
+                        for _, row in df_o.iterrows():
+                            try:
+                                urn = int(float(str(row[urn_col_o]).strip()))
+                            except (ValueError, TypeError):
+                                continue
+                            if urn in mapping:
+                                continue
+                            overall = str(row.get(overall_col_o, "")).strip()
+                            label, raw, score = None, None, None
+                            if overall in GRADE_MAP:
+                                label, raw, score = GRADE_MAP[overall]
+                            else:
+                                for text in ("Outstanding", "Good", "Requires improvement", "Inadequate"):
+                                    if text.lower() in overall.lower():
+                                        label = text
+                                        for k, v in GRADE_MAP.items():
+                                            if v[0] == text:
+                                                _, raw, score = v
+                                                break
+                                        break
+                            if label:
+                                mapping[urn] = {
+                                    "quality_label":    label,
+                                    "quality_raw":      raw,
+                                    "ofsted_score":     score,
+                                    "score_band":       label,
+                                    "behaviour_raw":    None,
+                                    "personal_dev_raw": None,
+                                    "leadership_raw":   None,
+                                    "safeguarding":     None,
+                                    "inspection_date":  str(row.get(date_col_o, "")).strip() if date_col_o else None,
+                                    "ofsted_url":       str(row.get(url_col_o, "")).strip() if url_col_o else None,
+                                    "ofsted_pupils":    None,
+                                    "ungraded_outcome": None,
+                                }
+                                ods_added += 1
+                    except Exception as e:
+                        print(f"  Could not process ODS sheet '{sheet_name}': {e}")
                 print(f"  Added Ofsted ratings from .ods snapshot: {ods_added:,} additional schools (historical)")
             except Exception as e:
                 print(f"  Could not parse .ods snapshot: {e}")

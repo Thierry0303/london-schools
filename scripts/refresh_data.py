@@ -511,22 +511,24 @@ def fetch_ofsted():
     # Scrapes the gov.uk page each run to find the latest "standard inspections"
     # CSV — auto-updates when Ofsted publishes a new release (every 3-4 months).
     # No manual URL maintenance needed.
+# ── Fetch Ofsted-inspected independent schools (recent CSV + full ODS snapshot) ──
     OFSTED_INDEP_PAGE = "https://www.gov.uk/government/statistical-data-sets/non-association-independent-schools-inspections-and-outcomes-management-information"
     try:
         print(f"  Fetching independents MI page: {OFSTED_INDEP_PAGE}")
         r_page = requests.get(OFSTED_INDEP_PAGE, timeout=30)
         r_page.raise_for_status()
+
+        # ── A. CSV file: standard inspections this quarter (most recent ratings) ──
         indep_links = re.findall(r'href="(https://[^"]+\.csv[^"]*)"', r_page.text)
         if not indep_links:
             indep_links = re.findall(r'href="([^"]+\.csv[^"]*)"', r_page.text)
-        # Prefer the "standard inspections" CSV (graded outcomes).
         indep_url = (
             next((u for u in indep_links if "standard" in u.lower() and "inspection" in u.lower()), None)
             or (indep_links[0] if indep_links else None)
         )
         if indep_url:
             indep_url = _abs(indep_url)
-            print(f"  Downloading (non-association independents): {indep_url}")
+            print(f"  Downloading (non-association independents CSV): {indep_url}")
             r_i = requests.get(indep_url, timeout=90)
             r_i.raise_for_status()
             df_i = pd.read_csv(io.BytesIO(r_i.content), encoding="latin-1", low_memory=False)
@@ -572,10 +574,78 @@ def fetch_ofsted():
                             "ungraded_outcome": None,
                         }
                         added += 1
-            print(f"  Added Ofsted ratings for {added:,} independent schools")
+            print(f"  Added Ofsted ratings for {added:,} independent schools (CSV — this quarter's inspections)")
         else:
             print("  No CSV link found on independents MI page")
+
+        # ── B. ODS snapshot: ALL independents with current rating (catches historical ratings) ──
+        ods_links = re.findall(r'href="(https://[^"]+\.ods[^"]*)"', r_page.text)
+        ods_url = (
+            next((u for u in ods_links if "as_at" in u.lower() or "as at" in u.lower()), None)
+            or (ods_links[0] if ods_links else None)
+        )
+        if ods_url:
+            ods_url = _abs(ods_url)
+            print(f"  Downloading (independents snapshot .ods): {ods_url}")
+            try:
+                r_o = requests.get(ods_url, timeout=120)
+                r_o.raise_for_status()
+                sheets = pd.read_excel(io.BytesIO(r_o.content), engine="odf", sheet_name=None)
+                print(f"  ODS sheets found: {list(sheets.keys())}")
+                ods_added = 0
+                for sheet_name, df_o in sheets.items():
+                    df_o.columns = df_o.columns.astype(str).str.strip()
+                    urn_col_o     = next((c for c in df_o.columns if c.strip().lower() in ("urn", "school urn")), None)
+                    overall_col_o = next((c for c in df_o.columns if "overall" in c.lower() and "effectiveness" in c.lower()), None)
+                    date_col_o    = next((c for c in df_o.columns if "inspection" in c.lower() and "date" in c.lower()), None)
+                    url_col_o     = next((c for c in df_o.columns if "web" in c.lower() or "url" in c.lower() or "link" in c.lower()), None)
+                    if not (urn_col_o and overall_col_o):
+                        continue
+                    print(f"  Processing ODS sheet '{sheet_name}' ({len(df_o)} rows)")
+                    for _, row in df_o.iterrows():
+                        try:
+                            urn = int(float(str(row[urn_col_o]).strip()))
+                        except (ValueError, TypeError):
+                            continue
+                        if urn in mapping:
+                            continue  # CSV (more recent) already won
+                        overall = str(row.get(overall_col_o, "")).strip()
+                        label, raw, score = None, None, None
+                        if overall in GRADE_MAP:
+                            label, raw, score = GRADE_MAP[overall]
+                        else:
+                            for text in ("Outstanding", "Good", "Requires improvement", "Inadequate"):
+                                if text.lower() in overall.lower():
+                                    label = text
+                                    for k, v in GRADE_MAP.items():
+                                        if v[0] == text:
+                                            _, raw, score = v
+                                            break
+                                    break
+                        if label:
+                            mapping[urn] = {
+                                "quality_label":    label,
+                                "quality_raw":      raw,
+                                "ofsted_score":     score,
+                                "score_band":       label,
+                                "behaviour_raw":    None,
+                                "personal_dev_raw": None,
+                                "leadership_raw":   None,
+                                "safeguarding":     None,
+                                "inspection_date":  str(row.get(date_col_o, "")).strip() if date_col_o else None,
+                                "ofsted_url":       str(row.get(url_col_o, "")).strip() if url_col_o else None,
+                                "ofsted_pupils":    None,
+                                "ungraded_outcome": None,
+                            }
+                            ods_added += 1
+                print(f"  Added Ofsted ratings from .ods snapshot: {ods_added:,} additional schools (historical)")
+            except Exception as e:
+                print(f"  Could not parse .ods snapshot: {e}")
+        else:
+            print("  No .ods snapshot link found on independents page")
+
     except Exception as e:
+
         print(f"  Could not fetch/parse independents data: {e}")
 
     # ── Overlay most-recent inspection dates from "all inspections" file ──────

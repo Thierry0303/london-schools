@@ -660,15 +660,30 @@ def fetch_ofsted():
             return {}
 
     # Build a composite "most recent across all historical files" map
-    print("  Overlaying historical annual inspection files (2021-22, 2022-23, 2023-24, 2024-25)...")
-    hist_recent = {}  # URN → most-recent ISO date across all historical files
+print("  Overlaying historical annual inspection files (2021-22, 2022-23, 2023-24, 2024-25)...")
+    hist_recent = {}
+    hist_ratings = {}
     for hist_url in OFSTED_HISTORICAL_ANNUAL_URLS:
         label = hist_url.split("/")[-1][:70]
         print(f"    Fetching: {label}")
-        partial = _build_recent_from_annual(hist_url)
-        for u, iso in partial.items():
+        partial_dates, partial_ratings = _build_recent_from_annual(hist_url)
+        for u, iso in partial_dates.items():
             if iso > hist_recent.get(u, ""):
                 hist_recent[u] = iso
+        for u, data in partial_ratings.items():
+            existing = hist_ratings.get(u)
+            if not existing or data["inspection_date"] > existing.get("inspection_date", ""):
+                hist_ratings[u] = data
+
+    # Use historical ratings as fallback for schools missing from current MI
+    filled = 0
+    for u, hdata in hist_ratings.items():
+        if u not in mapping or not mapping[u].get("quality_label"):
+            base = mapping.get(u, {})
+            base.update(hdata)
+            mapping[u] = base
+            filled += 1
+    print(f"  Filled in historical ratings for {filled:,} schools missing from current MI")
     print(f"    Historical date map built for {len(hist_recent):,} schools")
 
     hist_updated = 0

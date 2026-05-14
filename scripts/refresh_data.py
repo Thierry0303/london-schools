@@ -626,26 +626,20 @@ def fetch_ofsted():
     # Schools inspected in previous years (e.g. Outstanding schools that received their
     # first monitoring visit in 2022-23 or 2023-24) need dates from these annual files.
     # We only update inspection_date when the historical file has a MORE RECENT date.
-    def _build_recent_from_annual(csv_url):
-        """Download one annual Ofsted 'between' CSV and return URN→most-recent-date map."""
+def _build_recent_from_annual(csv_url):
+        """Download one annual Ofsted CSV and return (URN→date, URN→rating-data)."""
         try:
             r_hist = requests.get(csv_url, timeout=120)
             r_hist.raise_for_status()
             df_hist = pd.read_csv(io.BytesIO(r_hist.content), encoding="latin-1", low_memory=False)
             df_hist.columns = df_hist.columns.str.strip()
-
-            # These files use "Inspection start date" (not "Inspection date" like MI files)
-            urn_col_h  = next((c for c in df_hist.columns if c.strip().lower() in ("urn", "school urn")), None)
-            date_col_h = next((
-                c for c in df_hist.columns
-                if "inspection" in c.lower() and ("start" in c.lower() or "date" in c.lower())
-            ), None)
-
+            urn_col_h     = next((c for c in df_hist.columns if c.strip().lower() in ("urn", "school urn")), None)
+            date_col_h    = next((c for c in df_hist.columns if "inspection" in c.lower() and ("start" in c.lower() or "date" in c.lower())), None)
+            overall_col_h = next((c for c in df_hist.columns if "overall" in c.lower() and "effectiveness" in c.lower()), None)
+            url_col_h     = next((c for c in df_hist.columns if "web" in c.lower() or "url" in c.lower() or "link" in c.lower()), None)
             if not urn_col_h or not date_col_h:
-                print(f"    Could not find URN/date columns in {csv_url.split('/')[-1][:60]}")
-                return {}
-
-            recent_h = {}
+                return {}, {}
+            recent_h, rating_h = {}, {}
             for _, row in df_hist.iterrows():
                 try:
                     u = int(float(str(row[urn_col_h]).strip()))
@@ -654,10 +648,33 @@ def fetch_ofsted():
                 iso = _to_iso(row.get(date_col_h, ""))
                 if iso and iso > recent_h.get(u, ""):
                     recent_h[u] = iso
-            return recent_h
+                    if overall_col_h:
+                        overall = str(row.get(overall_col_h, "")).strip()
+                        label, raw, score = None, None, None
+                        if overall in GRADE_MAP:
+                            label, raw, score = GRADE_MAP[overall]
+                        else:
+                            for text in ("Outstanding", "Good", "Requires improvement", "Inadequate"):
+                                if text.lower() in overall.lower():
+                                    label = text
+                                    for k, v in GRADE_MAP.items():
+                                        if v[0] == text:
+                                            _, raw, score = v
+                                            break
+                                    break
+                        if label:
+                            rating_h[u] = {
+                                "quality_label":   label,
+                                "quality_raw":     raw,
+                                "ofsted_score":    score,
+                                "score_band":      label,
+                                "inspection_date": datetime.strptime(iso, "%Y-%m-%d").strftime("%d/%m/%Y"),
+                                "ofsted_url":      str(row.get(url_col_h, "")).strip() if url_col_h else None,
+                            }
+            return recent_h, rating_h
         except Exception as e:
             print(f"    Could not process {csv_url.split('/')[-1][:60]}: {e}")
-            return {}
+            return {}, {}
 
     # Build a composite "most recent across all historical files" map
 print("  Overlaying historical annual inspection files (2021-22, 2022-23, 2023-24, 2024-25)...")

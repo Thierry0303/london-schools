@@ -95,7 +95,28 @@ def safe(val, fallback="N/A"):
     if isinstance(val, float) and val == int(val):
         return str(int(val))
     return str(val)
-
+  
+def derive_phase(school, fallback="N/A"):
+    af = school.get("age_from")
+    at = school.get("age_to")
+    try:
+        af = int(af) if af not in (None, "") else None
+        at = int(at) if at not in (None, "") else None
+    except (TypeError, ValueError):
+        af = at = None
+    if af is not None and at is not None:
+        if at <= 5: return "Nursery"
+        if af >= 16: return "Sixth form"
+        is_p = af <= 7 and at >= 11
+        is_s = at >= 14 and af <= 14
+        if is_p and is_s: return "All-through"
+        if is_p: return "Primary"
+        if is_s: return "Secondary"
+    raw = school.get("phase")
+    if raw and str(raw).strip().lower() not in ("none", "null", "", "n/a"):
+        return str(raw).strip()
+    return fallback
+  
 def format_phone(tel):
     if not tel or tel == "N/A":
         return None
@@ -127,7 +148,7 @@ def build_school_page(school):
     borough       = safe(school.get("local_authority"))
     postcode      = safe(school.get("postcode"))
     street        = safe(school.get("street"))
-    phase         = safe(school.get("phase"))
+    phase         = derive_phase(school)
     school_type   = safe(school.get("school_type"))
     gender        = safe(school.get("gender"))
     age_from      = safe(school.get("age_from", ""), "")

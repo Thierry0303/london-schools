@@ -916,7 +916,7 @@ function ScoreCard({ school, compareList, toggleCompare, userCoords }) {
       </div>
       {school.ungraded_outcome && (
         <div style={{fontSize:'0.72rem',color:'#888',marginBottom:'8px',fontStyle:'italic'}}>
-          {school.ungraded_outcome}
+          {school.quality_label && school.ungraded_outcome.toLowerCase().includes(school.quality_label.toLowerCase()) ? school.ungraded_outcome : `Previously: ${school.ungraded_outcome}`}
         </div>
       )}
       {(school.crime_label || school.fsm_label) && (

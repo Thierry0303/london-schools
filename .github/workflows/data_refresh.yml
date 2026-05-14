@@ -22,7 +22,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install requests pandas numpy pyyaml --break-system-packages -q
+        run: pip install requests pandas numpy pyyaml odfpy --break-system-packages -q
 
       # Step 1: Test BEFORE refresh — confirm site is healthy going in
       - name: Pre-refresh tests

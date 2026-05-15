@@ -634,6 +634,12 @@ def fetch_ofsted():
                             if urn in mapping:
                                 continue
                             overall = str(row.get(overall_col_o, "")).strip()
+                            # ODS stores grades as floats ("1.0", "2.0") — normalize to "1", "2" so GRADE_MAP matches
+                            if overall and "." in overall:
+                                try:
+                                    overall = str(int(float(overall)))
+                                except (ValueError, TypeError):
+                                    pass
                             label, raw, score = None, None, None
                             if overall in GRADE_MAP:
                                 label, raw, score = GRADE_MAP[overall]

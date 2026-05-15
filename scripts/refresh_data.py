@@ -621,7 +621,11 @@ def fetch_ofsted():
                         overall_col_o = next((c for c in df_o.columns if "overall" in c.lower() and "effectiveness" in c.lower()), None)
                         date_col_o    = next((c for c in df_o.columns if "inspection" in c.lower() and "date" in c.lower()), None)
                         url_col_o     = next((c for c in df_o.columns if "web" in c.lower() or "url" in c.lower() or "link" in c.lower()), None)
-                        print(f"  Processing ODS sheet '{sheet_name}' ({len(df_o)} rows, cols: {list(df_o.columns[:10])})")
+                        print(f"  Processing ODS sheet '{sheet_name}' ({len(df_o)} rows)")
+                        print(f"    ALL columns ({len(df_o.columns)}): {list(df_o.columns)}")
+                        if overall_col_o:
+                            sample_vals = df_o[overall_col_o].dropna().astype(str).head(5).tolist()
+                            print(f"    Sample '{overall_col_o}' values: {sample_vals}")
                         for _, row in df_o.iterrows():
                             try:
                                 urn = int(float(str(row[urn_col_o]).strip()))

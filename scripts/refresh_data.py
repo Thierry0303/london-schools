@@ -265,7 +265,7 @@ def parse_gias(df):
       
           # Derive phase from age range if GIAS returns None/Not applicable
             # (common for independent schools)
-            raw_phase = school.get("phase")
+        raw_phase = school.get("phase")
             if not raw_phase or str(raw_phase).strip().lower() in ("not applicable", "nan", ""):
                 age_low  = school.get("age_from")
                 age_high = school.get("age_to")

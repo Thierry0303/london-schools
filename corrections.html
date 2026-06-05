@@ -3,93 +3,141 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Report a correction — London GP Directory</title>
-<meta name="description" content="Spot a wrong address, phone number or missing practice on London GP Directory? Tell us and we'll fix it on the next weekly refresh.">
-<link rel="canonical" href="https://londongp.directory/corrections.html">
-<meta name="robots" content="noindex, follow">
-<meta name="theme-color" content="#003087">
+<title>Corrections log — London School Directory</title>
+<meta name="description" content="A public log of every correction made to London School Directory — what was wrong, what we changed, and when.">
+<link rel="canonical" href="https://londonschool.directory/corrections-log.html">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#1a3c5e">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f3;color:#1a1a1a;font-size:16px;line-height:1.6}
-a{color:#003087;text-decoration:none}
+a{color:#1a3c5e;text-decoration:none}
 a:hover{text-decoration:underline}
-.hdr{background:#003087;color:#fff;padding:28px 24px;border-bottom:4px solid #0072CE}
+.hdr{background:#1a3c5e;color:#fff;padding:28px 24px;border-bottom:4px solid #e8a020}
 .hdr-in{max-width:780px;margin:0 auto}
 .crumbs{font-size:12px;opacity:.7;margin-bottom:10px}
-.crumbs a{color:#B5D4F4}
+.crumbs a{color:#b8d4f0}
 .hdr h1{font-family:Georgia,serif;font-size:1.8rem;font-weight:700;line-height:1.15;margin-bottom:8px}
-.hdr h1 em{color:#B5D4F4;font-style:italic;font-weight:400}
+.hdr h1 em{color:#f5c842;font-style:italic;font-weight:400}
 .hdr p{opacity:.85;max-width:640px}
 .wrap{max-width:780px;margin:0 auto;padding:32px 24px}
 .wrap section{background:#fff;border:1px solid #e5e5e3;border-radius:12px;padding:24px 26px;margin-bottom:18px}
-.wrap h2{font-family:Georgia,serif;color:#003087;font-size:1.2rem;margin-bottom:10px}
+.wrap h2{font-family:Georgia,serif;color:#1a3c5e;font-size:1.2rem;margin-bottom:10px}
 .wrap p{margin-bottom:14px;color:#333}
-.wrap ul{margin:8px 0 14px 22px;color:#333}
-.wrap li{margin-bottom:6px}
-.email-box{background:#EDF4FC;border:1px solid #B5D4F4;border-radius:10px;padding:14px 18px;font-size:15px;display:flex;align-items:center;gap:10px;margin-top:6px}
-.email-box a{font-weight:600}
-.tag{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:3px 9px;border-radius:99px;background:#EDF4FC;color:#003087;margin-right:6px}
-footer{background:#003087;color:rgba(255,255,255,.55);text-align:center;padding:18px 24px;font-size:12px}
+
+/* Log table */
+.log-table{width:100%;border-collapse:collapse;font-size:14px;margin-top:6px}
+.log-table th{text-align:left;padding:8px 10px;background:#edf3fb;color:#1a3c5e;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;border-bottom:2px solid #b8d4f0}
+.log-table td{padding:10px 10px;border-bottom:1px solid #eee;vertical-align:top;color:#333}
+.log-table tr:last-child td{border-bottom:none}
+.log-table tr:hover td{background:#fafafa}
+
+.badge{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:2px 8px;border-radius:99px}
+.badge-fixed{background:#e6f4ea;color:#1e7e34}
+.badge-pending{background:#fff8e1;color:#b45309}
+.badge-wontfix{background:#f3f3f3;color:#666}
+
+.empty-state{text-align:center;padding:40px 20px;color:#888}
+.empty-state .icon{font-size:2.5rem;margin-bottom:10px}
+.empty-state p{font-size:15px}
+
+.email-box{background:#edf3fb;border:1px solid #b8d4f0;border-radius:10px;padding:14px 18px;font-size:15px;display:flex;align-items:center;gap:10px;margin-top:6px}
+.email-box a{font-weight:600;color:#1a3c5e}
+
+footer{background:#1a3c5e;color:rgba(255,255,255,.55);text-align:center;padding:18px 24px;font-size:12px}
 footer a{color:rgba(255,255,255,.85)}
+
 @media(max-width:600px){
   .hdr{padding:20px 16px}
   .hdr h1{font-size:1.4rem}
   .wrap{padding:20px 16px}
-  .wrap section{padding:18px 18px}
+  .wrap section{padding:18px 16px}
+  .log-table{font-size:13px}
+  .log-table th,.log-table td{padding:8px 6px}
+  /* Stack on mobile */
+  .log-table thead{display:none}
+  .log-table tr{display:block;margin-bottom:14px;border:1px solid #e5e5e3;border-radius:8px;padding:10px 12px}
+  .log-table td{display:block;border:none;padding:3px 0}
+  .log-table td::before{content:attr(data-label);font-weight:700;font-size:11px;text-transform:uppercase;color:#888;display:block;margin-bottom:2px}
 }
 </style>
 </head>
 <body>
 <header class="hdr">
   <div class="hdr-in">
-    <div class="crumbs"><a href="/">Home</a> &rsaquo; <strong>Report a correction</strong></div>
-    <h1>Report a <em>correction</em></h1>
-    <p>Spotted a wrong phone number, a missing practice, a closed surgery still listed, or a borough that's not quite right? Let us know and we'll fix it on the next weekly refresh.</p>
+    <div class="crumbs"><a href="/">London Schools Explorer</a> &rsaquo; <strong>Corrections log</strong></div>
+    <h1>Corrections <em>log</em></h1>
+    <p>Every correction made to London School Directory is recorded here — what was reported, what we changed, and when. Transparency about our data quality matters.</p>
   </div>
 </header>
 <main class="wrap">
 
   <section>
-    <h2>The fastest way: email us</h2>
-    <p>Drop a short email describing what's wrong and where you saw it. Include a link to the page if you can.</p>
+    <h2>How this works</h2>
+    <p>When a visitor emails us about an error, we verify it against the source data (DfE GIAS, Ofsted, or the relevant borough's admissions statistics), make the fix, and log it here. The log is updated manually after each correction.</p>
+    <p>Want to report something? <a href="mailto:ThierrySW11@Gmail.Com?subject=London%20School%20Directory%20correction">Email us</a> with the school name, postcode, and what's wrong.</p>
+  </section>
+
+  <section>
+    <h2>Log</h2>
+
+    <!-- ============================================================
+         ADD NEW CORRECTIONS AT THE TOP OF THIS TABLE.
+         Columns: Date · School · Borough · What was wrong · Fix applied · Status
+         Status classes: badge-fixed / badge-pending / badge-wontfix
+         ============================================================ -->
+
+    <table class="log-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>School</th>
+          <th>Borough</th>
+          <th>Issue reported</th>
+          <th>Fix applied</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <!-- EXAMPLE ROW — delete or replace when you have real corrections
+        <tr>
+          <td data-label="Date">2026-06-01</td>
+          <td data-label="School"><a href="/schools/wandsworth/newton-preparatory-school/">Newton Preparatory School</a></td>
+          <td data-label="Borough">Wandsworth</td>
+          <td data-label="Issue reported">Phone number was listed as 020 7720 4091 — reader confirmed it changed to 020 7223 0461.</td>
+          <td data-label="Fix applied">Updated phone number in schools.json. Will go live on next rebuild.</td>
+          <td data-label="Status"><span class="badge badge-fixed">Fixed</span></td>
+        </tr>
+        -->
+
+        <!-- Empty state shown when no corrections yet -->
+        <tr id="empty-row">
+          <td colspan="6">
+            <div class="empty-state">
+              <div class="icon">✅</div>
+              <p>No corrections logged yet. If you spot an error, <a href="mailto:ThierrySW11@Gmail.Com?subject=London%20School%20Directory%20correction">let us know</a>.</p>
+            </div>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Report a new error</h2>
+    <p>If you've spotted something wrong — a closed school still listed, a wrong Ofsted grade, an incorrect address — please get in touch. Include the school name and a link to the page if you can.</p>
     <div class="email-box">
       <span>📧</span>
-      <a href="mailto:ThierrySW11@Gmail.Com?subject=London%20GP%20Directory%20correction">ThierrySW11@Gmail.Com</a>
+      <a href="mailto:ThierrySW11@Gmail.Com?subject=London%20School%20Directory%20correction">ThierrySW11@Gmail.Com</a>
     </div>
-    <p style="margin-top:14px;font-size:14px;color:#666;">We read every email — usually within a day.</p>
-  </section>
-
-  <section>
-    <h2>What to tell us</h2>
-    <p>Whichever of these you've got is helpful:</p>
-    <ul>
-      <li><span class="tag">Practice</span> Practice name + postcode (so we can find the right record).</li>
-      <li><span class="tag">What's wrong</span> One or two sentences — wrong phone, wrong address, missing practice, listed under wrong borough, etc.</li>
-      <li><span class="tag">Source</span> A link to the practice's NHS.uk page or CQC profile if you have it. We rely on those for the canonical answer.</li>
-    </ul>
-  </section>
-
-  <section>
-    <h2>Where our data comes from</h2>
-    <p>NHS practice phone numbers and addresses are pulled directly from the <strong>NHS ODS FHIR API</strong> (the same source NHS.uk uses). Private clinic data is pulled from the <strong>CQC public API</strong>. Both are refreshed every Monday, so corrections you send before then will land on the next refresh automatically.</p>
-    <p>If a practice has recently moved or changed phone number and you can't see the update yet, please give it a week — NHS ODS sometimes lags behind real-life changes. If it's still wrong after that, email us and we'll investigate.</p>
-  </section>
-
-  <section>
-    <h2>For practice managers</h2>
-    <p>If you manage an NHS GP practice and want to update your details, the canonical place to do it is the <a href="https://digital.nhs.uk/services/organisation-data-service" target="_blank">NHS Organisation Data Service</a>. Once it's updated there, it'll flow through to our site (and to NHS.uk) on the next refresh.</p>
-    <p>For private clinics, updates flow from the <a href="https://www.cqc.org.uk" target="_blank">CQC register</a>. If your CQC details are correct but we've classified you wrongly (e.g. wrong specialty or wrong borough), email us and we'll patch it manually.</p>
-  </section>
-
-  <section>
-    <h2>Removing a practice</h2>
-    <p>If your practice has closed, merged with another, or no longer accepts new patients, please email us so we can either remove the listing or flag it correctly.</p>
   </section>
 
 </main>
 <footer>
-  London GP Directory &middot; Data: NHS ODS FHIR API + CQC public API &middot;
-  <a href="/">All London</a> &middot;
+  London Schools Explorer &middot; Data: DfE GIAS + Ofsted &middot;
+  <a href="/">All London schools</a> &middot;
   <a href="/about.html">About</a> &middot;
   <a href="/methodology.html">Methodology</a> &middot;
   <a href="/sources.html">Sources</a>

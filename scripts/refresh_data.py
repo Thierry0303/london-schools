@@ -262,7 +262,32 @@ def parse_gias(df):
             "num_girls":         v("numberofgirls"),
             "mat_name":          None,
         }
-
+      
+          # Derive phase from age range if GIAS returns None/Not applicable
+            # (common for independent schools)
+            raw_phase = school.get("phase")
+            if not raw_phase or str(raw_phase).strip().lower() in ("not applicable", "nan", ""):
+                age_low  = school.get("age_from")
+                age_high = school.get("age_to")
+                try:
+                    age_low  = int(age_low)  if age_low  not in (None, "") else None
+                    age_high = int(age_high) if age_high not in (None, "") else None
+                except (TypeError, ValueError):
+                    age_low = age_high = None
+                if age_low is not None and age_high is not None:
+                    if age_high <= 5:
+                        school["phase"] = "Nursery"
+                    elif age_low >= 16:
+                        school["phase"] = "16 plus"
+                    elif age_low <= 7 and age_high >= 11 and age_high <= 13:
+                        school["phase"] = "Primary"
+                    elif age_low <= 7 and age_high >= 14:
+                        school["phase"] = "All-through"
+                    elif age_high <= 11:
+                        school["phase"] = "Primary"
+                    elif age_low >= 11:
+                        school["phase"] = "Secondary"
+      
         # Normalise sixth form field
         sf = str(school.get("sixth_form", "")).strip().lower()
         if sf in ("1", "true", "yes"):

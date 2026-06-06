@@ -862,15 +862,18 @@ function ScoreCard({ school, compareList, toggleCompare, userCoords }) {
     appsColor = r > 3 ? '#C0392B' : r > 1.5 ? '#E67E22' : r > 1 ? '#F39C12' : '#27AE60';
   }
 
-  // 3rd stat: secondary → att8, primary → ks2 expected %, fallback → pupils
+  // 3rd stat: secondary/all-through → att8, primary only → ks2 expected %, fallback → pupils
   var stat3num = school.pupils != null ? school.pupils : '—';
   var stat3lbl = 'Pupils';
   var stat3color = 'var(--ink)';
-  if (school.ks4_att8 != null) {
+  var phase3 = (school.phase || '').toLowerCase();
+  var isPrimary = phase3 === 'primary';
+  var isSecondaryLike = phase3 === 'secondary' || phase3 === 'all-through' || phase3 === '16 plus';
+  if (school.ks4_att8 != null && (isSecondaryLike || !isPrimary)) {
     stat3num = school.ks4_att8;
     stat3lbl = 'Att 8';
     stat3color = school.ks4_att8 >= ENG_ATT8_AVG ? '#27AE60' : '#E67E22';
-  } else if (school.ks2_expected_pct != null) {
+  } else if (school.ks2_expected_pct != null && isPrimary) {
     stat3num = school.ks2_expected_pct + '%';
     stat3lbl = 'KS2 exp';
     stat3color = school.ks2_expected_pct >= ENG_KS2_EXP_AVG ? '#27AE60' : '#E67E22';

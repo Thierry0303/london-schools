@@ -259,6 +259,11 @@
     .loading { display: flex; align-items: center; justify-content: center; padding: 60px; font-size: 0.9rem; color: #aaa; gap: 10px; }
     .spinner { width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.6s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg) } }
+    .sort-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+    .sort-pill { padding: 6px 14px; border-radius: 20px; border: 1.5px solid var(--border); background: white; font-size: 0.8rem; font-weight: 500; font-family: 'DM Sans', sans-serif; color: #666; cursor: pointer; transition: all 0.15s; }
+    .sort-pill:hover { border-color: var(--gold); color: #7a5500; }
+    .sort-pill.active { border-color: var(--gold); background: rgba(212,168,67,0.12); color: #7a5500; font-weight: 600; }
+
     .empty-state { text-align: center; padding: 60px; color: #aaa; }
     .empty-state h3 { font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 8px; color: #888; }
 
@@ -268,7 +273,7 @@
       /* Header */
       .header { padding: 10px 14px; height: auto; flex-direction: column; align-items: flex-start; gap: 8px; }
       .header-logo { font-size: 1.05rem; }
-      .header-nav { width: 100%; display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+      .header-nav { width: 100%; display: grid; grid-template-columns: repeat(6, 1fr); gap: 2px; }
       .nav-btn { font-size: 0.74rem; padding: 7px 4px; text-align: center; justify-content: center; border-radius: 5px; }
 
       /* Hero */
@@ -295,6 +300,9 @@
       .filter-group { width: 100%; }
       select { width: 100%; min-width: unset; }
       .clear-btn { width: 100%; text-align: center; }
+
+      .sort-pills { gap: 5px; }
+      .sort-pill { font-size: 0.75rem; padding: 5px 11px; }
 
       /* Results header */
       .results-header { flex-direction: column; gap: 8px; align-items: stretch; }
@@ -1469,7 +1477,7 @@ function App() {
           <span className="logo-text">London <em>Schools</em></span>
         </button>
         <nav className="header-nav">
-          {[['checker','Near Me'],['schools','Schools'],['map','Map'],['stats','Stats']].map(function(item){
+          {[['schools','Schools'],['map','Map'],['stats','Stats']].map(function(item){
             return <button key={item[0]} className={view===item[0]?'nav-btn active':'nav-btn'} onClick={() => setView(item[0])}>{item[1]}</button>;
           })}
           <a href="/appeals" className="nav-btn">Appeals</a>
@@ -1626,40 +1634,42 @@ function App() {
                 </div>
                 <div className="results-header">
                   <div className="results-count">Showing <strong>{filtered.length}</strong> school{filtered.length!==1?'s':''}{schools.length!==filtered.length?` of ${schools.length}`:''}</div>
-                  <div style={{display:'flex',flexDirection:'column',gap:4}}>
-                    <div style={{display:'flex',alignItems:'center',gap:8}}>
-                      <select value={sortBy} onChange={function(e){handleSortChange(e.target.value);}} style={{flex:1,minWidth:0,padding:'8px 28px 8px 10px',fontSize:'0.82rem',border:'1.5px solid var(--border)',borderRadius:6,background:'white'}}>
-                        <option value="nearby">📍 Near me + score</option>
-                        <option value="results">🎓 Best results</option>
-                        <option value="score">Ofsted grade</option>
-                        <option value="name">A–Z</option>
-                        <option value="apps">Oversubscribed</option>
-                        <option value="pupils">Largest</option>
-                      </select>
-                      <div className="view-toggle" style={{flexShrink:0}}>
-                        <button className={displayMode==='table'?'view-btn active':'view-btn'} onClick={() => setDisplayMode('table')}>List</button>
-                        <button className={displayMode==='grid'?'view-btn active':'view-btn'} onClick={() => setDisplayMode('grid')}>Cards</button>
-                      </div>
-                    </div>
-                    {sortBy === 'nearby' && locationStatus === 'requesting' && <span style={{fontSize:'0.67rem',color:'#888'}}>📍 Getting your location…</span>}
-                    {sortBy === 'nearby' && locationStatus === 'granted' && (
-                      <div>
-                        <div className="radius-chips">
-                          {[1,2,3].map(function(km){
-                            return (
-                              <button key={km} className={radiusKm===km?'radius-chip active':'radius-chip'} onClick={function(){ setRadiusKm(radiusKm===km?null:km); setPage(1); }}>
-                                {km}km
-                              </button>
-                            );
-                          })}
-                          {radiusKm && <span style={{fontSize:'0.67rem',color:'#27AE60',alignSelf:'center'}}>📍 Within {radiusKm}km · {filtered.length} schools</span>}
-                          {!radiusKm && <span style={{fontSize:'0.67rem',color:'#27AE60',alignSelf:'center'}}>📍 Sorted by proximity + score</span>}
-                        </div>
-                      </div>
-                    )}
-                    {sortBy === 'nearby' && locationStatus === 'denied' && <span style={{fontSize:'0.67rem',color:'#C0392B'}}>Location blocked — enable in browser settings</span>}
+                  <div className="view-toggle" style={{flexShrink:0}}>
+                    <button className={displayMode==='table'?'view-btn active':'view-btn'} onClick={() => setDisplayMode('table')}>List</button>
+                    <button className={displayMode==='grid'?'view-btn active':'view-btn'} onClick={() => setDisplayMode('grid')}>Cards</button>
                   </div>
                 </div>
+                <div className="sort-pills">
+                  {[
+                    {v:'nearby', label:'📍 Near me'},
+                    {v:'score',  label:'⭐ Ofsted'},
+                    {v:'results',label:'🎓 Academic'},
+                    {v:'name',   label:'A–Z'},
+                    {v:'apps',   label:'Oversubscribed'},
+                    {v:'pupils', label:'Largest'},
+                  ].map(function(item){
+                    return (
+                      <button key={item.v} className={sortBy===item.v?'sort-pill active':'sort-pill'} onClick={function(){ handleSortChange(item.v); }}>
+                        {item.label}
+                      </button>
+                    );
+                  })}
+                </div>
+                {sortBy === 'nearby' && locationStatus === 'requesting' && <div style={{fontSize:'0.72rem',color:'#888',marginBottom:8}}>📍 Getting your location…</div>}
+                {sortBy === 'nearby' && locationStatus === 'granted' && (
+                  <div className="radius-chips" style={{marginBottom:12}}>
+                    {[1,2,3].map(function(km){
+                      return (
+                        <button key={km} className={radiusKm===km?'radius-chip active':'radius-chip'} onClick={function(){ setRadiusKm(radiusKm===km?null:km); setPage(1); }}>
+                          {km}km
+                        </button>
+                      );
+                    })}
+                    {radiusKm && <span style={{fontSize:'0.72rem',color:'#27AE60',alignSelf:'center'}}>Within {radiusKm}km · {filtered.length} schools</span>}
+                    {!radiusKm && <span style={{fontSize:'0.72rem',color:'#27AE60',alignSelf:'center'}}>Sorted by proximity + score</span>}
+                  </div>
+                )}
+                {sortBy === 'nearby' && locationStatus === 'denied' && <div style={{fontSize:'0.72rem',color:'#C0392B',marginBottom:8}}>Location blocked — enable in browser settings</div>}
                 {filtered.length === 0 ? (
                   <div className="empty-state"><h3>No schools found</h3><p>Try adjusting your filters.</p></div>
                 ) : displayMode === 'grid' ? (
@@ -1931,11 +1941,11 @@ function App() {
 ReactDOM.createRoot(document.getElementById('root')).render(<App />);
 </script>
 
-<!-- ── Feedback Widget ── -->
+<!-- Feedback widget removed -->
 <script>
 (function() {
-  const SUPA_URL = 'https://kwqyogicwbubzbrjwues.supabase.co';
-  const SUPA_KEY = 'sb_publishable_488SMcDgCgQx14JB6ngw7A_qay_j9cd';
+  // placeholder
+  return;
 
   const css = `
     #fb-btn { position:fixed; bottom:24px; left:24px; z-index:8998; background:#1A1A2E; color:#D4A843; border:2px solid #D4A843; border-radius:24px; padding:10px 18px; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow:0 4px 16px rgba(0,0,0,0.25); transition:all 0.2s; }

@@ -188,17 +188,25 @@ def build_school_page(school):
     ks4_grade5    = school.get("ks4_grade5_em")
     ks4_grade4    = school.get("ks4_grade4_em")
 
+    phase_lc = phase.lower()
+    is_primary_phase = phase_lc == "primary"
+    is_secondary_phase = phase_lc in ("secondary", "middle deemed secondary", "16 plus")
+    is_all_through = phase_lc == "all-through"
+    is_special = "special" in (school.get("school_type") or "").lower()
+
     results_rows = ""
-    if ks2_expected is not None:
+    # KS2 only for primary schools — never for special, nursery or all-through
+    if ks2_expected is not None and is_primary_phase and not is_special:
         results_rows += f"<tr><td>KS2 expected standard</td><td><strong>{ks2_expected}%</strong></td></tr>"
-    if ks2_higher is not None:
+    if ks2_higher is not None and is_primary_phase and not is_special:
         results_rows += f"<tr><td>KS2 higher standard</td><td><strong>{ks2_higher}%</strong></td></tr>"
-    if ks4_att8 is not None:
+    # ATT8/GCSE for secondary and all-through only, never special schools
+    if ks4_att8 is not None and (is_secondary_phase or is_all_through) and not is_special:
         results_rows += f"<tr><td>Attainment 8 score</td><td><strong>{ks4_att8}</strong></td></tr>"
-    if ks4_grade5 is not None:
+    if ks4_grade5 is not None and (is_secondary_phase or is_all_through) and not is_special:
         ks4_grade5_display = min(ks4_grade5, 100.0)  # DfE data can exceed 100% due to cohort timing; cap for display
         results_rows += f"<tr><td>Grade 5+ English &amp; Maths</td><td><strong>{ks4_grade5_display}%</strong></td></tr>"
-    if ks4_grade4 is not None:
+    if ks4_grade4 is not None and (is_secondary_phase or is_all_through) and not is_special:
         results_rows += f"<tr><td>Grade 4+ English &amp; Maths</td><td><strong>{ks4_grade4}%</strong></td></tr>"
 
     # Build data note for results section
@@ -521,6 +529,7 @@ def build_school_page(school):
     </table>
   </section>
 
+{'''
 <section class="card" style="background:linear-gradient(135deg,#fff 0%,#f0f7ff 100%);border-color:#dbeafe;">
     <h2 style="display:flex;align-items:center;gap:8px;">
       <span style="font-size:20px;">🎓</span> 11+ Exam Preparation
@@ -528,19 +537,17 @@ def build_school_page(school):
     <p style="font-size:14px;color:#555;margin-bottom:16px;line-height:1.6;">
       High-quality 11+, 13+, Pre-Tests, SATs and GCSE resources from PiAcademy. Use code <strong>THIERR25</strong> at checkout for 25% off.
     </p>
-    
-    <a href="https://piacademy.co.uk/?aff=28" 
+    <a href="https://piacademy.co.uk/?aff=28"
        target="_blank" rel="noopener sponsored"
        style="display:inline-flex;align-items:center;gap:10px;padding:14px 28px;background:#7e22ce;color:white;border-radius:10px;font-size:16px;font-weight:700;text-decoration:none;box-shadow:0 4px 12px rgba(126,34,206,0.3);">
       🎓 Visit PiAcademy & Get 25% OFF
     </a>
-    
     <p style="font-size:12px;color:#666;margin-top:12px;">
       <strong>How to get the discount:</strong> Add any course or papers to your cart on PiAcademy, then enter coupon code <strong>THIERR25</strong> at the checkout.
     </p>
-    
     <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
   </section>
+''' if not is_special and phase_lc != "nursery" else ''}
 
 <section class="card" style="background:linear-gradient(135deg,#fff 0%,#f0f7ff 100%);border-color:#dbeafe;">
     <h2 style="display:flex;align-items:center;gap:8px;">

@@ -1,0 +1,34 @@
+name: Update Reception Timeline
+
+on:
+  schedule:
+    # Runs 1st October at 08:00 UTC every year
+    - cron: '0 8 1 10 *'
+  workflow_dispatch:  # Allow manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run update script
+        run: python3 scripts/update_reception_timeline.py
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add guides/london-reception-application-timeline/index.html
+          git commit --allow-empty -m "chore: update reception timeline for $(date +'%Y') admissions cycle"
+          git pull --rebase origin main
+          git push

@@ -1365,7 +1365,7 @@ function App() {
     else if (sortBy === 'name') r.sort((a,b) => a.name.localeCompare(b.name));
     else if (sortBy === 'apps') r.sort((a,b) => { var d=(b.apps_per_place??-1)-(a.apps_per_place??-1); return d!==0?d:a.name.localeCompare(b.name); });
     else if (sortBy === 'pupils') r.sort((a,b) => { var d=(b.pupils??-1)-(a.pupils??-1); return d!==0?d:a.name.localeCompare(b.name); });
-    else if (sortBy === 'nearby' && !userCoords) { r.sort((a,b) => { var d=(b.ofsted_score??-1)-(a.ofsted_score??-1); return d!==0?d:a.name.localeCompare(b.name); }); }
+    else if (sortBy === 'nearby' && !userCoords) { r.sort((a,b) => { var d=(b.ofsted_score??-1)-(a.ofsted_score??-1); return d; }); }
     else if (sortBy === 'nearby' && userCoords) {
       var BAND_RANK = {'Outstanding':4,'Good':3,'Requires improvement':2,'Inadequate':1,'Ungraded (monitoring)':2,'Report card (2025+)':2};
       r.sort(function(a,b) {

@@ -846,13 +846,25 @@ function ScoreCard({ school, compareList, toggleCompare, userCoords }) {
   const isSelected = compareList && compareList.find(function(s){return s.urn===school.urn;});
 
   // Composite score: 60% quality band + 40% academic results (0–100)
+  // For phases where academic metrics don't apply (nursery, special/all-through without ATT8),
+  // use Ofsted band only — don't inflate score with missing academic data
   var COMP_BAND = {'Outstanding':100,'Good':75,'Requires improvement':50,'Inadequate':25,'Ungraded (monitoring)':50,'Report card (2025+)':50};
   var bandVal = COMP_BAND[band] || 50;
+  var phaseLC = (school.phase || '').toLowerCase();
   var acadRaw = -1;
-  if (school.ks4_att8 != null) acadRaw = (school.ks4_att8 / ENG_ATT8_AVG) * 100;
-  else if (school.ks2_expected_pct != null) acadRaw = (school.ks2_expected_pct / ENG_KS2_EXP_AVG) * 100;
-  var acadVal = acadRaw > 0 ? Math.min(100, acadRaw) : bandVal;
-  var compositeScore = Math.round(bandVal * 0.60 + acadVal * 0.40);
+  // Only use academic data for phases where it's meaningful
+  if (phaseLC === 'secondary' || phaseLC === '16 plus') {
+    if (school.ks4_att8 != null) acadRaw = (school.ks4_att8 / ENG_ATT8_AVG) * 100;
+  } else if (phaseLC === 'primary') {
+    if (school.ks2_expected_pct != null) acadRaw = (school.ks2_expected_pct / ENG_KS2_EXP_AVG) * 100;
+  } else if (phaseLC === 'all-through') {
+    // All-through: use ATT8 if available, otherwise band only
+    if (school.ks4_att8 != null) acadRaw = (school.ks4_att8 / ENG_ATT8_AVG) * 100;
+  }
+  // acadRaw >= 0 means we have real academic data; use composite. Otherwise band only.
+  var compositeScore = acadRaw >= 0
+    ? Math.round(bandVal * 0.60 + Math.min(100, acadRaw) * 0.40)
+    : bandVal;
   var scoreColor = compositeScore >= 85 ? '#27AE60' : compositeScore >= 70 ? '#2980B9' : compositeScore >= 50 ? '#E67E22' : '#C0392B';
 
   // Apps/place colour
@@ -1359,8 +1371,14 @@ function App() {
     r = [...r];
     // Academic score: normalise Att8 and KS2 to the same relative-to-average scale
     function academicScore(s) {
-      if (s.ks4_att8 != null) return (s.ks4_att8 / ENG_ATT8_AVG) * 100;
-      if (s.ks2_expected_pct != null) return (s.ks2_expected_pct / ENG_KS2_EXP_AVG) * 100;
+      var p = (s.phase || '').toLowerCase();
+      if (p === 'secondary' || p === '16 plus') {
+        if (s.ks4_att8 != null) return (s.ks4_att8 / ENG_ATT8_AVG) * 100;
+      } else if (p === 'primary') {
+        if (s.ks2_expected_pct != null) return (s.ks2_expected_pct / ENG_KS2_EXP_AVG) * 100;
+      } else if (p === 'all-through') {
+        if (s.ks4_att8 != null) return (s.ks4_att8 / ENG_ATT8_AVG) * 100;
+      }
       return -1;
     }
     if (sortBy === 'score') r.sort((a,b) => { var d=(b.ofsted_score??-1)-(a.ofsted_score??-1); return d!==0?d:a.name.localeCompare(b.name); });

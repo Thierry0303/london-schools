@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>London School Guides — Admissions, Appeals & Catchments | London School Directory</title>
+<meta name="description" content="Expert guides to London school admissions, appeals, catchment areas and Ofsted ratings. Everything London parents need to navigate the school system." />
+<link rel="canonical" href="https://londonschool.directory/guides/" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #F5F0E8; --ink: #1A1A2E; --gold: #D4A843;
+  --border: #D8D0C0; --card-bg: #FDFAF4;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; }
+.header { background: var(--ink); color: var(--cream); padding: 0 40px; position: sticky; top: 0; z-index: 1000; border-bottom: 3px solid var(--gold); display: flex; align-items: center; justify-content: space-between; height: 64px; }
+.header-logo { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; text-decoration: none; color: var(--cream); display: flex; align-items: center; gap: 10px; }
+.header-logo span { color: var(--gold); }
+.header-nav { display: flex; gap: 6px; }
+.nav-btn { background: transparent; border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.7); padding: 7px 16px; border-radius: 4px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; cursor: pointer; text-decoration: none; transition: all 0.2s; }
+.nav-btn:hover, .nav-btn.active { background: var(--gold); color: var(--ink); border-color: var(--gold); font-weight: 600; }
+.hero { background: var(--ink); color: var(--cream); padding: 48px 40px 40px; }
+.hero-eyebrow { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+.hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 5vw, 3rem); font-weight: 900; line-height: 1.1; margin-bottom: 12px; }
+.hero-sub { font-size: 1rem; color: rgba(245,240,232,0.7); max-width: 540px; line-height: 1.6; }
+.crumbs { font-size: 0.8rem; color: rgba(245,240,232,0.5); margin-bottom: 16px; }
+.crumbs a { color: rgba(245,240,232,0.5); text-decoration: none; }
+.crumbs a:hover { color: var(--gold); }
+.main { max-width: 900px; margin: 0 auto; padding: 48px 40px; }
+.guides-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 24px; }
+.guide-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 28px; text-decoration: none; color: var(--ink); transition: all 0.2s; display: block; position: relative; overflow: hidden; }
+.guide-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--gold); }
+.guide-card:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(26,26,46,0.14); border-color: var(--gold); }
+.guide-tag { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold); margin-bottom: 10px; }
+.guide-title { font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 700; line-height: 1.3; margin-bottom: 10px; }
+.guide-desc { font-size: 0.88rem; color: #666; line-height: 1.6; margin-bottom: 16px; }
+.guide-read { font-size: 0.82rem; font-weight: 600; color: var(--ink); display: flex; align-items: center; gap: 6px; }
+.guide-read::after { content: '→'; color: var(--gold); }
+@media (max-width: 768px) {
+  .header { padding: 10px 16px; height: auto; flex-wrap: wrap; gap: 8px; }
+  .header-nav { width: 100%; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+  .nav-btn { font-size: 0.75rem; padding: 8px 4px; text-align: center; }
+  .hero { padding: 28px 16px; }
+  .main { padding: 28px 16px; }
+  .guides-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <a href="/" class="header-logo">London <span>School</span> Directory</a>
+  <nav class="header-nav">
+    <a href="/" class="nav-btn">Search</a>
+    <a href="/schools/" class="nav-btn">Boroughs</a>
+    <a href="/guides/" class="nav-btn active">Guides</a>
+  </nav>
+</header>
+
+<div class="hero">
+  <div class="crumbs"><a href="/">Home</a> › Guides</div>
+  <div class="hero-eyebrow">London School Guides</div>
+  <h1>Everything you need to navigate London schools</h1>
+  <p class="hero-sub">Plain-English guides to admissions, appeals, catchment areas and Ofsted ratings — written for London parents.</p>
+</div>
+
+<main class="main">
+  <div class="guides-grid">
+
+    <a href="/guides/how-to-appeal-a-london-school-place/" class="guide-card">
+      <div class="guide-tag">Admissions</div>
+      <div class="guide-title">How to Appeal a London School Place</div>
+      <div class="guide-desc">Didn't get your first choice? This step-by-step guide explains the appeals process, what to include in your case, and how to improve your chances.</div>
+      <div class="guide-read">Read guide</div>
+    </a>
+
+    <a href="/guides/london-reception-application-timeline/" class="guide-card">
+      <div class="guide-tag">Admissions</div>
+      <div class="guide-title">London Reception Application Timeline</div>
+      <div class="guide-desc">Key dates, deadlines and what to expect at each stage of the Reception admissions process — from open days to National Offer Day.</div>
+      <div class="guide-read">Read guide</div>
+    </a>
+
+    <a href="/guides/london-school-catchment-areas/" class="guide-card">
+      <div class="guide-tag">Catchments</div>
+      <div class="guide-title">London School Catchment Areas Explained</div>
+      <div class="guide-desc">How catchment areas work, why distances vary so much across London, and what they mean for your chances of getting a place.</div>
+      <div class="guide-read">Read guide</div>
+    </a>
+
+    <a href="/guides/ofsted-ratings-explained/" class="guide-card">
+      <div class="guide-tag">Ofsted</div>
+      <div class="guide-title">Ofsted Ratings Explained</div>
+      <div class="guide-desc">What Outstanding, Good, Requires Improvement and Inadequate really mean — and how much weight to give Ofsted ratings when choosing a school.</div>
+      <div class="guide-read">Read guide</div>
+    </a>
+
+  </div>
+</main>
+
+</body>
+</html>

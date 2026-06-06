@@ -1,13 +1,10 @@
 name: Monthly Data Refresh
-
 on:
   workflow_dispatch:
   schedule:
     - cron: '0 6 15 * *'   # 6am on the 15th of every month
-
 permissions:
   contents: write
-
 jobs:
   refresh:
     runs-on: ubuntu-latest
@@ -16,40 +13,36 @@ jobs:
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
       - name: Install dependencies
         run: pip install requests pandas numpy pyyaml odfpy --break-system-packages -q
-
       # Step 1: Test BEFORE refresh — confirm site is healthy going in
       - name: Pre-refresh tests
         run: python3 scripts/test_site.py
         continue-on-error: true   # Don't block refresh if pre-tests fail
-
       # Step 2: Refresh data from all official sources
       - name: Refresh data
         run: python3 scripts/refresh_data.py
-
+      # Step 2b: Fetch independent school ratings from DfE CSV
+      - name: Fetch independent school ratings
+        run: python3 scripts/fetch_independent_ratings.py
+        continue-on-error: true   # Don't block build if DfE CSV is temporarily unavailable
       # Step 3: Test AFTER refresh — abort if data is broken
       - name: Post-refresh tests
         id: post_test
         run: python3 scripts/test_site.py
-
       # Step 4: Build pages ONLY if post-refresh tests passed
       - name: Build static pages
         if: steps.post_test.outcome == 'success'
         run: |
           python3 scripts/build_school_pages.py
           echo "$(date -u)" > schools/.last_built
-
-      # Step 4b: NEW — Build borough hub pages (only if tests passed)
+      # Step 4b: Build borough hub pages (only if tests passed)
       - name: Build borough hub pages
         if: steps.post_test.outcome == 'success'
         run: python3 scripts/build_borough_hubs.py
-
       # Step 5: Commit everything
       - name: Commit and push
         if: steps.post_test.outcome == 'success'
@@ -60,7 +53,6 @@ jobs:
           git commit --allow-empty -m "chore: data refresh $(date +'%Y-%m')"
           git pull --rebase origin main
           git push
-
       # Step 6: If post-refresh tests failed — restore previous schools.json
       - name: Restore previous data on failure
         if: steps.post_test.outcome == 'failure'

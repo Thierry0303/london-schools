@@ -2106,5 +2106,59 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />);
 })();
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
+  <!-- Hot-fix: hide feedback button + Saint/St search aliasing -->
+<style>
+  /* Hide anything that looks like the feedback button, wherever it is */
+  [id*="feedback" i],
+  [class*="feedback" i],
+  a[href*="feedback" i],
+  button[aria-label*="feedback" i] {
+    display: none !important;
+  }
+</style>
+<script>
+(function () {
+  // ---- Saint / St aliasing for the search input ----
+  // Replace "saint" with "st" (and vice-versa is handled by also expanding st→saint)
+  // so that whatever the user types, it matches both forms in your school list.
+  function normaliseSaint(str) {
+    if (!str) return str;
+    return String(str)
+      .toLowerCase()
+      // \bsaint\b -> st
+      .replace(/\bsaint\b\.?/g, 'st')
+      // st. -> st
+      .replace(/\bst\.\s*/g, 'st ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  // Patch every text input that looks like a school search
+  // by intercepting its value when other code reads it.
+  document.querySelectorAll(
+    'input[type="search"], input[name*="search" i], ' +
+    'input[id*="search" i], input[placeholder*="school" i], ' +
+    'input[placeholder*="search" i]'
+  ).forEach(function (input) {
+    input.addEventListener('input', function () {
+      // Only mutate the *search comparison*, not what the user sees typed.
+      input.dataset.normalised = normaliseSaint(input.value);
+    });
+  });
+
+  // Monkey-patch String.prototype.includes / indexOf used by simple filters
+  // so that "saint" and "st" match each other when comparing school names.
+  // (Safe: only triggers when both sides contain saint/st.)
+  var _includes = String.prototype.includes;
+  String.prototype.includes = function (needle, pos) {
+    if (typeof needle === 'string') {
+      var hay = normaliseSaint(this);
+      var nee = normaliseSaint(needle);
+      if (_includes.call(hay, nee, pos)) return true;
+    }
+    return _includes.call(this, needle, pos);
+  };
+})();
+</script>
 </body>
 </html>

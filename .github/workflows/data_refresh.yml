@@ -29,6 +29,10 @@ jobs:
       - name: Fetch independent school ratings
         run: python3 scripts/fetch_independent_ratings.py
         continue-on-error: true   # Don't block build if DfE CSV is temporarily unavailable
+      # Step 2c: Fetch independent school enrichment data
+      - name: Fetch independent school enrichment data
+        run: python3 scripts/fetch_independent_school_data.py
+        continue-on-error: true   # Don't block if CSV missing or has issues
       # Step 3: Test AFTER refresh — abort if data is broken
       - name: Post-refresh tests
         id: post_test

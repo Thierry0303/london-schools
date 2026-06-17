@@ -137,13 +137,67 @@ def ofsted_badge_color(label):
     }
     return colors.get(label, ("#424242", "#F5F5F5"))
 
+def render_independent_school_section(school):
+    """
+    Render independent school enrichment section.
+    Only shown for independent schools with enrichment data.
+    """
+    
+    # Check if independent school with data
+    school_type = school.get('school_type', '').lower()
+    if 'independent' not in school_type:
+        return ''
+    
+    ind_data = school.get('independent_data')
+    if not ind_data:
+        return ''
+    
+    # Build HTML
+    html = []
+    html.append('<section class="card" style="background:#F9F7F4;border-left:4px solid #D4A843;">')
+    html.append('<h2>Independent School Information</h2>')
+    html.append('<table>')
+    
+    # Fees
+    if ind_data.get('fees_annual'):
+        fees = ind_data['fees_annual']
+        html.append(f'<tr><td>Annual Fees</td><td><strong>£{fees:,}</strong></td></tr>')
+    
+    # Boarding
+    if ind_data.get('boarding'):
+        boarding = ind_data['boarding']
+        html.append(f'<tr><td>Boarding</td><td><strong>{boarding}</strong></td></tr>')
+    
+    # A-Level
+    if ind_data.get('a_level_a_star_b_percent'):
+        a_level = ind_data['a_level_a_star_b_percent']
+        html.append(f'<tr><td>A-Level Results (A*/A)</td><td><strong>{a_level}%</strong></td></tr>')
+    
+    # GCSE
+    if ind_data.get('gcse_9_7_percent'):
+        gcse = ind_data['gcse_9_7_percent']
+        html.append(f'<tr><td>GCSE Results (9-7)</td><td><strong>{gcse}%</strong></td></tr>')
+    
+    # Exam Year
+    if ind_data.get('exam_results_year'):
+        year = ind_data['exam_results_year']
+        html.append(f'<tr><td>Exam Results Year</td><td><strong>{year}</strong></td></tr>')
+    
+    # ISI Status
+    if ind_data.get('isi_inspection_status'):
+        status = ind_data['isi_inspection_status']
+        html.append(f'<tr><td>ISI Inspection Status</td><td><strong>{status}</strong></td></tr>')
+    
+    html.append('</table>')
+    html.append('</section>')
+    return '\n'.join(html)
+
 def build_school_page(school):
     borough_slug  = slugify(school.get("local_authority", "unknown"))
     school_slug   = slugify(school.get("name", "unknown"))
     url           = f"{BASE_URL}/schools/{borough_slug}/{school_slug}"
 
     name          = safe(school.get("name"))
-    title         = name
     title         = name
     borough       = safe(school.get("local_authority"))
     postcode      = safe(school.get("postcode"))
@@ -160,7 +214,7 @@ def build_school_page(school):
     capacity      = safe(school.get("capacity"))
     religion      = safe(school.get("religious_character"))
     head_name     = safe(school.get("head_name"))
-    # Ensure spaces between title prefix and name parts (e.g. "MrSmith" â†' "Mr Smith")
+    # Ensure spaces between title prefix and name parts (e.g. "MrSmith" → "Mr Smith")
     if head_name:
         import re as _re
         head_name = _re.sub(r'\b(Mr|Mrs|Ms|Miss|Dr|Prof|Rev|Sir)([A-Z])', r'\1 \2', head_name)
@@ -349,6 +403,9 @@ def build_school_page(school):
             "mainEntity": faq_items
         }
 
+    # Call independent school section function
+    independent_section = render_independent_school_section(school)
+
     html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -512,6 +569,8 @@ def build_school_page(school):
 
   {results_section}
 
+  {independent_section}
+
   <section class="card">
     <h2>Contact & leadership</h2>
     <table>
@@ -602,7 +661,7 @@ def build_school_page(school):
     return borough_slug, school_slug, html
 
 
-# â"€â"€ Build all pages â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
+# ── Build all pages ────────────────────────────────────────────────────────────
 print(f"Building {len(schools)} school pages...")
 out_root = pathlib.Path("schools")
 sitemap_urls = [BASE_URL + "/"]
@@ -622,7 +681,7 @@ for school in schools:
 print(f"Built {built} pages successfully.")
 
 
-# â"€â"€ Borough index pages â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
+# ── Borough index pages ────────────────────────────────────────────────────────
 from collections import defaultdict
 
 BOROUGH_DESCRIPTIONS = {
@@ -964,7 +1023,7 @@ for borough, borough_schools in by_borough.items():
 print(f"Built {len(by_borough)} borough pages.")
 
 
-# â"€â"€ School type landing pages â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
+# ── School type landing pages ──────────────────────────────────────────────────
 def build_type_page(slug, title, meta_desc, intro, filter_fn, prominent_pi=False, prominent_scholastic=False):
     matched = [s for s in schools if filter_fn(s)]
     matched.sort(key=lambda s: (s.get("ofsted_score") or 0), reverse=True)
@@ -998,8 +1057,7 @@ def build_type_page(slug, title, meta_desc, intro, filter_fn, prominent_pi=False
     "@type": "BreadcrumbList",
     "itemListElement": [
       {{"@type": "ListItem", "position": 1, "name": "London Schools Explorer", "item": "https://londonschool.directory/"}},
-      {{"@type": "ListItem", "position": 2, "name": "{borough}", "item": "{BASE_URL}/schools/{borough_slug}"}},
-      {{"@type": "ListItem", "position": 3, "name": "{title}", "item": "{url}"}}
+      {{"@type": "ListItem", "position": 2, "name": "{title}", "item": "{url}"}}
     ]
   }}</script>
   <meta property="og:title" content="{title} | London Schools Explorer">
@@ -1151,7 +1209,7 @@ print(f"Built {len(TYPE_PAGES)} type pages.")
 
 
 # Written as .txt so Vercel doesn't treat it as a binary asset.
-# vercel.json rewrites /sitemap.xml â†' /sitemap_data.txt transparently.
+# vercel.json rewrites /sitemap.xml → /sitemap_data.txt transparently.
 lines = ['<?xml version="1.0" encoding="UTF-8"?>',
          '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
 from datetime import date as _date
@@ -1181,7 +1239,7 @@ with open("sitemap_data.txt", "w", encoding="utf-8", newline="\n") as f:
 print(f"Sitemap written with {len(sitemap_urls)} URLs.")
 
 
-# â"€â"€ robots.txt â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
+# ── robots.txt ─────────────────────────────────────────────────────────────────
 robots = f"User-agent: *\nAllow: /\nSitemap: {BASE_URL}/sitemap.xml\n"
 pathlib.Path("robots.txt").write_text(robots, encoding="utf-8")
 print("robots.txt written.")

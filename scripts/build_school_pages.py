@@ -109,7 +109,7 @@ def render_independent_school_section(school):
     # A-Level
     if ind_data.get('a_level_a_star_b_percent'):
         a_level = ind_data['a_level_a_star_b_percent']
-        html.append(f'<tr><td>A-Level Results (A*/A)</td><td><strong>{a_level}%</strong></td></tr>')
+        html.append(f'<tr><td>A-Level (A*&ndash;B)</td><td><strong>{a_level}%</strong></td></tr>')
     
     # GCSE
     if ind_data.get('gcse_9_7_percent'):
@@ -129,6 +129,57 @@ def render_independent_school_section(school):
     html.append('</table>')
     html.append('</section>')
     return '\n'.join(html)
+
+def render_agent_section(school):
+    """
+    Render AI-agent-sourced enrichment (agent_data). Every value shown was
+    extracted from a credible source with a source URL; we surface that link
+    so parents can verify. Renders nothing if there is no agent_data.
+    """
+    ad = school.get('agent_data')
+    if not ad or not ad.get('values'):
+        return ''
+
+    values = ad.get('values', {})
+    sources = ad.get('sources', {})
+    checked = ad.get('checked_at', '')
+
+    rows = []
+
+    def src_link(field):
+        u = sources.get(field)
+        return f' <a href="{u}" target="_blank" rel="noopener" style="font-size:11px;color:#888;">(source)</a>' if u else ''
+
+    # State-school catchment / admissions
+    if values.get('last_distance_offered_km') is not None:
+        d = values['last_distance_offered_km']
+        yr = values.get('last_distance_year')
+        yr_txt = f" ({yr})" if yr else ""
+        rows.append(f'<tr><td>Furthest offer distance{yr_txt}</td><td><strong>{d} km</strong>{src_link("last_distance_offered_km")}</td></tr>')
+    if values.get('published_admission_number') is not None:
+        rows.append(f'<tr><td>Places (PAN)</td><td><strong>{values["published_admission_number"]}</strong>{src_link("published_admission_number")}</td></tr>')
+    if values.get('oversubscribed') is not None:
+        rows.append(f'<tr><td>Oversubscribed</td><td><strong>{"Yes" if values["oversubscribed"] else "No"}</strong>{src_link("oversubscribed")}</td></tr>')
+
+    # Independent-school agent-found figures (only if not already in independent_data)
+    if values.get('fees_annual') is not None and not (school.get('independent_data') or {}).get('fees_annual'):
+        rows.append(f'<tr><td>Annual Fees</td><td><strong>£{int(values["fees_annual"]):,}</strong>{src_link("fees_annual")}</td></tr>')
+    if values.get('a_level_a_star_b') is not None and not (school.get('independent_data') or {}).get('a_level_a_star_b_percent'):
+        note = values.get('a_level_note') or "A*–B"
+        rows.append(f'<tr><td>A-Level ({note})</td><td><strong>{values["a_level_a_star_b"]}%</strong>{src_link("a_level_a_star_b")}</td></tr>')
+    if values.get('gcse_9_7') is not None and not (school.get('independent_data') or {}).get('gcse_9_7_percent'):
+        rows.append(f'<tr><td>GCSE (9–7)</td><td><strong>{values["gcse_9_7"]}%</strong>{src_link("gcse_9_7")}</td></tr>')
+
+    if not rows:
+        return ''
+
+    checked_txt = f'<p style="font-size:11px;color:#999;margin-top:10px;">Additional data gathered from official sources{(" · last checked " + checked) if checked else ""}. Please verify with the school before making decisions.</p>'
+
+    return ('<section class="card" style="border-left:4px solid #2563EB;">'
+            '<h2>Admissions &amp; further data</h2>'
+            '<table>' + ''.join(rows) + '</table>'
+            + checked_txt +
+            '</section>')
 
 def build_school_page(school):
     borough_slug  = slugify(school.get("local_authority", "unknown"))
@@ -343,6 +394,7 @@ def build_school_page(school):
 
     # Call independent school section function
     independent_section = render_independent_school_section(school)
+    agent_section = render_agent_section(school)
 
     html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -508,6 +560,8 @@ def build_school_page(school):
   {results_section}
 
   {independent_section}
+
+  {agent_section}
 
   <section class="card">
     <h2>Contact & leadership</h2>

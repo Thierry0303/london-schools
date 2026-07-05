@@ -1,788 +1,1183 @@
-<!DOCTYPE html>
+import json, os, pathlib, re
+from datetime import datetime
+
+# Always run from repo root regardless of where Vercel calls this from
+os.chdir(pathlib.Path(__file__).parent.parent)
+
+# ── Data vintage ───────────────────────────────────────────────────────────────
+# Update DATA_YEAR when DfE releases new annual performance tables (typically Oct/Nov).
+# This appears on every school page so parents can see exactly how recent the figures are.
+DATA_YEAR = "2024/25"
+BUILT_DATE = datetime.utcnow().strftime("%-d %B %Y")   # e.g. "23 April 2026"
+
+BASE_URL = "https://londonschool.directory"
+
+
+
+
+# Load school data
+with open("schools.json") as f:
+    schools = json.load(f)
+
+def slugify(text):
+    if not text:
+        return "unknown"
+    text = str(text).lower().strip()
+    text = re.sub(r"[''']", "", text)
+    text = re.sub(r"[^a-z0-9]+", "-", text)
+    return text.strip("-")
+
+def safe(val, fallback="N/A"):
+    if val is None or (isinstance(val, float) and str(val) == "nan"):
+        return fallback
+    if isinstance(val, float) and val == int(val):
+        return str(int(val))
+    return str(val)
+  
+def derive_phase(school, fallback="N/A"):
+    af = school.get("age_from")
+    at = school.get("age_to")
+    try:
+        af = int(af) if af not in (None, "") else None
+        at = int(at) if at not in (None, "") else None
+    except (TypeError, ValueError):
+        af = at = None
+    if af is not None and at is not None:
+        if at <= 5: return "Nursery"
+        if af >= 16: return "Sixth form"
+        is_p = af <= 7 and at >= 11
+        is_s = at >= 14 and af <= 14
+        if is_p and is_s: return "All-through"
+        if is_p: return "Primary"
+        if is_s: return "Secondary"
+    raw = school.get("phase")
+    if raw and str(raw).strip().lower() not in ("none", "null", "", "n/a"):
+        return str(raw).strip()
+    return fallback
+  
+def format_phone(tel):
+    if not tel or tel == "N/A":
+        return None
+    try:
+        digits = str(int(float(tel)))
+        if len(digits) == 10:
+            return f"0{digits}"
+        return digits
+    except:
+        return None
+
+def ofsted_badge_color(label):
+    colors = {
+        "Outstanding":   ("#1B5E20", "#E8F5E9"),
+        "Good":          ("#1565C0", "#E3F2FD"),
+        "Requires improvement": ("#E65100", "#FFF3E0"),
+        "Inadequate":    ("#B71C1C", "#FFEBEE"),
+    }
+    return colors.get(label, ("#424242", "#F5F5F5"))
+
+def render_independent_school_section(school):
+    """
+    Render independent school enrichment section.
+    Only shown for independent schools with enrichment data.
+    """
+    
+    # Check if independent school with data
+    school_type = school.get('school_type', '').lower()
+    if 'independent' not in school_type:
+        return ''
+    
+    ind_data = school.get('independent_data')
+    if not ind_data:
+        return ''
+    
+    # Build HTML
+    html = []
+    html.append('<section class="card" style="background:#F9F7F4;border-left:4px solid #D4A843;">')
+    html.append('<h2>Independent School Information</h2>')
+    html.append('<table>')
+    
+    # Fees
+    if ind_data.get('fees_annual'):
+        fees = ind_data['fees_annual']
+        html.append(f'<tr><td>Annual Fees</td><td><strong>£{fees:,}</strong></td></tr>')
+    
+    # Boarding
+    if ind_data.get('boarding'):
+        boarding = ind_data['boarding']
+        html.append(f'<tr><td>Boarding</td><td><strong>{boarding}</strong></td></tr>')
+    
+    # A-Level
+    if ind_data.get('a_level_a_star_b_percent'):
+        a_level = ind_data['a_level_a_star_b_percent']
+        html.append(f'<tr><td>A-Level Results (A*/A)</td><td><strong>{a_level}%</strong></td></tr>')
+    
+    # GCSE
+    if ind_data.get('gcse_9_7_percent'):
+        gcse = ind_data['gcse_9_7_percent']
+        html.append(f'<tr><td>GCSE Results (9-7)</td><td><strong>{gcse}%</strong></td></tr>')
+    
+    # Exam Year
+    if ind_data.get('exam_results_year'):
+        year = ind_data['exam_results_year']
+        html.append(f'<tr><td>Exam Results Year</td><td><strong>{year}</strong></td></tr>')
+    
+    # ISI Status
+    if ind_data.get('isi_inspection_status'):
+        status = ind_data['isi_inspection_status']
+        html.append(f'<tr><td>ISI Inspection Status</td><td><strong>{status}</strong></td></tr>')
+    
+    html.append('</table>')
+    html.append('</section>')
+    return '\n'.join(html)
+
+def build_school_page(school):
+    borough_slug  = slugify(school.get("local_authority", "unknown"))
+    school_slug   = slugify(school.get("name", "unknown"))
+    url           = f"{BASE_URL}/schools/{borough_slug}/{school_slug}"
+
+    name          = safe(school.get("name"))
+    title         = name
+    borough       = safe(school.get("local_authority"))
+    postcode      = safe(school.get("postcode"))
+    street        = safe(school.get("street"))
+    phase         = derive_phase(school)
+    school_type   = safe(school.get("school_type"))
+    gender        = safe(school.get("gender"))
+    age_from      = safe(school.get("age_from", ""), "")
+    age_to        = safe(school.get("age_to", ""), "")
+    age_range     = f"{age_from}–{age_to}" if age_from and age_to else "N/A"
+    sixth_form    = safe(school.get("sixth_form"))
+    admissions    = safe(school.get("admissions"))
+    pupils        = safe(school.get("pupils"))
+    capacity      = safe(school.get("capacity"))
+    religion      = safe(school.get("religious_character"))
+    head_name     = safe(school.get("head_name"))
+    # Ensure spaces between title prefix and name parts (e.g. "MrSmith" → "Mr Smith")
+    if head_name:
+        import re as _re
+        head_name = _re.sub(r'\b(Mr|Mrs|Ms|Miss|Dr|Prof|Rev|Sir)([A-Z])', r'\1 \2', head_name)
+    head_title    = safe(school.get("head_job_title", "Headteacher"))
+    website       = school.get("website") or ""
+    telephone     = format_phone(school.get("telephone"))
+    # Only use verified snobe_url from schools.json – set by check_snobe_slugs.py
+    # Never generate slugs from name: Snobe uses -0/-1/-2 suffixes for duplicates
+    # and different naming conventions to GIAS. Unverified links cause 404s.
+    snobe_url = school.get("snobe_url") or ""
+    ofsted_label  = safe(school.get("quality_label") or school.get("score_band"), "Not yet rated")
+    ofsted_url    = school.get("ofsted_url") or ""
+    inspection    = safe(school.get("inspection_date"), "")
+    fsm_label     = safe(school.get("fsm_label"), "")
+    crime_label   = safe(school.get("crime_label"), "")
+    lat           = school.get("lat", "")
+    lng           = school.get("lng", "")
+
+    ofsted_text_color, ofsted_bg_color = ofsted_badge_color(ofsted_label)
+
+    # KS2 / KS4 results
+    ks2_expected  = school.get("ks2_expected_pct")
+    ks2_higher    = school.get("ks2_higher_pct")
+    ks4_att8      = school.get("ks4_att8")
+    ks4_grade5    = school.get("ks4_grade5_em")
+    ks4_grade4    = school.get("ks4_grade4_em")
+
+    phase_lc = phase.lower()
+    is_primary_phase = phase_lc == "primary"
+    is_secondary_phase = phase_lc in ("secondary", "middle deemed secondary", "16 plus")
+    is_all_through = phase_lc == "all-through"
+    is_special = "special" in (school.get("school_type") or "").lower()
+
+    results_rows = ""
+    # KS2 only for primary schools — never for special, nursery or all-through
+    if ks2_expected is not None and is_primary_phase and not is_special:
+        results_rows += f"<tr><td>KS2 expected standard</td><td><strong>{ks2_expected}%</strong></td></tr>"
+    if ks2_higher is not None and is_primary_phase and not is_special:
+        results_rows += f"<tr><td>KS2 higher standard</td><td><strong>{ks2_higher}%</strong></td></tr>"
+    # ATT8/GCSE for secondary and all-through only, never special schools
+    if ks4_att8 is not None and (is_secondary_phase or is_all_through) and not is_special:
+        results_rows += f"<tr><td>Attainment 8 score</td><td><strong>{ks4_att8}</strong></td></tr>"
+    if ks4_grade5 is not None and (is_secondary_phase or is_all_through) and not is_special:
+        ks4_grade5_display = min(ks4_grade5, 100.0)  # DfE data can exceed 100% due to cohort timing; cap for display
+        results_rows += f"<tr><td>Grade 5+ English &amp; Maths</td><td><strong>{ks4_grade5_display}%</strong></td></tr>"
+    if ks4_grade4 is not None and (is_secondary_phase or is_all_through) and not is_special:
+        results_rows += f"<tr><td>Grade 4+ English &amp; Maths</td><td><strong>{ks4_grade4}%</strong></td></tr>"
+
+    # Build data note for results section
+    results_note = ""
+    if ks4_att8 or ks4_grade5:
+        results_note = f"<p style=\"font-size:12px;color:#888;margin-top:12px;line-height:1.5;\">KS4 data from DfE {DATA_YEAR} school performance tables. Attainment 8 measures average grade across 8 GCSE subjects (national average: 46.4). Grade 5+ is a strong pass in both English and Maths. Figures may occasionally exceed 100% due to mid-year cohort changes in DfE reporting.</p>"
+    elif ks2_expected or ks2_higher:
+        results_note = f"<p style=\"font-size:12px;color:#888;margin-top:12px;line-height:1.5;\">KS2 data from DfE {DATA_YEAR} performance tables. Figures show the percentage of pupils meeting the expected or higher standard in reading, writing and maths combined.</p>"
+
+    # Admissions demand row — shown in School details card if data available
+    apps_per_place = school.get("apps_per_place")
+    if apps_per_place:
+        apps_row = f'<tr><td>Applications per place</td><td><strong>{apps_per_place}</strong></td></tr>'
+        apps_note = ('<p style="font-size:12px;color:#888;margin-top:12px;line-height:1.5;">'
+                     'Applications per place = number of first-choice applications received per available place '
+                     f'in the {DATA_YEAR} admissions round (DfE data). A figure above 1.0 means the school was '
+                     'oversubscribed. For example, 2.0 means twice as many families listed this school as their '
+                     'first choice as there were places available.</p>')
+    else:
+        apps_row = ""
+        apps_note = ""
+
+    results_section = ""
+    if results_rows:
+        results_section = f"""
+    <section class="card">
+      <h2>Exam results</h2>
+      <table>{results_rows}</table>
+      {results_note}
+    </section>"""
+
+    website_link = f'<a href="{"https://" + website if not website.startswith("http") else website}" target="_blank" rel="noopener">{website}</a>' if website else "N/A"
+    ofsted_link  = f'<a href="{ofsted_url}" target="_blank" rel="noopener">View Ofsted report</a>' if ofsted_url else ""
+    phone_link   = f'<a href="tel:{telephone}">{telephone}</a>' if telephone else "N/A"
+    maps_link    = f"https://www.google.com/maps/search/?api=1&query={lat},{lng}" if lat and lng else ""
+    school_name_url = name.replace(" ", "+").replace("&", "and") if name else ""
+
+    # Rich meta description with actual data
+    meta_parts = [f"{ofsted_label} {phase} school in {borough}, London"]
+    if school.get("apps_per_place"):
+        meta_parts.append(f"{school['apps_per_place']}x oversubscribed")
+    if ks4_att8:
+        meta_parts.append(f"Attainment 8: {ks4_att8}")
+    elif ks2_expected:
+        meta_parts.append(f"KS2 expected: {ks2_expected}%")
+    if pupils:
+        meta_parts.append(f"{pupils} pupils")
+    meta_parts.append(f"{postcode}")
+    meta_desc = ". ".join(meta_parts) + ". Free admissions, Ofsted and exam data."
+
+    schema = {
+        "@context": "https://schema.org",
+        "@type": "School",
+        "name": name,
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": street,
+            "addressLocality": borough,
+            "addressRegion": "London",
+            "postalCode": postcode,
+            "addressCountry": "GB"
+        },
+        "url": url,
+        "description": meta_desc,
+        "isAccessibleForFree": True,
+        "publicAccess": True,
+    }
+    if telephone:
+        schema["telephone"] = telephone
+    if website:
+        schema["sameAs"] = f"https://{website}" if not website.startswith("http") else website
+    if lat and lng:
+        schema["geo"] = {
+            "@type": "GeoCoordinates",
+            "latitude": lat,
+            "longitude": lng
+        }
+    if pupils:
+        try:
+            schema["numberOfStudents"] = int(pupils)
+        except:
+            pass
+    if school.get("gender") and school["gender"] != "Mixed":
+        schema["gender"] = school["gender"]
+
+    # FAQ schema – answers common questions parents search for
+    faq_items = []
+    if school.get("apps_per_place"):
+        r = school["apps_per_place"]
+        faq_items.append({
+            "@type": "Question",
+            "name": f"How oversubscribed is {name}?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": f"{name} received {r} first-choice applications per available place in the {DATA_YEAR} admissions round."
+            }
+        })
+    if ofsted_label and ofsted_label != "Not yet rated":
+        faq_items.append({
+            "@type": "Question",
+            "name": f"What is {name}\'s Ofsted rating?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": f"{name} was rated {ofsted_label} by Ofsted{(' on ' + inspection) if inspection else ''}. View the full report on the Ofsted website."
+            }
+        })
+    if ks4_att8:
+        faq_items.append({
+            "@type": "Question",
+            "name": f"What are {name}\'s GCSE results?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": f"{name} achieved an Attainment 8 score of {ks4_att8} in {DATA_YEAR}. The national average is 46.4."
+            }
+        })
+    elif ks2_expected:
+        faq_items.append({
+            "@type": "Question",
+            "name": f"What are {name}\'s KS2 results?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": f"At {name}, {ks2_expected}% of pupils met the expected standard in reading, writing and maths at KS2 in {DATA_YEAR}."
+            }
+        })
+    if school.get("crime_label"):
+        faq_items.append({
+            "@type": "Question",
+            "name": f"Is the area around {name} safe?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": f"The area within 500m of {name} is classified as {school['crime_label'].lower()} based on Metropolitan Police data."
+            }
+        })
+
+    faq_schema = None
+    if faq_items:
+        faq_schema = {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": faq_items
+        }
+
+    # Call independent school section function
+    independent_section = render_independent_school_section(school)
+
+    html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>London Schools & Homes</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{name}, {borough} | London Schools Explorer</title>
+  <meta name="description" content="{meta_desc}">
+  <link rel="canonical" href="{url}">
+  <script type="application/ld+json">{{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {{"@type": "ListItem", "position": 1, "name": "London Schools Explorer", "item": "https://londonschool.directory/"}},
+      {{"@type": "ListItem", "position": 2, "name": "{borough}", "item": "{BASE_URL}/schools/{borough_slug}"}},
+      {{"@type": "ListItem", "position": 3, "name": "{title}", "item": "{url}"}}
+    ]
+  }}</script>
+  <meta property="og:title" content="{name} | London Schools Explorer">
+  <meta property="og:description" content="{meta_desc}">
+  <meta property="og:url" content="{url}">
+  <meta property="og:type" content="website">
+  <script type="application/ld+json">{json.dumps(schema, indent=2)}</script>
+  {f'<script type="application/ld+json">{json.dumps(faq_schema, indent=2)}</script>' if faq_schema else ''}
   <style>
-    :root {
-      --ink: #111827; --ink-2: #374151; --ink-3: #6B7280;
-      --gold: #D4A843; --gold-lt: #FDF6E3; --gold-md: #F5E6B8;
-      --green: #059669; --green-lt: #ECFDF5;
-      --blue: #2563EB; --blue-lt: #EFF6FF;
-      --amber: #D97706; --amber-lt: #FFFBEB;
-      --red: #DC2626; --red-lt: #FEF2F2;
-      --bg: #F9FAFB; --surface: #FFFFFF; --border: #E5E7EB; --border-2: #D1D5DB;
-      --radius: 10px; --radius-lg: 16px;
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { font-size: 15px; }
-    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; }
-
-    /* ── Top bar ── */
-    .topbar { background: var(--ink); height: 56px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; position: sticky; top: 0; z-index: 900; }
-    .topbar-logo { display: flex; align-items: center; gap: 10px; }
-    .topbar-logo-mark { width: 32px; height: 32px; background: var(--gold); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-weight: 900; font-size: 1rem; color: var(--ink); flex-shrink: 0; }
-    .topbar-logo-text { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1.05rem; color: white; letter-spacing: -0.01em; }
-    .topbar-logo-text span { color: var(--gold); }
-    .topbar-nav { display: flex; gap: 2px; }
-    .topbar-nav-btn { display: flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 7px; border: none; background: transparent; color: rgba(255,255,255,0.6); font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 500; cursor: pointer; transition: all 0.15s; }
-    .topbar-nav-btn svg { width: 15px; height: 15px; opacity: 0.7; }
-    .topbar-nav-btn:hover { background: rgba(255,255,255,0.08); color: white; }
-    .topbar-nav-btn.active { background: var(--gold); color: var(--ink); font-weight: 600; }
-    .topbar-nav-btn.active svg { opacity: 1; }
-
-    /* ── Hero ── */
-    .hero { background: var(--ink); color: white; padding: 48px 24px 40px; }
-    .hero-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: center; }
-    .hero-eyebrow { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
-    .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 900; line-height: 1.08; margin-bottom: 10px; }
-    .hero h1 em { font-style: italic; color: var(--gold); }
-    .hero-sub { font-size: 0.9rem; color: rgba(255,255,255,0.55); line-height: 1.65; max-width: 480px; }
-    .hero-stats { display: flex; gap: 0; flex-shrink: 0; background: rgba(255,255,255,0.06); border-radius: var(--radius); border: 1px solid rgba(255,255,255,0.1); overflow: hidden; }
-    .hero-stat { padding: 18px 24px; text-align: center; border-right: 1px solid rgba(255,255,255,0.08); }
-    .hero-stat:last-child { border-right: none; }
-    .hero-stat-num { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--gold); line-height: 1; }
-    .hero-stat-label { font-size: 0.65rem; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; }
-
-    /* ── Main layout ── */
-    .main { max-width: 1200px; margin: 0 auto; padding: 28px 24px; }
-
-    /* ── Filter bar ── */
-    .filter-bar { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; }
-    .fgroup { display: flex; flex-direction: column; gap: 4px; }
-    .flabel { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-3); }
-    .fsearch { position: relative; flex: 1; min-width: 200px; }
-    .fsearch input { width: 100%; padding: 8px 12px 8px 34px; border: 1.5px solid var(--border); border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 0.88rem; color: var(--ink); background: var(--bg); outline: none; transition: border-color 0.2s; }
-    .fsearch input:focus { border-color: var(--gold); background: white; }
-    .fsearch-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--ink-3); pointer-events: none; }
-    select { padding: 8px 28px 8px 10px; border: 1.5px solid var(--border); border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 0.85rem; background: var(--bg); color: var(--ink); cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%236B7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 9px center; outline: none; transition: border-color 0.2s; min-width: 140px; }
-    select:focus { border-color: var(--gold); background-color: white; }
-    .clear-btn { padding: 8px 14px; background: transparent; border: 1.5px solid var(--border); border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 0.82rem; color: var(--ink-3); cursor: pointer; transition: all 0.15s; white-space: nowrap; align-self: flex-end; }
-    .clear-btn:hover { border-color: var(--red); color: var(--red); background: var(--red-lt); }
-
-    /* ── Results header ── */
-    .results-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-    .results-count { font-size: 0.85rem; color: var(--ink-3); }
-    .results-count strong { color: var(--ink); font-weight: 600; }
-    .view-toggle { display: flex; gap: 2px; background: var(--border); border-radius: 8px; padding: 3px; }
-    .view-btn { width: 30px; height: 26px; background: transparent; border: none; border-radius: 6px; cursor: pointer; color: var(--ink-3); font-size: 0.9rem; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
-    .view-btn.active { background: white; color: var(--ink); }
-
-    /* ── School grid ── */
-    .school-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px; }
-    .school-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; cursor: pointer; transition: all 0.18s; position: relative; overflow: hidden; }
-    .school-card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--band-color, var(--border)); }
-    .school-card:hover { border-color: var(--gold); box-shadow: 0 4px 20px rgba(0,0,0,0.08); transform: translateY(-1px); }
-    .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
-    .card-phase { font-size: 0.67rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-3); background: var(--bg); padding: 3px 7px; border-radius: 4px; border: 1px solid var(--border); }
-    .card-name { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; line-height: 1.3; margin-bottom: 4px; }
-    .card-la { font-size: 0.77rem; color: var(--ink-3); margin-bottom: 12px; }
-    .card-rating-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-    .card-rating-track { flex: 1; background: var(--bg); border-radius: 4px; height: 5px; overflow: hidden; border: 1px solid var(--border); }
-    .card-rating-fill { height: 100%; border-radius: 4px; }
-    .card-rating-label { font-size: 0.72rem; font-weight: 600; min-width: 100px; text-align: right; }
-    .card-pills { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px; }
-    .pill { font-size: 0.68rem; padding: 3px 8px; border-radius: 20px; font-weight: 500; border: 1px solid transparent; }
-    .pill-o { background: var(--green-lt); color: var(--green); border-color: #A7F3D0; }
-    .pill-g { background: var(--blue-lt); color: var(--blue); border-color: #BFDBFE; }
-    .pill-r { background: var(--amber-lt); color: var(--amber); border-color: #FDE68A; }
-    .pill-i { background: var(--red-lt); color: var(--red); border-color: #FECACA; }
-    .pill-u { background: var(--bg); color: var(--ink-3); border-color: var(--border); }
-    .card-meta { display: flex; gap: 12px; font-size: 0.74rem; color: var(--ink-3); padding-top: 10px; border-top: 1px solid var(--bg); flex-wrap: wrap; }
-
-    /* ── School table ── */
-    .school-table { width: 100%; border-collapse: collapse; background: var(--surface); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); font-size: 0.84rem; }
-    .school-table th { background: var(--ink); color: rgba(255,255,255,0.8); padding: 11px 14px; text-align: left; font-weight: 500; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.09em; }
-    .school-table td { padding: 11px 14px; border-bottom: 1px solid var(--bg); vertical-align: middle; }
-    .school-table tr:last-child td { border-bottom: none; }
-    .school-table tr:hover td { background: var(--gold-lt); cursor: pointer; }
-    .rank-num { font-family: 'Playfair Display', serif; font-weight: 700; color: var(--gold); }
-    .band-chip { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 20px; font-size: 0.68rem; font-weight: 600; }
-
-    /* ── Map ── */
-    .map-wrap { border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); }
-    #school-map { height: 560px; width: 100%; }
-    .map-legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.75rem; color: var(--ink-3); margin-top: 12px; align-items: center; }
-    .map-legend-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; margin-right: 5px; }
-
-    /* ── Detail panel ── */
-    .detail-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 2000; display: flex; justify-content: flex-end; animation: fadeIn 0.15s; }
-    @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
-    @keyframes slideIn { from { transform: translateX(100%) } to { transform: translateX(0) } }
-    .detail-panel { width: 100%; max-width: 520px; background: var(--surface); height: 100%; overflow-y: auto; animation: slideIn 0.22s cubic-bezier(0.25,0.46,0.45,0.94); border-left: 1px solid var(--border); }
-    .detail-header { background: var(--ink); color: white; padding: 24px 24px 20px; position: relative; }
-    .detail-close { position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.1); border: none; color: white; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: background 0.15s; }
-    .detail-close:hover { background: rgba(255,255,255,0.2); }
-    .detail-phase-tag { font-size: 0.67rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--gold); margin-bottom: 7px; }
-    .detail-name { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 900; line-height: 1.15; margin-bottom: 5px; }
-    .detail-la { font-size: 0.82rem; color: rgba(255,255,255,0.5); }
-    .detail-score-row { display: flex; gap: 10px; margin-top: 18px; }
-    .detail-score-box { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px; text-align: center; flex: 1; }
-    .detail-score-val { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; color: var(--gold); line-height: 1; }
-    .detail-score-desc { font-size: 0.63rem; text-transform: uppercase; letter-spacing: 0.09em; color: rgba(255,255,255,0.4); margin-top: 4px; }
-    .detail-body { padding: 20px 24px; }
-    .detail-section { margin-bottom: 20px; }
-    .detail-section-title { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink-3); margin-bottom: 10px; padding-bottom: 7px; border-bottom: 1px solid var(--border); }
-    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .detail-field { display: flex; flex-direction: column; gap: 2px; padding: 8px; background: var(--bg); border-radius: 7px; }
-    .detail-field-label { font-size: 0.65rem; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.07em; }
-    .detail-field-val { font-size: 0.85rem; font-weight: 500; color: var(--ink); }
-    .rating-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-    .rating-label { font-size: 0.77rem; color: var(--ink-2); width: 160px; flex-shrink: 0; }
-    .rating-bar-wrap { flex: 1; background: var(--bg); border-radius: 4px; height: 6px; overflow: hidden; border: 1px solid var(--border); }
-    .rating-bar-fill { height: 100%; border-radius: 4px; }
-    .rating-chip { font-size: 0.67rem; font-weight: 600; width: 110px; text-align: right; }
-
-    /* ── Stats ── */
-    .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; margin-bottom: 20px; }
-    .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; }
-    .stat-card-num { font-family: 'Playfair Display', serif; font-size: 1.9rem; font-weight: 700; color: var(--ink); line-height: 1; margin-bottom: 4px; }
-    .stat-card-label { font-size: 0.7rem; color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.07em; }
-    .chart-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-bottom: 14px; }
-    .chart-title { font-family: 'Playfair Display', serif; font-size: 0.98rem; font-weight: 700; margin-bottom: 14px; }
-    .bar-chart-row { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; }
-    .bar-chart-label { font-size: 0.77rem; width: 160px; flex-shrink: 0; color: var(--ink-2); }
-    .bar-chart-wrap { flex: 1; background: var(--bg); border-radius: 3px; height: 18px; overflow: hidden; border: 1px solid var(--border); }
-    .bar-chart-fill { height: 100%; border-radius: 3px; display: flex; align-items: center; padding-left: 7px; font-size: 0.68rem; font-weight: 600; color: white; min-width: 18px; }
-    .bar-chart-count { font-size: 0.75rem; color: var(--ink-3); width: 30px; text-align: right; }
-
-    /* ── Pagination ── */
-    .pagination { display: flex; justify-content: center; align-items: center; gap: 5px; margin-top: 28px; }
-    .page-btn { min-width: 32px; height: 32px; border: 1.5px solid var(--border); border-radius: 7px; background: var(--surface); cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.8rem; color: var(--ink); transition: all 0.15s; display: flex; align-items: center; justify-content: center; padding: 0 8px; }
-    .page-btn.active { background: var(--ink); color: white; border-color: var(--ink); font-weight: 600; }
-    .page-btn:hover:not(.active):not(:disabled) { border-color: var(--gold); color: var(--gold); }
-    .page-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-
-    /* ── Loading / Empty ── */
-    .loading { display: flex; align-items: center; justify-content: center; padding: 80px; font-size: 0.88rem; color: var(--ink-3); gap: 10px; }
-    .spinner { width: 18px; height: 18px; border: 2px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.65s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg) } }
-    .empty-state { text-align: center; padding: 60px; color: var(--ink-3); }
-    .empty-state h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; margin-bottom: 8px; color: var(--ink-2); }
-
-    /* ── Property view ── */
-    .pv-layout { display: grid; grid-template-columns: 300px 1fr; gap: 20px; align-items: start; }
-    .pv-sidebar { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; position: sticky; top: 76px; }
-    .pv-sidebar-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; margin-bottom: 4px; }
-    .pv-sidebar-sub { font-size: 0.77rem; color: var(--ink-3); line-height: 1.5; margin-bottom: 18px; }
-    .pv-field { margin-bottom: 14px; }
-    .pv-field-label { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-3); margin-bottom: 5px; }
-    .pv-input { width: 100%; padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 0.85rem; color: var(--ink); background: var(--bg); outline: none; transition: border-color 0.2s; }
-    .pv-input:focus { border-color: var(--gold); background: white; }
-    .pv-input:disabled { opacity: 0.5; }
-    .pv-select { width: 100%; padding: 9px 28px 9px 10px; border: 1.5px solid var(--border); border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 0.85rem; background: var(--bg); color: var(--ink); cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%236B7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 9px center; outline: none; transition: border-color 0.2s; }
-    .pv-select:focus { border-color: var(--gold); background-color: white; }
-    .pv-divider { height: 1px; background: var(--border); margin: 16px 0; }
-    .pv-section-label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-3); margin-bottom: 10px; }
-    .pv-chips { display: flex; flex-direction: column; gap: 6px; }
-    .pv-chip { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1.5px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.15s; background: var(--bg); }
-    .pv-chip.on { border-color: var(--gold); background: var(--gold-lt); }
-    .pv-chip-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
-    .pv-chip-text { font-size: 0.8rem; font-weight: 500; color: var(--ink-2); }
-    .pv-chip.on .pv-chip-text { color: var(--ink); }
-    .pv-chip-check { margin-left: auto; font-size: 0.75rem; color: var(--gold); font-weight: 700; opacity: 0; }
-    .pv-chip.on .pv-chip-check { opacity: 1; }
-    .pv-search-btn { width: 100%; padding: 11px; background: var(--ink); color: var(--gold); border: none; border-radius: 9px; font-family: 'Playfair Display', serif; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: background 0.2s; margin-top: 16px; letter-spacing: 0.02em; }
-    .pv-search-btn:hover { background: #1f2937; }
-    .pv-search-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    .pv-main { min-width: 0; }
-    .pv-status { font-size: 0.8rem; color: var(--ink-3); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
-    .pv-spinner { width: 13px; height: 13px; border: 2px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.65s linear infinite; flex-shrink: 0; }
-    .pv-error { background: var(--red-lt); color: var(--red); border: 1px solid #FECACA; border-radius: 8px; padding: 10px 14px; font-size: 0.82rem; margin-bottom: 14px; }
-    .pv-schools-found { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; margin-bottom: 16px; }
-    .pv-sf-label { font-size: 0.63rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-3); margin-bottom: 9px; }
-    .pv-sf-list { display: flex; flex-wrap: wrap; gap: 7px; }
-    .pv-sf-badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 20px; font-size: 0.73rem; font-weight: 500; border: 1px solid var(--border); background: var(--bg); color: var(--ink-2); }
-    .pv-sf-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-    .pv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
-    .pv-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: all 0.18s; }
-    .pv-card:hover { border-color: var(--gold); box-shadow: 0 4px 18px rgba(0,0,0,0.07); transform: translateY(-1px); }
-    .pv-card-thumb { width: 100%; height: 140px; background: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; overflow: hidden; position: relative; }
-    .pv-card-thumb img { width: 100%; height: 100%; object-fit: cover; }
-    .pv-card-tenure { position: absolute; top: 9px; left: 9px; background: var(--ink); color: var(--gold); font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding: 3px 8px; border-radius: 5px; }
-    .pv-card-save { position: absolute; top: 9px; right: 9px; width: 28px; height: 28px; border-radius: 50%; background: white; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.85rem; transition: all 0.15s; }
-    .pv-card-save.saved { background: var(--gold); border-color: var(--gold); }
-    .pv-card-body { padding: 13px; }
-    .pv-price { font-family: 'Playfair Display', serif; font-size: 1.12rem; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
-    .pv-address { font-size: 0.75rem; color: var(--ink-3); margin-bottom: 9px; line-height: 1.4; }
-    .pv-pills { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 9px; }
-    .pv-pill { font-size: 0.67rem; padding: 2px 8px; border-radius: 20px; border: 1px solid var(--border); color: var(--ink-3); background: var(--bg); }
-    .pv-schools { border-top: 1px solid var(--bg); padding-top: 9px; }
-    .pv-school-row { display: flex; align-items: flex-start; gap: 7px; padding: 4px 0; font-size: 0.73rem; }
-    .pv-school-row + .pv-school-row { border-top: 1px solid var(--bg); }
-    .pv-s-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; }
-    .pv-s-name { font-weight: 600; color: var(--ink-2); }
-    .pv-s-detail { color: var(--ink-3); font-size: 0.68rem; }
-    .pv-cta { display: flex; gap: 7px; margin-top: 11px; }
-    .pv-btn-ghost { flex: 1; padding: 8px; font-size: 0.75rem; font-family: 'Inter', sans-serif; border: 1.5px solid var(--border); border-radius: 7px; background: var(--bg); cursor: pointer; color: var(--ink-2); font-weight: 500; transition: all 0.15s; }
-    .pv-btn-ghost:hover { border-color: var(--gold); color: var(--ink); }
-    .pv-btn-solid { flex: 1; padding: 8px; font-size: 0.75rem; font-family: 'Inter', sans-serif; border: none; border-radius: 7px; background: var(--ink); color: var(--gold); cursor: pointer; font-weight: 600; transition: background 0.15s; }
-    .pv-btn-solid:hover { background: #1f2937; }
-    .pv-empty { text-align: center; padding: 60px 20px; color: var(--ink-3); grid-column: 1/-1; }
-    .pv-empty-icon { font-size: 2.5rem; margin-bottom: 12px; }
-    .pv-empty h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--ink-2); margin-bottom: 7px; }
-    .pv-hero { background: var(--ink); border-radius: var(--radius-lg); padding: 28px; margin-bottom: 16px; color: white; }
-    .pv-hero-tag { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--gold); margin-bottom: 8px; }
-    .pv-hero-title { font-family: 'Playfair Display', serif; font-size: 1.35rem; font-weight: 700; margin-bottom: 6px; }
-    .pv-hero-sub { font-size: 0.8rem; color: rgba(255,255,255,0.55); line-height: 1.5; }
-
-    /* ── Responsive ── */
-    @media (max-width: 900px) {
-      .pv-layout { grid-template-columns: 1fr; }
-      .pv-sidebar { position: static; }
-      .hero-inner { grid-template-columns: 1fr; }
-      .hero-stats { display: none; }
-    }
-    @media (max-width: 640px) {
-      .topbar { padding: 0 14px; }
-      .topbar-nav-btn span { display: none; }
-      .main { padding: 16px 14px; }
-      .hero { padding: 28px 14px; }
-      .filter-bar { gap: 8px; }
-      .school-grid { grid-template-columns: 1fr; }
-    }
+    *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
+    body {{ font-family: system-ui, -apple-system, sans-serif; color: #1a1a1a; background: #f8f9fa; line-height: 1.6; }}
+    a {{ color: #1565C0; }}
+    .topbar {{ background: #fff; border-bottom: 1px solid #e0e0e0; padding: 12px 20px; }}
+    .topbar a {{ text-decoration: none; font-weight: 600; color: #1a1a1a; font-size: 15px; }}
+    .topbar span {{ color: #888; margin: 0 8px; }}
+    .hero {{ background: #fff; border-bottom: 1px solid #e0e0e0; padding: 28px 20px 24px; }}
+    .container {{ max-width: 780px; margin: 0 auto; padding: 24px 20px; display: flex; flex-direction: column; gap: 16px; }}
+    .hero .container {{ padding: 0; }}
+    .badge {{ display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-bottom: 10px; }}
+    h1 {{ font-size: clamp(22px, 5vw, 30px); font-weight: 700; line-height: 1.2; margin-bottom: 6px; }}
+    .meta {{ color: #555; font-size: 14px; margin-top: 4px; }}
+    .card {{ background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px 24px; }}
+    .card h2 {{ font-size: 16px; font-weight: 600; margin-bottom: 14px; color: #111; }}
+    table {{ width: 100%; border-collapse: collapse; font-size: 14px; }}
+    td {{ padding: 8px 0; border-bottom: 1px solid #f0f0f0; vertical-align: top; }}
+    td:first-child {{ color: #555; width: 48%; }}
+    tr:last-child td {{ border-bottom: none; }}
+    .grid {{ display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }}
+    .stat {{ background: #f8f9fa; border-radius: 8px; padding: 14px 16px; }}
+    .stat-label {{ font-size: 12px; color: #666; margin-bottom: 4px; }}
+    .stat-value {{ font-size: 22px; font-weight: 700; color: #111; }}
+    .actions {{ display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }}
+    .btn {{ display: inline-block; padding: 10px 18px; border-radius: 8px; font-size: 14px; font-weight: 500; text-decoration: none; border: 1px solid #ccc; color: #1a1a1a; background: #fff; }}
+    .btn-primary {{ background: #1565C0; color: #fff; border-color: #1565C0; }}
+    .back-link {{ font-size: 14px; color: #555; text-decoration: none; }}
+    .back-link:hover {{ color: #111; }}
+    footer {{ text-align: center; padding: 32px 20px; font-size: 13px; color: #888; }}
+    @media (max-width: 600px) {{
+      .hero {{ padding: 20px 14px 16px; }}
+      h1 {{ font-size: 22px; }}
+      .meta {{ font-size: 13px; }}
+      .actions {{ flex-direction: column; }}
+      .btn {{ text-align: center; }}
+      .container {{ padding: 16px 12px; gap: 12px; }}
+      .grid {{ grid-template-columns: 1fr; }}
+      .card {{ padding: 14px 16px; }}
+      td {{ font-size: 13px; padding: 6px 0; }}
+      .topbar {{ padding: 10px 12px; font-size: 13px; }}
+    }}
+    @media (max-width: 520px) {{ .grid {{ grid-template-columns: 1fr; }} }}
   </style>
 </head>
 <body>
-<div id="root"></div>
-<script type="text/babel">
-const { useState, useEffect, useMemo, useRef, useCallback } = React;
 
-const API_BASE = 'http://localhost:8000';
-const PROP_API = 'https://london-school-model.vercel.app/api';
-const JSON_FALLBACK = './schools.json';
+<div class="topbar">
+  <div style="max-width:780px;margin:0 auto">
+    <a href="/">London Schools Explorer</a>
+    <span>/</span>
+    <a href="/schools/{borough_slug}">{borough}</a>
+    <span>/</span>
+    {name}
+  </div>
+</div>
 
-const BAND_COLORS = { Outstanding:'#059669', Good:'#2563EB', 'Requires improvement':'#D97706', Inadequate:'#DC2626', Unknown:'#9CA3AF' };
-const BAND_BG    = { Outstanding:'#ECFDF5', Good:'#EFF6FF', 'Requires improvement':'#FFFBEB', Inadequate:'#FEF2F2', Unknown:'#F9FAFB' };
-const RATING_MAP   = { 1:'Outstanding', 2:'Good', 3:'Requires improvement', 4:'Inadequate' };
-const RATING_SCORES= { 1:100, 2:80, 3:40, 4:0 };
-
-function BandChip({ band }) {
-  const c = BAND_COLORS[band]||BAND_COLORS.Unknown;
-  const bg = BAND_BG[band]||BAND_BG.Unknown;
-  return <span className="band-chip" style={{background:bg, color:c, border:`1px solid ${c}33`}}>{band||'Unknown'}</span>;
-}
-
-function RatingBar({ label, raw }) {
-  const text = RATING_MAP[raw]; const score = RATING_SCORES[raw]; if (!text) return null;
-  return (
-    <div className="rating-row">
-      <div className="rating-label">{label}</div>
-      <div className="rating-bar-wrap"><div className="rating-bar-fill" style={{ width:`${score}%`, background:BAND_COLORS[text] }} /></div>
-      <div className="rating-chip" style={{ color:BAND_COLORS[text] }}>{text}</div>
-    </div>
-  );
-}
-
-function SchoolDetail({ school, onClose }) {
-  if (!school) return null;
-  const band = school.score_band || school.quality_label || 'Unknown';
-  const website = school.website ? (school.website.startsWith('http') ? school.website : `https://${school.website}`) : null;
-  return (
-    <div className="detail-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
-      <div className="detail-panel">
-        <div className="detail-header">
-          <button className="detail-close" onClick={onClose}>✕</button>
-          <div className="detail-phase-tag">{school.phase} · {school.school_type}</div>
-          <div className="detail-name">{school.name}</div>
-          <div className="detail-la">📍 {school.local_authority} · {school.postcode}</div>
-          <div className="detail-score-row">
-            <div className="detail-score-box"><div className="detail-score-val">{school.ofsted_score??'—'}</div><div className="detail-score-desc">Score</div></div>
-            <div className="detail-score-box" style={{flex:1.6}}><div style={{paddingTop:4}}><BandChip band={band} /></div><div className="detail-score-desc" style={{marginTop:5}}>Rating</div></div>
-            <div className="detail-score-box"><div className="detail-score-val">{school.pupils??'—'}</div><div className="detail-score-desc">Pupils</div></div>
-          </div>
-        </div>
-        <div className="detail-body">
-          <div className="detail-section">
-            <div className="detail-section-title">Ofsted Ratings</div>
-            <RatingBar label="Quality of education" raw={school.quality_raw} />
-            <RatingBar label="Behaviour & attitudes" raw={school.behaviour_raw} />
-            <RatingBar label="Personal development" raw={school.personal_dev_raw} />
-            <RatingBar label="Leadership & management" raw={school.leadership_raw} />
-          </div>
-          <div className="detail-section">
-            <div className="detail-section-title">School Information</div>
-            <div className="detail-grid">
-              <div className="detail-field"><span className="detail-field-label">Age Range</span><span className="detail-field-val">{school.age_from}–{school.age_to}</span></div>
-              <div className="detail-field"><span className="detail-field-label">Gender</span><span className="detail-field-val">{school.gender||'—'}</span></div>
-              <div className="detail-field"><span className="detail-field-label">Sixth Form</span><span className="detail-field-val">{school.sixth_form==='Has a sixth form'?'✓ Yes':'No'}</span></div>
-              <div className="detail-field"><span className="detail-field-label">Admissions</span><span className="detail-field-val">{school.admissions||'—'}</span></div>
-              <div className="detail-field"><span className="detail-field-label">Safeguarding</span><span className="detail-field-val" style={{color:school.safeguarding==='Yes'?'#059669':'#DC2626'}}>{school.safeguarding==='Yes'?'✓ Effective':school.safeguarding||'—'}</span></div>
-              <div className="detail-field"><span className="detail-field-label">Last Inspection</span><span className="detail-field-val">{school.inspection_date||'—'}</span></div>
-              {school.pct_fsm!=null&&<div className="detail-field"><span className="detail-field-label">Free School Meals</span><span className="detail-field-val">{school.pct_fsm}%</span></div>}
-              {school.idaci_quintile!=null&&<div className="detail-field"><span className="detail-field-label">IDACI Quintile</span><span className="detail-field-val">Quintile {school.idaci_quintile}</span></div>}
-              {school.head_name&&<div className="detail-field" style={{gridColumn:'span 2'}}><span className="detail-field-label">Headteacher</span><span className="detail-field-val">{school.head_name}</span></div>}
-              {school.telephone&&<div className="detail-field"><span className="detail-field-label">Telephone</span><span className="detail-field-val">{school.telephone}</span></div>}
-              {school.mat_name&&<div className="detail-field" style={{gridColumn:'span 2'}}><span className="detail-field-label">Academy Trust</span><span className="detail-field-val">{school.mat_name}</span></div>}
-              {school.religious_character&&school.religious_character!=='Does not apply'&&<div className="detail-field" style={{gridColumn:'span 2'}}><span className="detail-field-label">Religious Character</span><span className="detail-field-val">{school.religious_character}</span></div>}
-            </div>
-          </div>
-          <div style={{display:'flex',gap:9}}>
-            {website&&<a href={website} target="_blank" rel="noopener noreferrer" style={{flex:1,display:'block',textAlign:'center',padding:'10px',background:'var(--bg)',color:'var(--ink)',borderRadius:8,fontWeight:600,fontSize:'0.82rem',textDecoration:'none',border:'1.5px solid var(--border)'}}>School website →</a>}
-            {school.ofsted_url&&<a href={school.ofsted_url} target="_blank" rel="noopener noreferrer" style={{flex:1,display:'block',textAlign:'center',padding:'10px',background:'var(--ink)',color:'var(--gold)',borderRadius:8,fontWeight:600,fontSize:'0.82rem',textDecoration:'none'}}>Ofsted report →</a>}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function MapView({ schools, onSelect }) {
-  const mapInstance = useRef(null);
-  const markersRef = useRef([]);
-  useEffect(() => {
-    if (mapInstance.current) return;
-    mapInstance.current = L.map('school-map').setView([51.505, -0.1], 10);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap', maxZoom: 18 }).addTo(mapInstance.current);
-  }, []);
-  useEffect(() => {
-    if (!mapInstance.current) return;
-    markersRef.current.forEach(m => m.remove()); markersRef.current = [];
-    schools.filter(s => s.lat && s.lng).forEach(school => {
-      const band = school.score_band || school.quality_label || 'Unknown';
-      const color = BAND_COLORS[band] || '#9CA3AF';
-      const icon = L.divIcon({ className: '', html: `<div style="width:11px;height:11px;border-radius:50%;background:${color};border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.25)"></div>`, iconSize:[11,11], iconAnchor:[5,5] });
-      const m = L.marker([school.lat, school.lng], { icon }).addTo(mapInstance.current);
-      m.bindPopup(`<div style="font-family:Inter,sans-serif;min-width:180px"><div style="font-family:'Playfair Display',serif;font-weight:700;font-size:0.92rem;margin-bottom:2px">${school.name}</div><div style="font-size:0.73rem;color:#6B7280;margin-bottom:7px">${school.local_authority} · ${school.postcode}</div><span style="background:${BAND_BG[band]||'#F9FAFB'};color:${color};border:1px solid ${color}33;display:inline-block;padding:2px 8px;border-radius:20px;font-size:0.67rem;font-weight:600">${band}</span><br/><button onclick="window.__sel(${school.urn})" style="display:block;width:100%;text-align:center;padding:7px;background:#111827;color:#D4A843;border-radius:7px;font-size:0.75rem;font-weight:600;cursor:pointer;border:none;font-family:Inter,sans-serif;margin-top:8px">View details →</button></div>`);
-      markersRef.current.push(m);
-    });
-    window.__sel = urn => { const s = schools.find(x => x.urn === urn); if (s) onSelect(s); };
-  }, [schools]);
-  const withCoords = schools.filter(s => s.lat && s.lng).length;
-  return (
+<div class="hero">
+  <div class="container">
     <div>
-      <div className="map-wrap"><div id="school-map" /></div>
-      <div className="map-legend">
-        {Object.entries(BAND_COLORS).filter(([b]) => b !== 'Unknown').map(([band, color]) => (
-          <span key={band}><span className="map-legend-dot" style={{background:color}} />{band}</span>
-        ))}
-        <span style={{marginLeft:'auto'}}>{withCoords} of {schools.length} mapped</span>
-      </div>
+      <span class="badge" style="background:{ofsted_bg_color};color:{ofsted_text_color}">{ofsted_label}</span>
+      <h1>{name}</h1>
+      <p class="meta">{street}, {borough}, {postcode}{"&ensp;&middot;&ensp;" + phase if phase != "N/A" else ""}{"&ensp;&middot;&ensp;" + school_type if school_type != "N/A" else ""}</p>
     </div>
-  );
-}
-
-function StatsPage({ schools }) {
-  const byBand = useMemo(() => { const c={}; schools.forEach(s=>{const b=s.score_band||s.quality_label||'Unknown';c[b]=(c[b]||0)+1;}); return c; }, [schools]);
-  const byPhase = useMemo(() => { const c={}; schools.forEach(s=>{c[s.phase||'Unknown']=(c[s.phase||'Unknown']||0)+1;}); return Object.entries(c).sort((a,b)=>b[1]-a[1]); }, [schools]);
-  const byLA = useMemo(() => { const c={}; schools.forEach(s=>{c[s.local_authority||'Unknown']=(c[s.local_authority||'Unknown']||0)+1;}); return Object.entries(c).sort((a,b)=>b[1]-a[1]).slice(0,16); }, [schools]);
-  const rated = schools.filter(s=>s.ofsted_score!=null);
-  const avg = rated.length ? Math.round(rated.reduce((a,s)=>a+s.ofsted_score,0)/rated.length) : 0;
-  return (
-    <div>
-      <div className="stats-grid">
-        {[{num:schools.length,label:'Total Schools'},{num:byBand['Outstanding']||0,label:'Outstanding'},{num:byBand['Good']||0,label:'Good'},{num:avg,label:'Avg Score'}].map(({num,label})=>(
-          <div key={label} className="stat-card"><div className="stat-card-num">{num}</div><div className="stat-card-label">{label}</div></div>
-        ))}
-      </div>
-      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:14,marginBottom:14}}>
-        <div className="chart-section">
-          <div className="chart-title">By Ofsted rating</div>
-          {['Outstanding','Good','Requires improvement','Inadequate','Unknown'].map(band => { const count=byBand[band]||0; if(!count) return null; const pct=Math.round((count/schools.length)*100); return (<div key={band} className="bar-chart-row"><div className="bar-chart-label">{band}</div><div className="bar-chart-wrap"><div className="bar-chart-fill" style={{width:`${pct}%`,background:BAND_COLORS[band]}}>{pct>6?`${pct}%`:''}</div></div><div className="bar-chart-count">{count}</div></div>); })}
-        </div>
-        <div className="chart-section">
-          <div className="chart-title">By phase</div>
-          {byPhase.map(([phase,count])=>{const pct=Math.round((count/byPhase[0][1])*100);return(<div key={phase} className="bar-chart-row"><div className="bar-chart-label">{phase}</div><div className="bar-chart-wrap"><div className="bar-chart-fill" style={{width:`${pct}%`,background:'#111827'}}>{count}</div></div><div className="bar-chart-count">{count}</div></div>);})}
-        </div>
-      </div>
-      <div className="chart-section">
-        <div className="chart-title">By London borough</div>
-        {byLA.map(([la,count])=>{const pct=Math.round((count/byLA[0][1])*100);return(<div key={la} className="bar-chart-row"><div className="bar-chart-label">{la}</div><div className="bar-chart-wrap"><div className="bar-chart-fill" style={{width:`${pct}%`,background:'#D4A843'}}>{count}</div></div><div className="bar-chart-count">{count}</div></div>);})}
-      </div>
+    <div class="actions">
+      {"<a class='btn btn-primary' href='" + ofsted_url + "' target='_blank' rel='noopener'>View Ofsted report</a>" if ofsted_url else ""}
+      {"<a class='btn' href='" + maps_link + "' target='_blank' rel='noopener'>📍 View on map</a>" if maps_link else ""}
+      {"<a class='btn' href='https://www.google.com/maps/dir/?api=1&destination=" + str(lat) + "," + str(lng) + "&travelmode=walking' target='_blank' rel='noopener' style='background:#E8F5E9;color:#27AE60;border-color:#A5D6A7'>🚶 Walking route</a>" if lat and lng else ""}
+      {"<a class='btn' href='https://www.google.com/maps/dir/?api=1&destination=" + str(lat) + "," + str(lng) + "&travelmode=transit' target='_blank' rel='noopener' style='background:#E3F2FD;color:#1565C0;border-color:#90CAF9'>🚌 Bus / Tube route</a>" if lat and lng else ""}
+      {"<a class='btn' href='" + snobe_url + "' target='_blank' rel='noopener' style='background:#7B2FBE;color:white;border-color:#7B2FBE'>View on Snobe</a>" if snobe_url else "<a class='btn' href='https://snobe.co.uk/find-schools?search=" + school_name_url + "' target='_blank' rel='noopener' style='background:#7B2FBE;color:white;border-color:#7B2FBE'>Search on Snobe</a>"}
+      <a class="btn" href="/schools/{borough_slug}">More schools in {borough}</a>
+      <a class="btn" href="/">All London schools</a>
+      <button class="btn" onclick="shareSchoolWhatsApp()" style="background:#25D366;color:#fff;border-color:#25D366;">📱 WhatsApp</button>
+      <button class="btn" onclick="shareSchoolEmail()" style="background:#1565C0;color:#fff;border-color:#1565C0;">✉️ Email</button>
     </div>
-  );
+  </div>
+</div>
+<script>
+(function(){{
+  var d={{name:{json.dumps(name)},borough:{json.dumps(borough)},ofsted:{json.dumps(ofsted_label)},
+    att8:{json.dumps(str(school.get('ks4_att8','')) if school.get('ks4_att8') else '')},
+    ks2:{json.dumps(str(school.get('ks2_expected_pct','')) if school.get('ks2_expected_pct') else '')},
+    apps:{json.dumps(str(school.get('apps_per_place','')) if school.get('apps_per_place') else '')},
+    url:{json.dumps(url)}}};
+  window.shareSchoolWhatsApp=function(){{
+    var p=['🏫 *'+d.name+'*','📍 '+d.borough];
+    if(d.ofsted&&d.ofsted!=='Not yet rated')p.push('⭐ Ofsted: *'+d.ofsted+'*');
+    if(d.att8)p.push('📊 Attainment 8: '+d.att8);
+    if(d.ks2)p.push('📝 KS2 expected: '+d.ks2+'%');
+    if(d.apps&&d.apps!=='N/A')p.push('🎯 Applications per place: '+d.apps);
+    p.push('\\n🔗 '+d.url);
+    window.open('https://wa.me/?text='+encodeURIComponent(p.join('\\n')),'_blank');
+  }};
+  window.shareSchoolEmail=function(){{
+    var subj=d.name+' — London Schools Explorer';
+    var p=[d.name,'Borough: '+d.borough];
+    if(d.ofsted)p.push('Ofsted: '+d.ofsted);
+    if(d.att8)p.push('Attainment 8: '+d.att8);
+    if(d.ks2)p.push('KS2 expected standard: '+d.ks2+'%');
+    if(d.apps&&d.apps!=='N/A')p.push('Applications per place: '+d.apps);
+    p.push('','Full school profile: '+d.url);
+    window.location.href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(p.join('\\n'));
+  }};
+}})();
+</script>
+
+<div class="container">
+
+  <div class="grid">
+    <div class="stat"><div class="stat-label">Pupils</div><div class="stat-value">{pupils}</div></div>
+    <div class="stat"><div class="stat-label">Capacity</div><div class="stat-value">{capacity}</div></div>
+  </div>
+
+  <section class="card">
+    <h2>School details</h2>
+    <table>
+      <tr><td>Borough</td><td><strong>{borough}</strong></td></tr>
+      <tr><td>Postcode</td><td><strong>{postcode}</strong></td></tr>
+      <tr><td>Phase</td><td><strong>{phase}</strong></td></tr>
+      <tr><td>School type</td><td><strong>{school_type}</strong></td></tr>
+      <tr><td>Gender</td><td><strong>{gender}</strong></td></tr>
+      <tr><td>Age range</td><td><strong>{age_range}</strong></td></tr>
+      <tr><td>Sixth form</td><td><strong>{sixth_form}</strong></td></tr>
+      <tr><td>Admissions</td><td><strong>{admissions}</strong></td></tr>
+      <tr><td>Religious character</td><td><strong>{religion}</strong></td></tr>
+      {apps_row}
+    </table>
+    {apps_note}
+  </section>
+
+  <section class="card">
+    <h2>Ofsted inspection</h2>
+    <table>
+      <tr><td>Overall rating</td><td><span class="badge" style="background:{ofsted_bg_color};color:{ofsted_text_color}">{ofsted_label}</span></td></tr>
+      {"<tr><td>Last inspected</td><td><strong>" + inspection + "</strong></td></tr>" if inspection else ""}
+      {"<tr><td>Report</td><td>" + ofsted_link + "</td></tr>" if ofsted_link else ""}
+    </table>
+  </section>
+
+  {results_section}
+
+  {independent_section}
+
+  <section class="card">
+    <h2>Contact & leadership</h2>
+    <table>
+      <tr><td>{head_title}</td><td><strong>{head_name}</strong></td></tr>
+      <tr><td>Phone</td><td>{phone_link}</td></tr>
+      <tr><td>Website</td><td>{website_link}</td></tr>
+    </table>
+  </section>
+
+  <section class="card">
+    <h2>Local area</h2>
+    <table>
+      {"<tr><td>Pupil deprivation</td><td><strong>" + fsm_label + "</strong></td></tr>" if fsm_label else ""}
+      {"<tr><td>Crime level</td><td><strong>" + crime_label + "</strong></td></tr>" if crime_label else ""}
+    </table>
+  </section>
+
+{'''
+<section class="card" style="background:linear-gradient(135deg,#fff 0%,#f0f7ff 100%);border-color:#dbeafe;">
+    <h2 style="display:flex;align-items:center;gap:8px;">
+      <span style="font-size:20px;">🎓</span> 11+ Exam Preparation
+    </h2>
+    <p style="font-size:14px;color:#555;margin-bottom:16px;line-height:1.6;">
+      High-quality 11+, 13+, Pre-Tests, SATs and GCSE resources from PiAcademy. Use code <strong>THIERR25</strong> at checkout for 25% off.
+    </p>
+    <a href="https://piacademy.co.uk/?aff=28"
+       target="_blank" rel="noopener sponsored"
+       style="display:inline-flex;align-items:center;gap:10px;padding:14px 28px;background:#7e22ce;color:white;border-radius:10px;font-size:16px;font-weight:700;text-decoration:none;box-shadow:0 4px 12px rgba(126,34,206,0.3);">
+      🎓 Visit PiAcademy & Get 25% OFF
+    </a>
+    <p style="font-size:12px;color:#666;margin-top:12px;">
+      <strong>How to get the discount:</strong> Add any course or papers to your cart on PiAcademy, then enter coupon code <strong>THIERR25</strong> at the checkout.
+    </p>
+    <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
+  </section>
+''' if not is_special and phase_lc != "nursery" else ''}
+
+<section class="card" style="background:linear-gradient(135deg,#fff 0%,#f0f7ff 100%);border-color:#dbeafe;">
+    <h2 style="display:flex;align-items:center;gap:8px;">
+      <span style="font-size:20px;">📚</span> Children's Books
+    </h2>
+    <p style="font-size:14px;color:#555;margin-bottom:16px;line-height:1.6;">
+      Great children's books at low prices from Scholastic. Every purchase helps your child's school get free books too!
+    </p>
+    
+    <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&ued=https%3A%2F%2Fwww.scholastic.co.uk%2Fteachers" 
+       target="_blank" rel="noopener sponsored"
+       style="display:inline-flex;align-items:center;gap:10px;padding:14px 28px;background:#d97706;color:white;border-radius:10px;font-size:16px;font-weight:700;text-decoration:none;box-shadow:0 4px 12px rgba(217,119,6,0.3);">
+      📚 Shop Books at Scholastic
+    </a>
+    
+    <p style="font-size:12px;color:#666;margin-top:12px;">
+      Tip: At checkout, choose your school — Scholastic donates <strong>20p for every £1 spent</strong> back to the school in free books.
+    </p>
+    
+    <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
+  </section>
+
+<!-- Amazon School Supplies Section -->
+<section class="card" style="background:linear-gradient(135deg,#fff 0%,#fff8f0 100%);border-color:#fed7aa;">
+    <h2 style="display:flex;align-items:center;gap:8px;">
+      <span style="font-size:20px;">🛒</span> School Supplies on Amazon
+    </h2>
+    <p style="font-size:14px;color:#555;margin-bottom:16px;line-height:1.6;">
+      Everything you need for the school year — stationery, bags, PE kit, lunchboxes and more. Fast delivery from Amazon.
+    </p>
+    <a href="https://www.amazon.co.uk/s?k=school+supplies+stationery&tag=londonparents-21"
+       target="_blank" rel="noopener sponsored"
+       style="display:inline-flex;align-items:center;gap:10px;padding:14px 28px;background:#FF9900;color:#111;border-radius:10px;font-size:16px;font-weight:700;text-decoration:none;box-shadow:0 4px 12px rgba(255,153,0,0.35);">
+      🛒 Shop on Amazon
+    </a>
+    <p style="font-size:11px;color:#aaa;margin-top:16px;">Sponsored — helps keep this site free.</p>
+  </section>
+
+</div>
+
+<footer>
+  Data sourced from Ofsted and the Department for Education. Last updated {BUILT_DATE}.<br>
+  <a href="/">London Schools Explorer</a> &mdash; helping families find the right school.
+</footer>
+
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>"""
+
+    return borough_slug, school_slug, html
+
+
+# ── Build all pages ────────────────────────────────────────────────────────────
+print(f"Building {len(schools)} school pages...")
+out_root = pathlib.Path("schools")
+sitemap_urls = [BASE_URL + "/"]
+built = 0
+
+for school in schools:
+    try:
+        borough_slug, school_slug, html = build_school_page(school)
+        school_dir = out_root / borough_slug / school_slug
+        school_dir.mkdir(parents=True, exist_ok=True)
+        (school_dir / "index.html").write_text(html, encoding="utf-8")
+        sitemap_urls.append(f"{BASE_URL}/schools/{borough_slug}/{school_slug}")
+        built += 1
+    except Exception as e:
+        print(f"  SKIP {school.get('name','?')}: {e}")
+
+print(f"Built {built} pages successfully.")
+
+
+# ── Borough index pages ────────────────────────────────────────────────────────
+from collections import defaultdict
+
+BOROUGH_DESCRIPTIONS = {
+    "Barking and Dagenham": "Barking and Dagenham is one of East London's most affordable boroughs and has seen significant investment in its schools. The borough has a strong mix of primary and secondary provision, with several schools rated Outstanding by Ofsted. It borders Essex and offers good transport links into central London via the District and Overground lines.",
+    "Barnet": "Barnet is one of London's highest-performing boroughs for education, with a large number of Outstanding and Good schools across both primary and secondary phases. The borough includes several selective grammar schools and is consistently popular with families relocating from central London. Areas such as Finchley, East Barnet and Hendon are particularly sought after for their school catchments.",
+    "Bexley": "Bexley is a south-east London borough with a well-regarded school system and some of the lowest crime rates in the capital. The borough retains a selective grammar school system, making it attractive to families seeking academic pathways. Schools in areas like Bexleyheath, Sidcup and Welling consistently perform above national averages.",
+    "Bromley": "Bromley is one of London's largest boroughs and benefits from a strong educational landscape with numerous Outstanding-rated schools. Like Bexley, it operates grammar schools alongside comprehensive and faith schools. The borough has a suburban feel with good green space and is popular with families seeking larger homes within commuting distance of central London.",
+    "Camden": "Camden is an inner-London borough with a diverse and highly competitive school landscape. The borough is home to some of London's most oversubscribed primaries and highly regarded secondaries. Areas such as Hampstead, Primrose Hill and Gospel Oak attract families for their school catchments. Camden consistently invests in education and has a higher-than-average proportion of Outstanding schools.",
+    "City of London": "The City of London is the smallest local authority in the country, with just a handful of schools serving its resident and working population. Notable institutions include The Aldgate School, an Outstanding-rated Church of England primary, alongside several prestigious independent schools such as City of London School and City of London School for Girls.",
+    "Croydon": "Croydon is south London's largest borough and has one of the most varied school landscapes in the capital, ranging from Outstanding independents to schools requiring improvement. The borough is undergoing significant regeneration and has seen investment in its educational infrastructure. Selective and faith school options are available alongside a full range of comprehensive schools.",
+    "Ealing": "Ealing in west London has a strong reputation for education, particularly at primary level, with a high proportion of Good and Outstanding schools. The borough is ethnically diverse and multilingual, and schools reflect this rich cultural mix. Areas such as Hanwell, Northfields and Southall are popular with families, and the Elizabeth line has improved transport links significantly.",
+    "Enfield": "Enfield is a north London borough bordering Hertfordshire with a wide range of school types including grammar, faith, academy and independent schools. The borough spans leafy suburban areas in the north such as Winchmore Hill and Palmers Green, through to more urban areas in the south. Several schools consistently achieve above national average exam results.",
+    "Greenwich": "Greenwich combines historic significance with a growing and improving school landscape. The borough has seen considerable investment in new school places due to population growth. Secondary schools including Thomas Tallis and Corelli College are well regarded. The borough also benefits from proximity to Blackheath and Eltham, areas popular with families.",
+    "Hackney": "Hackney is one of East London's most dynamic boroughs and has transformed its educational offer over the past decade. The borough now has one of the highest proportions of Outstanding-rated schools in inner London. Highly regarded schools such as Gayhurst Community School and Queensbridge Primary make it a competitive catchment. Secondary provision includes Stoke Newington School and Mossbourne Community Academy.",
+    "Hammersmith and Fulham": "Hammersmith and Fulham is a compact west London borough with a strong concentration of Good and Outstanding schools. The borough is one of the most densely populated in London, making school places highly competitive. It borders Kensington and Chelsea to the east and has a mix of state, faith and independent school options.",
+    "Haringey": "Haringey spans from the affluent Muswell Hill and Crouch End in the west to the more diverse Tottenham and Wood Green in the east, and its school landscape reflects this contrast. The borough has made significant strides in improving school quality and has several Outstanding-rated primaries and secondaries. Alexandra Park School and Fortismere School are among the most popular secondaries.",
+    "Harrow": "Harrow is a north-west London borough with a diverse and high-performing school system. The borough is home to the renowned independent Harrow School as well as a strong state sector. Many schools serve large South Asian communities and have a strong ethos around academic achievement. Harrow-on-the-Hill and Pinner are particularly popular areas for families.",
+    "Havering": "Havering is the easternmost London borough, bordering Essex, and has a strong tradition of selective education with grammar schools including Royal Liberty and Coopers' Company and Coborn. The borough has a largely suburban character with lower house prices than inner London, making it attractive to families seeking larger homes and strong school options.",
+    "Hillingdon": "Hillingdon in west London includes areas ranging from urban Hayes and Southall through to the greener suburbs of Ruislip, Northwood and Uxbridge. The borough has a wide range of school types and several schools rated Outstanding. Proximity to Heathrow and good Crossrail links make it popular with commuting families.",
+    "Hounslow": "Hounslow is a diverse west London borough with a strong primary school sector and improving secondary provision. The borough spans from Chiswick in the east – with some of west London's most sought-after schools – to Feltham and Hanworth in the west. Many schools serve large South Asian and Eastern European communities.",
+    "Islington": "Islington is an inner-London borough with a highly competitive school landscape and some of the most oversubscribed schools in the capital. The borough borders Camden and Hackney and is popular with young professional families. Highbury Fields School, Elizabeth Garrett Anderson and Highgate Wood School are among the most popular secondaries. Primary catchments can be extremely tight.",
+    "Kensington and Chelsea": "Kensington and Chelsea is one of London's wealthiest boroughs and home to a concentration of prestigious independent schools as well as strong state provision. Holland Park School is one of the most celebrated state secondaries in the capital. The borough has some of the most competitive primary catchments in London, particularly around South Kensington and Chelsea.",
+    "Kingston upon Thames": "Kingston upon Thames is a prosperous south-west London borough with consistently high-performing schools across both primary and secondary phases. The borough benefits from a strong local economy and high levels of parental engagement. Schools in areas such as Surbiton, New Malden and Kingston town centre are popular with families relocating from central London.",
+    "Lambeth": "Lambeth is a vibrant south London borough stretching from the South Bank to Streatham, with a diverse and improving school landscape. The borough includes highly regarded schools such as Dunraven School and La Retraite RC Girls' School. Brixton, Clapham and Streatham are popular with young families drawn by relatively affordable housing and good transport links.",
+    "Lewisham": "Lewisham is a south-east London borough with a strong community feel and an improving school landscape. The borough has invested significantly in education over the past decade and several schools are now rated Outstanding. Areas such as Blackheath, Forest Hill and Lee are particularly popular with families. Prendergast schools and Haberdashers' Boys' School are among the most sought-after secondaries.",
+    "Merton": "Merton is a south London borough with a strong reputation for education, particularly in the Wimbledon and Raynes Park areas. The borough has several Outstanding-rated schools and benefits from good transport links via the District line and Thameslink. Rutlish School and Wimbledon College are popular secondary choices.",
+    "Newham": "Newham in east London has undergone remarkable educational improvement over the past two decades and now has one of the highest proportions of Good and Outstanding schools among inner-London boroughs. The borough benefited significantly from Olympic investment and regeneration. Schools such as Brampton Manor Academy – which sends more students to Oxbridge than most independent schools – have national reputations.",
+    "Redbridge": "Redbridge is a north-east London borough with a highly competitive school system and a large number of selective and faith school options. The borough has one of the highest proportions of grammar school places in London. Ilford County High and Woodford County High are among the most academically selective schools in the country. The borough borders Essex and has a large South Asian community.",
+    "Richmond upon Thames": "Richmond upon Thames is consistently rated as one of the best boroughs in London for education and quality of life. The borough has an exceptionally high proportion of Outstanding-rated schools and benefits from low crime, extensive green space and strong community networks. Schools in Richmond, Twickenham and Ham are highly sought after and catchments can be very tight.",
+    "Southwark": "Southwark is an inner-south London borough with a rapidly improving school landscape. The borough spans from London Bridge and Bermondsey through to Peckham, Dulwich and Forest Hill. Dulwich in particular is home to several prestigious independent schools. State secondaries such as Notre Dame RC Girls' School and Harris Academy Peckham are well regarded.",
+    "Sutton": "Sutton is a south London borough with one of the strongest selective school systems in the capital. Grammar schools including Nonsuch High School for Girls, Wallington High School for Girls and Sutton Grammar School are among the most academically competitive in London. The borough has consistently high Ofsted ratings across both primary and secondary phases.",
+    "Tower Hamlets": "Tower Hamlets is one of London's most densely populated and diverse boroughs, and has one of the most improved school systems in the country. The borough now performs significantly above national averages at both primary and secondary level, a remarkable turnaround from a decade ago. Schools such as Mulberry Academy Shoreditch and George Green's School on the Isle of Dogs are well regarded.",
+    "Waltham Forest": "Waltham Forest in north-east London has seen significant improvement in its school quality over the past decade. The borough is increasingly popular with young families priced out of Hackney and Islington, attracted by its improving schools and better value housing. Areas such as Walthamstow, Leytonstone and Chingford offer a range of primary and secondary options.",
+    "Wandsworth": "Wandsworth is a south London borough with one of the strongest state school systems in the capital. The borough consistently produces some of the best primary and secondary results in London. Areas such as Battersea, Tooting, Balham and Putney are highly sought after for their school catchments. Ernest Bevin College and Burntwood School are among the most popular secondaries.",
+    "Westminster": "Westminster is central London's most prominent borough and home to a mix of outstanding state schools and prestigious independent institutions. The borough is one of the most diverse in London and its schools reflect this. Several primaries are among the most oversubscribed in the capital. Secondary options include Grey Coat Hospital School and The Grey Coat Hospital.",
 }
 
-function ScoreCard({ school, onClick }) {
-  const band = school.score_band || school.quality_label || 'Unknown';
-  const color = BAND_COLORS[band] || '#9CA3AF';
-  const admissions = school.admissions;
-  const showAdm = admissions && admissions !== 'Not applicable';
-  return (
-    <div className="school-card" style={{'--band-color': color}} onClick={() => onClick(school)}>
-      <div className="card-top">
-        <span className="card-phase">{school.phase}</span>
-        {showAdm && <span className="pill" style={admissions==='Selective'?{background:'#FFFBEB',color:'#D97706',border:'1px solid #FDE68A'}:{background:'var(--bg)',color:'var(--ink-3)',border:'1px solid var(--border)'}}>{admissions==='Selective'?'🎓 Selective':admissions}</span>}
-      </div>
-      <div className="card-name">{school.name}</div>
-      <div className="card-la">📍 {school.local_authority} · {school.postcode}</div>
-      <div className="card-rating-bar">
-        <div className="card-rating-track"><div className="card-rating-fill" style={{width:`${school.ofsted_score??0}%`, background:color}} /></div>
-        <span className="card-rating-label" style={{color}}>{band}</span>
-      </div>
-      <div className="card-pills">
-        {school.sixth_form==='Has a sixth form'&&<span className="pill" style={{background:'#F5F3FF',color:'#7C3AED',border:'1px solid #DDD6FE'}}>Sixth form</span>}
-        {school.gender&&school.gender!=='Mixed'&&<span className="pill" style={{background:'#FDF2F8',color:'#9D174D',border:'1px solid #FBCFE8'}}>{school.gender}</span>}
-        {school.religious_character&&school.religious_character!=='Does not apply'&&school.religious_character!=='None'&&<span className="pill" style={{background:'var(--green-lt)',color:'var(--green)',border:'1px solid #A7F3D0'}}>⛪ {school.religious_character}</span>}
-      </div>
-      <div className="card-meta">
-        <span>👥 {school.pupils??'—'} pupils</span>
-        {school.inspection_date&&<span>📅 {school.inspection_date}</span>}
-        {school.imd_score!=null&&<span>IMD {school.imd_score}</span>}
-      </div>
-    </div>
-  );
+# ── Boroughs with grammar / selective schools (Pi Academy more prominent) ──
+GRAMMAR_BOROUGHS = {
+    "Barnet", "Bexley", "Bromley", "Kingston upon Thames",
+    "Redbridge", "Sutton", "Havering", "Enfield"
 }
 
-// ── Property View ─────────────────────────────────────────────────────────────
+# ── Reusable affiliate HTML blocks ─────────────────────────────────────────
+def affiliate_block_html(prominent_pi=False, prominent_scholastic=False, compact=False):
+    """Return the HTML for the two affiliate cards.
+    prominent_pi          – show Pi Academy first and larger (grammar boroughs / selective pages)
+    prominent_scholastic  – show Scholastic first and larger (primary pages)
+    compact               – lighter padding for type pages
+    """
+    pad = "14px 20px" if not compact else "12px 16px"
+    pi_card = f"""
+<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fdf4ff 0%,#ede9fe 100%);
+     border:1px solid #d8b4fe;border-radius:12px;padding:{pad};">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+    <span style="font-size:22px;">🎓</span>
+    <strong style="font-size:15px;color:#5b21b6;">11+ &amp; 13+ Exam Prep</strong>
+  </div>
+  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
+    PiAcademy resources for grammar school entrance, SATs &amp; GCSE.
+    Use code <strong>THIERR25</strong> for 25% off.
+  </p>
+  <a href="https://piacademy.co.uk/?aff=28"
+     target="_blank" rel="noopener sponsored"
+     style="display:inline-block;padding:9px 18px;background:#7e22ce;color:#fff;
+            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
+    Get 25% OFF →
+  </a>
+  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
+</div>"""
 
-const OFSTED_CHIPS = [
-  { label:'Outstanding', color:'#059669' },
-  { label:'Good',        color:'#2563EB' },
-  { label:'Requires improvement', color:'#D97706' },
-];
+    scholastic_card = f"""
+<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%);
+     border:1px solid #fcd34d;border-radius:12px;padding:{pad};">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+    <span style="font-size:22px;">📚</span>
+    <strong style="font-size:15px;color:#92400e;">Children's Books</strong>
+  </div>
+  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
+    Great books at low prices. At checkout, choose your school — Scholastic donates
+    <strong>20p for every £1 spent</strong> back to the school in free books.
+  </p>
+  <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&ued=https%3A%2F%2Fwww.scholastic.co.uk%2Fteachers"
+     target="_blank" rel="noopener sponsored"
+     style="display:inline-block;padding:9px 18px;background:#d97706;color:#fff;
+            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
+    Shop at Scholastic →
+  </a>
+  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
+</div>"""
 
-function PropertyView({ schools }) {
-  const [postcode, setPostcode]       = useState('');
-  const [selSchool, setSelSchool]     = useState('');
-  const [radius, setRadius]           = useState('0.5');
-  const [tenure, setTenure]           = useState('sale');
-  const [bedsMin, setBedsMin]         = useState('2');
-  const [ofstedF, setOfstedF]         = useState(new Set(['Outstanding','Good']));
-  const [loading, setLoading]         = useState(false);
-  const [error, setError]             = useState(null);
-  const [results, setResults]         = useState(null);
-  const [saved, setSaved]             = useState(new Set());
+    amazon_card = f"""
+<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fff8f0 0%,#fff3e0 100%);
+     border:1px solid #fed7aa;border-radius:12px;padding:{pad};">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+    <span style="font-size:22px;">🛒</span>
+    <strong style="font-size:15px;color:#92400e;">School Supplies</strong>
+  </div>
+  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
+    Stationery, bags, PE kit, lunchboxes and more — fast delivery from Amazon.
+  </p>
+  <a href="https://www.amazon.co.uk/s?k=school+supplies+stationery&tag=londonparents-21"
+     target="_blank" rel="noopener sponsored"
+     style="display:inline-block;padding:9px 18px;background:#FF9900;color:#111;
+            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
+    Shop on Amazon →
+  </a>
+  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
+</div>"""
 
-  const schoolOptions = useMemo(() => schools.filter(s=>s.postcode).sort((a,b)=>a.name.localeCompare(b.name)), [schools]);
+    if prominent_pi:
+        cards = pi_card + scholastic_card + amazon_card
+    elif prominent_scholastic:
+        cards = scholastic_card + amazon_card + pi_card
+    else:
+        cards = pi_card + scholastic_card + amazon_card
 
-  function toggleOfsted(label) {
-    setOfstedF(prev => { const n=new Set(prev); n.has(label)?n.delete(label):n.add(label); return n; });
-  }
+    return f"""
+<div style="display:flex;gap:16px;flex-wrap:wrap;margin:20px 0;">
+{cards}
+</div>"""
 
-  function ofstedMin() {
-    if (ofstedF.has('Requires improvement')) return 3;
-    if (ofstedF.has('Good')) return 2;
-    return 1;
-  }
+by_borough = defaultdict(list)
+for school in schools:
+    b = school.get("local_authority", "unknown")
+    by_borough[b].append(school)
 
-  async function doSearch() {
-    const pc = selSchool || postcode.trim();
-    if (!pc) { setError('Enter a postcode or pick a school.'); return; }
-    setError(null); setLoading(true); setResults(null);
-    try {
-      const p = new URLSearchParams({ postcode:pc, radius, tenure, beds_min:bedsMin, ofsted_min:ofstedMin() });
-      const res = await fetch(`${PROP_API}/search?${p}`);
-      if (!res.ok) { const e=await res.json(); throw new Error(e.error||'Search failed'); }
-      setResults(await res.json());
-    } catch(e) { setError(e.message); }
-    finally { setLoading(false); }
-  }
+for borough, borough_schools in by_borough.items():
+    borough_slug = slugify(borough)
+    borough_dir  = out_root / borough_slug
+    borough_dir.mkdir(parents=True, exist_ok=True)
 
-  const filtered = useMemo(() => {
-    if (!results) return [];
-    return results.properties.filter(p => {
-      if (!p.nearbySchools?.length) return true;
-      return p.nearbySchools.some(s => ofstedF.has(s.ratingLabel));
-    });
-  }, [results, ofstedF]);
+    # Count outstanding schools for the meta description
+    outstanding = sum(1 for s in borough_schools if (s.get("quality_label") or s.get("score_band")) == "Outstanding")
+    good        = sum(1 for s in borough_schools if (s.get("quality_label") or s.get("score_band")) == "Good")
+    desc_intro  = BOROUGH_DESCRIPTIONS.get(borough, f"Browse all {len(borough_schools)} schools in {borough}, London. Find outstanding schools by Ofsted rating, phase and type.")
 
-  return (
-    <div className="pv-layout">
-      {/* Sidebar filters */}
-      <aside className="pv-sidebar">
-        <div className="pv-sidebar-title">Find a home nearby</div>
-        <div className="pv-sidebar-sub">Search by postcode or choose a school to find family properties within walking distance.</div>
+    rows = ""
+    for s in sorted(borough_schools, key=lambda x: x.get("name", "")):
+        s_slug  = slugify(s.get("name","unknown"))
+        label   = s.get("quality_label") or s.get("score_band") or "Not yet rated"
+        tc, bc  = ofsted_badge_color(label)
+        s_url   = f"{BASE_URL}/schools/{borough_slug}/{s_slug}"
+        s_att8  = str(s.get("ks4_att8","")) if s.get("ks4_att8") else ""
+        s_ks2   = str(s.get("ks2_expected_pct","")) if s.get("ks2_expected_pct") else ""
+        rows += f"""<tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="{safe(s.get('name')).replace('"','&quot;')}"
+            data-ofsted="{label}"
+            data-phase="{derive_phase(s)}"
+            data-att8="{s_att8}"
+            data-ks2="{s_ks2}"
+            data-url="{s_url}"></td>
+          <td><a href="/schools/{borough_slug}/{s_slug}">{safe(s.get('name'))}</a></td>
+          <td>{derive_phase(s)}</td>
+          <td><span style="background:{bc};color:{tc};padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">{label}</span></td>
+          <td>{safe(s.get('pupils'))}</td>
+        </tr>"""
 
-        {schoolOptions.length > 0 && (
-          <div className="pv-field">
-            <div className="pv-field-label">Near a school</div>
-            <select className="pv-select" value={selSchool} onChange={e => { setSelSchool(e.target.value); if(e.target.value) setPostcode(''); }}>
-              <option value="">— choose a school —</option>
-              {schoolOptions.map(s=><option key={s.urn} value={s.postcode}>{s.name}</option>)}
-            </select>
-          </div>
-        )}
+    borough_html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Schools in {borough}, London | Ofsted Ratings &amp; Results | London Schools Explorer</title>
+  <meta name="description" content="{len(borough_schools)} schools in {borough}, London. {outstanding} Outstanding, {good} Good-rated by Ofsted. Compare admissions oversubscription, exam results and crime data. Free.">
+  <script type="application/ld+json">{{
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Schools in {borough}, London",
+    "description": "{len(borough_schools)} schools in {borough}, London rated by Ofsted",
+    "numberOfItems": {len(borough_schools)},
+    "url": "{BASE_URL}/schools/{borough_slug}"
+  }}</script>
+  <script type="application/ld+json">{{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {{"@type": "ListItem", "position": 1, "name": "London Schools Explorer", "item": "https://londonschool.directory/"}},
+      {{"@type": "ListItem", "position": 2, "name": "Schools in {borough}", "item": "{BASE_URL}/schools/{borough_slug}"}}
+    ]
+  }}</script>
+  <link rel="canonical" href="{BASE_URL}/schools/{borough_slug}">
+  <meta property="og:title" content="Schools in {borough} | London Schools Explorer">
+  <meta property="og:description" content="{len(borough_schools)} schools in {borough}. {outstanding} Outstanding-rated. Compare Ofsted ratings, exam results and admissions.">
+  <meta property="og:url" content="{BASE_URL}/schools/{borough_slug}">
+  <style>
+    *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
+    body {{ font-family: system-ui, -apple-system, sans-serif; color: #1a1a1a; background: #f8f9fa; line-height: 1.6; }}
+    a {{ color: #1565C0; }}
+    .topbar {{ background: #fff; border-bottom: 1px solid #e0e0e0; padding: 12px 20px; }}
+    .topbar a {{ text-decoration: none; font-weight: 600; color: #1a1a1a; font-size: 15px; }}
+    .topbar span {{ color: #888; margin: 0 8px; }}
+    .container {{ max-width: 900px; margin: 0 auto; padding: 32px 20px; }}
+    h1 {{ font-size: 28px; font-weight: 700; margin-bottom: 8px; }}
+    .intro {{ background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; font-size: 15px; color: #333; line-height: 1.7; }}
+    .stats-row {{ display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }}
+    .stat-box {{ background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 14px 18px; flex: 1; min-width: 120px; }}
+    .stat-num {{ font-size: 24px; font-weight: 700; color: #1a1a1a; line-height: 1; }}
+    .stat-lbl {{ font-size: 12px; color: #888; margin-top: 4px; }}
+    table {{ width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #e0e0e0; }}
+    th {{ background: #f5f5f5; padding: 12px 16px; text-align: left; font-size: 13px; color: #555; font-weight: 600; border-bottom: 1px solid #e0e0e0; }}
+    td {{ padding: 12px 16px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }}
+    tr:last-child td {{ border-bottom: none; }}
+    tr:hover td {{ background: #fafafa; }}
+    .back {{ display: inline-block; margin-bottom: 20px; font-size: 14px; color: #555; text-decoration: none; }}
+    .back:hover {{ color: #111; }}
+    footer {{ text-align: center; padding: 32px 20px; font-size: 13px; color: #888; }}
+    @media (max-width: 600px) {{
+      .container {{ padding: 16px 12px; }}
+      h1 {{ font-size: 22px; }}
+      .stats-row {{ grid-template-columns: 1fr 1fr; }}
+      .intro {{ padding: 14px 16px; font-size: 14px; }}
+      table {{ font-size: 13px; }}
+      th, td {{ padding: 10px 10px; }}
+      .topbar {{ padding: 10px 12px; font-size: 13px; }}
+    }}
+    @media (max-width: 600px) {{ .stats-row {{ flex-direction: column; }} }}
+  </style>
+</head>
+<body>
+<div class="topbar">
+  <div style="max-width:900px;margin:0 auto">
+    <a href="/">London Schools Explorer</a>
+    <span>/</span>
+    {borough}
+  </div>
+</div>
+<div class="container">
+  <a class="back" href="/">&#8592; All boroughs</a>
+  <h1>Schools in {borough}</h1>
 
-        <div className="pv-field">
-          <div className="pv-field-label">Or enter a postcode</div>
-          <input className="pv-input" type="text" placeholder="e.g. N1, SE22, EC1A 1BB" value={postcode} disabled={!!selSchool} onChange={e=>setPostcode(e.target.value)} onKeyDown={e=>e.key==='Enter'&&doSearch()} />
-        </div>
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-num">{len(borough_schools)}</div><div class="stat-lbl">Total schools</div></div>
+    <div class="stat-box"><div class="stat-num">{outstanding}</div><div class="stat-lbl">Outstanding</div></div>
+    <div class="stat-box"><div class="stat-num">{sum(1 for s in borough_schools if (s.get("quality_label") or s.get("score_band")) == "Good")}</div><div class="stat-lbl">Good</div></div>
+    <div class="stat-box"><div class="stat-num">{len(set(s.get("phase","") for s in borough_schools if s.get("phase") and s.get("phase") != "Not applicable"))}</div><div class="stat-lbl">School phases</div></div>
+  </div>
 
-        <div className="pv-field">
-          <div className="pv-field-label">Radius</div>
-          <select className="pv-select" value={radius} onChange={e=>setRadius(e.target.value)}>
-            <option value="0.25">¼ mile</option>
-            <option value="0.5">½ mile</option>
-            <option value="1">1 mile</option>
-            <option value="2">2 miles</option>
-          </select>
-        </div>
+  <div class="intro">{desc_intro}</div>
 
-        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:14}}>
-          <div className="pv-field" style={{marginBottom:0}}>
-            <div className="pv-field-label">Type</div>
-            <select className="pv-select" value={tenure} onChange={e=>setTenure(e.target.value)}>
-              <option value="sale">For sale</option>
-              <option value="rent">To rent</option>
-            </select>
-          </div>
-          <div className="pv-field" style={{marginBottom:0}}>
-            <div className="pv-field-label">Bedrooms</div>
-            <select className="pv-select" value={bedsMin} onChange={e=>setBedsMin(e.target.value)}>
-              <option value="2">2+</option>
-              <option value="3">3+</option>
-              <option value="4">4+</option>
-            </select>
-          </div>
-        </div>
+  {affiliate_block_html(prominent_pi=(borough in GRAMMAR_BOROUGHS))}
 
-        <div className="pv-divider" />
-        <div className="pv-section-label">Ofsted rating nearby</div>
-        <div className="pv-chips">
-          {OFSTED_CHIPS.map(({label,color}) => (
-            <div key={label} className={`pv-chip${ofstedF.has(label)?' on':''}`} onClick={()=>toggleOfsted(label)}>
-              <span className="pv-chip-dot" style={{background:color}} />
-              <span className="pv-chip-text">{label}</span>
-              <span className="pv-chip-check">✓</span>
-            </div>
-          ))}
-        </div>
+  <!-- Borough share buttons -->
+  <div style="display:flex;gap:10px;margin:16px 0 8px;flex-wrap:wrap;align-items:center;">
+    <span style="font-size:13px;color:#555;font-weight:600;">Share {borough} schools:</span>
+    <button onclick="shareBoroughWhatsApp()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 WhatsApp</button>
+    <button onclick="shareBoroughEmail()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#1565C0;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Email</button>
+    <span style="font-size:12px;color:#999;margin-left:4px;">Or tick schools below to share a shortlist</span>
+  </div>
 
-        <button className="pv-search-btn" onClick={doSearch} disabled={loading}>
-          {loading ? 'Searching…' : 'Find properties →'}
-        </button>
+  <!-- Sticky compare bar (appears when schools are ticked) -->
+  <div id="cmp-bar" style="display:none;position:sticky;top:0;z-index:100;background:#1A1A2E;color:#fff;padding:12px 16px;border-radius:10px;margin-bottom:12px;display:none;align-items:center;gap:10px;flex-wrap:wrap;">
+    <span id="cmp-count" style="font-weight:700;font-size:14px;">0 schools selected</span>
+    <button onclick="shareCompareWhatsApp()" style="padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 Share via WhatsApp</button>
+    <button onclick="shareCompareEmail()" style="padding:8px 16px;background:#fff;color:#1A1A2E;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Share via Email</button>
+    <button onclick="clearSelection()" style="padding:8px 12px;background:transparent;color:#aaa;border:1px solid #555;border-radius:8px;font-size:12px;cursor:pointer;">✕ Clear</button>
+  </div>
 
-        {selSchool && <button className="clear-btn" style={{width:'100%',marginTop:8,textAlign:'center'}} onClick={()=>setSelSchool('')}>✕ Clear school</button>}
-      </aside>
+  <table>
+    <thead><tr><th style="width:36px"></th><th>School</th><th>Phase</th><th>Ofsted</th><th>Pupils</th></tr></thead>
+    <tbody>{rows}</tbody>
+  </table>
+</div>
+<footer><a href="/">London Schools Explorer</a> &mdash; helping families find the right school in London.</footer>
+<script defer src="/_vercel/insights/script.js"></script>
+<script>
+(function(){{
+  var borough={json.dumps(borough)}, boroughUrl={json.dumps(BASE_URL+'/schools/'+borough_slug)};
+  var outstanding={outstanding}, total={len(borough_schools)};
 
-      {/* Main results area */}
-      <div className="pv-main">
-        {/* Hero banner — only when no results */}
-        {!results && !loading && (
-          <div className="pv-hero">
-            <div className="pv-hero-tag">New feature</div>
-            <div className="pv-hero-title">Properties matched to school catchments</div>
-            <div className="pv-hero-sub">Every listing shows the nearest Ofsted-rated schools and their walking distance — so you can find the right home and the right school at the same time.</div>
-          </div>
-        )}
+  // Borough-level share
+  window.shareBoroughWhatsApp=function(){{
+    var t='🏙️ *Schools in '+borough+', London*\\n'+
+        '📊 '+total+' schools · '+outstanding+' Outstanding\\n\\n'+
+        '🔗 '+boroughUrl;
+    window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank');
+  }};
+  window.shareBoroughEmail=function(){{
+    var s='Schools in '+borough+' — London Schools Explorer';
+    var b='Schools in '+borough+', London\\n'+
+        total+' schools, '+outstanding+' rated Outstanding by Ofsted\\n\\n'+
+        'Browse them here: '+boroughUrl;
+    window.location.href='mailto:?subject='+encodeURIComponent(s)+'&body='+encodeURIComponent(b);
+  }};
 
-        {loading && <div className="pv-status"><div className="pv-spinner"/>Searching Zoopla listings and Ofsted data…</div>}
-        {error && <div className="pv-error">⚠ {error}</div>}
+  // Shortlist comparison share
+  function getSelected(){{
+    return Array.from(document.querySelectorAll('.sch-sel:checked')).map(function(cb){{
+      return {{name:cb.dataset.name,ofsted:cb.dataset.ofsted,phase:cb.dataset.phase,
+               att8:cb.dataset.att8,ks2:cb.dataset.ks2,url:cb.dataset.url}};
+    }});
+  }}
+  function updateBar(){{
+    var sel=getSelected();
+    var bar=document.getElementById('cmp-bar');
+    document.getElementById('cmp-count').textContent=sel.length+' school'+(sel.length===1?'':' s')+' selected';
+    bar.style.display=sel.length>0?'flex':'none';
+  }}
+  document.querySelectorAll('.sch-sel').forEach(function(cb){{ cb.onchange=updateBar; }});
 
-        {results?.schools?.length > 0 && (
-          <div className="pv-schools-found">
-            <div className="pv-sf-label">Schools found nearby · {results.meta.schoolsFound}</div>
-            <div className="pv-sf-list">
-              {results.schools.slice(0,7).map(s=>(
-                <span key={s.urn||s.name} className="pv-sf-badge">
-                  <span className="pv-sf-dot" style={{background:BAND_COLORS[s.ratingLabel]||'#9CA3AF'}} />
-                  {s.name}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {results && (
-          <>
-            <div className="pv-status">{filtered.length} propert{filtered.length===1?'y':'ies'} found{results.meta?.schoolsFound ? ` · ${results.meta.schoolsFound} schools nearby` : ''}</div>
-            <div className="pv-grid">
-              {filtered.length===0
-                ? <div className="pv-empty"><div className="pv-empty-icon">🏘</div><h3>No matches</h3><p>Try a wider radius or adjusting the Ofsted filter.</p></div>
-                : filtered.map(p=>(
-                  <div key={p.id} className="pv-card">
-                    <div className="pv-card-thumb" style={{position:'relative'}}>
-                      {p.thumbnail ? <img src={p.thumbnail} alt={p.address} loading="lazy"/> : '🏡'}
-                      <span className="pv-card-tenure">{p.tenure==='rent'?'To rent':'For sale'}</span>
-                      <button className={`pv-card-save${saved.has(p.id)?' saved':''}`} onClick={()=>setSaved(prev=>{const n=new Set(prev);n.has(p.id)?n.delete(p.id):n.add(p.id);return n;})}>
-                        {saved.has(p.id)?'★':'☆'}
-                      </button>
-                    </div>
-                    <div className="pv-card-body">
-                      <div className="pv-price">{p.price}</div>
-                      <div className="pv-address">{p.address}</div>
-                      <div className="pv-pills">
-                        <span className="pv-pill">{p.beds} bed</span>
-                        {p.baths>0&&<span className="pv-pill">{p.baths} bath</span>}
-                        <span className="pv-pill">{p.type||'Property'}</span>
-                      </div>
-                      {(p.nearbySchools||[]).slice(0,2).length>0&&(
-                        <div className="pv-schools">
-                          {(p.nearbySchools||[]).slice(0,2).map(s=>(
-                            <div key={s.urn||s.name} className="pv-school-row">
-                              <span className="pv-s-dot" style={{background:BAND_COLORS[s.ratingLabel]||'#9CA3AF'}} />
-                              <div><div className="pv-s-name">{s.name}</div><div className="pv-s-detail">{s.ratingLabel}{s.walkDistance&&s.walkDistance!=='N/A'?` · ${s.walkDistance} walk`:''}</div></div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                      <div className="pv-cta">
-                        <button className="pv-btn-ghost" onClick={()=>p.url&&window.open(p.url,'_blank')}>View listing</button>
-                        <button className="pv-btn-solid" onClick={()=>setSaved(prev=>{const n=new Set(prev);n.has(p.id)?n.delete(p.id):n.add(p.id);return n;})}>{saved.has(p.id)?'✓ Saved':'Save'}</button>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              }
-            </div>
-          </>
-        )}
-      </div>
-    </div>
-  );
-}
-
-// ── App ───────────────────────────────────────────────────────────────────────
-
-function App() {
-  const [view, setView]           = useState('schools');
-  const [displayMode, setDisplayMode] = useState('grid');
-  const [schools, setSchools]     = useState([]);
-  const [loading, setLoading]     = useState(true);
-  const [selected, setSelected]   = useState(null);
-  const [page, setPage]           = useState(1);
-  const PAGE_SIZE = 24;
-  const [filters, setFilters]     = useState({ q:'', phase:'', local_authority:'', score_band:'' });
-
-  useEffect(() => {
-    async function load() {
-      try { const r=await fetch(`${API_BASE}/schools?limit=500`); if(!r.ok) throw new Error(); const d=await r.json(); setSchools(d.schools); setLoading(false); return; } catch {}
-      try { const r=await fetch(JSON_FALLBACK); if(!r.ok) throw new Error(); const d=await r.json(); setSchools(d); } catch { console.warn('Place schools.json alongside this file.'); }
-      setLoading(false);
-    }
-    load();
-  }, []);
-
-  const phases = useMemo(() => [...new Set(schools.map(s=>s.phase).filter(Boolean))].sort(), [schools]);
-  const localAuthorities = useMemo(() => [...new Set(schools.map(s=>s.local_authority).filter(Boolean))].sort(), [schools]);
-  const filtered = useMemo(() => {
-    let r = schools;
-    if (filters.q) r=r.filter(s=>s.name.toLowerCase().includes(filters.q.toLowerCase())||(s.postcode||'').toLowerCase().includes(filters.q.toLowerCase()));
-    if (filters.phase) r=r.filter(s=>s.phase===filters.phase);
-    if (filters.local_authority) r=r.filter(s=>s.local_authority===filters.local_authority);
-    if (filters.score_band) r=r.filter(s=>(s.score_band||s.quality_label)===filters.score_band);
-    return r.sort((a,b)=>(b.ofsted_score??-1)-(a.ofsted_score??-1));
-  }, [schools, filters]);
-
-  const totalPages = Math.ceil(filtered.length/PAGE_SIZE);
-  const paged = filtered.slice((page-1)*PAGE_SIZE, page*PAGE_SIZE);
-  const setFilter = useCallback((k,v)=>{setFilters(f=>({...f,[k]:v}));setPage(1);},[]);
-  const clearFilters = ()=>{setFilters({q:'',phase:'',local_authority:'',score_band:''});setPage(1);};
-  const hasFilters = filters.q||filters.phase||filters.local_authority||filters.score_band;
-  const stats = useMemo(()=>{const rated=schools.filter(s=>s.ofsted_score!=null);return{total:schools.length,outstanding:schools.filter(s=>(s.score_band||s.quality_label)==='Outstanding').length,avg:rated.length?Math.round(rated.reduce((a,s)=>a+s.ofsted_score,0)/rated.length):0};},[schools]);
-
-  const NAV = [
-    { id:'schools', icon:'▤', label:'Schools' },
-    { id:'map',     icon:'◎', label:'Map' },
-    { id:'stats',   icon:'▦', label:'Statistics' },
-    { id:'property',icon:'⌂', label:'Properties' },
-  ];
-
-  return (
-    <>
-      <nav className="topbar">
-        <div className="topbar-logo">
-          <div className="topbar-logo-mark">LS</div>
-          <span className="topbar-logo-text">London <span>Schools</span></span>
-        </div>
-        <div className="topbar-nav">
-          {NAV.map(n=>(
-            <button key={n.id} className={`topbar-nav-btn${view===n.id?' active':''}`} onClick={()=>setView(n.id)}>
-              <span style={{fontSize:'0.95rem'}}>{n.icon}</span>
-              <span>{n.label}</span>
-            </button>
-          ))}
-        </div>
-      </nav>
-
-      <div className="hero">
-        <div className="hero-inner">
-          <div>
-            <div className="hero-eyebrow">Ofsted data · 32 London boroughs</div>
-            <h1>Find the right school<br />in <em>London</em></h1>
-            <p className="hero-sub">Compare schools using official Ofsted data, deprivation indices, and composite scoring. Now with nearby property search.</p>
-          </div>
-          <div className="hero-stats">
-            {[{n:stats.total,l:'Schools'},{n:stats.outstanding,l:'Outstanding'},{n:stats.avg,l:'Avg score'},{n:32,l:'Boroughs'}].map(({n,l})=>(
-              <div key={l} className="hero-stat"><div className="hero-stat-num">{n}</div><div className="hero-stat-label">{l}</div></div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="main">
-        {loading ? (
-          <div className="loading"><div className="spinner"/>Loading schools…</div>
-        ) : view==='property' ? (
-          <PropertyView schools={schools} />
-        ) : view==='stats' ? (
-          <StatsPage schools={schools} />
-        ) : view==='map' ? (
-          <>
-            <div className="filter-bar">
-              <div className="fsearch" style={{flex:1,minWidth:200}}><span className="fsearch-icon">🔍</span><input type="text" placeholder="Filter by name or postcode…" value={filters.q} onChange={e=>setFilter('q',e.target.value)}/></div>
-              <div className="fgroup"><span className="flabel">Phase</span><select value={filters.phase} onChange={e=>setFilter('phase',e.target.value)}><option value="">All phases</option>{phases.map(p=><option key={p} value={p}>{p}</option>)}</select></div>
-              <div className="fgroup"><span className="flabel">Borough</span><select value={filters.local_authority} onChange={e=>setFilter('local_authority',e.target.value)}><option value="">All boroughs</option>{localAuthorities.map(la=><option key={la} value={la}>{la}</option>)}</select></div>
-              <div className="fgroup"><span className="flabel">Rating</span><select value={filters.score_band} onChange={e=>setFilter('score_band',e.target.value)}><option value="">All ratings</option>{['Outstanding','Good','Requires improvement','Inadequate'].map(b=><option key={b} value={b}>{b}</option>)}</select></div>
-              {hasFilters&&<button className="clear-btn" onClick={clearFilters}>✕ Clear</button>}
-            </div>
-            <MapView schools={filtered} onSelect={setSelected}/>
-          </>
-        ) : (
-          <>
-            <div className="filter-bar">
-              <div className="fsearch"><span className="fsearch-icon">🔍</span><input type="text" placeholder="Search by name or postcode…" value={filters.q} onChange={e=>setFilter('q',e.target.value)}/></div>
-              <div className="fgroup"><span className="flabel">Phase</span><select value={filters.phase} onChange={e=>setFilter('phase',e.target.value)}><option value="">All phases</option>{phases.map(p=><option key={p} value={p}>{p}</option>)}</select></div>
-              <div className="fgroup"><span className="flabel">Borough</span><select value={filters.local_authority} onChange={e=>setFilter('local_authority',e.target.value)}><option value="">All boroughs</option>{localAuthorities.map(la=><option key={la} value={la}>{la}</option>)}</select></div>
-              <div className="fgroup"><span className="flabel">Rating</span><select value={filters.score_band} onChange={e=>setFilter('score_band',e.target.value)}><option value="">All ratings</option>{['Outstanding','Good','Requires improvement','Inadequate'].map(b=><option key={b} value={b}>{b}</option>)}</select></div>
-              {hasFilters&&<button className="clear-btn" onClick={clearFilters}>✕ Clear</button>}
-            </div>
-            <div className="results-header">
-              <div className="results-count">Showing <strong>{filtered.length}</strong> school{filtered.length!==1?'s':''}{schools.length!==filtered.length?` of ${schools.length}`:''}</div>
-              <div className="view-toggle">
-                <button className={`view-btn${displayMode==='grid'?' active':''}`} onClick={()=>setDisplayMode('grid')}>⊞</button>
-                <button className={`view-btn${displayMode==='table'?' active':''}`} onClick={()=>setDisplayMode('table')}>☰</button>
-              </div>
-            </div>
-            {filtered.length===0 ? (
-              <div className="empty-state"><h3>No schools found</h3><p>Try adjusting your filters.</p></div>
-            ) : displayMode==='grid' ? (
-              <div className="school-grid">{paged.map(s=><ScoreCard key={s.urn} school={s} onClick={setSelected}/>)}</div>
-            ) : (
-              <table className="school-table">
-                <thead><tr><th>#</th><th>School</th><th>Borough</th><th>Phase</th><th>Ofsted grade</th><th>Admissions</th><th>Pupils</th><th>Inspected</th></tr></thead>
-                <tbody>
-                  {paged.map((s,i)=>{const band=s.score_band||s.quality_label||'Unknown';const adm=s.admissions;return(
-                    <tr key={s.urn} onClick={()=>setSelected(s)}>
-                      <td><span className="rank-num">{(page-1)*PAGE_SIZE+i+1}</span></td>
-                      <td style={{fontWeight:600,maxWidth:260}}>{s.name}</td>
-                      <td style={{color:'var(--ink-3)'}}>{s.local_authority}</td>
-                      <td style={{color:'var(--ink-3)',fontSize:'0.78rem'}}>{s.phase}</td>
-                      <td><BandChip band={band}/></td>
-                      <td style={{fontSize:'0.8rem'}}>{adm==='Selective'?<span style={{color:'#D97706',fontWeight:600}}>🎓 Selective</span>:adm==='Non-selective'?<span style={{color:'var(--ink-3)'}}>Non-selective</span>:<span style={{color:'#D1D5DB'}}>—</span>}</td>
-                      <td style={{color:'var(--ink-3)'}}>{s.pupils??'—'}</td>
-                      <td style={{color:'var(--ink-3)',fontSize:'0.78rem'}}>{s.inspection_date||'—'}</td>
-                    </tr>
-                  );})}
-                </tbody>
-              </table>
-            )}
-            {totalPages>1&&(
-              <div className="pagination">
-                <button className="page-btn" onClick={()=>setPage(p=>p-1)} disabled={page===1}>‹</button>
-                {Array.from({length:Math.min(7,totalPages)},(_,i)=>{let p;if(totalPages<=7)p=i+1;else if(page<=4)p=i+1;else if(page>=totalPages-3)p=totalPages-6+i;else p=page-3+i;return<button key={p} className={`page-btn${page===p?' active':''}`} onClick={()=>setPage(p)}>{p}</button>;})  }
-                <button className="page-btn" onClick={()=>setPage(p=>p+1)} disabled={page===totalPages}>›</button>
-              </div>
-            )}
-          </>
-        )}
-      </div>
-      {selected&&<SchoolDetail school={selected} onClose={()=>setSelected(null)}/>}
-    </>
-  );
-}
-
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  function buildCompareText(sel,markdown){{
+    var lines=['📋 *My '+borough+' school shortlist*',''];
+    sel.forEach(function(s,i){{
+      lines.push((i+1)+'. '+(markdown?'*':'')+s.name+(markdown?'*':''));
+      lines.push('   ⭐ Ofsted: '+s.ofsted+(s.phase?' · '+s.phase:''));
+      if(s.att8)lines.push('   📊 Attainment 8: '+s.att8);
+      if(s.ks2)lines.push('   📝 KS2 expected: '+s.ks2+'%');
+      lines.push('   🔗 '+s.url);
+      lines.push('');
+    }});
+    lines.push('via London Schools Explorer — '+boroughUrl);
+    return lines.join('\\n');
+  }}
+  window.shareCompareWhatsApp=function(){{
+    var sel=getSelected();
+    if(!sel.length)return;
+    window.open('https://wa.me/?text='+encodeURIComponent(buildCompareText(sel,true)),'_blank');
+  }};
+  window.shareCompareEmail=function(){{
+    var sel=getSelected();
+    if(!sel.length)return;
+    var subj='My '+borough+' school shortlist — London Schools Explorer';
+    window.location.href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(buildCompareText(sel,false));
+  }};
+  window.clearSelection=function(){{
+    document.querySelectorAll('.sch-sel:checked').forEach(function(cb){{cb.checked=false;}});
+    updateBar();
+  }};
+}})();
 </script>
 </body>
-</html>
+</html>"""
+
+    # feedback widget removed
+    (borough_dir / "index.html").write_text(borough_html, encoding="utf-8")
+    sitemap_urls.append(f"{BASE_URL}/schools/{borough_slug}")
+
+print(f"Built {len(by_borough)} borough pages.")
+
+
+# ── School type landing pages ──────────────────────────────────────────────────
+def build_type_page(slug, title, meta_desc, intro, filter_fn, prominent_pi=False, prominent_scholastic=False):
+    matched = [s for s in schools if filter_fn(s)]
+    matched.sort(key=lambda s: (s.get("ofsted_score") or 0), reverse=True)
+
+    rows = ""
+    for s in matched:
+        b_slug  = slugify(s.get("local_authority", "unknown"))
+        s_slug  = slugify(s.get("name", "unknown"))
+        label   = s.get("quality_label") or s.get("score_band") or "Not yet rated"
+        tc, bc  = ofsted_badge_color(label)
+        score   = s.get("ofsted_score")
+        rows += f"""<tr>
+          <td><a href="/schools/{b_slug}/{s_slug}">{safe(s.get('name'))}</a></td>
+          <td>{safe(s.get('local_authority'))}</td>
+          <td>{safe(s.get('phase'))}</td>
+          <td><span style="background:{bc};color:{tc};padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">{label}</span></td>
+          <td style="font-weight:700;color:#1a1a1a">{int(score) if score else '–'}</td>
+        </tr>"""
+
+    url  = f"{BASE_URL}/schools/{slug}"
+    html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{title} | London Schools Explorer</title>
+  <meta name="description" content="{meta_desc}">
+  <link rel="canonical" href="{url}">
+  <script type="application/ld+json">{{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {{"@type": "ListItem", "position": 1, "name": "London Schools Explorer", "item": "https://londonschool.directory/"}},
+      {{"@type": "ListItem", "position": 2, "name": "{title}", "item": "{url}"}}
+    ]
+  }}</script>
+  <meta property="og:title" content="{title} | London Schools Explorer">
+  <meta property="og:description" content="{meta_desc}">
+  <meta property="og:url" content="{url}">
+  <style>
+    *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
+    body {{ font-family: system-ui, -apple-system, sans-serif; color: #1a1a1a; background: #f8f9fa; line-height: 1.6; }}
+    a {{ color: #1565C0; }}
+    .topbar {{ background: #fff; border-bottom: 1px solid #e0e0e0; padding: 12px 20px; }}
+    .topbar a {{ text-decoration: none; font-weight: 600; color: #1a1a1a; font-size: 15px; }}
+    .topbar span {{ color: #888; margin: 0 8px; }}
+    .container {{ max-width: 960px; margin: 0 auto; padding: 32px 20px; }}
+    h1 {{ font-size: 28px; font-weight: 700; margin-bottom: 8px; }}
+    .intro {{ background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; font-size: 15px; color: #333; line-height: 1.7; }}
+    .count-badge {{ display: inline-block; background: #1565C0; color: #fff; font-size: 13px; font-weight: 600; padding: 4px 12px; border-radius: 20px; margin-bottom: 16px; }}
+    table {{ width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #e0e0e0; }}
+    th {{ background: #f5f5f5; padding: 12px 16px; text-align: left; font-size: 13px; color: #555; font-weight: 600; border-bottom: 1px solid #e0e0e0; white-space: nowrap; }}
+    td {{ padding: 11px 16px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }}
+    tr:last-child td {{ border-bottom: none; }}
+    tr:hover td {{ background: #fafafa; }}
+    .back {{ display: inline-block; margin-bottom: 20px; font-size: 14px; color: #555; text-decoration: none; }}
+    footer {{ text-align: center; padding: 32px 20px; font-size: 13px; color: #888; }}
+    @media (max-width: 600px) {{
+      .container {{ padding: 16px 12px; }}
+      h1 {{ font-size: 22px; }}
+      .intro {{ padding: 14px 16px; font-size: 14px; }}
+      table {{ font-size: 12px; }}
+      th, td {{ padding: 8px 8px; }}
+      th:nth-child(3), td:nth-child(3),
+      th:nth-child(5), td:nth-child(5) {{ display: none; }}
+      .topbar {{ padding: 10px 12px; font-size: 13px; }}
+    }}
+  </style>
+</head>
+<body>
+<div class="topbar">
+  <div style="max-width:960px;margin:0 auto">
+    <a href="/">London Schools Explorer</a>
+    <span>/</span>
+    {title}
+  </div>
+</div>
+<div class="container">
+  <a class="back" href="/">&#8592; All schools</a>
+  <h1>{title}</h1>
+  <span class="count-badge">{len(matched)} schools</span>
+  <div class="intro">{intro}</div>
+  {affiliate_block_html(prominent_pi=prominent_pi, prominent_scholastic=prominent_scholastic, compact=True)}
+  <table>
+    <thead><tr><th>School</th><th>Borough</th><th>Phase</th><th>Ofsted</th><th>Score</th></tr></thead>
+    <tbody>{rows}</tbody>
+  </table>
+</div>
+<footer><a href="/">London Schools Explorer</a> &mdash; helping families find the right school in London.</footer>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>"""
+
+    page_dir = pathlib.Path("schools") / slug
+    page_dir.mkdir(parents=True, exist_ok=True)
+    # feedback widget removed
+    (page_dir / "index.html").write_text(html, encoding="utf-8")
+    sitemap_urls.append(url)
+    print(f"  Built /schools/{slug} ({len(matched)} schools)")
+
+
+TYPE_PAGES = [
+    (
+        "outstanding",
+        "Outstanding Schools in London",
+        "Full list of all Outstanding-rated schools in London ranked by Ofsted score. Compare exam results, admissions and pupil data across all 32 boroughs.",
+        "Outstanding is the highest rating awarded by Ofsted inspectors and is given only to schools that are truly exceptional across all areas: quality of education, behaviour and attitudes, personal development, and leadership and management. Less than a quarter of London schools hold an Outstanding rating. This page lists every Outstanding-rated school in London, ranked by composite score, so you can compare them across boroughs, phases and school types.",
+        lambda s: (s.get("quality_label") or s.get("score_band")) == "Outstanding",
+        False, False  # prominent_pi, prominent_scholastic
+    ),
+    (
+        "good",
+        "Good Schools in London",
+        "Browse all Good-rated schools in London by Ofsted. Compare results, admissions and borough across all 32 London boroughs.",
+        "Good is the second-highest Ofsted rating and represents a school that is performing well and meeting the needs of its pupils. The majority of London schools are rated Good. This page lists every Good-rated school in London, ranked by composite score. A Good school is an excellent choice for most families – many Good schools outperform Outstanding schools on exam results and have less oversubscribed admissions.",
+        lambda s: (s.get("quality_label") or s.get("score_band")) == "Good",
+        False, False
+    ),
+    (
+        "selective",
+        "Selective Schools in London",
+        "All selective schools in London including grammar schools and academically selective independents. Compare Ofsted ratings, exam results and admissions data.",
+        "Selective schools in London admit pupils based on academic ability, typically assessed through entrance exams taken in Year 5 or 6 for secondary entry. London has fewer grammar schools than areas like Kent or Buckinghamshire, but there are selective state schools and many academically selective independent schools. Selective schools are among the most oversubscribed in the capital. This page lists every school in London with a selective admissions policy, ranked by Ofsted score.",
+        lambda s: s.get("admissions") == "Selective",
+        True, False  # Pi Academy prominent — parents researching selective schools are the perfect audience
+    ),
+    (
+        "grammar",
+        "Grammar Schools in London",
+        "All grammar schools in London. Compare Ofsted ratings, exam results, admissions and borough location for every London grammar school.",
+        "Grammar schools are state-funded secondary schools that select pupils by academic ability. London has significantly fewer grammar schools than surrounding counties – most are concentrated in Barnet, Bexley, Kingston, Redbridge and Sutton. Entry is typically via the 11-plus exam taken in Year 6. Places at London grammar schools are highly competitive, with many schools receiving ten or more applications per place. This page lists every grammar school in London ranked by Ofsted composite score.",
+        lambda s: (
+            s.get("admissions") == "Selective"
+            and s.get("phase") in ("Secondary", "Middle deemed secondary")
+            and s.get("school_type") in {
+                "Community school", "Foundation school",
+                "Voluntary aided school", "Voluntary controlled school",
+                "Academy converter", "Academy sponsor led"
+            }
+        ),
+        True, False  # Pi Academy prominent — 11+ prep is the #1 need for grammar school parents
+    ),
+    (
+        "faith",
+        "Faith Schools in London",
+        "All faith schools in London including Church of England, Catholic, Jewish, Muslim and other religious schools. Compare Ofsted ratings and admissions data.",
+        "London has one of the most diverse ranges of faith schools of any city in the world, reflecting its multicultural population. Church of England and Catholic schools make up the majority, but there are also Jewish, Muslim, Hindu, Sikh and other faith schools across the capital. Many faith schools are rated Outstanding or Good by Ofsted and are highly sought after. Admissions to faith schools often prioritise regular worshippers, so it is important to understand the admissions criteria carefully before applying.",
+        lambda s: s.get("religious_character") and s.get("religious_character") not in ("None", "Does not apply", "Not applicable", "N/A"),
+        False, True  # Scholastic prominent — faith school families are strong Scholastic audience
+    ),
+    (
+        "primary",
+        "Primary Schools in London",
+        "Browse all primary schools in London. Compare Ofsted ratings, KS2 SATs results, admissions and pupil data across all 32 boroughs.",
+        "London has over 2,000 primary schools spanning nursery, infant, junior and all-through primary phases, catering for children aged 3 to 11. Primary school places in inner London are among the most competitive in the country, with many schools receiving far more applications than they have places available. This page lists all primary schools in London ranked by Ofsted composite score. You can click any school to view its full profile including KS2 SATs results, admissions data and local area information.",
+        lambda s: s.get("phase") == "Primary",
+        False, True  # Scholastic prominent — primary parents are the core book-buying audience
+    ),
+    (
+        "secondary",
+        "Secondary Schools in London",
+        "Browse all secondary schools in London. Compare Ofsted ratings, GCSE results, sixth form provision and admissions data across all 32 boroughs.",
+        "London has over 500 secondary schools offering education to pupils aged 11 to 16 or 18. Secondary school choice in London is complex, with a mix of comprehensives, academies, selective grammar schools, faith schools and independent schools. GCSE results vary widely – from schools where nearly every pupil achieves grade 5 or above in English and Maths, to schools with significant challenges. This page lists all secondary schools in London ranked by Ofsted composite score, with GCSE Attainment 8 scores where available.",
+        lambda s: s.get("phase") in ("Secondary", "Middle deemed secondary"),
+        True, False  # Pi Academy prominent — GCSE and 13+ prep for secondary parents
+    ),
+    (
+        "sixth-form",
+        "Schools with Sixth Forms in London",
+        "All London schools and colleges with sixth forms. Compare A-level provision, Ofsted ratings and admissions across all 32 boroughs.",
+        "Having a sixth form means a school offers post-16 education, typically A-levels or BTECs, allowing students to continue their studies through Years 12 and 13 without changing schools. Not all London secondary schools have sixth forms – many pupils transfer to sixth form colleges or further education colleges at 16. This page lists every school in London that has a sixth form, ranked by Ofsted composite score.",
+        lambda s: s.get("sixth_form") == "Has a sixth form",
+        False, False
+    ),
+]
+
+print("Building school type pages...")
+for slug, title, meta_desc, intro, filter_fn, prominent_pi, prominent_scholastic in TYPE_PAGES:
+    build_type_page(slug, title, meta_desc, intro, filter_fn,
+                    prominent_pi=prominent_pi, prominent_scholastic=prominent_scholastic)
+print(f"Built {len(TYPE_PAGES)} type pages.")
+
+
+
+# Written as .txt so Vercel doesn't treat it as a binary asset.
+# vercel.json rewrites /sitemap.xml → /sitemap_data.txt transparently.
+lines = ['<?xml version="1.0" encoding="UTF-8"?>',
+         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+from datetime import date as _date
+_today = _date.today().isoformat()
+for u in sitemap_urls:
+    safe_u = u.replace("&", "&amp;")
+    if u == BASE_URL + "/":
+        priority, changefreq = "1.0", "weekly"
+    elif u == BASE_URL + "/appeals":
+        priority, changefreq = "0.9", "yearly"
+    elif "/schools/" in u and u.count("/") >= 5:
+        priority, changefreq = "0.8", "monthly"
+    elif "/schools/" in u:
+        priority, changefreq = "0.7", "monthly"
+    else:
+        priority, changefreq = "0.5", "monthly"
+    lines.append(
+        f"  <url><loc>{safe_u}</loc>"
+        f"<lastmod>{_today}</lastmod>"
+        f"<changefreq>{changefreq}</changefreq>"
+        f"<priority>{priority}</priority></url>"
+    )
+lines.append("</urlset>")
+
+with open("sitemap_data.txt", "w", encoding="utf-8", newline="\n") as f:
+    f.write("\n".join(lines) + "\n")
+print(f"Sitemap written with {len(sitemap_urls)} URLs.")
+
+
+# ── robots.txt ─────────────────────────────────────────────────────────────────
+robots = f"User-agent: *\nAllow: /\nSitemap: {BASE_URL}/sitemap.xml\n"
+pathlib.Path("robots.txt").write_text(robots, encoding="utf-8")
+print("robots.txt written.")
+
+print("\nDone! Deploy to Vercel and submit sitemap.xml to Google Search Console.")

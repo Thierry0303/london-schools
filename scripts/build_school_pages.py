@@ -616,6 +616,26 @@ for school in schools:
 
 print(f"Built {built} pages successfully.")
 
+# ── Remove orphaned pages ───────────────────────────────────────────────────────
+# Schools occasionally get re-issued URNs (academy conversion, trust change), which
+# changes their name/slug. Old page directories would otherwise linger forever and
+# fail validation (stale template, missing schema). Delete any school page dir that
+# no longer corresponds to a school in the current dataset.
+import shutil as _shutil
+_valid_paths = set()
+for _s in schools:
+    _b = slugify(_s.get("local_authority", "unknown"))
+    _n = slugify(_s.get("name", "unknown"))
+    _valid_paths.add(out_root / _b / _n)
+
+_orphans = 0
+for _idx in out_root.glob("*/*/index.html"):
+    if _idx.parent not in _valid_paths:
+        _shutil.rmtree(_idx.parent)
+        _orphans += 1
+if _orphans:
+    print(f"Removed {_orphans} orphaned page directories.")
+
 
 # ── Borough index pages ────────────────────────────────────────────────────────
 from collections import defaultdict

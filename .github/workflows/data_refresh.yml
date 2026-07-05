@@ -33,21 +33,19 @@ jobs:
       - name: Fetch independent school enrichment data
         run: python3 scripts/fetch_independent_school_data.py
         continue-on-error: true   # Don't block if CSV missing or has issues
-      # Step 3: Test AFTER refresh — abort if data is broken
-      - name: Post-refresh tests
-        id: post_test
-        run: python3 scripts/test_site.py
-      # Step 4: Build pages ONLY if post-refresh tests passed
+      # Step 3: Build pages FIRST, from the freshly-refreshed data
       - name: Build static pages
-        if: steps.post_test.outcome == 'success'
         run: |
           python3 scripts/build_school_pages.py
           echo "$(date -u)" > schools/.last_built
-      # Step 4b: Build borough hub pages (only if tests passed)
+      # Step 3b: Build borough hub pages
       - name: Build borough hub pages
-        if: steps.post_test.outcome == 'success'
         run: python3 scripts/build_borough_hubs.py
-      # Step 5: Commit everything
+      # Step 4: Test AFTER rebuild — validates the freshly-built pages; abort if broken
+      - name: Post-refresh tests
+        id: post_test
+        run: python3 scripts/test_site.py
+      # Step 5: Commit everything (only if tests passed)
       - name: Commit and push
         if: steps.post_test.outcome == 'success'
         run: |

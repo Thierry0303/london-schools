@@ -148,7 +148,8 @@ else:
     # Count total pages — pages are built after data refresh so may not exist yet
     pages = list(schools_dir.rglob("index.html"))
     school_pages = [p for p in pages if len(p.parts) == 3]
-    if len(school_pages) >= 3000:
+    pages_are_fresh = len(school_pages) >= 3000
+    if pages_are_fresh:
         ok(f"Static pages: {len(school_pages):,} school pages built")
     else:
         # Not a failure — pages are rebuilt after this test runs
@@ -179,12 +180,19 @@ else:
             content = p.read_text(encoding="utf-8")
             if must_contain in content:
                 ok(f"{school_name}: contains '{must_contain}'")
-            else:
+            elif pages_are_fresh:
                 fail(f"{school_name}: missing '{must_contain}' in page")
-            # Check page has basic structure
+            else:
+                warn(f"{school_name}: '{must_contain}' not in stale page (will be rebuilt)")
+            # Check page has basic structure. Only a hard failure once pages are
+            # freshly built; on stale pages (pre-rebuild) these are warnings, since
+            # the build step regenerates them immediately after this test.
             for tag in ["<title>", "<meta", "schema.org", "Ofsted"]:
                 if tag not in content:
-                    fail(f"{school_name}: missing '{tag}' in page")
+                    if pages_are_fresh:
+                        fail(f"{school_name}: missing '{tag}' in page")
+                    else:
+                        warn(f"{school_name}: '{tag}' not in stale page (will be rebuilt)")
 
 # ── 3. Borough and type pages ─────────────────────────────────
 section("3. Borough & type index pages")

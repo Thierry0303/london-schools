@@ -1,0 +1,89 @@
+name: Agent Enrichment
+
+# Runs the AI-agent enrichment on its own schedule, independent of the monthly
+# data refresh, so coverage builds up quickly instead of being limited to one
+# batch per month. Each run processes AGENT_MAX_PER_RUN schools that haven't been
+# checked in the last ~180 days, then rebuilds affected pages and pushes.
+#
+# Cost control: raise/lower AGENT_MAX_PER_RUN and the schedule to trade speed for
+# API spend (~$0.08 per school). At 200/run daily, all ~2,768 eligible schools
+# are covered in ~2 weeks.
+
+on:
+  workflow_dispatch:
+    inputs:
+      max_per_run:
+        description: "How many schools to enrich this run"
+        required: false
+        default: "200"
+  schedule:
+    - cron: '0 3 * * *'   # 03:00 UTC daily
+
+# Share the write-lock with the other workflows so pushes never race.
+concurrency:
+  group: site-write
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  enrich:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install requests --break-system-packages -q
+
+      - name: Run agent enrichment
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          AGENT_MAX_PER_RUN: ${{ github.event.inputs.max_per_run || '200' }}
+        run: python3 scripts/agent_enrich.py
+
+      - name: Rebuild pages
+        run: |
+          python3 scripts/build_school_pages.py
+          python3 scripts/build_borough_hubs.py
+
+      - name: Test
+        run: python3 scripts/test_site.py
+
+      - name: Commit and push (conflict-proof)
+        run: |
+          set -e
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A schools.json schools/ sitemap_data.txt robots.txt data/
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git commit -m "chore: agent enrichment [skip ci]"
+
+          # Built pages are derived artifacts — local build always wins on divergence.
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then
+              echo "Pushed on attempt $attempt"
+              exit 0
+            fi
+            echo "Push $attempt rejected — integrating remote, keeping local build..."
+            git fetch origin main
+            if ! git rebase -X ours origin/main; then
+              git checkout --ours -- . 2>/dev/null || true
+              git add -A
+              GIT_EDITOR=true git rebase --continue 2>/dev/null || git rebase --abort 2>/dev/null || true
+              git reset --soft origin/main
+              git add -A schools.json schools/ sitemap_data.txt robots.txt data/
+              git commit -m "chore: agent enrichment [skip ci]" || true
+            fi
+            sleep $((attempt * 3))
+          done
+          echo "::error::Could not push after 5 attempts"
+          exit 1

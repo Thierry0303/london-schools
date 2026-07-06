@@ -90,21 +90,47 @@ def school_category(school):
 # Each spec tells the model exactly what to look for, where, and the exact JSON
 # shape to return. The prompt forbids guessing.
 INDEPENDENT_FIELDS = """
-Return a JSON object with these keys (use null if not found on a credible source):
-- "fees_annual": integer GBP, the ANNUAL day fee for the senior/main phase, VAT-inclusive if stated. From the school's OWN website fees page only.
-- "a_level_a_star_b": number, percentage of A-level grades at A*-B (if the school reports A*-A only, use that and set a_level_note accordingly). From the school's OWN results/exam page.
-- "a_level_note": short string clarifying which measure (e.g. "A*-B" or "A*-A") or null.
-- "gcse_9_7": number, percentage of GCSE grades at 9-7. From the school's OWN results page.
-- "exam_year": integer year the exam results refer to (e.g. 2025).
-- "isi_status": string, the latest ISI inspection outcome, ONLY if using current ISI wording; null if unsure.
+This is an INDEPENDENT (fee-paying) school. Search its OWN official website
+thoroughly and try to fill EVERY field below (look at the fees page, the exam
+results/results page, and the ISI/inspection page). Return null only when a
+field genuinely isn't published. Return a JSON object with these keys:
+
+- "fees_annual": integer GBP — the ANNUAL day fee for the senior/main phase
+  (multiply a termly fee by 3). VAT-inclusive if the school states VAT is included.
+- "fees_note": short string — clarify what the fee covers if needed, e.g.
+  "senior day, VAT incl." or "reception; senior fees differ". Else null.
+- "a_level_a_star_a": number or null — % of A-level entries graded A*-A.
+- "a_level_a_star_b": number or null — % of A-level entries graded A*-B.
+- "gcse_9_7": number or null — % of GCSE entries graded 9-7.
+- "exam_year": integer — the year these exam results refer to (e.g. 2025).
+- "isi_status": string — the ISI inspection outcome, NORMALIZED to EXACTLY ONE of
+  these values (map the school's wording to the closest):
+    "Met all standards"      (current framework: standards met / compliant)
+    "Not all standards met"  (current framework: some standards not met)
+    "Excellent"              (old framework rating)
+    "Good"                   (old framework rating)
+    "Sound"                  (old framework rating)
+    "Unsatisfactory"         (old framework rating)
+  If you cannot map it confidently to one of these, return null.
+- "isi_year": integer — year of the ISI inspection (e.g. 2024). Else null.
+
+Give exam figures as plain numbers (e.g. 92.0, not "92%"). Never put sentences
+in numeric fields.
 """
 
 STATE_FIELDS = """
 Return a JSON object with these keys (use null if not found on a credible source):
-- "last_distance_offered_km": number, the distance (in km) to the furthest pupil offered a place in the most recent normal admissions round, under the school's distance/proximity oversubscription criterion. ONLY from the relevant London BOROUGH COUNCIL admissions data or the school's own admissions page. This is the "cut-off distance" / "last distance offered". If the school did not fill on distance (e.g. faith/banding/aptitude), return null.
-- "last_distance_year": integer year the distance refers to (e.g. 2025).
-- "oversubscribed": boolean, whether the school was oversubscribed in the most recent round (more applications than places), if stated by an official source; else null.
-- "published_admission_number": integer, the PAN (number of places) for the main entry year, from the borough or school admissions page.
+- "last_distance_offered_km": number, the distance to the furthest pupil offered a place in the most recent normal admissions round under the school's distance/proximity criterion (the "last distance offered" / "cut-off distance"). CONVERT MILES TO KM if the source uses miles (1 mile = 1.60934 km). If the school admits by banding and publishes several band distances, use the LARGEST band distance and note the banding in "distance_note". If the school did NOT fill on distance (sources say "n/a", "no distance cut-off", or it admits by faith/aptitude/test only), return null and set "distance_note" to explain. 
+- "last_distance_year": integer year the distance refers to (e.g. 2025 or 2026).
+- "distance_note": short string clarifying the measure (e.g. "furthest of 4 bands; largest = Band B 0.76mi", or "no distance cut-off — admits by banding") or null.
+- "oversubscribed": boolean, whether oversubscribed in the most recent round, if an official source states it; else null.
+- "published_admission_number": integer, the PAN (places) for the main entry year.
+
+WHERE TO LOOK for the distance (search these, in order):
+  1. The school's OWN website, pages titled "offer distances", "admissions outcome", "how places were allocated", "cut-off distance", or "catchment".
+  2. The London BOROUGH COUNCIL's "how places were offered/allocated" report (often a PDF named like "How places were offered ... [year]").
+  3. Do NOT use Locrating, Mumsnet, admissionsday, or other aggregators/forums for the number — those are not credible sources. You may only cite the school or the council.
+If none of those credible sources give a number, return null. Do not estimate.
 """
 
 
@@ -192,6 +218,65 @@ def parse_json_blob(text):
 
 
 # ── Validation: only keep credible, sourced values ───────────────────────────────
+def _coerce_number(v):
+    """Return a float if v looks numeric (strip %, £, commas), else None."""
+    if isinstance(v, (int, float)):
+        return float(v)
+    if isinstance(v, str):
+        s = v.replace("%", "").replace("£", "").replace(",", "").strip()
+        try:
+            return float(s)
+        except ValueError:
+            return None
+    return None
+
+
+# Fields that MUST be numeric; if the model put text there, we drop them.
+NUMERIC_FIELDS = {
+    "fees_annual", "a_level_a_star_a", "a_level_a_star_b", "gcse_9_7",
+    "exam_year", "isi_year", "last_distance_offered_km", "last_distance_year",
+    "published_admission_number",
+}
+# Percentage fields must be within a sane 0-100 range.
+PERCENT_FIELDS = {"a_level_a_star_a", "a_level_a_star_b", "gcse_9_7"}
+# ISI status must be one of these exact normalized values.
+ISI_ALLOWED = {
+    "Met all standards", "Not all standards met",
+    "Excellent", "Good", "Sound", "Unsatisfactory",
+}
+# Free-text note fields we allow through (kept short at render time).
+NOTE_FIELDS = {"fees_note", "distance_note"}
+
+
+def _normalize_value(field, v):
+    """Enforce the schema for a single field. Return normalized value or None to drop."""
+    if field in NUMERIC_FIELDS:
+        n = _coerce_number(v)
+        if n is None:
+            return None
+        if field in PERCENT_FIELDS and not (0 <= n <= 100):
+            return None
+        # integers where appropriate
+        if field in {"fees_annual", "exam_year", "isi_year",
+                     "last_distance_year", "published_admission_number"}:
+            return int(round(n))
+        return n
+    if field == "isi_status":
+        return v if v in ISI_ALLOWED else None
+    if field == "oversubscribed":
+        return bool(v) if isinstance(v, bool) else None
+    if field in NOTE_FIELDS:
+        s = str(v).strip()
+        return s[:120] if s else None
+    # a_level_note kept for backward-compat but capped
+    if field == "a_level_note":
+        s = str(v).strip()
+        return s[:120] if s else None
+    # unknown field: pass through as string, capped
+    s = str(v).strip()
+    return s[:200] if s else None
+
+
 def clean_result(result, category):
     """Return a clean agent_data dict, or None if nothing usable."""
     if not result or not isinstance(result, dict):
@@ -203,19 +288,42 @@ def clean_result(result, category):
     values = result.get("values") or {}
     sources = result.get("sources") or {}
 
+    # Note fields describe a nearby value and don't need their own source URL.
+    NO_SOURCE_NEEDED = NOTE_FIELDS | {"a_level_note", "exam_year", "isi_year",
+                                      "last_distance_year"}
+
     kept = {}
     kept_sources = {}
     for k, v in values.items():
         if v is None or v == "":
             continue
+        norm = _normalize_value(k, v)
+        if norm is None:
+            continue  # failed schema validation — drop it (this is the reliability guard)
+        if k in NO_SOURCE_NEEDED:
+            kept[k] = norm
+            continue
         src = sources.get(k)
-        # require a source URL that looks like a real URL
         if not src or not str(src).startswith("http"):
             continue
-        kept[k] = v
+        kept[k] = norm
         kept_sources[k] = src
 
-    if not kept:
+    # Drop orphan notes whose parent value didn't survive.
+    if "fees_note" in kept and "fees_annual" not in kept:
+        kept.pop("fees_note")
+    if "distance_note" in kept and "last_distance_offered_km" not in kept:
+        # keep distance_note only if it explains WHY there's no distance
+        pass  # allowed: explains "no distance cut-off"
+    if "exam_year" in kept and not any(f in kept for f in ("a_level_a_star_a", "a_level_a_star_b", "gcse_9_7")):
+        kept.pop("exam_year")
+    if "isi_year" in kept and "isi_status" not in kept:
+        kept.pop("isi_year")
+
+    # Must have at least one substantive (non-note, non-year) value.
+    substantive = [k for k in kept if k not in NOTE_FIELDS
+                   and k not in {"a_level_note", "exam_year", "isi_year", "last_distance_year"}]
+    if not substantive:
         return None
 
     return {

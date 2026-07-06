@@ -5,6 +5,11 @@ on:
     - cron: '0 6 15 * *'   # 6am on the 15th of every month
 permissions:
   contents: write
+# Share the write-lock with Ci.yml and agent_enrich.yml so no two workflows
+# build + push at the same time (that caused the cancelled/hung run).
+concurrency:
+  group: site-write
+  cancel-in-progress: false
 jobs:
   refresh:
     runs-on: ubuntu-latest
@@ -33,13 +38,9 @@ jobs:
       - name: Fetch independent school enrichment data
         run: python3 scripts/fetch_independent_school_data.py
         continue-on-error: true   # Don't block if CSV missing or has issues
-      # Step 2d: AI-agent enrichment (fees, catchment distance, etc. from official sources)
-      - name: AI-agent enrichment
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          AGENT_MAX_PER_RUN: "40"
-        run: python3 scripts/agent_enrich.py
-        continue-on-error: true   # Non-fatal: only writes verified, sourced values; skips if no key
+      # NOTE: AI-agent enrichment runs in its OWN workflow (agent_enrich.yml), not
+      # here — it must not sit behind the slow data refresh, where it was getting
+      # starved/cancelled. This keeps the monthly refresh fast and reliable.
       # Step 3: Build pages FIRST, from the freshly-refreshed data
       - name: Build static pages
         run: |

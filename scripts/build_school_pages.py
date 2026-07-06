@@ -165,7 +165,9 @@ def render_agent_section(school):
     if values.get('last_distance_offered_km') is not None:
         yr = values.get('last_distance_year')
         label = f"Furthest offer distance{f' ({yr})' if yr else ''}"
-        rows.append(f'<tr><td>{label}</td><td><strong>{values["last_distance_offered_km"]} km</strong> · {src_link("last_distance_offered_km")}</td></tr>')
+        note = values.get('distance_note')
+        marker = add_footnote(note) if note and len(str(note)) > 0 else ''
+        rows.append(f'<tr><td>{label}{marker}</td><td><strong>{values["last_distance_offered_km"]} km</strong> · {src_link("last_distance_offered_km")}</td></tr>')
     if values.get('published_admission_number') is not None:
         rows.append(f'<tr><td>Places offered per year</td><td><strong>{values["published_admission_number"]}</strong> · {src_link("published_admission_number")}</td></tr>')
     if values.get('oversubscribed') is not None:
@@ -173,33 +175,43 @@ def render_agent_section(school):
 
     # ── Independent-school figures (only if not already in independent_data) ──
     if values.get('fees_annual') is not None and not ind.get('fees_annual'):
-        rows.append(f'<tr><td>Annual fees</td><td><strong>£{int(values["fees_annual"]):,}</strong> · {src_link("fees_annual")}</td></tr>')
+        note = values.get('fees_note')
+        marker = add_footnote(note) if note else ''
+        rows.append(f'<tr><td>Annual fees{marker}</td><td><strong>£{int(values["fees_annual"]):,}</strong> · {src_link("fees_annual")}</td></tr>')
 
+    yr = values.get('exam_year')
+    yr_txt = f' <span style="color:#999;font-size:12px;">{yr}</span>' if yr else ''
+
+    if values.get('a_level_a_star_a') is not None:
+        rows.append(f'<tr><td>A-Level (A*–A)</td><td><strong>{values["a_level_a_star_a"]}%</strong>{yr_txt} · {src_link("a_level_a_star_a")}</td></tr>')
     if values.get('a_level_a_star_b') is not None and not ind.get('a_level_a_star_b_percent'):
-        note = values.get('a_level_note')
-        # If the note is a short measure name keep it in the label; if it's a long
-        # sentence, move it to a footnote so the row stays clean.
-        if note and len(str(note)) <= 8:
-            label = f"A-Level ({note})"
-            marker = ''
-        else:
-            label = "A-Level (A*–B)"
-            marker = add_footnote(note) if note else ''
-        yr = values.get('exam_year')
-        yr_txt = f' <span style="color:#999;font-size:12px;">{yr}</span>' if yr else ''
-        rows.append(f'<tr><td>{label}{marker}</td><td><strong>{values["a_level_a_star_b"]}%</strong>{yr_txt} · {src_link("a_level_a_star_b")}</td></tr>')
-
+        rows.append(f'<tr><td>A-Level (A*–B)</td><td><strong>{values["a_level_a_star_b"]}%</strong>{yr_txt} · {src_link("a_level_a_star_b")}</td></tr>')
     if values.get('gcse_9_7') is not None and not ind.get('gcse_9_7_percent'):
-        yr = values.get('exam_year')
-        yr_txt = f' <span style="color:#999;font-size:12px;">{yr}</span>' if yr else ''
         rows.append(f'<tr><td>GCSE (9–7)</td><td><strong>{values["gcse_9_7"]}%</strong>{yr_txt} · {src_link("gcse_9_7")}</td></tr>')
 
     if values.get('isi_status') and not ind.get('isi_inspection_status'):
-        # ISI status is often a long sentence — keep the row value short, detail in footnote.
-        raw = str(values['isi_status'])
-        short = "Inspected" if len(raw) > 40 else raw
-        marker = add_footnote(raw) if len(raw) > 40 else ''
-        rows.append(f'<tr><td>ISI inspection{marker}</td><td><strong>{short}</strong> · {src_link("isi_status")}</td></tr>')
+        iyr = values.get('isi_year')
+        iyr_txt = f' <span style="color:#999;font-size:12px;">{iyr}</span>' if iyr else ''
+        raw_isi = str(values['isi_status'])
+        # Defensive: older records stored a long free-text ISI sentence. Map/condense
+        # to a short label so the row stays clean until re-checked under the new schema.
+        isi_allowed = {"Met all standards", "Not all standards met",
+                       "Excellent", "Good", "Sound", "Unsatisfactory"}
+        if raw_isi in isi_allowed:
+            isi_display = raw_isi
+        else:
+            low = raw_isi.lower()
+            if "not" in low and ("met" in low or "standard" in low):
+                isi_display = "Not all standards met"
+            elif "compliant" in low or "standards are met" in low or "standards met" in low or "met all" in low:
+                isi_display = "Met all standards"
+            elif "excellent" in low:
+                isi_display = "Excellent"
+            elif "good" in low:
+                isi_display = "Good"
+            else:
+                isi_display = "Inspected"
+        rows.append(f'<tr><td>ISI inspection</td><td><strong>{isi_display}</strong>{iyr_txt} · {src_link("isi_status")}</td></tr>')
 
     if not rows:
         return ''

@@ -33,6 +33,13 @@ jobs:
       - name: Fetch independent school enrichment data
         run: python3 scripts/fetch_independent_school_data.py
         continue-on-error: true   # Don't block if CSV missing or has issues
+      # Step 2d: AI-agent enrichment (fees, catchment distance, etc. from official sources)
+      - name: AI-agent enrichment
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          AGENT_MAX_PER_RUN: "40"
+        run: python3 scripts/agent_enrich.py
+        continue-on-error: true   # Non-fatal: only writes verified, sourced values; skips if no key
       # Step 3: Build pages FIRST, from the freshly-refreshed data
       - name: Build static pages
         run: |
@@ -51,10 +58,32 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -A schools.json schools/ sitemap_data.txt robots.txt
+          git add -A schools.json schools/ sitemap_data.txt robots.txt data/
           git commit --allow-empty -m "chore: data refresh $(date +'%Y-%m')"
-          git pull --rebase origin main
-          git push
+
+          # Built pages are DERIVED artifacts. On divergence the freshly-built
+          # local version must win — never rebase/merge generated HTML (identical
+          # files regenerated on both sides produce endless conflicts).
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then
+              echo "Pushed on attempt $attempt"
+              exit 0
+            fi
+            echo "Push $attempt rejected — integrating remote, keeping locally-built pages..."
+            git fetch origin main
+            if ! git rebase -X ours origin/main; then
+              echo "Conflicts during rebase — forcing local build to win"
+              git checkout --ours -- . 2>/dev/null || true
+              git add -A
+              GIT_EDITOR=true git rebase --continue 2>/dev/null || git rebase --abort 2>/dev/null || true
+              git reset --soft origin/main
+              git add -A schools.json schools/ sitemap_data.txt robots.txt data/
+              git commit --allow-empty -m "chore: data refresh $(date +'%Y-%m')"
+            fi
+            sleep $((attempt * 3))
+          done
+          echo "::error::Could not push after 5 attempts"
+          exit 1
       # Step 6: If post-refresh tests failed — restore previous schools.json
       - name: Restore previous data on failure
         if: steps.post_test.outcome == 'failure'

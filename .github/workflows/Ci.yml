@@ -28,7 +28,14 @@ jobs:
         with:
           python-version: '3.11'
       - name: Install dependencies
-        run: pip install requests pandas numpy --break-system-packages -q
+        run: pip install requests pandas numpy pyyaml odfpy --break-system-packages -q
+      # Rebuild pages BEFORE testing so the suite validates freshly-generated
+      # output, not stale committed HTML. Without this, any template change makes
+      # the schema/content checks fail against old pages.
+      - name: Build pages (for testing)
+        run: |
+          python3 scripts/build_school_pages.py
+          python3 scripts/build_borough_hubs.py
       - name: Run test suite
         run: python3 scripts/test_site.py
 
@@ -70,13 +77,27 @@ jobs:
           # [skip ci] keeps this commit from re-triggering CI in an infinite loop.
           git commit -m "chore: rebuild pages [skip ci]"
 
+          # Built pages are DERIVED artifacts. On divergence, the freshly-built
+          # local version must win — never rebase/merge generated HTML (identical
+          # files regenerated on both sides produce endless conflicts).
           for attempt in 1 2 3 4 5; do
             if git push origin HEAD:main; then
               echo "Push succeeded on attempt $attempt."
               exit 0
             fi
-            echo "Push attempt $attempt rejected — pulling and rebasing..."
-            git pull --rebase --autostash origin main
+            echo "Push attempt $attempt rejected — integrating remote, keeping locally-built pages..."
+            git fetch origin main
+            # Re-apply our commit on top of remote, preferring OUR files on conflict.
+            if ! git rebase -X ours origin/main; then
+              echo "Conflicts during rebase — forcing local build to win."
+              git checkout --ours -- . 2>/dev/null || true
+              git add -A
+              GIT_EDITOR=true git rebase --continue 2>/dev/null || git rebase --abort 2>/dev/null || true
+              # Fallback: reset onto remote and re-stage our built artifacts.
+              git reset --soft origin/main
+              git add schools/ sitemap_data.txt robots.txt
+              git commit -m "chore: rebuild pages [skip ci]" || true
+            fi
             sleep $((attempt * 3))
           done
 

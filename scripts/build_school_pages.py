@@ -236,6 +236,13 @@ def build_school_page(school):
     is_secondary_phase = phase_lc in ("secondary", "middle deemed secondary", "16 plus")
     is_all_through = phase_lc == "all-through"
     is_special = "special" in (school.get("school_type") or "").lower()
+    is_independent = "independent" in (school.get("school_type") or "").lower()
+
+    def _is_zeroish(v):
+        try:
+            return float(v) == 0.0
+        except (TypeError, ValueError):
+            return False
 
     results_rows = ""
     # KS2 only for primary schools — never for special, nursery or all-through
@@ -243,13 +250,15 @@ def build_school_page(school):
         results_rows += f"<tr><td>KS2 expected standard</td><td><strong>{ks2_expected}%</strong></td></tr>"
     if ks2_higher is not None and is_primary_phase and not is_special:
         results_rows += f"<tr><td>KS2 higher standard</td><td><strong>{ks2_higher}%</strong></td></tr>"
-    # ATT8/GCSE for secondary and all-through only, never special schools
-    if ks4_att8 is not None and (is_secondary_phase or is_all_through) and not is_special:
+    # ATT8/GCSE for secondary and all-through only. Never special or independent
+    # schools (independents don't report standardised KS4 grades to DfE, so the
+    # values are blank/zero and misleading). Also skip zero-valued rows.
+    if ks4_att8 is not None and (is_secondary_phase or is_all_through) and not is_special and not is_independent and not _is_zeroish(ks4_att8):
         results_rows += f"<tr><td>Attainment 8 score</td><td><strong>{ks4_att8}</strong></td></tr>"
-    if ks4_grade5 is not None and (is_secondary_phase or is_all_through) and not is_special:
+    if ks4_grade5 is not None and (is_secondary_phase or is_all_through) and not is_special and not is_independent and not _is_zeroish(ks4_grade5):
         ks4_grade5_display = min(ks4_grade5, 100.0)  # DfE data can exceed 100% due to cohort timing; cap for display
         results_rows += f"<tr><td>Grade 5+ English &amp; Maths</td><td><strong>{ks4_grade5_display}%</strong></td></tr>"
-    if ks4_grade4 is not None and (is_secondary_phase or is_all_through) and not is_special:
+    if ks4_grade4 is not None and (is_secondary_phase or is_all_through) and not is_special and not is_independent and not _is_zeroish(ks4_grade4):
         results_rows += f"<tr><td>Grade 4+ English &amp; Maths</td><td><strong>{ks4_grade4}%</strong></td></tr>"
 
     # Build data note for results section

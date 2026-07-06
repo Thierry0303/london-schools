@@ -1,0 +1,482 @@
+{
+  "100000": {
+    "checked_at": "2026-07-06",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "published_admission_number": 30
+      },
+      "sources": {
+        "published_admission_number": "https://www.cityoflondon.gov.uk/assets/Services-DCCS/admissions-policy-aldgate-2023-24.pdf"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-06"
+    }
+  },
+  "100001": {
+    "checked_at": "2026-07-06",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "a_level_a_star_b": 96,
+        "a_level_note": "A*-B (school also reports A*-A = 81%); both figures from the school's own exam results summary page for 2025",
+        "gcse_9_7": 95,
+        "exam_year": 2025,
+        "isi_status": "Standards met (Routine Inspection, April–May 2025)"
+      },
+      "sources": {
+        "a_level_a_star_b": "https://clsg.org.uk/learning/academic/exam-results/",
+        "a_level_note": "https://clsg.org.uk/learning/academic/exam-results/",
+        "gcse_9_7": "https://clsg.org.uk/learning/academic/exam-results/",
+        "exam_year": "https://clsg.org.uk/learning/academic/exam-results/",
+        "isi_status": "https://clsg.org.uk/app/uploads/2025/06/CIty-of-London-School-for-Girls-ISI-report-June-2025.pdf"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-06"
+    }
+  },
+  "100002": {
+    "checked_at": "2026-07-06",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 23310
+      },
+      "sources": {
+        "fees_annual": "https://www.spcslondon.com/admissions/fees/"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-06"
+    }
+  },
+  "100003": {
+    "checked_at": "2026-07-06",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 28386,
+        "a_level_a_star_b": 95.0,
+        "a_level_note": "A*-B (also reported: 78% at A*-A and 39% at A*)",
+        "gcse_9_7": 92.0,
+        "exam_year": 2024,
+        "isi_status": "Compliant with all regulations; all standards are met (ISI full inspection, November 2024)"
+      },
+      "sources": {
+        "fees_annual": "https://www.cityoflondonschool.org.uk/admissions/fees/",
+        "a_level_a_star_b": "https://www.cityoflondonschool.org.uk/news/outstanding-a-level-results-from-cls/",
+        "a_level_note": "https://www.cityoflondonschool.org.uk/news/outstanding-a-level-results-from-cls/",
+        "gcse_9_7": "https://www.cityoflondonschool.org.uk/news/outstanding-a-level-results-from-cls/",
+        "exam_year": "https://www.cityoflondonschool.org.uk/news/outstanding-a-level-results-from-cls/",
+        "isi_status": "https://www.cityoflondonschool.org.uk/about/inspection-reports/"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-06"
+    }
+  },
+  "100008": {
+    "checked_at": "2026-07-06",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "published_admission_number": 45
+      },
+      "sources": {
+        "published_admission_number": "https://www.camden.gov.uk/school-admissions-general"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-06"
+    }
+  },
+  "100009": {
+    "checked_at": "2026-07-06",
+    "found": false,
+    "data": null
+  },
+  "100010": {
+    "checked_at": "2026-07-06",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "published_admission_number": 60
+      },
+      "sources": {
+        "published_admission_number": "https://cindex.camden.gov.uk/kb5/camden/cd/service.page?id=EK3QMLEzs90"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-06"
+    }
+  },
+  "100011": {
+    "checked_at": "2026-07-06",
+    "found": false,
+    "data": null
+  },
+  "100013": {
+    "checked_at": "2026-07-06",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "published_admission_number": 30
+      },
+      "sources": {
+        "published_admission_number": "https://www.edithneville.camden.sch.uk/admissions-1/"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-06"
+    }
+  },
+  "100014": {
+    "checked_at": "2026-07-06",
+    "found": false,
+    "data": null
+  },
+  "100015": {
+    "checked_at": "2026-07-06",
+    "found": false,
+    "data": null
+  },
+  "100018": {
+    "checked_at": "2026-07-06",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "published_admission_number": 60
+      },
+      "sources": {
+        "published_admission_number": "https://www.netley.camden.sch.uk/eyfs/"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-06"
+    }
+  },
+  "100019": {
+    "checked_at": "2026-07-06",
+    "found": false,
+    "data": null
+  },
+  "100020": {
+    "checked_at": "2026-07-06",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "published_admission_number": 60
+      },
+      "sources": {
+        "published_admission_number": "https://cindex.camden.gov.uk/kb5/camden/cd/service.page?id=cOiRXs6vnn4"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-06"
+    }
+  },
+  "100021": {
+    "checked_at": "2026-07-06",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "published_admission_number": 60
+      },
+      "sources": {
+        "published_admission_number": "https://www.rhylprim.camden.sch.uk/school-info/admissions/"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-06"
+    }
+  },
+  "100022": {
+    "checked_at": "2026-07-06",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "published_admission_number": 60
+      },
+      "sources": {
+        "published_admission_number": "https://www.camden.gov.uk/school-admissions-general"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-06"
+    }
+  },
+  "100023": {
+    "checked_at": "2026-07-06",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "published_admission_number": 58
+      },
+      "sources": {
+        "published_admission_number": "https://cindex.camden.gov.uk/kb5/camden/cd/service.page?id=nf2j3lj-eKc"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-06"
+    }
+  },
+  "100025": {
+    "checked_at": "2026-07-06",
+    "found": false,
+    "data": null
+  },
+  "100026": {
+    "checked_at": "2026-07-06",
+    "found": false,
+    "data": null
+  },
+  "100027": {
+    "checked_at": "2026-07-06",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "oversubscribed": true,
+        "published_admission_number": 30
+      },
+      "sources": {
+        "oversubscribed": "https://www.eleanorpalmer.camden.sch.uk/About/Admissions/",
+        "published_admission_number": "https://www.camden.gov.uk/documents/d/guest/camden-la-determined-admission-arrangements-for-entry-in-sept-2025-26"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-06"
+    }
+  },
+  "100028": {
+    "checked_at": "2026-07-06",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "published_admission_number": 28
+      },
+      "sources": {
+        "published_admission_number": "https://christchurchschool.co.uk/wp-content/uploads/2024/12/Christ-Church-NW3-Admissions-Criteria-September-2026-final.pdf"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-06"
+    }
+  },
+  "100029": {
+    "checked_at": "2026-07-06",
+    "found": false,
+    "data": null
+  },
+  "100030": {
+    "checked_at": "2026-07-06",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "published_admission_number": 30
+      },
+      "sources": {
+        "published_admission_number": "https://www.emmanuel.camden.sch.uk/_site/data/files/D47204DD75EF6B3488E619EAD92444DD.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-06"
+    }
+  },
+  "100031": {
+    "checked_at": "2026-07-06",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "published_admission_number": 30
+      },
+      "sources": {
+        "published_admission_number": "https://hampsteadprimary.co.uk/about-us/admissions/"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-06"
+    }
+  },
+  "100032": {
+    "checked_at": "2026-07-06",
+    "found": false,
+    "data": null
+  },
+  "100033": {
+    "checked_at": "2026-07-06",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "published_admission_number": 30
+      },
+      "sources": {
+        "published_admission_number": "https://www.holytrinitynw1.camden.sch.uk/our-school/about/admissions/"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-06"
+    }
+  },
+  "100034": {
+    "checked_at": "2026-07-06",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "published_admission_number": 30
+      },
+      "sources": {
+        "published_admission_number": "https://www.kentishtown.camden.sch.uk/criteria-for-admissions-2025-2026/"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-06"
+    }
+  },
+  "100035": {
+    "checked_at": "2026-07-06",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "published_admission_number": 45
+      },
+      "sources": {
+        "published_admission_number": "https://cindex.camden.gov.uk/kb5/camden/cd/service.page?id=tj52uTvdx28"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-06"
+    }
+  },
+  "100036": {
+    "checked_at": "2026-07-06",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "published_admission_number": 30
+      },
+      "sources": {
+        "published_admission_number": "https://www.stalbanscamden.co.uk/attachments/download.asp?file=415&type=pdf"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-06"
+    }
+  },
+  "100040": {
+    "checked_at": "2026-07-06",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "published_admission_number": 30
+      },
+      "sources": {
+        "published_admission_number": "https://www.stgeorge.camden.sch.uk/attachments/download.asp?file=357&type=pdf"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-06"
+    }
+  },
+  "100041": {
+    "checked_at": "2026-07-06",
+    "found": false,
+    "data": null
+  },
+  "100042": {
+    "checked_at": "2026-07-06",
+    "found": false,
+    "data": null
+  },
+  "100043": {
+    "checked_at": "2026-07-06",
+    "found": false,
+    "data": null
+  },
+  "100045": {
+    "checked_at": "2026-07-06",
+    "found": false,
+    "data": null
+  },
+  "100046": {
+    "checked_at": "2026-07-06",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "published_admission_number": 30
+      },
+      "sources": {
+        "published_admission_number": "https://www.stpauls.camden.sch.uk/Our-School/Admissions/"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-06"
+    }
+  },
+  "100047": {
+    "checked_at": "2026-07-06",
+    "found": false,
+    "data": null
+  },
+  "100048": {
+    "checked_at": "2026-07-06",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "published_admission_number": 30
+      },
+      "sources": {
+        "published_admission_number": "https://cindex.camden.gov.uk/kb5/camden/cd/service.page?id=HQSqtDH3VM4"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-06"
+    }
+  },
+  "100049": {
+    "checked_at": "2026-07-06",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "published_admission_number": 180
+      },
+      "sources": {
+        "published_admission_number": "https://www.haverstock.camden.sch.uk/406/admission-to-year-7"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-06"
+    }
+  },
+  "100050": {
+    "checked_at": "2026-07-06",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "published_admission_number": 180
+      },
+      "sources": {
+        "published_admission_number": "https://www.camden.gov.uk/documents/d/guest/secondary-schools-in-camden-2026-admissions-guide"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-06"
+    }
+  },
+  "100051": {
+    "checked_at": "2026-07-06",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "published_admission_number": 180
+      },
+      "sources": {
+        "published_admission_number": "https://cindex.camden.gov.uk/kb5/camden/cd/service.page?id=FCUS9uh5hAo"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-06"
+    }
+  }
+}

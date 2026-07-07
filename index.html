@@ -776,10 +776,16 @@ function ScoreCard({ school, compareList, toggleCompare, userCoords }) {
   var stat3num = school.pupils != null ? school.pupils : '—';
   var stat3lbl = 'Pupils';
   var stat3color = 'var(--ink)';
+  var indFees = school.independent_data && school.independent_data.fees_annual;
+  if (indFees) {
+    stat3num = '£' + (indFees/1000).toFixed(0) + 'k';
+    stat3lbl = 'Fees/yr';
+    stat3color = '#7D6EB5';
+  }
   var phase3 = (school.phase || '').toLowerCase();
   var isPrimary = phase3 === 'primary';
   var isSecondaryLike = phase3 === 'secondary' || phase3 === 'all-through' || phase3 === '16 plus';
-  if (school.ks4_att8 != null && (isSecondaryLike || !isPrimary)) {
+  if (!indFees && school.ks4_att8 != null && (isSecondaryLike || !isPrimary)) {
     stat3num = school.ks4_att8;
     stat3lbl = 'Att 8';
     stat3color = school.ks4_att8 >= ENG_ATT8_AVG ? '#27AE60' : '#E67E22';
@@ -1200,8 +1206,13 @@ function App() {
       function normalise(list) {
         (list || []).forEach(function(s){
           var t = (s.school_type || '').toLowerCase();
-          if (t.indexOf('independent') !== -1 && !s.quality_label) {
-            s.score_band = (s.isi_url || s.isi_latest_report) ? 'Independent (ISI)' : 'Independent';
+          if (t.indexOf('independent') !== -1) {
+            if (!s.quality_label) {
+              s.score_band = (s.isi_url || s.isi_latest_report) ? 'Independent (ISI)' : 'Independent';
+            }
+            // DfE KS4 figures exclude IGCSEs, so they misrepresent
+            // independent schools (e.g. Att8 "17" at Dulwich College).
+            delete s.ks4_att8; delete s.ks4_grade5_em; delete s.ks4_grade4_em;
           }
         });
         return list;

@@ -34,7 +34,13 @@ jobs:
       - name: Fetch independent school ratings
         run: python3 scripts/fetch_independent_ratings.py
         continue-on-error: true   # Don't block build if DfE CSV is temporarily unavailable
-      # Step 2c: Fetch independent school enrichment data
+      # Step 2c: Fetch ISI inspection reports for association independents
+      # (crawls isi.net listing politely; cached in data/isi_reports.json)
+      - name: Fetch ISI inspection reports
+        run: python3 scripts/fetch_isi_reports.py
+        timeout-minutes: 30
+        continue-on-error: true   # Don't block build if isi.net is unavailable
+      # Step 2d: Fetch independent school enrichment data
       - name: Fetch independent school enrichment data
         run: python3 scripts/fetch_independent_school_data.py
         continue-on-error: true   # Don't block if CSV missing or has issues

@@ -76,77 +76,108 @@
 }</script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, -apple-system, sans-serif; color: #1a1a1a; background: #f8f9fa; line-height: 1.6; }
-    a { color: #1565C0; }
-    .topbar { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 12px 20px; }
-    .topbar a { text-decoration: none; font-weight: 600; color: #1a1a1a; font-size: 15px; }
-    .topbar span { color: #888; margin: 0 8px; }
-    .hero { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 28px 20px 24px; }
-    .container { max-width: 780px; margin: 0 auto; padding: 24px 20px; display: flex; flex-direction: column; gap: 16px; }
-    .hero .container { padding: 0; }
-    .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-bottom: 10px; }
-    h1 { font-size: clamp(22px, 5vw, 30px); font-weight: 700; line-height: 1.2; margin-bottom: 6px; }
-    .meta { color: #555; font-size: 14px; margin-top: 4px; }
-    .card { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px 24px; }
-    .card h2 { font-size: 16px; font-weight: 600; margin-bottom: 14px; color: #111; }
-    table { width: 100%; border-collapse: collapse; font-size: 14px; }
-    td { padding: 8px 0; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
-    td:first-child { color: #555; width: 48%; }
-    tr:last-child td { border-bottom: none; }
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .stat { background: #f8f9fa; border-radius: 8px; padding: 14px 16px; }
-    .stat-label { font-size: 12px; color: #666; margin-bottom: 4px; }
-    .stat-value { font-size: 22px; font-weight: 700; color: #111; }
-    .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
-    .btn { display: inline-block; padding: 10px 18px; border-radius: 8px; font-size: 14px; font-weight: 500; text-decoration: none; border: 1px solid #ccc; color: #1a1a1a; background: #fff; }
-    .btn-primary { background: #1565C0; color: #fff; border-color: #1565C0; }
-    .back-link { font-size: 14px; color: #555; text-decoration: none; }
-    .back-link:hover { color: #111; }
-    footer { text-align: center; padding: 32px 20px; font-size: 13px; color: #888; }
-    @media (max-width: 600px) {
-      .hero { padding: 20px 14px 16px; }
-      h1 { font-size: 22px; }
-      .meta { font-size: 13px; }
-      .actions { flex-direction: column; }
-      .btn { text-align: center; }
-      .container { padding: 16px 12px; gap: 12px; }
-      .grid { grid-template-columns: 1fr; }
-      .card { padding: 14px 16px; }
-      td { font-size: 13px; padding: 6px 0; }
-      .topbar { padding: 10px 12px; font-size: 13px; }
+    :root {
+      --navy: #0F1E3D;
+      --navy-soft: #1B2E52;
+      --gold: #C8A24B;
+      --gold-soft: #E4CE93;
+      --paper: #F7F5F0;
+      --ink: #1a1a1a;
+      --muted: #6B7280;
+      --line: #E8E4DB;
+      --card: #FFFFFF;
     }
-    @media (max-width: 520px) { .grid { grid-template-columns: 1fr; } }
+    body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--ink); background: var(--paper); line-height: 1.6; }
+    a { color: #1E4C8A; }
+    .serif { font-family: Georgia, "Times New Roman", serif; }
+
+    /* Breadcrumb */
+    .topbar { background: var(--navy); padding: 11px 20px; }
+    .topbar-inner { max-width: 820px; margin: 0 auto; font-size: 13px; color: #A9B6D0; }
+    .topbar a { text-decoration: none; color: #D6DEEC; font-weight: 500; }
+    .topbar a:hover { color: #fff; }
+    .topbar span { margin: 0 7px; color: #5C6B8C; }
+    .topbar .current { color: #fff; }
+
+    /* Hero band — the brand signature */
+    .hero { background: var(--navy); color: #fff; padding: 34px 20px 30px; border-bottom: 3px solid var(--gold); }
+    .hero-inner { max-width: 820px; margin: 0 auto; }
+    .rating-badge { display: inline-block; padding: 5px 14px; border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; margin-bottom: 14px; }
+    .hero h1 { font-family: Georgia, "Times New Roman", serif; font-size: clamp(26px, 5.5vw, 40px); font-weight: 700; line-height: 1.12; color: #fff; letter-spacing: -0.01em; }
+    .hero h1 .accent { color: var(--gold-soft); }
+    .hero .meta { color: #AFBCD6; font-size: 14.5px; margin-top: 10px; }
+    .hero .meta strong { color: #E8EDF6; font-weight: 600; }
+
+    .container { max-width: 820px; margin: 0 auto; padding: 26px 20px 8px; display: flex; flex-direction: column; gap: 18px; }
+
+    /* Quick-stat strip */
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .stat { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; position: relative; }
+    .stat::before { content:""; position:absolute; left:0; top:14px; bottom:14px; width:3px; border-radius:3px; background: var(--gold); }
+    .stat-label { font-size: 11.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 5px; padding-left: 10px; }
+    .stat-value { font-family: Georgia, serif; font-size: 26px; font-weight: 700; color: var(--navy); padding-left: 10px; }
+
+    /* Cards */
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px 24px; }
+    .card h2 { font-family: Georgia, serif; font-size: 18px; font-weight: 700; margin-bottom: 4px; color: var(--navy); }
+    .card h2 + .rule { height: 2px; width: 34px; background: var(--gold); border-radius: 2px; margin: 8px 0 14px; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    td { padding: 10px 0; border-bottom: 1px solid #F0EEE8; vertical-align: top; }
+    td:first-child { color: var(--muted); width: 46%; }
+    td:last-child { color: var(--ink); }
+    tr:last-child td { border-bottom: none; }
+
+    .rating-pill { display:inline-block; padding:3px 11px; border-radius:999px; font-size:12.5px; font-weight:700; }
+
+    /* Actions */
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+    .btn { display: inline-flex; align-items:center; gap:6px; padding: 10px 16px; border-radius: 9px; font-size: 13.5px; font-weight: 600; text-decoration: none; border: 1px solid rgba(255,255,255,.25); color: #fff; background: rgba(255,255,255,.08); transition: background .15s; }
+    .btn:hover { background: rgba(255,255,255,.16); }
+    .btn-gold { background: var(--gold); color: var(--navy); border-color: var(--gold); }
+    .btn-gold:hover { background: var(--gold-soft); }
+    .hero .actions .btn { color:#fff; }
+    .hero .actions .btn-gold { color: var(--navy); }
+
+    footer { text-align: center; padding: 34px 20px; font-size: 12.5px; color: var(--muted); margin-top: 12px; }
+    footer a { color: var(--navy); font-weight: 600; }
+
+    @media (max-width: 600px) {
+      .hero { padding: 24px 16px 22px; }
+      .hero h1 { font-size: 26px; }
+      .actions { flex-direction: column; }
+      .btn { justify-content:center; text-align: center; }
+      .container { padding: 18px 14px 4px; gap: 14px; }
+      .grid { grid-template-columns: 1fr; }
+      .card { padding: 18px 18px; }
+      td { font-size: 13.5px; }
+    }
   </style>
 </head>
 <body>
 
 <div class="topbar">
-  <div style="max-width:780px;margin:0 auto">
-    <a href="/">London Schools Explorer</a>
+  <div class="topbar-inner">
+    <a href="/">London Schools</a>
     <span>/</span>
     <a href="/schools/lewisham">Lewisham</a>
     <span>/</span>
-    Stillness Junior School
+    <span class="current">Stillness Junior School</span>
   </div>
 </div>
 
 <div class="hero">
-  <div class="container">
-    <div>
-      <span class="badge" style="background:#E3F2FD;color:#1565C0">Good</span>
-      <h1>Stillness Junior School</h1>
-      <p class="meta">Brockley Rise, Lewisham, SE23 1NH&ensp;&middot;&ensp;Primary&ensp;&middot;&ensp;Community school</p>
-    </div>
+  <div class="hero-inner">
+    <span class="rating-badge" style="background:#E3F2FD;color:#1565C0">Good</span>
+    <h1 class="serif">Stillness Junior School</h1>
+    <p class="meta">Brockley Rise, Lewisham, <strong>SE23 1NH</strong>&ensp;&middot;&ensp;Primary&ensp;&middot;&ensp;Community school</p>
     <div class="actions">
-      <a class='btn btn-primary' href='http://www.ofsted.gov.uk/inspection-reports/find-inspection-report/provider/ELS/100704' target='_blank' rel='noopener'>View Ofsted report</a>
-      <a class='btn' href='https://www.google.com/maps/search/?api=1&query=51.44949,-0.038895' target='_blank' rel='noopener'>📍 View on map</a>
-      <a class='btn' href='https://www.google.com/maps/dir/?api=1&destination=51.44949,-0.038895&travelmode=walking' target='_blank' rel='noopener' style='background:#E8F5E9;color:#27AE60;border-color:#A5D6A7'>🚶 Walking route</a>
-      <a class='btn' href='https://www.google.com/maps/dir/?api=1&destination=51.44949,-0.038895&travelmode=transit' target='_blank' rel='noopener' style='background:#E3F2FD;color:#1565C0;border-color:#90CAF9'>🚌 Bus / Tube route</a>
-      <a class='btn' href='https://snobe.co.uk/schools/stillness-junior-school' target='_blank' rel='noopener' style='background:#7B2FBE;color:white;border-color:#7B2FBE'>View on Snobe</a>
-      <a class="btn" href="/schools/lewisham">More schools in Lewisham</a>
-      <a class="btn" href="/">All London schools</a>
-      <button class="btn" onclick="shareSchoolWhatsApp()" style="background:#25D366;color:#fff;border-color:#25D366;">📱 WhatsApp</button>
-      <button class="btn" onclick="shareSchoolEmail()" style="background:#1565C0;color:#fff;border-color:#1565C0;">✉️ Email</button>
+      <a class='btn btn-gold' href='http://www.ofsted.gov.uk/inspection-reports/find-inspection-report/provider/ELS/100704' target='_blank' rel='noopener'>View Ofsted report</a>
+      <a class='btn' href='https://www.google.com/maps/search/?api=1&query=51.44949,-0.038895' target='_blank' rel='noopener'>View on map</a>
+      <a class='btn' href='https://www.google.com/maps/dir/?api=1&destination=51.44949,-0.038895&travelmode=walking' target='_blank' rel='noopener'>Walking route</a>
+      <a class='btn' href='https://www.google.com/maps/dir/?api=1&destination=51.44949,-0.038895&travelmode=transit' target='_blank' rel='noopener'>Bus / Tube</a>
+      <a class='btn' href='https://snobe.co.uk/schools/stillness-junior-school' target='_blank' rel='noopener'>View on Snobe</a>
+      <button class="btn" onclick="shareSchoolWhatsApp()">Share</button>
     </div>
   </div>
 </div>
@@ -188,6 +219,7 @@
 
   <section class="card">
     <h2>School details</h2>
+    <div class="rule"></div>
     <table>
       <tr><td>Borough</td><td><strong>Lewisham</strong></td></tr>
       <tr><td>Postcode</td><td><strong>SE23 1NH</strong></td></tr>
@@ -205,8 +237,9 @@
 
   <section class="card">
     <h2>Ofsted inspection</h2>
+    <div class="rule"></div>
     <table>
-      <tr><td>Overall rating</td><td><span class="badge" style="background:#E3F2FD;color:#1565C0">Good</span></td></tr>
+      <tr><td>Overall rating</td><td><span class="rating-pill" style="background:#E3F2FD;color:#1565C0">Good</span></td></tr>
       <tr><td>Last inspected</td><td><strong>10/12/2024</strong></td></tr>
       <tr><td>Report</td><td><a href="http://www.ofsted.gov.uk/inspection-reports/find-inspection-report/provider/ELS/100704" target="_blank" rel="noopener">View Ofsted report</a></td></tr>
     </table>

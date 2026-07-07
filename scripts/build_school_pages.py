@@ -72,6 +72,8 @@ def ofsted_badge_color(label):
         "Good":          ("#1565C0", "#E3F2FD"),
         "Requires improvement": ("#E65100", "#FFF3E0"),
         "Inadequate":    ("#B71C1C", "#FFEBEE"),
+        "ISI inspected": ("#4A3A7A", "#EFEAFA"),
+        "Independent school": ("#4A3A7A", "#EFEAFA"),
     }
     return colors.get(label, ("#424242", "#F5F5F5"))
 
@@ -89,17 +91,17 @@ def render_independent_school_section(school):
     ind_data = school.get('independent_data')
     if not ind_data:
         return ''
-    
+
     # Build HTML
     html = []
     html.append('<section class="card" style="background:#F9F7F4;border-left:4px solid #D4A843;">')
-    html.append('<h2>Independent School Information</h2>')
+    html.append('<h2>Fees &amp; independent school information</h2>')
     html.append('<table>')
-    
+
     # Fees
     if ind_data.get('fees_annual'):
         fees = ind_data['fees_annual']
-        html.append(f'<tr><td>Annual Fees</td><td><strong>£{fees:,}</strong></td></tr>')
+        html.append(f'<tr><td>Annual day fees (inc VAT)</td><td><strong>£{fees:,}</strong></td></tr>')
     
     # Boarding
     if ind_data.get('boarding'):
@@ -125,8 +127,14 @@ def render_independent_school_section(school):
     if ind_data.get('isi_inspection_status'):
         status = ind_data['isi_inspection_status']
         html.append(f'<tr><td>ISI Inspection Status</td><td><strong>{status}</strong></td></tr>')
-    
+
     html.append('</table>')
+    # Provenance / caveat note (source details live in the CSV 'notes' column)
+    note = ind_data.get('notes') or ''
+    src_txt = f' {note}' if note else ''
+    html.append('<p style="font-size:12px;color:#888;margin-top:12px;line-height:1.5;">'
+                'Fees and results are compiled from the school\'s own published information and change annually. '
+                'Please verify with the school before making decisions.' + src_txt + '</p>')
     html.append('</section>')
     return '\n'.join(html)
 
@@ -295,6 +303,20 @@ def build_school_page(school):
         except (TypeError, ValueError):
             return False
 
+    # ── Independent-school data (fees, ISI inspection) ────────────────────
+    ind_data   = school.get("independent_data") or {}
+    agent_vals = (school.get("agent_data") or {}).get("values") or {}
+    fees_annual = ind_data.get("fees_annual") or agent_vals.get("fees_annual")
+    isi_url    = school.get("isi_url") or ""
+    isi_report = school.get("isi_latest_report") or {}
+    is_isi     = is_independent and bool(isi_url or isi_report)
+    has_ofsted_rating = bool(school.get("quality_label"))
+    # ISI (association) schools are inspected by ISI, not Ofsted — a grey
+    # "Not yet rated" badge is misleading for them.
+    if is_independent and not has_ofsted_rating:
+        ofsted_label = "ISI inspected" if is_isi else "Independent school"
+        ofsted_text_color, ofsted_bg_color = ofsted_badge_color(ofsted_label)
+
     results_rows = ""
     # KS2 only for primary schools — never for special, nursery or all-through
     if ks2_expected is not None and is_primary_phase and not is_special:
@@ -348,17 +370,33 @@ def build_school_page(school):
     school_name_url = name.replace(" ", "+").replace("&", "and") if name else ""
 
     # Rich meta description with actual data
-    meta_parts = [f"{ofsted_label} {phase} school in {borough}, London"]
-    if school.get("apps_per_place"):
-        meta_parts.append(f"{school['apps_per_place']}x oversubscribed")
-    if ks4_att8:
-        meta_parts.append(f"Attainment 8: {ks4_att8}")
-    elif ks2_expected:
-        meta_parts.append(f"KS2 expected: {ks2_expected}%")
-    if pupils:
-        meta_parts.append(f"{pupils} pupils")
-    meta_parts.append(f"{postcode}")
-    meta_desc = ". ".join(meta_parts) + ". Free admissions, Ofsted and exam data."
+    if is_independent:
+        # Independent schools: DfE Attainment 8 is misleading (IGCSEs aren't
+        # counted) and "Free admissions" reads as "admission is free".
+        label_txt = "ISI-inspected independent" if (is_isi and not has_ofsted_rating) else (
+            f"{ofsted_label} independent" if has_ofsted_rating else "Independent")
+        meta_parts = [f"{label_txt} {phase.lower()} school in {borough}, London" if phase != "N/A"
+                      else f"{label_txt} school in {borough}, London"]
+        if fees_annual:
+            meta_parts.append(f"Fees £{int(fees_annual):,}/year")
+        if isi_report.get("date"):
+            meta_parts.append(f"Last ISI inspection {isi_report['date'][:4]}")
+        if pupils:
+            meta_parts.append(f"{pupils} pupils")
+        meta_parts.append(f"{postcode}")
+        meta_desc = ". ".join(meta_parts) + ". Fees, inspection reports and admissions info."
+    else:
+        meta_parts = [f"{ofsted_label} {phase} school in {borough}, London"]
+        if school.get("apps_per_place"):
+            meta_parts.append(f"{school['apps_per_place']}x oversubscribed")
+        if ks4_att8:
+            meta_parts.append(f"Attainment 8: {ks4_att8}")
+        elif ks2_expected:
+            meta_parts.append(f"KS2 expected: {ks2_expected}%")
+        if pupils:
+            meta_parts.append(f"{pupils} pupils")
+        meta_parts.append(f"{postcode}")
+        meta_desc = ". ".join(meta_parts) + ". Free admissions, Ofsted and exam data."
 
     schema = {
         "@context": "https://schema.org",
@@ -416,13 +454,33 @@ def build_school_page(school):
                 "text": f"{name} was rated {ofsted_label} by Ofsted{(' on ' + inspection) if inspection else ''}. View the full report on the Ofsted website."
             }
         })
-    if ks4_att8:
+    if ks4_att8 and not is_independent:
         faq_items.append({
             "@type": "Question",
             "name": f"What are {name}\'s GCSE results?",
             "acceptedAnswer": {
                 "@type": "Answer",
                 "text": f"{name} achieved an Attainment 8 score of {ks4_att8} in {DATA_YEAR}. The national average is 46.4."
+            }
+        })
+    if is_independent and fees_annual:
+        faq_items.append({
+            "@type": "Question",
+            "name": f"How much are the fees at {name}?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": f"Day fees at {name} are around £{int(fees_annual):,} per year including VAT. Fees vary by year group and change annually — check the school's website for the current fee schedule."
+            }
+        })
+    if is_isi and not has_ofsted_rating:
+        _isi_txt = (f" Its most recent ISI inspection was a {isi_report['type'].lower()} in {isi_report['date'][:4]}."
+                    if isi_report.get("type") and isi_report.get("date") else "")
+        faq_items.append({
+            "@type": "Question",
+            "name": f"Is {name} inspected by Ofsted?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": f"As an association independent school, {name} is inspected by the Independent Schools Inspectorate (ISI) rather than Ofsted.{_isi_txt}"
             }
         })
     elif ks2_expected:
@@ -455,6 +513,48 @@ def build_school_page(school):
     # Call independent school section function
     independent_section = render_independent_school_section(school)
     agent_section = render_agent_section(school)
+
+    # ── Inspection card: Ofsted for state / non-association schools, ISI for
+    # association independents ─────────────────────────────────────────────
+    if is_independent and not has_ofsted_rating:
+        isi_rows = ""
+        if isi_report.get("type"):
+            isi_rows += f"<tr><td>Latest inspection</td><td><strong>{isi_report['type']}</strong></td></tr>"
+        if isi_report.get("date"):
+            isi_rows += f"<tr><td>Inspection date</td><td><strong>{isi_report['date']}</strong></td></tr>"
+        if isi_report.get("url"):
+            isi_rows += f'<tr><td>Report</td><td><a href="{isi_report["url"]}" target="_blank" rel="noopener">View ISI report (PDF)</a></td></tr>'
+        if isi_url:
+            isi_rows += f'<tr><td>ISI profile</td><td><a href="{isi_url}" target="_blank" rel="noopener">View on isi.net</a></td></tr>'
+        if not isi_rows:
+            isi_rows = ('<tr><td>Reports</td><td>Search for this school\'s inspection reports on '
+                        '<a href="https://www.isi.net/reports/" target="_blank" rel="noopener">isi.net</a></td></tr>')
+        inspection_card = f"""<section class="card">
+    <h2>Inspection</h2>
+    <div class="rule"></div>
+    <table>
+      <tr><td>Inspectorate</td><td><span class="rating-pill" style="background:{ofsted_bg_color};color:{ofsted_text_color}">Independent Schools Inspectorate</span></td></tr>
+      {isi_rows}
+    </table>
+    <p style="font-size:12px;color:#888;margin-top:12px;line-height:1.5;">Most association independent schools are inspected by ISI rather than Ofsted. Since September 2023, ISI reports state whether a school meets regulatory standards instead of awarding a single-word grade — read the full report for the inspectors' findings.</p>
+  </section>"""
+    else:
+        inspection_card = f"""<section class="card">
+    <h2>Ofsted inspection</h2>
+    <div class="rule"></div>
+    <table>
+      <tr><td>Overall rating</td><td><span class="rating-pill" style="background:{ofsted_bg_color};color:{ofsted_text_color}">{ofsted_label}</span></td></tr>
+      {"<tr><td>Last inspected</td><td><strong>" + inspection + "</strong></td></tr>" if inspection else ""}
+      {"<tr><td>Report</td><td>" + ofsted_link + "</td></tr>" if ofsted_link else ""}
+    </table>
+  </section>"""
+
+    # Hero action button: link to the relevant inspection report
+    if is_independent and not has_ofsted_rating:
+        report_btn = (f"<a class='btn btn-gold' href='{isi_report['url']}' target='_blank' rel='noopener'>View ISI report</a>" if isi_report.get("url")
+                      else (f"<a class='btn btn-gold' href='{isi_url}' target='_blank' rel='noopener'>View on isi.net</a>" if isi_url else ""))
+    else:
+        report_btn = f"<a class='btn btn-gold' href='{ofsted_url}' target='_blank' rel='noopener'>View Ofsted report</a>" if ofsted_url else ""
 
     html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -577,7 +677,7 @@ def build_school_page(school):
     <h1 class="serif">{name}</h1>
     <p class="meta">{street}, {borough}, <strong>{postcode}</strong>{"&ensp;&middot;&ensp;" + phase if phase != "N/A" else ""}{"&ensp;&middot;&ensp;" + school_type if school_type != "N/A" else ""}</p>
     <div class="actions">
-      {"<a class='btn btn-gold' href='" + ofsted_url + "' target='_blank' rel='noopener'>View Ofsted report</a>" if ofsted_url else ""}
+      {report_btn}
       {"<a class='btn' href='" + maps_link + "' target='_blank' rel='noopener'>View on map</a>" if maps_link else ""}
       {"<a class='btn' href='https://www.google.com/maps/dir/?api=1&destination=" + str(lat) + "," + str(lng) + "&travelmode=walking' target='_blank' rel='noopener'>Walking route</a>" if lat and lng else ""}
       {"<a class='btn' href='https://www.google.com/maps/dir/?api=1&destination=" + str(lat) + "," + str(lng) + "&travelmode=transit' target='_blank' rel='noopener'>Bus / Tube</a>" if lat and lng else ""}
@@ -589,13 +689,15 @@ def build_school_page(school):
 <script>
 (function(){{
   var d={{name:{json.dumps(name)},borough:{json.dumps(borough)},ofsted:{json.dumps(ofsted_label)},
-    att8:{json.dumps(str(school.get('ks4_att8','')) if school.get('ks4_att8') else '')},
+    fees:{json.dumps(f"£{int(fees_annual):,}/year" if (is_independent and fees_annual) else '')},
+    att8:{json.dumps(str(school.get('ks4_att8','')) if (school.get('ks4_att8') and not is_independent) else '')},
     ks2:{json.dumps(str(school.get('ks2_expected_pct','')) if school.get('ks2_expected_pct') else '')},
     apps:{json.dumps(str(school.get('apps_per_place','')) if school.get('apps_per_place') else '')},
     url:{json.dumps(url)}}};
   window.shareSchoolWhatsApp=function(){{
     var p=['🏫 *'+d.name+'*','📍 '+d.borough];
-    if(d.ofsted&&d.ofsted!=='Not yet rated')p.push('⭐ Ofsted: *'+d.ofsted+'*');
+    if(d.ofsted&&d.ofsted!=='Not yet rated'&&d.ofsted!=='ISI inspected'&&d.ofsted!=='Independent school')p.push('⭐ Ofsted: *'+d.ofsted+'*');
+    if(d.fees)p.push('💷 Fees: '+d.fees);
     if(d.att8)p.push('📊 Attainment 8: '+d.att8);
     if(d.ks2)p.push('📝 KS2 expected: '+d.ks2+'%');
     if(d.apps&&d.apps!=='N/A')p.push('🎯 Applications per place: '+d.apps);
@@ -606,6 +708,7 @@ def build_school_page(school):
     var subj=d.name+' — London Schools Explorer';
     var p=[d.name,'Borough: '+d.borough];
     if(d.ofsted)p.push('Ofsted: '+d.ofsted);
+    if(d.fees)p.push('Fees: '+d.fees);
     if(d.att8)p.push('Attainment 8: '+d.att8);
     if(d.ks2)p.push('KS2 expected standard: '+d.ks2+'%');
     if(d.apps&&d.apps!=='N/A')p.push('Applications per place: '+d.apps);
@@ -640,15 +743,7 @@ def build_school_page(school):
     {apps_note}
   </section>
 
-  <section class="card">
-    <h2>Ofsted inspection</h2>
-    <div class="rule"></div>
-    <table>
-      <tr><td>Overall rating</td><td><span class="rating-pill" style="background:{ofsted_bg_color};color:{ofsted_text_color}">{ofsted_label}</span></td></tr>
-      {"<tr><td>Last inspected</td><td><strong>" + inspection + "</strong></td></tr>" if inspection else ""}
-      {"<tr><td>Report</td><td>" + ofsted_link + "</td></tr>" if ofsted_link else ""}
-    </table>
-  </section>
+  {inspection_card}
 
   {results_section}
 
@@ -1131,18 +1226,35 @@ def build_type_page(slug, title, meta_desc, intro, filter_fn, prominent_pi=False
     matched = [s for s in schools if filter_fn(s)]
     matched.sort(key=lambda s: (s.get("ofsted_score") or 0), reverse=True)
 
+    def _fees_of(s):
+        return ((s.get("independent_data") or {}).get("fees_annual")
+                or ((s.get("agent_data") or {}).get("values") or {}).get("fees_annual"))
+
+    # Show a Fees column when the page contains fee-paying schools with data
+    show_fees = any(_fees_of(s) for s in matched)
+    if show_fees:
+        # Fee-paying page: schools with known fees first, then by score
+        matched.sort(key=lambda s: (_fees_of(s) is not None, s.get("ofsted_score") or 0), reverse=True)
+
     rows = ""
     for s in matched:
         b_slug  = slugify(s.get("local_authority", "unknown"))
         s_slug  = slugify(s.get("name", "unknown"))
         label   = s.get("quality_label") or s.get("score_band") or "Not yet rated"
+        is_ind  = "independent" in (s.get("school_type") or "").lower()
+        if is_ind and not s.get("quality_label"):
+            label = "ISI inspected" if (s.get("isi_url") or s.get("isi_latest_report")) else "Independent school"
         tc, bc  = ofsted_badge_color(label)
         score   = s.get("ofsted_score")
+        fv      = _fees_of(s)
+        fees_td = (f'<td style="font-weight:600;white-space:nowrap">{"£" + format(int(fv), ",") + "/yr" if fv else "–"}</td>'
+                   if show_fees else "")
         rows += f"""<tr>
           <td><a href="/schools/{b_slug}/{s_slug}">{safe(s.get('name'))}</a></td>
           <td>{safe(s.get('local_authority'))}</td>
           <td>{safe(s.get('phase'))}</td>
           <td><span style="background:{bc};color:{tc};padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">{label}</span></td>
+          {fees_td}
           <td style="font-weight:700;color:#1a1a1a">{int(score) if score else '–'}</td>
         </tr>"""
 
@@ -1211,7 +1323,7 @@ def build_type_page(slug, title, meta_desc, intro, filter_fn, prominent_pi=False
   <div class="intro">{intro}</div>
   {affiliate_block_html(prominent_pi=prominent_pi, prominent_scholastic=prominent_scholastic, compact=True)}
   <table>
-    <thead><tr><th>School</th><th>Borough</th><th>Phase</th><th>Ofsted</th><th>Score</th></tr></thead>
+    <thead><tr><th>School</th><th>Borough</th><th>Phase</th><th>Ofsted</th>{"<th>Fees</th>" if show_fees else ""}<th>Score</th></tr></thead>
     <tbody>{rows}</tbody>
   </table>
 </div>
@@ -1301,6 +1413,14 @@ TYPE_PAGES = [
         lambda s: s.get("sixth_form") == "Has a sixth form",
         False, False
     ),
+    (
+        "independent",
+        "Private & Independent Schools in London",
+        "All 511 private and independent schools in London with annual fees, ISI and Ofsted inspection reports, and admissions information across all 32 boroughs.",
+        "London has over 500 private (independent) schools, from world-famous names like St Paul's, Westminster and Dulwich College to small preparatory and specialist schools. Most association independents are inspected by the Independent Schools Inspectorate (ISI) rather than Ofsted, and since VAT was added in January 2025 senior day fees at leading London schools typically run from £25,000 to over £45,000 a year. This page lists every independent school in London with annual day fees where published, inspection status and a link to each school's full profile. Fees change every year — always confirm with the school directly.",
+        lambda s: "independent" in (s.get("school_type") or "").lower(),
+        False, False
+    ),
 ]
 
 print("Building school type pages...")
@@ -1342,7 +1462,7 @@ with open("sitemap_data.txt", "w", encoding="utf-8", newline="\n") as f:
 print(f"Sitemap written with {len(sitemap_urls)} URLs.")
 
 
-# ── robots.txt ─────────────────────────────────────────────────────────────────
+# ── robots.txt ───────────────────────────────────────────────────────────────────────
 robots = f"User-agent: *\nAllow: /\nSitemap: {BASE_URL}/sitemap.xml\n"
 pathlib.Path("robots.txt").write_text(robots, encoding="utf-8")
 print("robots.txt written.")

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Orchard House School, Hounslow | London Schools Explorer</title>
-  <meta name="description" content="Not yet rated Primary school in Hounslow, London. 331 pupils. W4 1LB. Free admissions, Ofsted and exam data.">
+  <meta name="description" content="Independent primary school in Hounslow, London. 331 pupils. W4 1LB. Fees, inspection reports and admissions info.">
   <link rel="canonical" href="https://londonschool.directory/schools/hounslow/orchard-house-school">
   <script type="application/ld+json">{
     "@context": "https://schema.org",
@@ -16,7 +16,7 @@
     ]
   }</script>
   <meta property="og:title" content="Orchard House School | London Schools Explorer">
-  <meta property="og:description" content="Not yet rated Primary school in Hounslow, London. 331 pupils. W4 1LB. Free admissions, Ofsted and exam data.">
+  <meta property="og:description" content="Independent primary school in Hounslow, London. 331 pupils. W4 1LB. Fees, inspection reports and admissions info.">
   <meta property="og:url" content="https://londonschool.directory/schools/hounslow/orchard-house-school">
   <meta property="og:type" content="website">
   <script type="application/ld+json">{
@@ -32,7 +32,7 @@
     "addressCountry": "GB"
   },
   "url": "https://londonschool.directory/schools/hounslow/orchard-house-school",
-  "description": "Not yet rated Primary school in Hounslow, London. 331 pupils. W4 1LB. Free admissions, Ofsted and exam data.",
+  "description": "Independent primary school in Hounslow, London. 331 pupils. W4 1LB. Fees, inspection reports and admissions info.",
   "isAccessibleForFree": true,
   "publicAccess": true,
   "telephone": "02087428544",
@@ -48,6 +48,14 @@
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is Orchard House School's Ofsted rating?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Orchard House School was rated Independent school by Ofsted. View the full report on the Ofsted website."
+      }
+    },
     {
       "@type": "Question",
       "name": "Is the area around Orchard House School safe?",
@@ -152,7 +160,7 @@
 
 <div class="hero">
   <div class="hero-inner">
-    <span class="rating-badge" style="background:#F5F5F5;color:#424242">Not yet rated</span>
+    <span class="rating-badge" style="background:#EFEAFA;color:#4A3A7A">Independent school</span>
     <h1 class="serif">Orchard House School</h1>
     <p class="meta">Priory House, Hounslow, <strong>W4 1LB</strong>&ensp;&middot;&ensp;Primary&ensp;&middot;&ensp;Other independent school</p>
     <div class="actions">
@@ -167,14 +175,16 @@
 </div>
 <script>
 (function(){
-  var d={name:"Orchard House School",borough:"Hounslow",ofsted:"Not yet rated",
+  var d={name:"Orchard House School",borough:"Hounslow",ofsted:"Independent school",
+    fees:"",
     att8:"",
     ks2:"",
     apps:"",
     url:"https://londonschool.directory/schools/hounslow/orchard-house-school"};
   window.shareSchoolWhatsApp=function(){
     var p=['🏫 *'+d.name+'*','📍 '+d.borough];
-    if(d.ofsted&&d.ofsted!=='Not yet rated')p.push('⭐ Ofsted: *'+d.ofsted+'*');
+    if(d.ofsted&&d.ofsted!=='Not yet rated'&&d.ofsted!=='ISI inspected'&&d.ofsted!=='Independent school')p.push('⭐ Ofsted: *'+d.ofsted+'*');
+    if(d.fees)p.push('💷 Fees: '+d.fees);
     if(d.att8)p.push('📊 Attainment 8: '+d.att8);
     if(d.ks2)p.push('📝 KS2 expected: '+d.ks2+'%');
     if(d.apps&&d.apps!=='N/A')p.push('🎯 Applications per place: '+d.apps);
@@ -185,6 +195,7 @@
     var subj=d.name+' — London Schools Explorer';
     var p=[d.name,'Borough: '+d.borough];
     if(d.ofsted)p.push('Ofsted: '+d.ofsted);
+    if(d.fees)p.push('Fees: '+d.fees);
     if(d.att8)p.push('Attainment 8: '+d.att8);
     if(d.ks2)p.push('KS2 expected standard: '+d.ks2+'%');
     if(d.apps&&d.apps!=='N/A')p.push('Applications per place: '+d.apps);
@@ -220,13 +231,13 @@
   </section>
 
   <section class="card">
-    <h2>Ofsted inspection</h2>
+    <h2>Inspection</h2>
     <div class="rule"></div>
     <table>
-      <tr><td>Overall rating</td><td><span class="rating-pill" style="background:#F5F5F5;color:#424242">Not yet rated</span></td></tr>
-      
-      
+      <tr><td>Inspectorate</td><td><span class="rating-pill" style="background:#EFEAFA;color:#4A3A7A">Independent Schools Inspectorate</span></td></tr>
+      <tr><td>Reports</td><td>Search for this school's inspection reports on <a href="https://www.isi.net/reports/" target="_blank" rel="noopener">isi.net</a></td></tr>
     </table>
+    <p style="font-size:12px;color:#888;margin-top:12px;line-height:1.5;">Most association independent schools are inspected by ISI rather than Ofsted. Since September 2023, ISI reports state whether a school meets regulatory standards instead of awarding a single-word grade — read the full report for the inspectors' findings.</p>
   </section>
 
   

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Lady Nafisa School, Hillingdon | London Schools Explorer</title>
-  <meta name="description" content="Good Secondary school in Hillingdon, London. Attainment 8: 51.7. 85 pupils. UB7 0JG. Free admissions, Ofsted and exam data.">
+  <meta name="description" content="Good independent secondary school in Hillingdon, London. 85 pupils. UB7 0JG. Fees, inspection reports and admissions info.">
   <link rel="canonical" href="https://londonschool.directory/schools/hillingdon/lady-nafisa-school">
   <script type="application/ld+json">{
     "@context": "https://schema.org",
@@ -16,7 +16,7 @@
     ]
   }</script>
   <meta property="og:title" content="Lady Nafisa School | London Schools Explorer">
-  <meta property="og:description" content="Good Secondary school in Hillingdon, London. Attainment 8: 51.7. 85 pupils. UB7 0JG. Free admissions, Ofsted and exam data.">
+  <meta property="og:description" content="Good independent secondary school in Hillingdon, London. 85 pupils. UB7 0JG. Fees, inspection reports and admissions info.">
   <meta property="og:url" content="https://londonschool.directory/schools/hillingdon/lady-nafisa-school">
   <meta property="og:type" content="website">
   <script type="application/ld+json">{
@@ -32,7 +32,7 @@
     "addressCountry": "GB"
   },
   "url": "https://londonschool.directory/schools/hillingdon/lady-nafisa-school",
-  "description": "Good Secondary school in Hillingdon, London. Attainment 8: 51.7. 85 pupils. UB7 0JG. Free admissions, Ofsted and exam data.",
+  "description": "Good independent secondary school in Hillingdon, London. 85 pupils. UB7 0JG. Fees, inspection reports and admissions info.",
   "isAccessibleForFree": true,
   "publicAccess": true,
   "telephone": "02087070001",
@@ -55,14 +55,6 @@
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "Lady Nafisa School was rated Good by Ofsted on NaT. View the full report on the Ofsted website."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What are Lady Nafisa School's GCSE results?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Lady Nafisa School achieved an Attainment 8 score of 51.7 in 2024/25. The national average is 46.4."
       }
     },
     {
@@ -185,13 +177,15 @@
 <script>
 (function(){
   var d={name:"Lady Nafisa School",borough:"Hillingdon",ofsted:"Good",
-    att8:"51.7",
+    fees:"",
+    att8:"",
     ks2:"",
     apps:"",
     url:"https://londonschool.directory/schools/hillingdon/lady-nafisa-school"};
   window.shareSchoolWhatsApp=function(){
     var p=['🏫 *'+d.name+'*','📍 '+d.borough];
-    if(d.ofsted&&d.ofsted!=='Not yet rated')p.push('⭐ Ofsted: *'+d.ofsted+'*');
+    if(d.ofsted&&d.ofsted!=='Not yet rated'&&d.ofsted!=='ISI inspected'&&d.ofsted!=='Independent school')p.push('⭐ Ofsted: *'+d.ofsted+'*');
+    if(d.fees)p.push('💷 Fees: '+d.fees);
     if(d.att8)p.push('📊 Attainment 8: '+d.att8);
     if(d.ks2)p.push('📝 KS2 expected: '+d.ks2+'%');
     if(d.apps&&d.apps!=='N/A')p.push('🎯 Applications per place: '+d.apps);
@@ -202,6 +196,7 @@
     var subj=d.name+' — London Schools Explorer';
     var p=[d.name,'Borough: '+d.borough];
     if(d.ofsted)p.push('Ofsted: '+d.ofsted);
+    if(d.fees)p.push('Fees: '+d.fees);
     if(d.att8)p.push('Attainment 8: '+d.att8);
     if(d.ks2)p.push('KS2 expected standard: '+d.ks2+'%');
     if(d.apps&&d.apps!=='N/A')p.push('Applications per place: '+d.apps);

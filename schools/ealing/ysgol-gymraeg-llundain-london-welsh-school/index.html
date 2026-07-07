@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Ysgol Gymraeg Llundain, London Welsh School, Ealing | London Schools Explorer</title>
-  <meta name="description" content="Good Primary school in Ealing, London. 12 pupils. W7 1PD. Free admissions, Ofsted and exam data.">
+  <meta name="description" content="Good independent primary school in Ealing, London. 12 pupils. W7 1PD. Fees, inspection reports and admissions info.">
   <link rel="canonical" href="https://londonschool.directory/schools/ealing/ysgol-gymraeg-llundain-london-welsh-school">
   <script type="application/ld+json">{
     "@context": "https://schema.org",
@@ -16,7 +16,7 @@
     ]
   }</script>
   <meta property="og:title" content="Ysgol Gymraeg Llundain, London Welsh School | London Schools Explorer">
-  <meta property="og:description" content="Good Primary school in Ealing, London. 12 pupils. W7 1PD. Free admissions, Ofsted and exam data.">
+  <meta property="og:description" content="Good independent primary school in Ealing, London. 12 pupils. W7 1PD. Fees, inspection reports and admissions info.">
   <meta property="og:url" content="https://londonschool.directory/schools/ealing/ysgol-gymraeg-llundain-london-welsh-school">
   <meta property="og:type" content="website">
   <script type="application/ld+json">{
@@ -32,7 +32,7 @@
     "addressCountry": "GB"
   },
   "url": "https://londonschool.directory/schools/ealing/ysgol-gymraeg-llundain-london-welsh-school",
-  "description": "Good Primary school in Ealing, London. 12 pupils. W7 1PD. Free admissions, Ofsted and exam data.",
+  "description": "Good independent primary school in Ealing, London. 12 pupils. W7 1PD. Fees, inspection reports and admissions info.",
   "isAccessibleForFree": true,
   "publicAccess": true,
   "telephone": "02085750237",
@@ -176,13 +176,15 @@
 <script>
 (function(){
   var d={name:"Ysgol Gymraeg Llundain, London Welsh School",borough:"Ealing",ofsted:"Good",
+    fees:"",
     att8:"",
     ks2:"",
     apps:"",
     url:"https://londonschool.directory/schools/ealing/ysgol-gymraeg-llundain-london-welsh-school"};
   window.shareSchoolWhatsApp=function(){
     var p=['🏫 *'+d.name+'*','📍 '+d.borough];
-    if(d.ofsted&&d.ofsted!=='Not yet rated')p.push('⭐ Ofsted: *'+d.ofsted+'*');
+    if(d.ofsted&&d.ofsted!=='Not yet rated'&&d.ofsted!=='ISI inspected'&&d.ofsted!=='Independent school')p.push('⭐ Ofsted: *'+d.ofsted+'*');
+    if(d.fees)p.push('💷 Fees: '+d.fees);
     if(d.att8)p.push('📊 Attainment 8: '+d.att8);
     if(d.ks2)p.push('📝 KS2 expected: '+d.ks2+'%');
     if(d.apps&&d.apps!=='N/A')p.push('🎯 Applications per place: '+d.apps);
@@ -193,6 +195,7 @@
     var subj=d.name+' — London Schools Explorer';
     var p=[d.name,'Borough: '+d.borough];
     if(d.ofsted)p.push('Ofsted: '+d.ofsted);
+    if(d.fees)p.push('Fees: '+d.fees);
     if(d.att8)p.push('Attainment 8: '+d.att8);
     if(d.ks2)p.push('KS2 expected standard: '+d.ks2+'%');
     if(d.apps&&d.apps!=='N/A')p.push('Applications per place: '+d.apps);

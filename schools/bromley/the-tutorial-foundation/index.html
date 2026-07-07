@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>The Tutorial Foundation, Bromley | London Schools Explorer</title>
-  <meta name="description" content="Good Secondary school in Bromley, London. Attainment 8: 6.2. 38 pupils. BR1 3HY. Free admissions, Ofsted and exam data.">
+  <meta name="description" content="Good independent secondary school in Bromley, London. 38 pupils. BR1 3HY. Fees, inspection reports and admissions info.">
   <link rel="canonical" href="https://londonschool.directory/schools/bromley/the-tutorial-foundation">
   <script type="application/ld+json">{
     "@context": "https://schema.org",
@@ -16,7 +16,7 @@
     ]
   }</script>
   <meta property="og:title" content="The Tutorial Foundation | London Schools Explorer">
-  <meta property="og:description" content="Good Secondary school in Bromley, London. Attainment 8: 6.2. 38 pupils. BR1 3HY. Free admissions, Ofsted and exam data.">
+  <meta property="og:description" content="Good independent secondary school in Bromley, London. 38 pupils. BR1 3HY. Fees, inspection reports and admissions info.">
   <meta property="og:url" content="https://londonschool.directory/schools/bromley/the-tutorial-foundation">
   <meta property="og:type" content="website">
   <script type="application/ld+json">{
@@ -32,7 +32,7 @@
     "addressCountry": "GB"
   },
   "url": "https://londonschool.directory/schools/bromley/the-tutorial-foundation",
-  "description": "Good Secondary school in Bromley, London. Attainment 8: 6.2. 38 pupils. BR1 3HY. Free admissions, Ofsted and exam data.",
+  "description": "Good independent secondary school in Bromley, London. 38 pupils. BR1 3HY. Fees, inspection reports and admissions info.",
   "isAccessibleForFree": true,
   "publicAccess": true,
   "telephone": "02084600181",
@@ -54,14 +54,6 @@
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "The Tutorial Foundation was rated Good by Ofsted on NaT. View the full report on the Ofsted website."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What are The Tutorial Foundation's GCSE results?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "The Tutorial Foundation achieved an Attainment 8 score of 6.2 in 2024/25. The national average is 46.4."
       }
     },
     {
@@ -184,13 +176,15 @@
 <script>
 (function(){
   var d={name:"The Tutorial Foundation",borough:"Bromley",ofsted:"Good",
-    att8:"6.2",
+    fees:"",
+    att8:"",
     ks2:"",
     apps:"",
     url:"https://londonschool.directory/schools/bromley/the-tutorial-foundation"};
   window.shareSchoolWhatsApp=function(){
     var p=['🏫 *'+d.name+'*','📍 '+d.borough];
-    if(d.ofsted&&d.ofsted!=='Not yet rated')p.push('⭐ Ofsted: *'+d.ofsted+'*');
+    if(d.ofsted&&d.ofsted!=='Not yet rated'&&d.ofsted!=='ISI inspected'&&d.ofsted!=='Independent school')p.push('⭐ Ofsted: *'+d.ofsted+'*');
+    if(d.fees)p.push('💷 Fees: '+d.fees);
     if(d.att8)p.push('📊 Attainment 8: '+d.att8);
     if(d.ks2)p.push('📝 KS2 expected: '+d.ks2+'%');
     if(d.apps&&d.apps!=='N/A')p.push('🎯 Applications per place: '+d.apps);
@@ -201,6 +195,7 @@
     var subj=d.name+' — London Schools Explorer';
     var p=[d.name,'Borough: '+d.borough];
     if(d.ofsted)p.push('Ofsted: '+d.ofsted);
+    if(d.fees)p.push('Fees: '+d.fees);
     if(d.att8)p.push('Attainment 8: '+d.att8);
     if(d.ks2)p.push('KS2 expected standard: '+d.ks2+'%');
     if(d.apps&&d.apps!=='N/A')p.push('Applications per place: '+d.apps);

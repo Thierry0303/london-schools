@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Wize Up, Greenwich | London Schools Explorer</title>
-  <meta name="description" content="Good Secondary school in Greenwich, London. Attainment 8: 3.9. 46 pupils. SE9 6DN. Free admissions, Ofsted and exam data.">
+  <meta name="description" content="Good independent secondary school in Greenwich, London. 46 pupils. SE9 6DN. Fees, inspection reports and admissions info.">
   <link rel="canonical" href="https://londonschool.directory/schools/greenwich/wize-up">
   <script type="application/ld+json">{
     "@context": "https://schema.org",
@@ -16,7 +16,7 @@
     ]
   }</script>
   <meta property="og:title" content="Wize Up | London Schools Explorer">
-  <meta property="og:description" content="Good Secondary school in Greenwich, London. Attainment 8: 3.9. 46 pupils. SE9 6DN. Free admissions, Ofsted and exam data.">
+  <meta property="og:description" content="Good independent secondary school in Greenwich, London. 46 pupils. SE9 6DN. Fees, inspection reports and admissions info.">
   <meta property="og:url" content="https://londonschool.directory/schools/greenwich/wize-up">
   <meta property="og:type" content="website">
   <script type="application/ld+json">{
@@ -32,7 +32,7 @@
     "addressCountry": "GB"
   },
   "url": "https://londonschool.directory/schools/greenwich/wize-up",
-  "description": "Good Secondary school in Greenwich, London. Attainment 8: 3.9. 46 pupils. SE9 6DN. Free admissions, Ofsted and exam data.",
+  "description": "Good independent secondary school in Greenwich, London. 46 pupils. SE9 6DN. Fees, inspection reports and admissions info.",
   "isAccessibleForFree": true,
   "publicAccess": true,
   "telephone": "02088599664",
@@ -54,14 +54,6 @@
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "Wize Up was rated Good by Ofsted on NaT. View the full report on the Ofsted website."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What are Wize Up's GCSE results?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Wize Up achieved an Attainment 8 score of 3.9 in 2024/25. The national average is 46.4."
       }
     },
     {
@@ -184,13 +176,15 @@
 <script>
 (function(){
   var d={name:"Wize Up",borough:"Greenwich",ofsted:"Good",
-    att8:"3.9",
+    fees:"",
+    att8:"",
     ks2:"",
     apps:"",
     url:"https://londonschool.directory/schools/greenwich/wize-up"};
   window.shareSchoolWhatsApp=function(){
     var p=['🏫 *'+d.name+'*','📍 '+d.borough];
-    if(d.ofsted&&d.ofsted!=='Not yet rated')p.push('⭐ Ofsted: *'+d.ofsted+'*');
+    if(d.ofsted&&d.ofsted!=='Not yet rated'&&d.ofsted!=='ISI inspected'&&d.ofsted!=='Independent school')p.push('⭐ Ofsted: *'+d.ofsted+'*');
+    if(d.fees)p.push('💷 Fees: '+d.fees);
     if(d.att8)p.push('📊 Attainment 8: '+d.att8);
     if(d.ks2)p.push('📝 KS2 expected: '+d.ks2+'%');
     if(d.apps&&d.apps!=='N/A')p.push('🎯 Applications per place: '+d.apps);
@@ -201,6 +195,7 @@
     var subj=d.name+' — London Schools Explorer';
     var p=[d.name,'Borough: '+d.borough];
     if(d.ofsted)p.push('Ofsted: '+d.ofsted);
+    if(d.fees)p.push('Fees: '+d.fees);
     if(d.att8)p.push('Attainment 8: '+d.att8);
     if(d.ks2)p.push('KS2 expected standard: '+d.ks2+'%');
     if(d.apps&&d.apps!=='N/A')p.push('Applications per place: '+d.apps);

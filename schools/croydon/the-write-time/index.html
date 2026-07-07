@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>The Write Time, Croydon | London Schools Explorer</title>
-  <meta name="description" content="Good Secondary school in Croydon, London. Attainment 8: 2.6. 59 pupils. CR0 4BH. Free admissions, Ofsted and exam data.">
+  <meta name="description" content="Good independent secondary school in Croydon, London. 59 pupils. CR0 4BH. Fees, inspection reports and admissions info.">
   <link rel="canonical" href="https://londonschool.directory/schools/croydon/the-write-time">
   <script type="application/ld+json">{
     "@context": "https://schema.org",
@@ -16,7 +16,7 @@
     ]
   }</script>
   <meta property="og:title" content="The Write Time | London Schools Explorer">
-  <meta property="og:description" content="Good Secondary school in Croydon, London. Attainment 8: 2.6. 59 pupils. CR0 4BH. Free admissions, Ofsted and exam data.">
+  <meta property="og:description" content="Good independent secondary school in Croydon, London. 59 pupils. CR0 4BH. Fees, inspection reports and admissions info.">
   <meta property="og:url" content="https://londonschool.directory/schools/croydon/the-write-time">
   <meta property="og:type" content="website">
   <script type="application/ld+json">{
@@ -32,7 +32,7 @@
     "addressCountry": "GB"
   },
   "url": "https://londonschool.directory/schools/croydon/the-write-time",
-  "description": "Good Secondary school in Croydon, London. Attainment 8: 2.6. 59 pupils. CR0 4BH. Free admissions, Ofsted and exam data.",
+  "description": "Good independent secondary school in Croydon, London. 59 pupils. CR0 4BH. Fees, inspection reports and admissions info.",
   "isAccessibleForFree": true,
   "publicAccess": true,
   "telephone": "02086897676",
@@ -54,14 +54,6 @@
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "The Write Time was rated Good by Ofsted on NaT. View the full report on the Ofsted website."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What are The Write Time's GCSE results?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "The Write Time achieved an Attainment 8 score of 2.6 in 2024/25. The national average is 46.4."
       }
     },
     {
@@ -184,13 +176,15 @@
 <script>
 (function(){
   var d={name:"The Write Time",borough:"Croydon",ofsted:"Good",
-    att8:"2.6",
+    fees:"",
+    att8:"",
     ks2:"",
     apps:"",
     url:"https://londonschool.directory/schools/croydon/the-write-time"};
   window.shareSchoolWhatsApp=function(){
     var p=['🏫 *'+d.name+'*','📍 '+d.borough];
-    if(d.ofsted&&d.ofsted!=='Not yet rated')p.push('⭐ Ofsted: *'+d.ofsted+'*');
+    if(d.ofsted&&d.ofsted!=='Not yet rated'&&d.ofsted!=='ISI inspected'&&d.ofsted!=='Independent school')p.push('⭐ Ofsted: *'+d.ofsted+'*');
+    if(d.fees)p.push('💷 Fees: '+d.fees);
     if(d.att8)p.push('📊 Attainment 8: '+d.att8);
     if(d.ks2)p.push('📝 KS2 expected: '+d.ks2+'%');
     if(d.apps&&d.apps!=='N/A')p.push('🎯 Applications per place: '+d.apps);
@@ -201,6 +195,7 @@
     var subj=d.name+' — London Schools Explorer';
     var p=[d.name,'Borough: '+d.borough];
     if(d.ofsted)p.push('Ofsted: '+d.ofsted);
+    if(d.fees)p.push('Fees: '+d.fees);
     if(d.att8)p.push('Attainment 8: '+d.att8);
     if(d.ks2)p.push('KS2 expected standard: '+d.ks2+'%');
     if(d.apps&&d.apps!=='N/A')p.push('Applications per place: '+d.apps);

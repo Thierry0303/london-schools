@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Maypole School (Leigham Court), Lambeth | London Schools Explorer</title>
-  <meta name="description" content="Good All-through school in Lambeth, London. 60 pupils. SW16 2QA. Free admissions, Ofsted and exam data.">
+  <meta name="description" content="Good independent all-through school in Lambeth, London. 60 pupils. SW16 2QA. Fees, inspection reports and admissions info.">
   <link rel="canonical" href="https://londonschool.directory/schools/lambeth/maypole-school-leigham-court">
   <script type="application/ld+json">{
     "@context": "https://schema.org",
@@ -16,7 +16,7 @@
     ]
   }</script>
   <meta property="og:title" content="Maypole School (Leigham Court) | London Schools Explorer">
-  <meta property="og:description" content="Good All-through school in Lambeth, London. 60 pupils. SW16 2QA. Free admissions, Ofsted and exam data.">
+  <meta property="og:description" content="Good independent all-through school in Lambeth, London. 60 pupils. SW16 2QA. Fees, inspection reports and admissions info.">
   <meta property="og:url" content="https://londonschool.directory/schools/lambeth/maypole-school-leigham-court">
   <meta property="og:type" content="website">
   <script type="application/ld+json">{
@@ -32,7 +32,7 @@
     "addressCountry": "GB"
   },
   "url": "https://londonschool.directory/schools/lambeth/maypole-school-leigham-court",
-  "description": "Good All-through school in Lambeth, London. 60 pupils. SW16 2QA. Free admissions, Ofsted and exam data.",
+  "description": "Good independent all-through school in Lambeth, London. 60 pupils. SW16 2QA. Fees, inspection reports and admissions info.",
   "isAccessibleForFree": true,
   "publicAccess": true,
   "telephone": "07955286016",
@@ -176,13 +176,15 @@
 <script>
 (function(){
   var d={name:"Maypole School (Leigham Court)",borough:"Lambeth",ofsted:"Good",
+    fees:"",
     att8:"",
     ks2:"",
     apps:"",
     url:"https://londonschool.directory/schools/lambeth/maypole-school-leigham-court"};
   window.shareSchoolWhatsApp=function(){
     var p=['🏫 *'+d.name+'*','📍 '+d.borough];
-    if(d.ofsted&&d.ofsted!=='Not yet rated')p.push('⭐ Ofsted: *'+d.ofsted+'*');
+    if(d.ofsted&&d.ofsted!=='Not yet rated'&&d.ofsted!=='ISI inspected'&&d.ofsted!=='Independent school')p.push('⭐ Ofsted: *'+d.ofsted+'*');
+    if(d.fees)p.push('💷 Fees: '+d.fees);
     if(d.att8)p.push('📊 Attainment 8: '+d.att8);
     if(d.ks2)p.push('📝 KS2 expected: '+d.ks2+'%');
     if(d.apps&&d.apps!=='N/A')p.push('🎯 Applications per place: '+d.apps);
@@ -193,6 +195,7 @@
     var subj=d.name+' — London Schools Explorer';
     var p=[d.name,'Borough: '+d.borough];
     if(d.ofsted)p.push('Ofsted: '+d.ofsted);
+    if(d.fees)p.push('Fees: '+d.fees);
     if(d.att8)p.push('Attainment 8: '+d.att8);
     if(d.ks2)p.push('KS2 expected standard: '+d.ks2+'%');
     if(d.apps&&d.apps!=='N/A')p.push('Applications per place: '+d.apps);

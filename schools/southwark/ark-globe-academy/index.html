@@ -74,6 +74,14 @@
     },
     {
       "@type": "Question",
+      "name": "What are Ark Globe Academy's KS2 results?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "At Ark Globe Academy, 64.0% of pupils met the expected standard in reading, writing and maths at KS2 in 2024/25."
+      }
+    },
+    {
+      "@type": "Question",
       "name": "Is the area around Ark Globe Academy safe?",
       "acceptedAnswer": {
         "@type": "Answer",
@@ -192,13 +200,15 @@
 <script>
 (function(){
   var d={name:"Ark Globe Academy",borough:"Southwark",ofsted:"Good",
+    fees:"",
     att8:"48.4",
     ks2:"64.0",
     apps:"1.1",
     url:"https://londonschool.directory/schools/southwark/ark-globe-academy"};
   window.shareSchoolWhatsApp=function(){
     var p=['🏫 *'+d.name+'*','📍 '+d.borough];
-    if(d.ofsted&&d.ofsted!=='Not yet rated')p.push('⭐ Ofsted: *'+d.ofsted+'*');
+    if(d.ofsted&&d.ofsted!=='Not yet rated'&&d.ofsted!=='ISI inspected'&&d.ofsted!=='Independent school')p.push('⭐ Ofsted: *'+d.ofsted+'*');
+    if(d.fees)p.push('💷 Fees: '+d.fees);
     if(d.att8)p.push('📊 Attainment 8: '+d.att8);
     if(d.ks2)p.push('📝 KS2 expected: '+d.ks2+'%');
     if(d.apps&&d.apps!=='N/A')p.push('🎯 Applications per place: '+d.apps);
@@ -209,6 +219,7 @@
     var subj=d.name+' — London Schools Explorer';
     var p=[d.name,'Borough: '+d.borough];
     if(d.ofsted)p.push('Ofsted: '+d.ofsted);
+    if(d.fees)p.push('Fees: '+d.fees);
     if(d.att8)p.push('Attainment 8: '+d.att8);
     if(d.ks2)p.push('KS2 expected standard: '+d.ks2+'%');
     if(d.apps&&d.apps!=='N/A')p.push('Applications per place: '+d.apps);

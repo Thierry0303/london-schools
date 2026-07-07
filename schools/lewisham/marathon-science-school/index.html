@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Marathon Science School, Lewisham | London Schools Explorer</title>
-  <meta name="description" content="Requires improvement Secondary school in Lewisham, London. 35 pupils. SE8 5RQ. Free admissions, Ofsted and exam data.">
+  <meta name="description" content="Requires improvement independent secondary school in Lewisham, London. 35 pupils. SE8 5RQ. Fees, inspection reports and admissions info.">
   <link rel="canonical" href="https://londonschool.directory/schools/lewisham/marathon-science-school">
   <script type="application/ld+json">{
     "@context": "https://schema.org",
@@ -16,7 +16,7 @@
     ]
   }</script>
   <meta property="og:title" content="Marathon Science School | London Schools Explorer">
-  <meta property="og:description" content="Requires improvement Secondary school in Lewisham, London. 35 pupils. SE8 5RQ. Free admissions, Ofsted and exam data.">
+  <meta property="og:description" content="Requires improvement independent secondary school in Lewisham, London. 35 pupils. SE8 5RQ. Fees, inspection reports and admissions info.">
   <meta property="og:url" content="https://londonschool.directory/schools/lewisham/marathon-science-school">
   <meta property="og:type" content="website">
   <script type="application/ld+json">{
@@ -32,7 +32,7 @@
     "addressCountry": "GB"
   },
   "url": "https://londonschool.directory/schools/lewisham/marathon-science-school",
-  "description": "Requires improvement Secondary school in Lewisham, London. 35 pupils. SE8 5RQ. Free admissions, Ofsted and exam data.",
+  "description": "Requires improvement independent secondary school in Lewisham, London. 35 pupils. SE8 5RQ. Fees, inspection reports and admissions info.",
   "isAccessibleForFree": true,
   "publicAccess": true,
   "telephone": "02072313232",
@@ -177,13 +177,15 @@
 <script>
 (function(){
   var d={name:"Marathon Science School",borough:"Lewisham",ofsted:"Requires improvement",
+    fees:"",
     att8:"",
     ks2:"",
     apps:"",
     url:"https://londonschool.directory/schools/lewisham/marathon-science-school"};
   window.shareSchoolWhatsApp=function(){
     var p=['🏫 *'+d.name+'*','📍 '+d.borough];
-    if(d.ofsted&&d.ofsted!=='Not yet rated')p.push('⭐ Ofsted: *'+d.ofsted+'*');
+    if(d.ofsted&&d.ofsted!=='Not yet rated'&&d.ofsted!=='ISI inspected'&&d.ofsted!=='Independent school')p.push('⭐ Ofsted: *'+d.ofsted+'*');
+    if(d.fees)p.push('💷 Fees: '+d.fees);
     if(d.att8)p.push('📊 Attainment 8: '+d.att8);
     if(d.ks2)p.push('📝 KS2 expected: '+d.ks2+'%');
     if(d.apps&&d.apps!=='N/A')p.push('🎯 Applications per place: '+d.apps);
@@ -194,6 +196,7 @@
     var subj=d.name+' — London Schools Explorer';
     var p=[d.name,'Borough: '+d.borough];
     if(d.ofsted)p.push('Ofsted: '+d.ofsted);
+    if(d.fees)p.push('Fees: '+d.fees);
     if(d.att8)p.push('Attainment 8: '+d.att8);
     if(d.ks2)p.push('KS2 expected standard: '+d.ks2+'%');
     if(d.apps&&d.apps!=='N/A')p.push('Applications per place: '+d.apps);

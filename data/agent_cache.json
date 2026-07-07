@@ -478,5 +478,1240 @@
       "confidence": "medium",
       "checked_at": "2026-07-06"
     }
+  },
+  "100052": {
+    "checked_at": "2026-07-07",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "distance_note": "No distance cut-off published by the school or Camden Council for the most recent admissions round. Hampstead School is ",
+        "published_admission_number": 210
+      },
+      "sources": {
+        "published_admission_number": "https://www.camden.gov.uk/documents/d/guest/camden-la-determined-admission-arrangements-for-entry-in-sept-2025-26"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-07"
+    }
+  },
+  "100053": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100054": {
+    "checked_at": "2026-07-07",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 1.223,
+        "last_distance_year": 2026,
+        "distance_note": "School admits by 4-band banding assessment; per-band cut-off distances in 2026: Band A 0.38 mi, Band B 0.76 mi (largest)",
+        "published_admission_number": 120
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.camdengirls.camden.sch.uk/page/?title=Offer+Distances&pid=216",
+        "published_admission_number": "https://www.camdengirls.camden.sch.uk/_site/data/files/users/53/duska/826EB863303D3B3F0D24D7140B923058.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-07"
+    }
+  },
+  "100055": {
+    "checked_at": "2026-07-07",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "distance_note": "No distance cut-off — school admits primarily by Catholic faith criteria; distance is only a tiebreaker within the same ",
+        "published_admission_number": 150
+      },
+      "sources": {
+        "published_admission_number": "https://www.mariafidelis.camden.sch.uk/attachments/download.asp?file=506&type=pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-07"
+    }
+  },
+  "100056": {
+    "checked_at": "2026-07-07",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2025,
+        "distance_note": "No distance cut-off published. Distance (straight-line) is criterion 7 and used only as a tiebreaker within higher-prior",
+        "published_admission_number": 112
+      },
+      "sources": {
+        "published_admission_number": "https://www.williamellis.camden.sch.uk/admissions-information"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-07"
+    }
+  },
+  "100059": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100061": {
+    "checked_at": "2026-07-07",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 26379,
+        "fees_note": "prep school day fee (ages 4–11), all-in, VAT incl.; single fee for all year groups",
+        "isi_status": "Met all standards",
+        "isi_year": 2025
+      },
+      "sources": {
+        "fees_annual": "https://www.stchristophers.london/join-us/fees/",
+        "isi_status": "https://nappyvalleynet.com/great-british-schools-guide/school/100061-st-christophers-school-nw3-5ae/"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-07"
+    }
+  },
+  "100062": {
+    "checked_at": "2026-07-07",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 23847,
+        "fees_note": "senior day (Yr 7–11), £7,949/term × 3; VAT inclusion not stated for senior phase",
+        "gcse_9_7": 72.0,
+        "exam_year": 2023,
+        "isi_status": "Met all standards",
+        "isi_year": 2025
+      },
+      "sources": {
+        "fees_annual": "https://gsa.uk.com/school/st-margarets-school/",
+        "gcse_9_7": "https://st-margarets.co.uk/gcse-results-2023/",
+        "isi_status": "https://www.isi.net/institutions/school/st-margaret-s-school-7005"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-07"
+    }
+  },
+  "100063": {
+    "checked_at": "2026-07-07",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 25920,
+        "fees_note": "Reception–Year 6 termly fee £8,640 inc. VAT × 3; prep school only (ages 3–11), no senior/sixth form phase",
+        "isi_status": "Met all standards",
+        "isi_year": 2023
+      },
+      "sources": {
+        "fees_annual": "https://www.sarumhallschool.co.uk/admissions/",
+        "isi_status": "https://www.sarumhallschool.co.uk/about-sarum-hall/inspection-report/"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-07"
+    }
+  },
+  "100064": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100065": {
+    "checked_at": "2026-07-07",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "a_level_a_star_a": 72.0,
+        "a_level_a_star_b": 93.0,
+        "gcse_9_7": 91.0,
+        "exam_year": 2025,
+        "isi_status": "Met all standards",
+        "isi_year": 2024
+      },
+      "sources": {
+        "a_level_a_star_a": "https://www.ucs.org.uk/senior/results/",
+        "a_level_a_star_b": "https://www.ucs.org.uk/senior/results/",
+        "gcse_9_7": "https://www.ucs.org.uk/senior/results/",
+        "isi_status": "https://www.ucs.org.uk/news/a-testament-to-excellence-isi-inspection-report/"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-07"
+    }
+  },
+  "100066": {
+    "checked_at": "2026-07-07",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 19050,
+        "fees_note": "top-of-range prep day fee (Year 6), excl. VAT; ISC lists £3,680–£6,350 per term excl. VAT",
+        "isi_status": "Met all standards",
+        "isi_year": 2024
+      },
+      "sources": {
+        "fees_annual": "https://www.isc.co.uk/schools/england/london-area/london-borough-of-camden/camden/the-cavendish-school/",
+        "isi_status": "https://cavendishschool.co.uk/about-us/isi-reports/"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-07"
+    }
+  },
+  "100067": {
+    "checked_at": "2026-07-07",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Met all standards",
+        "isi_year": 2025
+      },
+      "sources": {
+        "isi_status": "https://reports.isi.net/DownloadReport.aspx?t=c&r=ROU7020_20260210.pdf&s=7020"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-07"
+    }
+  },
+  "100068": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100069": {
+    "checked_at": "2026-07-07",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 25812,
+        "fees_note": "Years 4–8 senior day, termly fee £8,604 inc. VAT × 3; fees incl. lunch and books",
+        "isi_status": "Excellent",
+        "isi_year": 2023
+      },
+      "sources": {
+        "fees_annual": "https://www.herewardhouse.co.uk/admissions/fees",
+        "isi_status": "https://www.herewardhouse.co.uk/images/pdfs2/Inspection_Reports/Hereward_Hse_EQI_report_v5_2023-05-26.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-07"
+    }
+  },
+  "100070": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100073": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100074": {
+    "checked_at": "2026-07-07",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "gcse_9_7": 44.0,
+        "exam_year": 2024,
+        "isi_status": "Excellent",
+        "isi_year": 2023
+      },
+      "sources": {
+        "gcse_9_7": "https://www.northbridgehouse.com/senior-hampstead/results-destinations/",
+        "isi_status": "https://www.northbridgehouse.com/senior-hampstead/inspection-reports/"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-07"
+    }
+  },
+  "100075": {
+    "checked_at": "2026-07-07",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Met all standards",
+        "isi_year": 2024
+      },
+      "sources": {
+        "isi_status": "https://www.trevor-robertsschool.co.uk/wp/wp-content/uploads/2024/09/Trevor-Roberts-School-ROU-Report-v5-2024-09-13.pdf"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-07"
+    }
+  },
+  "100076": {
+    "checked_at": "2026-07-07",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "a_level_a_star_a": 80.0,
+        "a_level_a_star_b": 95.0,
+        "exam_year": 2025,
+        "isi_status": "Met all standards",
+        "isi_year": 2026
+      },
+      "sources": {
+        "a_level_a_star_a": "https://www.shhs.gdst.net/news/record-results/",
+        "a_level_a_star_b": "https://www.shhs.gdst.net/news/record-results/",
+        "isi_status": "https://reports.isi.net/DownloadReport.aspx?t=c&r=ROU6910_20260210.pdf&s=6910"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-07"
+    }
+  },
+  "100078": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100080": {
+    "checked_at": "2026-07-07",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Met all standards",
+        "isi_year": 2024
+      },
+      "sources": {
+        "isi_status": "https://www.devonshirehouseschool.co.uk/our-school/policies-reports-inspections/"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-07"
+    }
+  },
+  "100081": {
+    "checked_at": "2026-07-07",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Excellent",
+        "isi_year": 2022
+      },
+      "sources": {
+        "isi_status": "https://www.broadhurstschool.com/about-us/inspection/"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-07"
+    }
+  },
+  "100082": {
+    "checked_at": "2026-07-07",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Excellent",
+        "isi_year": 2025
+      },
+      "sources": {
+        "isi_status": "https://www.cfbl.org.uk/en/our-school/inspections-and-policies"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-07"
+    }
+  },
+  "100084": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100087": {
+    "checked_at": "2026-07-07",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Met all standards",
+        "isi_year": 2024
+      },
+      "sources": {
+        "isi_status": "https://mulberryhouseschool.com/our-school/inspection-reports/"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-07"
+    }
+  },
+  "100090": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100114": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100115": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100120": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100125": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100127": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100129": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100131": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100134": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100137": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100140": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100141": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100142": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100146": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100149": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100152": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100155": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100158": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100159": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100162": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100163": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100164": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100165": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100166": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100167": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100168": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100169": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100170": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100171": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100173": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100174": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100175": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100176": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100177": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100180": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100181": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100182": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100183": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100190": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100193": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100198": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100199": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100200": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100201": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100202": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100203": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100218": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100223": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100225": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100229": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100230": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100231": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100232": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100234": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100235": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100239": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100240": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100241": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100242": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100243": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100245": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100248": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100250": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100252": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100253": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100254": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100256": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100257": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100258": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100259": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100260": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100261": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100263": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100264": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100266": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100267": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100269": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100270": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100274": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100275": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100279": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100282": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100284": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100287": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100289": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100291": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100293": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100294": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100295": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100296": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100298": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100299": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100300": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100321": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100322": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100324": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100326": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100328": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100331": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100334": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100335": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100338": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100340": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100341": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100344": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100345": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100346": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100349": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100350": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100351": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100352": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100353": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100354": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100366": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100368": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100369": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100370": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100371": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100372": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100373": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100375": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100397": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100402": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100403": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100405": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100406": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100407": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100408": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100411": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100415": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100418": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100422": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100425": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100426": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100428": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100429": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100430": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100432": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100434": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100437": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100438": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100439": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100440": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100441": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100443": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100444": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100446": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100447": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100448": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100449": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100450": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100455": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100457": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100458": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100462": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100463": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100477": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100478": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100479": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100480": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100481": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100482": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100483": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100485": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100486": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100487": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100488": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100489": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100490": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100491": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100492": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100493": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100494": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
+  },
+  "100495": {
+    "checked_at": "2026-07-07",
+    "found": false,
+    "data": null
   }
 }

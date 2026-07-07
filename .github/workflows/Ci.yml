@@ -36,6 +36,10 @@ jobs:
         run: |
           python3 scripts/build_school_pages.py
           python3 scripts/build_borough_hubs.py
+      # Data-quality gate: fails the build on fabricated / malformed data
+      # (fake school names, synthetic postcodes, unsourced agent values, etc.)
+      - name: Data quality check
+        run: python3 scripts/data_quality.py --strict
       - name: Run test suite
         run: python3 scripts/test_site.py
 

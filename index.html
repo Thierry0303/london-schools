@@ -431,7 +431,7 @@ const ENG_ATT8_AVG       = 39.5;
 const ENG_G5_AVG         = 36.8;
 const ENG_KS2_HIGHER_AVG = 7.4;
 const ENG_KS2_EXP_AVG    = 58.4;
-const BAND_COLORS = { 'Outstanding':'#27AE60', 'Good':'#2980B9', 'Requires improvement':'#E67E22', 'Inadequate':'#C0392B', 'Ungraded (monitoring)':'#8E44AD', 'Report card (2025+)':'#16A085', 'Not yet rated':'#BDC3C7', 'Unknown':'#95A5A6' };
+const BAND_COLORS = { 'Outstanding':'#27AE60', 'Good':'#2980B9', 'Requires improvement':'#E67E22', 'Inadequate':'#C0392B', 'Ungraded (monitoring)':'#8E44AD', 'Report card (2025+)':'#16A085', 'Independent (ISI)':'#7D6EB5', 'Independent':'#7D6EB5', 'Not yet rated':'#BDC3C7', 'Unknown':'#95A5A6' };
 const RATING_MAP = { 1:'Outstanding', 2:'Good', 3:'Requires improvement', 4:'Inadequate' };
 const RATING_SCORES = { 1:100, 2:80, 3:40, 4:0 };
 
@@ -735,7 +735,7 @@ function SchoolListRow({ school, rank, compareList, toggleCompare, userCoords })
       <div className="slr-body">
         <div className="slr-name">{school.name}</div>
         <div className="slr-sub">
-          {school.local_authority}{distStr ? <span style={{color:'var(--gold)',fontWeight:600}}> · {distStr}</span> : null}{school.crime_label ? <span style={{color:crimeCol}}> · 🔒 {school.crime_label}</span> : null}
+          {school.local_authority}{distStr ? <span style={{color:'var(--gold)',fontWeight:600}}> · {distStr}</span> : null}{school.independent_data && school.independent_data.fees_annual ? <span style={{color:'#7D6EB5',fontWeight:600}}> · £{(school.independent_data.fees_annual/1000).toFixed(0)}k/yr</span> : null}{school.crime_label ? <span style={{color:crimeCol}}> · 🔒 {school.crime_label}</span> : null}
         </div>
       </div>
       <div className="slr-right">
@@ -1195,8 +1195,19 @@ function App() {
   const [radiusKm, setRadiusKm] = useState(null);
   useEffect(() => {
     async function load() {
-      try { const r = await fetch(`${API_BASE}/schools?limit=500`); if (!r.ok) throw new Error(); const d = await r.json(); setSchools(d.schools); setLoading(false); return; } catch {}
-      try { const r = await fetch(JSON_FALLBACK); if (!r.ok) throw new Error(); const d = await r.json(); setSchools(d); } catch { console.warn('Could not load school data.'); }
+      // ISI (association) independent schools aren't Ofsted-rated — relabel
+      // their band so they don't show a misleading grey "Not yet rated".
+      function normalise(list) {
+        (list || []).forEach(function(s){
+          var t = (s.school_type || '').toLowerCase();
+          if (t.indexOf('independent') !== -1 && !s.quality_label) {
+            s.score_band = (s.isi_url || s.isi_latest_report) ? 'Independent (ISI)' : 'Independent';
+          }
+        });
+        return list;
+      }
+      try { const r = await fetch(`${API_BASE}/schools?limit=500`); if (!r.ok) throw new Error(); const d = await r.json(); setSchools(normalise(d.schools)); setLoading(false); return; } catch {}
+      try { const r = await fetch(JSON_FALLBACK); if (!r.ok) throw new Error(); const d = await r.json(); setSchools(normalise(d)); } catch { console.warn('Could not load school data.'); }
       setLoading(false);
     }
     load();
@@ -1413,7 +1424,7 @@ function App() {
               <div className="search-wrap"><span className="search-icon">🔍</span><input type="text" placeholder="Filter map by name or postcode..." value={filters.q} onChange={e => setFilter('q', e.target.value)} /></div>
               <div className="filter-group"><span className="filter-label">Phase</span><select value={filters.phase} onChange={e => setFilter('phase', e.target.value)}><option value="">All phases</option>{phases.map(p=><option key={p} value={p}>{p}</option>)}</select></div>
               <div className="filter-group"><span className="filter-label">Borough</span><select value={''} onChange={function(e){ var la=e.target.value; if(!la) return; setFilters(function(f){ var arr=f.local_authority.includes(la)?f.local_authority.filter(function(x){return x!==la;}):[...f.local_authority,la]; return {...f,local_authority:arr}; }); setPage(1); }}><option value="">{filters.local_authority.length?filters.local_authority.length+' borough'+(filters.local_authority.length>1?'s':''):' All boroughs'}</option>{localAuthorities.map(function(la){ return <option key={la} value={la}>{filters.local_authority.includes(la)?'✓ ':''}{la}</option>; })}</select></div>
-              <div className="filter-group"><span className="filter-label">Rating</span><select value={filters.score_band} onChange={e => setFilter('score_band', e.target.value)}><option value="">All ratings</option>{['Outstanding','Good','Requires improvement','Inadequate','Ungraded (monitoring)','Report card (2025+)'].map(b=><option key={b} value={b}>{b}</option>)}</select></div>
+              <div className="filter-group"><span className="filter-label">Rating</span><select value={filters.score_band} onChange={e => setFilter('score_band', e.target.value)}><option value="">All ratings</option>{['Outstanding','Good','Requires improvement','Inadequate','Ungraded (monitoring)','Report card (2025+)','Independent (ISI)','Independent'].map(b=><option key={b} value={b}>{b}</option>)}</select></div>
               {hasFilters && <button className="clear-btn" onClick={clearFilters}>✕ Clear</button>}
             </div>
             <MapView schools={filtered} onSelect={() => {}} />
@@ -1465,7 +1476,7 @@ function App() {
                     {filters.score_band && <span className="sidebar-active-dot" />}
                   </div>
                   <div>
-                    {['Outstanding','Good','Requires improvement','Inadequate'].map(function(b){
+                    {['Outstanding','Good','Requires improvement','Inadequate','Independent (ISI)'].map(function(b){
                       return (
                         <button key={b} className={filters.score_band===b?'sidebar-chip active':'sidebar-chip'} onClick={() => setFilter('score_band', filters.score_band===b?'':b)}>
                           <span className="sidebar-rating-dot" style={{background:BAND_COLORS[b]||'#ccc'}} />

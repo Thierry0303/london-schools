@@ -1207,6 +1207,13 @@ function App() {
         (list || []).forEach(function(s){
           var t = (s.school_type || '').toLowerCase();
           if (t.indexOf('independent') !== -1) {
+            // Fees can come from the manual CSV (independent_data) or the
+            // AI agent (agent_data.values) — surface both on cards.
+            var agf = s.agent_data && s.agent_data.values && s.agent_data.values.fees_annual;
+            if (agf && !(s.independent_data && s.independent_data.fees_annual)) {
+              s.independent_data = s.independent_data || {};
+              s.independent_data.fees_annual = agf;
+            }
             if (!s.quality_label) {
               s.score_band = (s.isi_url || s.isi_latest_report) ? 'Independent (ISI)' : 'Independent';
             }

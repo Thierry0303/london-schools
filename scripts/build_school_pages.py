@@ -832,6 +832,7 @@ def build_school_page(school):
 <footer>
   Data sourced from Ofsted and the Department for Education. Last updated {BUILT_DATE}.<br>
   <a href="/">London Schools Explorer</a> &mdash; helping families find the right school.
+  <p style="margin-top:10px">Browse by type: <a href="/schools/outstanding">Outstanding</a> &middot; <a href="/schools/good">Good</a> &middot; <a href="/schools/grammar">Grammar</a> &middot; <a href="/schools/selective">Selective</a> &middot; <a href="/schools/faith">Faith</a> &middot; <a href="/schools/primary">Primary</a> &middot; <a href="/schools/secondary">Secondary</a> &middot; <a href="/schools/sixth-form">Sixth form</a> &middot; <a href="/schools/independent">Private &amp; independent</a></p>
 </footer>
 
 <script defer src="/_vercel/insights/script.js"></script>
@@ -1146,7 +1147,7 @@ for borough, borough_schools in by_borough.items():
     <tbody>{rows}</tbody>
   </table>
 </div>
-<footer><a href="/">London Schools Explorer</a> &mdash; helping families find the right school in London.</footer>
+<footer><a href="/">London Schools Explorer</a> &mdash; helping families find the right school in London.<p style="margin-top:10px">Browse by type: <a href="/schools/outstanding">Outstanding</a> &middot; <a href="/schools/good">Good</a> &middot; <a href="/schools/grammar">Grammar</a> &middot; <a href="/schools/selective">Selective</a> &middot; <a href="/schools/faith">Faith</a> &middot; <a href="/schools/primary">Primary</a> &middot; <a href="/schools/secondary">Secondary</a> &middot; <a href="/schools/sixth-form">Sixth form</a> &middot; <a href="/schools/independent">Private &amp; independent</a></p></footer>
 <script defer src="/_vercel/insights/script.js"></script>
 <script>
 (function(){{
@@ -1329,7 +1330,7 @@ def build_type_page(slug, title, meta_desc, intro, filter_fn, prominent_pi=False
     <tbody>{rows}</tbody>
   </table>
 </div>
-<footer><a href="/">London Schools Explorer</a> &mdash; helping families find the right school in London.</footer>
+<footer><a href="/">London Schools Explorer</a> &mdash; helping families find the right school in London.<p style="margin-top:10px">Browse by type: <a href="/schools/outstanding">Outstanding</a> &middot; <a href="/schools/good">Good</a> &middot; <a href="/schools/grammar">Grammar</a> &middot; <a href="/schools/selective">Selective</a> &middot; <a href="/schools/faith">Faith</a> &middot; <a href="/schools/primary">Primary</a> &middot; <a href="/schools/secondary">Secondary</a> &middot; <a href="/schools/sixth-form">Sixth form</a> &middot; <a href="/schools/independent">Private &amp; independent</a></p></footer>
 <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>"""

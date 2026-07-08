@@ -6928,5 +6928,2080 @@
       "confidence": "high",
       "checked_at": "2026-07-08"
     }
+  },
+  "101571": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 12822,
+        "fees_note": "Prep school (senior/main phase) top termly fee £4,274 excl. VAT × 3; VAT status: school charges VAT on fees (excl. VAT p",
+        "isi_status": "Met all standards",
+        "isi_year": 2023
+      },
+      "sources": {
+        "fees_annual": "https://www.isc.co.uk/schools/england/london-area/london-borough-of-brent/wembley/st-christophers-school/",
+        "isi_status": "https://www.stchristophersschool.org.uk/about-us/inspection-and-accreditation"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "101575": {
+    "checked_at": "2026-07-08",
+    "found": false,
+    "data": null
+  },
+  "102869": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 10008,
+        "fees_note": "All-year day fee (3 terms × £3,336); VAT at 20% included; lunches excluded",
+        "isi_status": "Not all standards met",
+        "isi_year": 2025
+      },
+      "sources": {
+        "fees_annual": "https://eastcourtschool.org.uk/wp-content/uploads/2025/09/FEES-LETTER-25-26-1.pdf",
+        "isi_status": "https://eastcourtschool.org.uk/wp-content/uploads/2026/03/Eastcourt_Independent_School.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "134911": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 51633,
+        "fees_note": "Senior day (Marylebone campus, ages 11-19); VAT excluded — fees listed exclusive of all applicable taxes including VAT",
+        "isi_status": "Met all standards",
+        "isi_year": 2025
+      },
+      "sources": {
+        "fees_annual": "https://www.abingdonhouseschool.co.uk/marylebone-senior-school/admissions-marylebone/",
+        "isi_status": "https://www.abingdonhouseschool.co.uk/2025/03/05/isi-report/"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "133646": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Met all standards",
+        "isi_year": 2024
+      },
+      "sources": {
+        "isi_status": "https://files.ofsted.gov.uk/v1/file/50251487"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "144516": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 34620,
+        "fees_note": "pre-prep day fee (ages 4–8), VAT incl.; termly fee £11,540 × 3; 2026–27",
+        "isi_status": "Met all standards",
+        "isi_year": 2023
+      },
+      "sources": {
+        "fees_annual": "https://www.wetherbyschool.co.uk/admissions/fees",
+        "isi_status": "https://www.isi.net/institutions/school/wetherby-school--kensington-9406"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "149715": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 24864,
+        "fees_note": "senior day (Yrs 7–11), termly fee £8,288 × 3; includes lunch and compulsory trips; 2024–25 figure; VAT status not stated",
+        "gcse_9_7": 32.0,
+        "exam_year": 2025,
+        "isi_status": "Excellent",
+        "isi_year": 2024
+      },
+      "sources": {
+        "fees_annual": "https://www.londonparkschools.com/join-london-park-schools/fees/",
+        "gcse_9_7": "https://www.londonparkschools.com/category/lps-clapham/",
+        "isi_status": "https://www.londonparkschools.com/wp-content/uploads/2024/07/10322623-London-Park-School-Clapham-Final-.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "102064": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Met all standards",
+        "isi_year": 2024
+      },
+      "sources": {
+        "isi_status": "https://www.vitaetpax.co.uk/inspection"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "133449": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2024
+      },
+      "sources": {
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/133449"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "141247": {
+    "checked_at": "2026-07-08",
+    "found": false,
+    "data": null
+  },
+  "101368": {
+    "checked_at": "2026-07-08",
+    "found": false,
+    "data": null
+  },
+  "101568": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Met all standards",
+        "isi_year": 2024
+      },
+      "sources": {
+        "isi_status": "https://reports.isi.net/DownloadReport.aspx?t=c&r=ROU7379_20241015.pdf&s=7379"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "147025": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2021
+      },
+      "sources": {
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/147025"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "101955": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Excellent",
+        "isi_year": 2023
+      },
+      "sources": {
+        "isi_status": "https://www.cliftonlodgeschool.co.uk/inspection-reports/"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "136817": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2024
+      },
+      "sources": {
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/136817"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "151698": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 33500,
+        "fees_note": "Annual day fee Years 7–9, VAT incl. (2025–26)"
+      },
+      "sources": {
+        "fees_annual": "https://www.wetherbypembridge.co.uk/admissions/fees"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "102618": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 13392,
+        "fees_note": "Upper (Year 6) day fee excl. VAT, per ISC data (£4,464/term × 3); school's own 2025-26 PDF states fees are VAT-inclusive",
+        "isi_status": "Excellent",
+        "isi_year": 2022
+      },
+      "sources": {
+        "fees_annual": "https://www.isc.co.uk/schools/england/london-area/london-borough-of-kingston-upon-thames/new-malden/westbury-house-school/",
+        "isi_status": "https://www.westburyhouse.surrey.sch.uk/about-us/school-policies-procedures"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "135989": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 18756,
+        "fees_note": "all-year day fee (3 terms × £6,252); VAT inclusive; single fee structure for all year groups (Reception–Year 6)",
+        "isi_status": "Met all standards",
+        "isi_year": 2025
+      },
+      "sources": {
+        "fees_annual": "https://www.faradayschool.co.uk/admissions/fees/",
+        "isi_status": "https://www.faradayschool.co.uk/about-us/inspection-reports/"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "148652": {
+    "checked_at": "2026-07-08",
+    "found": false,
+    "data": null
+  },
+  "131395": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Met all standards",
+        "isi_year": 2025
+      },
+      "sources": {
+        "isi_status": "https://reports.isi.net/DownloadReport.aspx?t=c&r=ROU9537_20250325.pdf&s=9537"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "136231": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2022
+      },
+      "sources": {
+        "isi_status": "https://files.ofsted.gov.uk/v1/file/50280988"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "147986": {
+    "checked_at": "2026-07-08",
+    "found": false,
+    "data": null
+  },
+  "134577": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 2880,
+        "fees_note": "annual day fee, all year groups (primary); figure recorded in Feb 2025 Ofsted inspection report",
+        "isi_status": "Good",
+        "isi_year": 2025
+      },
+      "sources": {
+        "fees_annual": "https://reports.ofsted.gov.uk/provider/27/134577",
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/134577"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "132736": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2025
+      },
+      "sources": {
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/132736"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "138777": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Met all standards",
+        "isi_year": 2024
+      },
+      "sources": {
+        "isi_status": "https://reports.isi.net/DownloadReport.aspx?t=c&r=ROU9544_20240611.pdf&s=9544"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "134243": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 3690,
+        "fees_note": "Years 1–6 annual day fee; Reception is £3,960/yr. Primary only school (ages 3–11); no senior/sixth-form phase.",
+        "isi_status": "Not all standards met",
+        "isi_year": 2023
+      },
+      "sources": {
+        "fees_annual": "https://suffahschool.hounslow.sch.uk/admissions/",
+        "isi_status": "https://suffahschool.hounslow.sch.uk/wp-content/uploads/2024/01/Suffah-Primary-School-ISI-Report-2023-24.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "136263": {
+    "checked_at": "2026-07-08",
+    "found": false,
+    "data": null
+  },
+  "131291": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 23190,
+        "fees_note": "termly fee £7,730 ex-VAT × 3; VAT not included in stated fee",
+        "isi_status": "Excellent",
+        "isi_year": 2023
+      },
+      "sources": {
+        "fees_annual": "https://academyschoolhampstead.com/fees",
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/131291"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "134585": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 5808,
+        "fees_note": "secondary day, annual fee (up to); no VAT mention for secondary",
+        "isi_status": "Good",
+        "isi_year": 2024
+      },
+      "sources": {
+        "fees_annual": "https://secondaryboys.alkhairschool.org.uk/wp-content/uploads/2024/09/15.-Fees-policy.docx.pdf",
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/134585"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "147027": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2024
+      },
+      "sources": {
+        "isi_status": "https://www.schooldash.com/school/147027/"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "148190": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2022
+      },
+      "sources": {
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/148190"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "102871": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 21686,
+        "fees_note": "Years 5 & 6 (senior phase), VAT incl. (20%); lunches charged separately at £460/term",
+        "isi_status": "Met all standards",
+        "isi_year": 2024
+      },
+      "sources": {
+        "fees_annual": "https://www.snaresbrook.org/",
+        "isi_status": "https://snaresbrookprep.org/wp-content/uploads/2024/09/Snaresbrook-Preparatory-School-ROU-Report-v5.3-1.pdfJUNE-24.pdf"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "136052": {
+    "checked_at": "2026-07-08",
+    "found": false,
+    "data": null
+  },
+  "136746": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 5184,
+        "fees_note": "annual day fee (Years 7–11), VAT incl. (£4,320 ex-VAT + £864 VAT); 2025–26",
+        "isi_status": "Good",
+        "isi_year": 2023
+      },
+      "sources": {
+        "fees_annual": "https://asgedu.org.uk/school-fees/",
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/136746"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "101953": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Excellent",
+        "isi_year": 2021
+      },
+      "sources": {
+        "isi_status": "https://files.ofsted.gov.uk/v1/file/50172813"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "132848": {
+    "checked_at": "2026-07-08",
+    "found": false,
+    "data": null
+  },
+  "136046": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2023
+      },
+      "sources": {
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/136046"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "101383": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 9195,
+        "fees_note": "prep day (Reception–Form 6), excl. VAT; £3,065/term × 3; no senior phase exists at this school",
+        "isi_status": "Met all standards",
+        "isi_year": 2024
+      },
+      "sources": {
+        "fees_annual": "https://www.stmartinsmillhill.co.uk/fees/",
+        "isi_status": "https://www.stmartinsmillhill.co.uk/ofsted-report/"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "136747": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2023
+      },
+      "sources": {
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/136747"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "145946": {
+    "checked_at": "2026-07-08",
+    "found": false,
+    "data": null
+  },
+  "138406": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 15495,
+        "fees_note": "Reception–Y6 day, 3 × £5,165/term (2023-24 figure per Wandsworth Borough Council FIS); school states fees include lunche",
+        "isi_status": "Met all standards",
+        "isi_year": 2023
+      },
+      "sources": {
+        "fees_annual": "https://fis.wandsworth.gov.uk/kb5/wandsworth/fsd/service.page?id=Kjl8K7KZKNo&familychannel=3",
+        "isi_status": "https://www.isi.net/institutions/school/wandsworth-preparatory-school-8834"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "144738": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 46410,
+        "fees_note": "secondary (age 11-16) day place, 2024/25, exclusive of VAT; primary fee is £39,660 p.a. ex-VAT",
+        "isi_status": "Excellent",
+        "isi_year": 2025
+      },
+      "sources": {
+        "fees_annual": "https://gesherschool.com/about-us/admissions/",
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/144738"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "134084": {
+    "checked_at": "2026-07-08",
+    "found": false,
+    "data": null
+  },
+  "144774": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2025
+      },
+      "sources": {
+        "isi_status": "https://www.kedlestongroup.com/news/brookways-school-celebrates-good-ofsted-rating-for-its-nurturing-and-ambitious-approach"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "138801": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 3500,
+        "fees_note": "annual day fee, all ages; no VAT statement found"
+      },
+      "sources": {
+        "fees_annual": "https://files.ofsted.gov.uk/v1/file/50233363"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "148415": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2025
+      },
+      "sources": {
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/148415"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "149692": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 23532,
+        "fees_note": "Reception–Year 6 day fee, VAT incl., lunch/breakfast/snack incl.; single rate across all year groups",
+        "isi_status": "Met all standards",
+        "isi_year": 2024
+      },
+      "sources": {
+        "fees_annual": "https://prep.radnor-twickenham.org/fees/",
+        "isi_status": "https://prep.radnor-twickenham.org/wp-content/uploads/2024/07/Radnor-House-Prep-School-Inspection-Report_2024.pdf"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "135072": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Excellent",
+        "isi_year": 2024
+      },
+      "sources": {
+        "isi_status": "https://www.orangetreeschool.org/inspection-reports"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "102620": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 20322,
+        "fees_note": "Senior day (Yrs 7–11), termly fee £6,774 × 3; VAT excl. (20% VAT applicable on top)",
+        "isi_status": "Met all standards",
+        "isi_year": 2024
+      },
+      "sources": {
+        "fees_annual": "https://canburyschool.co.uk/fees/",
+        "isi_status": "https://canburyschool.co.uk/wp-content/uploads/2024/03/Canbury-ROU-Report-v5-2024-03-19.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "134800": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 24012,
+        "fees_note": "Reception/Yr1/Yr2 day, ex-VAT £6,670/term; annual figure shown is VAT-inclusive (£6,670 × 1.20 × 3). Nursery fees are VA",
+        "isi_status": "Met all standards",
+        "isi_year": 2024
+      },
+      "sources": {
+        "fees_annual": "https://avenuepreprep.co.uk/fileadmin/upload/Policies_and_reports/Office/2025_-_2026_Fees_and_Financial_Information__FINAL_2025_.pdf",
+        "isi_status": "https://avenuepreprep.co.uk/fileadmin/upload/Policies_and_reports/Office/2024_ISI_Report_5_2024-02-29.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "109774": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Met all standards",
+        "isi_year": 2023
+      },
+      "sources": {
+        "isi_status": "https://reports.isi.net/DownloadReport.aspx?t=c&r=ROU9374_20231205.pdf&s=9374"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "134594": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 62028,
+        "fees_note": "Annual day fee lower bound (range £62,028–£79,076); special school ages 4–12, LA-funded placements typical; no senior ph",
+        "isi_status": "Good",
+        "isi_year": 2023
+      },
+      "sources": {
+        "fees_annual": "https://files.ofsted.gov.uk/v1/file/50238290",
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/134594"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "138599": {
+    "checked_at": "2026-07-08",
+    "found": false,
+    "data": null
+  },
+  "133385": {
+    "checked_at": "2026-07-08",
+    "found": false,
+    "data": null
+  },
+  "137808": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2023
+      },
+      "sources": {
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/137808"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "149018": {
+    "checked_at": "2026-07-08",
+    "found": false,
+    "data": null
+  },
+  "149578": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 48900,
+        "fees_note": "Annual day fee inclusive of all therapies and support, as stated in Ofsted inspection report (May 2024). A Feb 2026 scho",
+        "isi_status": "Good",
+        "isi_year": 2024
+      },
+      "sources": {
+        "fees_annual": "https://files.ofsted.gov.uk/v1/file/50255558",
+        "isi_status": "https://files.ofsted.gov.uk/v1/file/50255558"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "145164": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 74214,
+        "fees_note": "annual day fee, as stated in July 2025 Ofsted inspection report",
+        "isi_status": "Excellent",
+        "isi_year": 2025
+      },
+      "sources": {
+        "fees_annual": "https://www.beyondautism.org.uk/wp-content/uploads/2025/09/Tram-House-Ofsted-July-2025.pdf",
+        "isi_status": "https://www.beyondautism.org.uk/wp-content/uploads/2025/09/Tram-House-Ofsted-July-2025.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "135155": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2024
+      },
+      "sources": {
+        "isi_status": "https://ayeshasiddiqa.org.uk/"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "150312": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 5640,
+        "fees_note": "annual day fee; full-year one-off payment (3 × £1,880 termly); VAT status not stated",
+        "isi_status": "Good",
+        "isi_year": 2025
+      },
+      "sources": {
+        "fees_annual": "https://tarbiyyahsecondaryboys.co.uk/admissions/",
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/150312"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "101375": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Met all standards",
+        "isi_year": 2025
+      },
+      "sources": {
+        "isi_status": "https://reports.isi.net/DownloadReport.aspx?t=c&r=ROU8843_20251104.pdf&s=8843"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "137809": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Not all standards met",
+        "isi_year": 2024
+      },
+      "sources": {
+        "isi_status": "https://files.ofsted.gov.uk/v1/file/50247137"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "135687": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Met all standards",
+        "isi_year": 2024
+      },
+      "sources": {
+        "isi_status": "https://reports.isi.net/DownloadReport.aspx?t=c&r=ROU9188_20241008.pdf&s=9188"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "147966": {
+    "checked_at": "2026-07-08",
+    "found": false,
+    "data": null
+  },
+  "149917": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2024
+      },
+      "sources": {
+        "isi_status": "https://www.maypoleschool.co.uk/about-our-school/ofsted-reports"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "135493": {
+    "checked_at": "2026-07-08",
+    "found": false,
+    "data": null
+  },
+  "142621": {
+    "checked_at": "2026-07-08",
+    "found": false,
+    "data": null
+  },
+  "101962": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 18177,
+        "fees_note": "Years 1–6 day, VAT incl. (£6,059/term × 3); Reception is £5,760/term × 3 = £17,280",
+        "isi_status": "Not all standards met",
+        "isi_year": 2023
+      },
+      "sources": {
+        "fees_annual": "https://www.avenuehouse.org/uploads/files/2025/AHS%20Schedule%20of%20Fees%202025-26%20(Sept%2025).pdf",
+        "isi_status": "https://www.avenuehouse.org/uploads/files/downloads/2023/Avenue%20House%20School%20Inspection%20Report%20v5%202023-11-21%20(1).pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "135373": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Met all standards",
+        "isi_year": 2025
+      },
+      "sources": {
+        "isi_status": "https://www.southoverpartnership.com/wp-content/uploads/2025/09/Southover-Partnership-School-NRI-v5-25-09-11.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "135794": {
+    "checked_at": "2026-07-08",
+    "found": false,
+    "data": null
+  },
+  "135839": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 33000,
+        "fees_note": "annual day fee, all-through (ages 5–18); VAT status not stated in report",
+        "isi_status": "Excellent",
+        "isi_year": 2024
+      },
+      "sources": {
+        "fees_annual": "https://files.ofsted.gov.uk/v1/file/50241798",
+        "isi_status": "https://files.ofsted.gov.uk/v1/file/50241798"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "144727": {
+    "checked_at": "2026-07-08",
+    "found": false,
+    "data": null
+  },
+  "148807": {
+    "checked_at": "2026-07-08",
+    "found": false,
+    "data": null
+  },
+  "134145": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Excellent",
+        "isi_year": 2023
+      },
+      "sources": {
+        "isi_status": "https://www.beyondautismschools.org.uk/parkhouse/ofsted"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "134388": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2025
+      },
+      "sources": {
+        "isi_status": "https://files.ofsted.gov.uk/v1/file/50281819"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "149444": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2024
+      },
+      "sources": {
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/149444"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "103111": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 8054,
+        "fees_note": "annual day fee upper range (ages 2–11); lower range £6,711; source: Ofsted inspection report Jan 2025",
+        "isi_status": "Good",
+        "isi_year": 2025
+      },
+      "sources": {
+        "fees_annual": "https://files.ofsted.gov.uk/v1/file/50271336",
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/103111"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "135729": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 19467,
+        "fees_note": "Years 6–11 day; £5,407.50/term excl. VAT (×3, +20% VAT = £19,467 p.a.)",
+        "isi_status": "Good",
+        "isi_year": 2023
+      },
+      "sources": {
+        "fees_annual": "https://www.londonvocationalballetschool.com/termdatesandfees",
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/135729"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "132791": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Met all standards",
+        "isi_year": 2025
+      },
+      "sources": {
+        "isi_status": "https://rosemaryworks.co.uk/wp-content/uploads/2025/09/Rosemary-Works-School-ISI-Report-2025.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "140496": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2014
+      },
+      "sources": {
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/140496"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "150995": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Excellent",
+        "isi_year": 2025
+      },
+      "sources": {
+        "isi_status": "https://files.ofsted.gov.uk/v1/file/50287556"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "148600": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2022
+      },
+      "sources": {
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/148600"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "138386": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 50540,
+        "fees_note": "LA-funded SEND placement; annual day fee range £50,540–£69,713 per Ofsted 2023 report; lower bound used. Not a privately",
+        "isi_status": "Met all standards",
+        "isi_year": 2023
+      },
+      "sources": {
+        "fees_annual": "https://files.ofsted.gov.uk/v1/file/50222633",
+        "isi_status": "https://files.ofsted.gov.uk/v1/file/50222633"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "149445": {
+    "checked_at": "2026-07-08",
+    "found": false,
+    "data": null
+  },
+  "131662": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Met all standards",
+        "isi_year": 2023
+      },
+      "sources": {
+        "isi_status": "https://reports.isi.net/DownloadReport.aspx?t=c&r=ADD9498_20230705.pdf&s=9498"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "148358": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2025
+      },
+      "sources": {
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/148358"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "102693": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Met all standards",
+        "isi_year": 2022
+      },
+      "sources": {
+        "isi_status": "https://www.norwegianschool.org.uk/wp-content/uploads/2023/01/Ofsted-Final-report-2022.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "136092": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 16575,
+        "fees_note": "Day pupils; range £16,575–£18,525 per annum per 2020 Ofsted report; lower bound shown. No current fees page published by",
+        "isi_status": "Good",
+        "isi_year": 2024
+      },
+      "sources": {
+        "fees_annual": "https://files.ofsted.gov.uk/v1/file/50144725",
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/136092"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "136228": {
+    "checked_at": "2026-07-08",
+    "found": false,
+    "data": null
+  },
+  "151204": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Not all standards met",
+        "isi_year": 2025
+      },
+      "sources": {
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/151204"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "102867": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 10248,
+        "fees_note": "senior/main school day, termly fee £3,416 excl. VAT × 3; VAT not included in figure",
+        "isi_status": "Met all standards",
+        "isi_year": 2022
+      },
+      "sources": {
+        "fees_annual": "https://www.isc.co.uk/schools/england/essex/ilford/beehive-preparatory-school/",
+        "isi_status": "https://www.isi.net/school/beehive-preparatory-school-9163"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "136110": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 75000,
+        "fees_note": "Annual day fee per Ofsted report; most pupils LA-funded; VAT status not stated in source",
+        "isi_status": "Good",
+        "isi_year": 2023
+      },
+      "sources": {
+        "fees_annual": "https://files.ofsted.gov.uk/v1/file/50229321",
+        "isi_status": "https://files.ofsted.gov.uk/v1/file/50229321"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "102789": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Met all standards",
+        "isi_year": 2025
+      },
+      "sources": {
+        "isi_status": "https://www.grangewoodschool.com/isa-reports"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "131128": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 16710,
+        "fees_note": "Eldest nursery class (年長, full-day 9:00–14:45), Acton Yochien, 2026 academic year; VAT applicable (全課税); no senior/secon"
+      },
+      "sources": {
+        "fees_annual": "http://www.maedagroup.co.uk/admission/fees.html"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "135616": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 58500,
+        "fees_note": "Annual day fee range £58,500–£65,500 per Ofsted 2023 report; lower bound used. Special school (ASD); all pupils LA-funde",
+        "isi_status": "Good",
+        "isi_year": 2023
+      },
+      "sources": {
+        "fees_annual": "https://snowflakeschool.org.uk/wp-content/uploads/2025/08/2023-OFSTED.pdf",
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/135616"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "150543": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 69000,
+        "fees_note": "Annual day fee range £69,000–£89,000 (lower bound used); special school, all pupils LA-funded EHC; VAT status not stated",
+        "isi_status": "Good",
+        "isi_year": 2025
+      },
+      "sources": {
+        "fees_annual": "https://files.ofsted.gov.uk/v1/file/50253356",
+        "isi_status": "https://files.ofsted.gov.uk/v1/file/50281877"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "131237": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2024
+      },
+      "sources": {
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/131237"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "151492": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Met all standards",
+        "isi_year": 2025
+      },
+      "sources": {
+        "isi_status": "https://london.edullectacademy.uk/news/"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "131288": {
+    "checked_at": "2026-07-08",
+    "found": false,
+    "data": null
+  },
+  "135683": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2019
+      },
+      "sources": {
+        "isi_status": "https://files.ofsted.gov.uk/v1/file/50143591"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "134591": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2023
+      },
+      "sources": {
+        "isi_status": "https://files.ofsted.gov.uk/v1/file/50223487"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "140039": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2025
+      },
+      "sources": {
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/140039"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "135670": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2024
+      },
+      "sources": {
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/135670"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "143048": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 15000,
+        "fees_note": "Primary day (top of range, Year 6), excl. VAT; termly fee £5,000 × 3",
+        "isi_status": "Met all standards",
+        "isi_year": 2025
+      },
+      "sources": {
+        "fees_annual": "https://www.isc.co.uk/schools/england/london-area/london-borough-of-hammersmith-and-fulham/hammersmith/azbuka-russian-english-bilingual-school/",
+        "isi_status": "https://reports.isi.net/DownloadReport.aspx?t=c&r=ROU9389_20251125.pdf&s=9389"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "149762": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Met all standards",
+        "isi_year": 2024
+      },
+      "sources": {
+        "isi_status": "https://files.ofsted.gov.uk/v1/file/50248406"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "131351": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 9677,
+        "fees_note": "Annual fee paid as monthly standing order of £806.40 × 12; primary/prep phase only (ages 3–11); VAT status not stated on",
+        "isi_status": "Good",
+        "isi_year": 2024
+      },
+      "sources": {
+        "fees_annual": "https://www.educaresmallschool.org.uk/",
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/131351"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "146553": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "a_level_a_star_a": 45.0,
+        "a_level_a_star_b": 58.0,
+        "isi_status": "Good",
+        "isi_year": 2024
+      },
+      "sources": {
+        "a_level_a_star_a": "https://www.lsi.college/news/why-lsi-independent-college-is-the-premier-choice-for-a-levels-in-london",
+        "a_level_a_star_b": "https://www.lsi.college/news/why-lsi-independent-college-is-the-premier-choice-for-a-levels-in-london",
+        "isi_status": "https://www.lsi.college/news/2024-ofsted-inspection-report-highlights-teaching-quality-student-outstanding-behavior"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "135901": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 4500,
+        "fees_note": "day pupils, annual fee (stated as 'from £4,500'); VAT status not specified"
+      },
+      "sources": {
+        "fees_annual": "https://files.ofsted.gov.uk/v1/file/50262843"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "141859": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 10600,
+        "fees_note": "annual day fee, as stated in Ofsted inspection report June 2025; VAT status not specified",
+        "isi_status": "Good",
+        "isi_year": 2025
+      },
+      "sources": {
+        "fees_annual": "https://files.ofsted.gov.uk/v1/file/50287302",
+        "isi_status": "https://files.ofsted.gov.uk/v1/file/50287302"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "101843": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2025
+      },
+      "sources": {
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/101843"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "146973": {
+    "checked_at": "2026-07-08",
+    "found": false,
+    "data": null
+  },
+  "151474": {
+    "checked_at": "2026-07-08",
+    "found": false,
+    "data": null
+  },
+  "131830": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 13500,
+        "fees_note": "senior day, per term x3, excl. VAT",
+        "isi_status": "Not all standards met",
+        "isi_year": 2025
+      },
+      "sources": {
+        "fees_annual": "https://www.isc.co.uk/schools/england/london-area/london-borough-of-barnet/barnet/susi-earnshaw-theatre-school/",
+        "isi_status": "https://reports.isi.net/DownloadReport.aspx?t=c&r=ROU8952_20250701.pdf&s=8952"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "136678": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2024
+      },
+      "sources": {
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/136678"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "143036": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2024
+      },
+      "sources": {
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/143036"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "145192": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Met all standards",
+        "isi_year": 2026
+      },
+      "sources": {
+        "isi_status": "https://bepgroup.net/site/"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "101964": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2025
+      },
+      "sources": {
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/101964"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "141701": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2024
+      },
+      "sources": {
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/141701"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "147977": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2023
+      },
+      "sources": {
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/147977"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "149481": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 72050,
+        "fees_note": "Annual day fee range published as £72,050–£102,000; lower bound used. SEND specialist placements; VAT status not stated ",
+        "isi_status": "Met all standards",
+        "isi_year": 2025
+      },
+      "sources": {
+        "fees_annual": "https://files.ofsted.gov.uk/v1/file/50252506",
+        "isi_status": "https://files.ofsted.gov.uk/v1/file/50271522"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "145510": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2023
+      },
+      "sources": {
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/145510"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "149157": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2023
+      },
+      "sources": {
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/149157"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "147908": {
+    "checked_at": "2026-07-08",
+    "found": false,
+    "data": null
+  },
+  "149148": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Not all standards met",
+        "isi_year": 2025
+      },
+      "sources": {
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/149148"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "150751": {
+    "checked_at": "2026-07-08",
+    "found": false,
+    "data": null
+  },
+  "132788": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 21000,
+        "fees_note": "secondary day, VAT incl.; includes meals, trips and drop-in after-school club"
+      },
+      "sources": {
+        "fees_annual": "https://www.lloydwilliamson.co.uk/fees-secondary-school"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "150750": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2025
+      },
+      "sources": {
+        "isi_status": "https://www.omg.school/news/omg-education-rated-%E2%80%98good%E2%80%99-in-first-ofsted-inspection"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "131788": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Not all standards met",
+        "isi_year": 2024
+      },
+      "sources": {
+        "isi_status": "https://dim-london.europe.sch.gr/wp-content/uploads/2024/12/10322578-Greek-Primary-School-OFSTED-final.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "150733": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 42387,
+        "fees_note": "annual day fee (Tooting site); VAT status not stated in source",
+        "isi_status": "Good",
+        "isi_year": 2025
+      },
+      "sources": {
+        "fees_annual": "https://www.burlingtonhouseschool.com/wp-content/uploads/2025/06/10375121-Burlington-House-School-150733-Final.pdf",
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/150733"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "149443": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Not all standards met",
+        "isi_year": 2024
+      },
+      "sources": {
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/149443"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "151476": {
+    "checked_at": "2026-07-08",
+    "found": false,
+    "data": null
+  },
+  "149908": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Not all standards met",
+        "isi_year": 2025
+      },
+      "sources": {
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/149908"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "142334": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 49500,
+        "fees_note": "Annual day fee (lower bound of published range £49,500–£69,010); independent special school, no VAT status stated",
+        "isi_status": "Excellent",
+        "isi_year": 2023
+      },
+      "sources": {
+        "fees_annual": "https://files.ofsted.gov.uk/v1/file/50224555",
+        "isi_status": "https://northstarnewschool.org/wp-content/uploads/2024/07/10338198-Northstar-New-School-142334-final-pdf.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "147199": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2024
+      },
+      "sources": {
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/147199"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "149904": {
+    "checked_at": "2026-07-08",
+    "found": false,
+    "data": null
+  },
+  "151911": {
+    "checked_at": "2026-07-08",
+    "found": false,
+    "data": null
+  },
+  "142832": {
+    "checked_at": "2026-07-08",
+    "found": false,
+    "data": null
+  },
+  "143933": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Met all standards",
+        "isi_year": 2024
+      },
+      "sources": {
+        "isi_status": "https://emlm.org.uk/wp-content/uploads/2024/04/Ofsted-Outcome-Letter-Feb-2024-1.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "144796": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2024
+      },
+      "sources": {
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/144796"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "150298": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 22800,
+        "fees_note": "primary day, range £0–£22,800 p.a. (supported places model; top rate cited in Oct 2025 Ofsted report; VAT-inclusive posi",
+        "isi_status": "Not all standards met",
+        "isi_year": 2024
+      },
+      "sources": {
+        "fees_annual": "https://files.ofsted.gov.uk/v1/file/50291771",
+        "isi_status": "https://files.ofsted.gov.uk/v1/file/50262020"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "137802": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "fees_annual": 10800,
+        "fees_note": "Annual day fee as stated in 2022 Ofsted inspection report (school's own website); current fee not separately published o",
+        "isi_status": "Good",
+        "isi_year": 2025
+      },
+      "sources": {
+        "fees_annual": "https://lachouetteschool.co.uk/wp-content/uploads/2024/09/La-Chouette-School-OFSTED-Report-2022.pdf",
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/137802"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-07-08"
+    }
+  },
+  "149566": {
+    "checked_at": "2026-07-08",
+    "found": true,
+    "data": {
+      "category": "independent",
+      "values": {
+        "isi_status": "Good",
+        "isi_year": 2024
+      },
+      "sources": {
+        "isi_status": "https://reports.ofsted.gov.uk/provider/27/149566"
+      },
+      "confidence": "high",
+      "checked_at": "2026-07-08"
+    }
   }
 }

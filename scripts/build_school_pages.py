@@ -276,6 +276,8 @@ def build_school_page(school):
     ofsted_label  = safe(school.get("quality_label") or school.get("score_band"), "Not yet rated")
     ofsted_url    = school.get("ofsted_url") or ""
     inspection    = safe(school.get("inspection_date"), "")
+    if inspection in ("NaT", "nan", "NaN", "None", "N/A"):  # pandas artifacts
+        inspection = ""
     fsm_label     = safe(school.get("fsm_label"), "")
     crime_label   = safe(school.get("crime_label"), "")
     lat           = school.get("lat", "")

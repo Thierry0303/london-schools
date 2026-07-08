@@ -65,10 +65,10 @@ DRY_RUN = os.environ.get("ISI_DRY_RUN", "0") == "1"
 # UK postcode (tolerant)
 POSTCODE_RE = re.compile(r"\b([A-Z]{1,2}\d[A-Z\d]?)\s*(\d[A-Z]{2})\b")
 # institution links on listing pages
-INST_LINK_RE = re.compile(r'href="(?:https?://www\.isi\.net)?(/institutions/school/[a-z0-9\-]+-(\d+))"', re.I)
+INST_LINK_RE = re.compile(r'(/institutions/school/[a-z0-9\-]+-(\d+))', re.I)
 # report links on institution pages: r=<TYPE><id>_<yyyymmdd>.pdf
 REPORT_RE = re.compile(
-    r'href="(https?://reports\.isi\.net/DownloadReport\.aspx\?[^"]*?r=([A-Z]+)\d+_(\d{8})\.pdf[^"]*)"', re.I)
+    r'(https?://reports\.isi\.net/DownloadReport\.aspx\?[^"\'\s<>]*?r=([A-Z]+)\d+_(\d{8})\.pdf[^"\'\s<>]*)', re.I)
 
 REPORT_TYPE_LABELS = {
     "ROU": "Routine inspection",
@@ -85,7 +85,11 @@ REPORT_TYPE_LABELS = {
 
 
 def fetch(url: str) -> str:
-    req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+    req = urllib.request.Request(url, headers={
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36 LondonSchoolDirectory/1.0",
+        "Accept": "text/html,application/xhtml+xml",
+        "Accept-Language": "en-GB,en;q=0.9",
+    })
     with urllib.request.urlopen(req, timeout=45) as resp:
         return resp.read().decode("utf-8", errors="replace")
 
@@ -110,6 +114,8 @@ def crawl_listing() -> list[dict]:
         html = fetch(LIST_URL.format(page=page))
         links = INST_LINK_RE.findall(html)
         if not links:
+            print(f"  page {page}: 0 institution links. First 400 chars of HTML:")
+            print("  " + html[:400].replace("\n", " ")[:400])
             empty_streak += 1
             page += 1
             continue
@@ -186,7 +192,9 @@ def main():
         cache = json.loads(CACHE_FILE.read_text(encoding="utf-8"))
     fetched_at = cache.get("fetched_at")
     stale = True
-    if fetched_at and not FORCE:
+    if not cache.get("schools"):
+        print("cache is empty -> ignoring it and re-crawling")
+    elif fetched_at and not FORCE:
         age = (datetime.now(timezone.utc)
                - datetime.fromisoformat(fetched_at)).days
         stale = age >= CACHE_TTL_DAYS
@@ -236,6 +244,11 @@ def main():
                 print(f"  fetched {i}/{len(matched)} institution pages")
             time.sleep(CRAWL_DELAY)
 
+        if not results:
+            print("ERROR: crawl produced 0 matched schools — NOT caching, so the")
+            print("next run retries. Check the page-1 HTML snippet above: if it")
+            print("shows a challenge/JS shell, isi.net is blocking this runner.")
+            sys.exit(1)
         cache = {
             "fetched_at": datetime.now(timezone.utc).isoformat(),
             "schools": results,

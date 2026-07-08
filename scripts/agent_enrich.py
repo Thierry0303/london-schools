@@ -189,11 +189,11 @@ def call_agent(school, category):
                           headers=headers, json=body, timeout=120)
         if r.status_code != 200:
             print(f"    API error {r.status_code}: {r.text[:200]}")
-            return None
+            return "API_ERROR"
         data = r.json()
     except Exception as e:
         print(f"    request failed: {e}")
-        return None
+        return "API_ERROR"
 
     # Concatenate all text blocks, then extract the JSON object
     text = "".join(b.get("text", "") for b in data.get("content", []) if b.get("type") == "text")
@@ -367,6 +367,16 @@ def main():
     schools = json.loads(SCHOOLS_JSON.read_text(encoding="utf-8"))
     cache = load_cache()
 
+    # Heal poisoned entries: AGENT_PURGE_EMPTY_SINCE=YYYY-MM-DD removes
+    # "checked, nothing found" entries from that date onwards so those
+    # schools are retried (use after runs that failed on API credits).
+    purge_since = os.environ.get("AGENT_PURGE_EMPTY_SINCE")
+    if purge_since:
+        before = len(cache)
+        cache = {u: e for u, e in cache.items()
+                 if e.get("found") or (e.get("checked_at", "9999") < purge_since)}
+        print(f"purged {before - len(cache)} empty cache entries since {purge_since}")
+
     # Candidates: schools we can enrich and haven't checked recently
     candidates = []
     for s in schools:
@@ -380,14 +390,33 @@ def main():
             continue
         candidates.append((urn, s, cat))
 
+    # Independent schools first (fees/ISI are the site's biggest data gap),
+    # largest schools first within each group so well-known names fill in
+    # early. State schools follow once independents are covered.
+    candidates.sort(key=lambda t: (t[2] != "independent", -(t[1].get("pupils") or 0)))
+
     print(f"Agent enrichment: {len(candidates)} candidates, processing up to {MAX_PER_RUN}")
     processed = 0
     written = 0
+    api_errors = 0
 
     for urn, school, cat in candidates[:MAX_PER_RUN]:
         name = school.get("name", "?")
         print(f"  [{processed+1}] {name} ({cat})")
         result = call_agent(school, cat)
+        if result == "API_ERROR":
+            # Billing/auth/network problem — NOT a research result. Don't
+            # cache it (the school must be retried) and bail out early if it
+            # keeps happening, instead of burning through the whole batch.
+            api_errors += 1
+            print("       ! API failure — not cached, will retry next run")
+            if api_errors >= 3 and written == 0:
+                print("ABORTING RUN: repeated API failures — check the")
+                print("ANTHROPIC_API_KEY secret and your API credit balance.")
+                break
+            processed += 1
+            time.sleep(1)
+            continue
         clean = clean_result(result, cat)
 
         # Record in cache regardless (so we don't re-hit empty ones constantly)

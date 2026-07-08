@@ -1364,6 +1364,7 @@ function App() {
           {[['schools','Schools'],['map','Map'],['stats','Stats']].map(function(item){
             return <button key={item[0]} className={view===item[0]?'nav-btn active':'nav-btn'} onClick={() => setView(item[0])}>{item[1]}</button>;
           })}
+          <a href="/schools/independent" className="nav-btn">Private Schools</a>
           <a href="/appeals" className="nav-btn">Appeals</a>
           <a href="/guides/" className="nav-btn">Guides</a>
           <a href="/schools/" className="nav-btn">Boroughs</a>

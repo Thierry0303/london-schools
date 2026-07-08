@@ -10,6 +10,7 @@
     <nav>
       <a href="/" ${currentPath === '/' ? 'class="active"' : ''}>Search</a>
       <a href="/schools/" ${currentPath.startsWith('/schools/') ? 'class="active"' : ''}>Boroughs</a>
+      <a href="/schools/independent" ${currentPath === '/schools/independent' || currentPath === '/schools/independent/' ? 'class="active"' : ''}>Private Schools</a>
       <a href="/appeals.html" ${currentPath.includes('appeals') ? 'class="active"' : ''}>Appeals</a>
       <a href="/guides/" ${currentPath.startsWith('/guides/') ? 'class="active"' : ''}>Guides</a>
       <a href="/methodology.html" ${currentPath.includes('methodology') ? 'class="active"' : ''}>Methodology</a>

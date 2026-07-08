@@ -433,6 +433,10 @@ def main():
             print("       — nothing verifiable found")
 
         processed += 1
+        # Save incrementally: a canceled/timed-out run keeps everything
+        # done so far (the next run resumes from the cache).
+        if processed % 5 == 0:
+            save_cache(cache)
         time.sleep(1)  # gentle pacing
 
     save_cache(cache)

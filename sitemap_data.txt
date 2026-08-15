@@ -650,7 +650,6 @@
   <url><loc>https://londonschool.directory/schools/westminster/st-peters-cofe-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/westminster/st-peters-eaton-square-cofe-primary-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/westminster/st-saviours-cofe-primary-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://londonschool.directory/schools/westminster/st-vincents-catholic-primary-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/westminster/christ-church-bentinck-cofe-primary-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/westminster/st-augustines-federated-schools-ce-high-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/westminster/arnold-house-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
@@ -773,7 +772,7 @@
   <url><loc>https://londonschool.directory/schools/barnet/st-michaels-catholic-grammar-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/barnet/finchley-catholic-high-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/barnet/st-james-catholic-high-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://londonschool.directory/schools/barnet/mill-hill-school-foundation</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://londonschool.directory/schools/barnet/mill-hill-schools</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/barnet/hendon-preparatory-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/barnet/the-king-alfred-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/barnet/lyonsdown-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
@@ -1570,7 +1569,7 @@
   <url><loc>https://londonschool.directory/schools/newham/central-park-primary-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/barnet/hasmonean-primary-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/redbridge/highlands-primary-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://londonschool.directory/schools/tower-hamlets/stephen-hawking-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://londonschool.directory/schools/tower-hamlets/the-hamlet-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/barnet/beis-soroh-schneirer</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/waltham-forest/barn-croft-primary-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/brent/brondesbury-college-london</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
@@ -1752,7 +1751,6 @@
   <url><loc>https://londonschool.directory/schools/hammersmith-and-fulham/larmenier-sacred-heart-catholic-primary-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/hammersmith-and-fulham/parsons-green-prep-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/wandsworth/gatton-va-primary-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://londonschool.directory/schools/haringey/islamic-shakhsiyah-foundation</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/southwark/the-villa</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/wandsworth/park-house-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/tower-hamlets/malmesbury-primary-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
@@ -2564,7 +2562,7 @@
   <url><loc>https://londonschool.directory/schools/greenwich/timbercroft-primary-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/greenwich/brooklands-primary-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/greenwich/millennium-primary-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://londonschool.directory/schools/hammersmith-and-fulham/queens-manor-school-and-special-needs-unit</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://londonschool.directory/schools/hammersmith-and-fulham/queens-manor-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/hammersmith-and-fulham/fulham-primary-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/hammersmith-and-fulham/sulivan-primary-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/havering/benhurst-primary-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
@@ -2607,7 +2605,7 @@
   <url><loc>https://londonschool.directory/schools/newham/royal-wharf-primary-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/sutton/carew-academy</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/greenwich/woolwich-polytechnic-school-for-girls</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://londonschool.directory/schools/islington/the-bridge-satellite-provision</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://londonschool.directory/schools/islington/the-bridge-keystone</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/sutton/harris-academy-sutton</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/hillingdon/the-pride-academy</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/tower-hamlets/mulberry-academy-london-dock</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
@@ -2941,7 +2939,7 @@
   <url><loc>https://londonschool.directory/schools/hillingdon/hermitage-primary-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/sutton/bandon-hill-primary-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/kingston-upon-thames/fern-hill-primary-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://londonschool.directory/schools/ealing/blooming-tree-pre-prep-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://londonschool.directory/schools/ealing/blooming-tree-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/newham/rokeby-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/newham/lister-community-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/barking-and-dagenham/brook-sixth-form-and-academy</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
@@ -2968,13 +2966,11 @@
   <url><loc>https://londonschool.directory/schools/southwark/notre-dame-catholic-girls-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/bexley/st-thomas-more-catholic-primary-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/newham/harris-science-academy-east-london</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://londonschool.directory/schools/croydon/bright-minds-creative-academy</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/croydon/aspire-learning</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/croydon/olympus</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/lambeth/evolve-academy</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/havering/ardleigh-green-junior-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/havering/ardleigh-green-infant-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://londonschool.directory/schools/croydon/arise-academy</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/westminster/st-josephs-rc-primary-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/redbridge/downshall-primary-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/bromley/downe-primary-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
@@ -3014,7 +3010,6 @@
   <url><loc>https://londonschool.directory/schools/hackney/clockhouse-primary-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/hounslow/hounslow-heath-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/barnet/menorah-primary-school-for-boys</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://londonschool.directory/schools/ealing/west-london-performing-arts-academy-wlpa-academy</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/camden/wildwood-nature-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/westminster/caelum-house-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/hounslow/tarbiyyah-secondary-school-for-boys</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
@@ -3123,7 +3118,9 @@
   <url><loc>https://londonschool.directory/schools/ealing/st-vincents-catholic-primary-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/hillingdon/oak-farm-primary-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/hammersmith-and-fulham/st-thomas-of-canterbury-catholic-primary-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://londonschool.directory/schools/westminster/st-vincents-catholic-primary-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/westminster/st-vincent-de-paul-catholic-primary-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://londonschool.directory/schools/greenwich/thrive-independent-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/brent/mount-stewart-junior-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/brent/mount-stewart-infant-school</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/city-of-london</loc><lastmod>2026-08-15</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>

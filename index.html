@@ -392,10 +392,11 @@
       .cmp-header { padding:14px 16px; }
       .cmp-header h2 { font-size:1rem; }
     }
-    .cmp-header { background:var(--ink); color:var(--cream); padding:18px 24px; display:flex; align-items:center; justify-content:space-between; }
+    .cmp-header { background:var(--ink); color:var(--cream); padding:18px 24px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
     .cmp-header h2 { font-family:'Playfair Display',serif; font-size:1.2rem; }
-    .cmp-close { background:none; border:none; color:var(--cream); font-size:1.4rem; cursor:pointer; opacity:0.7; }
+    .cmp-close { background:rgba(255,255,255,0.12); border:none; color:var(--cream); font-size:1.5rem; line-height:1; cursor:pointer; opacity:0.9; flex-shrink:0; width:40px; height:40px; border-radius:8px; display:flex; align-items:center; justify-content:center; }
     .cmp-close:hover { opacity:1; }
+    .cmp-close:active { background:rgba(255,255,255,0.25); }
     .cmp-grid { display:grid; gap:0; overflow-x:auto; }
     .cmp-row { display:contents; }
     .cmp-cell { padding:12px 16px; border-bottom:1px solid var(--border); font-size:0.85rem; overflow-wrap:break-word; word-break:break-word; }
@@ -1314,6 +1315,18 @@ function App() {
   const [geoCoords, setGeoCoords] = useState(null);
   const [compareList, setCompareList] = useState([]);
   const [showCompare, setShowCompare] = useState(false);
+  // Let the Android back button / back-swipe close the comparison card
+  // (instead of exiting the whole app when running as an installed TWA).
+  useEffect(() => {
+    if (!showCompare) return;
+    const onPop = () => setShowCompare(false);
+    window.history.pushState({ cmp: 1 }, '');
+    window.addEventListener('popstate', onPop);
+    return () => {
+      window.removeEventListener('popstate', onPop);
+      if (window.history.state && window.history.state.cmp) window.history.back();
+    };
+  }, [showCompare]);
   const [showGuide, setShowGuide] = useState(() => {
     try { return localStorage.getItem('compareGuideSeen') !== '1'; } catch { return true; }
   });
@@ -1728,11 +1741,11 @@ function App() {
           }
         }
         return(
-          <div className="cmp-overlay" onClick={e=>{if(e.target.className==='cmp-overlay')setShowCompare(false)}}>
+          <div className="cmp-overlay" onClick={e=>{if(e.target===e.currentTarget)setShowCompare(false)}}>
             <div className="cmp-modal">
               <div className="cmp-header">
                 <h2>Side-by-side comparison</h2>
-                <div style={{display:'flex',alignItems:'center',gap:8}}>
+                <div style={{display:'flex',alignItems:'center',flexWrap:'wrap',justifyContent:'flex-end',gap:8}}>
                   <button onClick={doShareWA} style={{padding:'6px 12px',background:'#25D366',color:'#fff',border:'none',borderRadius:6,fontSize:'0.8rem',fontWeight:700,cursor:'pointer',whiteSpace:'nowrap'}}>WhatsApp</button>
                   <button onClick={doShareEmail} style={{padding:'6px 12px',background:'#1565C0',color:'#fff',border:'none',borderRadius:6,fontSize:'0.8rem',fontWeight:700,cursor:'pointer',whiteSpace:'nowrap'}}>Email</button>
                   <button onClick={e=>doCopyLink(e.currentTarget)} style={{padding:'6px 12px',background:'#555',color:'#fff',border:'none',borderRadius:6,fontSize:'0.8rem',fontWeight:700,cursor:'pointer',whiteSpace:'nowrap'}}>Copy link</button>

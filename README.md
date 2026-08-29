@@ -1,6 +1,6 @@
 # London Schools Explorer 🏫
 
-A free, data-driven directory of all **3,196 London schools** — searchable by Ofsted rating, borough, phase, admissions oversubscription, exam results and local crime data.
+A free, data-driven directory of **every London school** — searchable by Ofsted rating, borough, phase, admissions oversubscription, exam results and local crime data.
 
 🌐 **Live site:** [londonschool.directory](https://londonschool.directory)
 
@@ -49,7 +49,7 @@ All data is open government data published under the [Open Government Licence](h
 london-schools/
 ├── index.html                  # React SPA homepage
 ├── appeals.html                # Admissions appeals tracker page
-├── schools.json                # All 3,196 London schools with data
+├── schools.json                # Every London school with data
 ├── schools/                    # Static school pages (auto-generated)
 │   ├── camden/
 │   │   ├── haverstock-school/index.html
@@ -75,7 +75,7 @@ london-schools/
 The GitHub Actions workflow (`monthly_refresh.yml`) runs automatically on the **15th of every month** at 08:00 UTC:
 
 1. `refresh_data.py` — fetches fresh data from GIAS, Ofsted, EES and Police API
-2. `reset_snobe_urls.py` — regenerates all 3,196 Snobe profile URLs
+2. `reset_snobe_urls.py` — regenerates every school's Snobe profile URL
 3. `check_snobe_slugs.py` — validates URLs against live Snobe site
 4. `build_school_pages.py` — rebuilds all static pages with fresh data
 5. Commits updated files back to GitHub

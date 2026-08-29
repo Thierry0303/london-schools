@@ -153,6 +153,8 @@
       td { font-size: 13.5px; }
     }
   </style>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 </head>
 <body>
 
@@ -344,5 +346,12 @@
 </footer>
 
 <script defer src="/_vercel/insights/script.js"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/sw.js').catch(function () {});
+  });
+}
+</script>
 </body>
 </html>

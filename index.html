@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>London Schools Directory — Find &amp; Compare Every London School by Ofsted Rating</title>
 <meta name="description" content="Free directory of every London school. Compare schools across all 32 London boroughs by Ofsted rating, KS2 / KS4 results, admissions oversubscription and local crime data. Updated monthly.">
 <meta name="keywords" content="London schools, Ofsted rating, school finder London, primary schools, secondary schools, grammar schools, school admissions, school appeals, attainment 8, KS2 KS4">
@@ -48,8 +48,8 @@
       --border: #D8D0C0; --card-bg: #FDFAF4;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; }
-    .header { background: var(--ink); color: var(--cream); padding: 0 40px; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; height: 60px; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; overscroll-behavior-y: contain; }
+    .header { background: var(--ink); color: var(--cream); padding: env(safe-area-inset-top) 40px 0; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; height: calc(60px + env(safe-area-inset-top)); box-sizing: border-box; }
     .header-logo { font-family: 'Playfair Display', serif; font-size: 1.18rem; font-weight: 700; display: flex; align-items: center; gap: 10px; letter-spacing: -0.01em; text-decoration: none; color: var(--cream); }
     .logo-mark { width: 28px; height: 28px; background: var(--gold); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700; color: var(--ink); flex-shrink: 0; font-family: 'Playfair Display', serif; }
     .logo-text em { font-style: normal; color: var(--gold); }
@@ -187,7 +187,7 @@
     @media (min-width: 769px) { .filters-toggle-btn { display: none; } }
     @media (max-width: 768px) {
       .page-layout { display: block; }
-      .filter-sidebar { position: fixed; top: 0; left: -292px; bottom: 0; width: 280px; border-radius: 0; max-height: 100vh; z-index: 9100; transition: left 0.28s ease; box-shadow: 4px 0 24px rgba(0,0,0,0.18); }
+      .filter-sidebar { position: fixed; top: 0; left: -292px; bottom: 0; width: 280px; border-radius: 0; max-height: 100vh; z-index: 9100; transition: left 0.28s ease; box-shadow: 4px 0 24px rgba(0,0,0,0.18); padding-top: env(safe-area-inset-top); box-sizing: border-box; }
       .filter-sidebar.sidebar-open { left: 0; }
       .sidebar-overlay { display: block; }
       .sidebar-overlay.visible { opacity: 1; pointer-events: all; }
@@ -345,7 +345,7 @@
     .ac-address-text { font-size: 0.88rem; }
     .ac-address-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(245,240,232,0.5); margin-bottom: 2px; }
     /* Compare feature */
-    .compare-guide { position:fixed; bottom:24px; right:16px; background:var(--ink); color:var(--cream); border-radius:10px; padding:14px 18px; max-width:240px; font-size:0.82rem; line-height:1.6; z-index:8999; box-shadow:0 8px 32px rgba(0,0,0,0.3); animation:guideIn 0.3s ease; transition: bottom 0.3s; }
+    .compare-guide { position:fixed; bottom:calc(24px + env(safe-area-inset-bottom)); right:16px; background:var(--ink); color:var(--cream); border-radius:10px; padding:14px 18px; max-width:240px; font-size:0.82rem; line-height:1.6; z-index:8999; box-shadow:0 8px 32px rgba(0,0,0,0.3); animation:guideIn 0.3s ease; transition: bottom 0.3s; }
     @media (max-width:600px) {
       .compare-guide { left:16px; right:16px; max-width:none; bottom:24px; }
       .compare-guide::after { display:none; }
@@ -364,7 +364,7 @@
     .compare-btn.selected { border-color:var(--gold); background:rgba(212,168,67,0.14); color:#7a5500; font-weight:600; }
     .compare-btn .compare-check { width:14px; height:14px; border-radius:50%; border:1.5px solid currentColor; display:flex; align-items:center; justify-content:center; font-size:0.6rem; flex-shrink:0; }
     .compare-btn.selected .compare-check { background:var(--gold); border-color:var(--gold); color:var(--ink); }
-    .compare-bar { position:fixed; bottom:0; left:0; right:0; background:var(--ink); color:var(--cream); padding:10px 16px; display:flex; align-items:center; gap:10px; z-index:9000; transform:translateY(100%); transition:transform 0.3s; box-shadow:0 -4px 20px rgba(0,0,0,0.3); flex-wrap:wrap; }
+    .compare-bar { position:fixed; bottom:0; left:0; right:0; background:var(--ink); color:var(--cream); padding:10px 16px calc(10px + env(safe-area-inset-bottom)); display:flex; align-items:center; gap:10px; z-index:9000; transform:translateY(100%); transition:transform 0.3s; box-shadow:0 -4px 20px rgba(0,0,0,0.3); flex-wrap:wrap; }
     .compare-bar.visible { transform:translateY(0); }
     .compare-bar-schools { display:flex; gap:6px; flex:1; flex-wrap:wrap; min-width:0; }
     .compare-bar-chip { background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); border-radius:4px; padding:4px 8px; font-size:0.75rem; display:flex; align-items:center; gap:5px; max-width:150px; }
@@ -1024,7 +1024,7 @@ function AddressChecker({ schools, initialPostcode, initialCoords }) {
         <div className="ac-title">Address Checker</div>
         <div className="ac-sub">Enter a London postcode to see every nearby school ranked by Ofsted rating, exam results and admissions data.</div>
         <div className="ac-row">
-          <input className="ac-input" type="text" placeholder="Postcode or school name (e.g. SW1A 1AA or 'Saint Paul's')" value={address} onChange={e=>setAddress(e.target.value)} onKeyDown={e=>e.key==='Enter'&&doCheck()} />
+          <input className="ac-input" type="text" enterKeyHint="search" autoComplete="off" autoCorrect="off" spellCheck={false} placeholder="Postcode or school name (e.g. SW1A 1AA or 'Saint Paul's')" value={address} onChange={e=>setAddress(e.target.value)} onKeyDown={e=>e.key==='Enter'&&doCheck()} />
           <select className="ac-select" value={radius} onChange={e=>setRadius(e.target.value)}>
             <option value="0.5">½ mile</option>
             <option value="1">1 mile</option>
@@ -1331,6 +1331,17 @@ function App() {
     try { return localStorage.getItem('compareGuideSeen') !== '1'; } catch { return true; }
   });
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  // Android back button / back-swipe closes the filter drawer instead of exiting the app.
+  useEffect(() => {
+    if (!sidebarOpen) return;
+    const onPop = () => setSidebarOpen(false);
+    window.history.pushState({ drawer: 1 }, '');
+    window.addEventListener('popstate', onPop);
+    return () => {
+      window.removeEventListener('popstate', onPop);
+      if (window.history.state && window.history.state.drawer) window.history.back();
+    };
+  }, [sidebarOpen]);
   function dismissGuide() {
     setShowGuide(false);
     try { localStorage.setItem('compareGuideSeen', '1'); } catch {}
@@ -1396,6 +1407,12 @@ function App() {
               <input
                 className="hero-search-input"
                 type="text"
+                inputMode="text"
+                enterKeyHint="search"
+                autoComplete="postal-code"
+                autoCapitalize="characters"
+                autoCorrect="off"
+                spellCheck={false}
                 value={heroPostcode}
                 onChange={e => setHeroPostcode(e.target.value)}
                 onKeyDown={e => { if(e.key==='Enter') setView('checker'); }}

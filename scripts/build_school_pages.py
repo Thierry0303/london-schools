@@ -660,6 +660,8 @@ def build_school_page(school):
       td {{ font-size: 13.5px; }}
     }}
   </style>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 </head>
 <body>
 
@@ -836,6 +838,13 @@ def build_school_page(school):
 </footer>
 
 <script defer src="/_vercel/insights/script.js"></script>
+<script>
+if ('serviceWorker' in navigator) {{
+  window.addEventListener('load', function () {{
+    navigator.serviceWorker.register('/sw.js').catch(function () {{}});
+  }});
+}}
+</script>
 </body>
 </html>"""
 
@@ -1102,6 +1111,8 @@ for borough, borough_schools in by_borough.items():
     }}
     @media (max-width: 600px) {{ .stats-row {{ flex-direction: column; }} }}
   </style>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 </head>
 <body>
 <div class="topbar">
@@ -1214,6 +1225,13 @@ for borough, borough_schools in by_borough.items():
   }};
 }})();
 </script>
+<script>
+if ('serviceWorker' in navigator) {{
+  window.addEventListener('load', function () {{
+    navigator.serviceWorker.register('/sw.js').catch(function () {{}});
+  }});
+}}
+</script>
 </body>
 </html>"""
 
@@ -1310,6 +1328,8 @@ def build_type_page(slug, title, meta_desc, intro, filter_fn, prominent_pi=False
       .topbar {{ padding: 10px 12px; font-size: 13px; }}
     }}
   </style>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 </head>
 <body>
 <div class="topbar">
@@ -1332,6 +1352,13 @@ def build_type_page(slug, title, meta_desc, intro, filter_fn, prominent_pi=False
 </div>
 <footer><a href="/">London Schools Explorer</a> &mdash; helping families find the right school in London.<p style="margin-top:10px">Browse by type: <a href="/schools/outstanding">Outstanding</a> &middot; <a href="/schools/good">Good</a> &middot; <a href="/schools/grammar">Grammar</a> &middot; <a href="/schools/selective">Selective</a> &middot; <a href="/schools/faith">Faith</a> &middot; <a href="/schools/primary">Primary</a> &middot; <a href="/schools/secondary">Secondary</a> &middot; <a href="/schools/sixth-form">Sixth form</a> &middot; <a href="/schools/independent">Private &amp; independent</a></p></footer>
 <script defer src="/_vercel/insights/script.js"></script>
+<script>
+if ('serviceWorker' in navigator) {{
+  window.addEventListener('load', function () {{
+    navigator.serviceWorker.register('/sw.js').catch(function () {{}});
+  }});
+}}
+</script>
 </body>
 </html>"""
 

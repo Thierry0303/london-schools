@@ -110,6 +110,8 @@
       .borough-table th:nth-child(3), .borough-table td:nth-child(3) { display: none; }
     }
   </style>
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 </head>
 <body>
 
@@ -514,5 +516,12 @@ function highlightTypeChart() {
 }
 </script>
 
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/sw.js').catch(function () {});
+  });
+}
+</script>
 </body>
 </html>

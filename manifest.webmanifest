@@ -1,0 +1,30 @@
+{
+  "id": "/",
+  "name": "London Schools Directory",
+  "short_name": "LS Directory",
+  "description": "Find & compare 3,196 London schools by Ofsted rating, KS2 / KS4 results, admissions oversubscription and local crime data. Updated monthly.",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#1A1A2E",
+  "theme_color": "#1A1A2E",
+  "lang": "en-GB",
+  "dir": "ltr",
+  "categories": ["education", "reference"],
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "screenshots": [
+    {
+      "src": "/og-image.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "London Schools Directory — find and compare schools"
+    }
+  ]
+}

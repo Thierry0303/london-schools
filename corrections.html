@@ -40,6 +40,8 @@ footer a{color:rgba(255,255,255,.85)}
   .wrap section{padding:18px 18px}
 }
 </style>
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 </head>
 <body>
 <header class="hdr">
@@ -76,5 +78,12 @@ footer a{color:rgba(255,255,255,.85)}
   <a href="/methodology.html">Methodology</a> &middot;
   <a href="/sources.html">Sources</a>
 </footer>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/sw.js').catch(function () {});
+  });
+}
+</script>
 </body>
 </html>

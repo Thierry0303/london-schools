@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Offline — London Schools Directory</title>
+<meta name="theme-color" content="#1A1A2E">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:'DM Sans',system-ui,sans-serif;
+    background:#1A1A2E;color:#F5F0E8;
+    display:flex;align-items:center;justify-content:center;
+    text-align:center;padding:24px;line-height:1.6;
+  }
+  .wrap{max-width:420px}
+  .logo{
+    width:72px;height:72px;border-radius:16px;background:#F5F0E8;color:#1A1A2E;
+    display:flex;align-items:center;justify-content:center;margin:0 auto 24px;
+    font-family:'Playfair Display',Georgia,serif;font-weight:900;font-size:34px;letter-spacing:1px;
+  }
+  h1{font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:28px;margin-bottom:12px}
+  p{opacity:.8;margin-bottom:24px;font-size:15px}
+  button{
+    font-family:inherit;font-size:15px;font-weight:500;cursor:pointer;
+    background:#F5F0E8;color:#1A1A2E;border:none;border-radius:999px;padding:12px 28px;
+  }
+  button:hover{opacity:.9}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="logo">LS</div>
+    <h1>You're offline</h1>
+    <p>London Schools Directory needs a connection to load school data. Check your network and try again.</p>
+    <button onclick="location.reload()">Try again</button>
+  </div>
+</body>
+</html>

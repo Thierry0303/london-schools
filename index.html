@@ -88,6 +88,16 @@
     .hero-stat { display: flex; flex-direction: column; }
     .hero-stat-num { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; color: var(--gold); line-height: 1; }
     .hero-stat-label { font-size: 0.78rem; color: rgba(245,240,232,0.6); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px; }
+    .home-promo { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; max-width: 1400px; margin: 22px auto 0; padding: 16px 24px; background: linear-gradient(100deg, var(--ink) 0%, var(--ink-soft) 100%); border: 1px solid rgba(212,168,67,0.4); border-radius: 14px; text-decoration: none; color: var(--cream); box-shadow: 0 8px 30px rgba(26,26,46,0.18); transition: transform 0.18s, box-shadow 0.18s; }
+    .home-promo:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(26,26,46,0.28); border-color: rgba(212,168,67,0.7); }
+    .home-promo-main { display: flex; align-items: center; gap: 16px; min-width: 0; }
+    .home-promo-icon { font-size: 1.8rem; flex-shrink: 0; }
+    .home-promo-main strong { display: block; font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; }
+    .home-promo-main span { display: block; font-size: 0.85rem; color: rgba(245,240,232,0.62); margin-top: 2px; }
+    .home-promo-cta { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
+    .home-promo-code { font-size: 0.78rem; font-weight: 600; color: var(--gold); white-space: nowrap; }
+    .home-promo-btn { padding: 10px 20px; background: var(--gold); color: var(--ink); border-radius: 8px; font-family: 'Playfair Display', serif; font-weight: 700; font-size: 0.9rem; white-space: nowrap; }
+    .home-promo-tag { max-width: 1400px; margin: 4px auto 0; padding: 0 26px; font-size: 0.68rem; color: #b7ae9c; text-align: right; }
     .main { max-width: 1400px; margin: 0 auto; padding: 28px 40px; }
     .controls { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; align-items: flex-end; }
     .search-wrap { flex: 1; min-width: 220px; position: relative; }
@@ -267,6 +277,9 @@
       .hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px; margin-top: 28px; }
       .hero-stat-num { font-size: 1.8rem; }
       .quick-browse { padding: 10px 12px; }
+      .home-promo { margin: 14px 12px 0; padding: 14px 16px; gap: 12px; }
+      .home-promo-cta { width: 100%; justify-content: space-between; }
+      .home-promo-tag { padding: 0 14px; }
       .main { padding: 12px; }
       .controls { flex-direction: column; gap: 8px; }
       .search-wrap { min-width: unset; width: 100%; }
@@ -1456,6 +1469,20 @@ function App() {
           })}
         </div>
       </section>
+      <a className="home-promo" href="https://piacademy.co.uk/?aff=28" target="_blank" rel="noopener sponsored">
+        <div className="home-promo-main">
+          <span className="home-promo-icon">🎓</span>
+          <div>
+            <strong>11+, SATs &amp; GCSE exam prep from PiAcademy</strong>
+            <span>Grammar &amp; independent school entrance practice — trusted by London parents.</span>
+          </div>
+        </div>
+        <div className="home-promo-cta">
+          <span className="home-promo-code">Code THIERR25 — 25% off</span>
+          <span className="home-promo-btn">Get the discount →</span>
+        </div>
+      </a>
+      <div className="home-promo-tag">Sponsored — helps keep this site free.</div>
       <QuickBrowse />
       <main className="main">
         {loading ? (

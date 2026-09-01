@@ -1,524 +1,1547 @@
-<!doctype html>
-<html lang="en-GB">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Schools in Hillingdon, London — Ofsted, Performance & Admissions</title>
-<meta name="description" content="All 109 schools in Hillingdon, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
-<link rel="canonical" href="https://londonschool.directory/schools/hillingdon/">
-<meta property="og:title" content="Schools in Hillingdon, London — Ofsted, Performance & Admissions">
-<meta property="og:description" content="All 109 schools in Hillingdon, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://londonschool.directory/schools/hillingdon/">
-<meta property="og:site_name" content="London School Directory">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#0b2545">
-<meta name="robots" content="index,follow,max-image-preview:large">
-<link rel="preconnect" href="https://unpkg.com">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<style>
-  :root {
-    --ink: #0b2545;
-    --ink-2: #1e3a5f;
-    --muted: #5b6b85;
-    --line: #e3e8ef;
-    --bg: #ffffff;
-    --bg-2: #f6f8fb;
-    --accent: #0b6efd;
-    --good: #137333;
-    --warn: #a85b00;
-    --bad: #b3261e;
-    --radius: 10px;
-  }
-  * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    color: var(--ink);
-    background: var(--bg);
-    line-height: 1.55;
-    -webkit-font-smoothing: antialiased;
-  }
-  a { color: var(--accent); text-decoration: none; }
-  a:hover { text-decoration: underline; }
-  header.site {
-    border-bottom: 1px solid var(--line);
-    background: var(--bg);
-    position: sticky; top: 0; z-index: 50;
-  }
-  header.site .inner {
-    max-width: 1100px; margin: 0 auto; padding: 14px 20px;
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  header.site a.brand { color: var(--ink); font-weight: 700; letter-spacing: -0.01em; }
-  header.site nav a { margin-left: 18px; color: var(--ink-2); font-size: 14px; }
-  main { max-width: 1100px; margin: 0 auto; padding: 28px 20px 80px; }
-  .crumbs { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
-  .crumbs a { color: var(--muted); }
-  h1 { font-size: 32px; line-height: 1.2; margin: 0 0 8px; letter-spacing: -0.02em; }
-  .lede { color: var(--ink-2); font-size: 17px; max-width: 720px; }
-  .stamp { font-size: 12px; color: var(--muted); margin-top: 8px; }
-  .stamp .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--good); vertical-align: middle; margin-right: 6px; }
-  .grid-stats {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 12px; margin: 24px 0 8px;
-  }
-  .stat {
-    background: var(--bg-2); border: 1px solid var(--line);
-    border-radius: var(--radius); padding: 14px 16px;
-  }
-  .stat .v { font-size: 24px; font-weight: 700; color: var(--ink); }
-  .stat .l { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
-  section { margin-top: 36px; }
-  h2 { font-size: 22px; margin: 0 0 12px; letter-spacing: -0.01em; }
-  .twocol { display: grid; grid-template-columns: 1.4fr 1fr; gap: 28px; }
-  @media (max-width: 820px) { .twocol { grid-template-columns: 1fr; } }
-  table.schools { width: 100%; border-collapse: collapse; font-size: 14px; }
-  table.schools th, table.schools td {
-    text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line);
-  }
-  table.schools th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); font-weight: 600; }
-  .rating { font-weight: 600; }
-  .rating.Outstanding { color: var(--good); }
-  .rating.Good { color: var(--ink-2); }
-  .rating.RequiresImprovement, .rating.Requires { color: var(--warn); }
-  .rating.Inadequate { color: var(--bad); }
-  #map { height: 380px; border-radius: var(--radius); border: 1px solid var(--line); }
-  .pills { display: flex; flex-wrap: wrap; gap: 6px; }
-  .pill { background: var(--bg-2); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; font-size: 12px; color: var(--ink-2); }
-  details.faq { border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 8px; background: var(--bg); }
-  details.faq summary { cursor: pointer; font-weight: 600; color: var(--ink); }
-  details.faq[open] { background: var(--bg-2); }
-  footer { border-top: 1px solid var(--line); padding: 28px 20px; color: var(--muted); font-size: 13px; }
-  footer .inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 24px; flex-wrap: wrap; }
-  .sources { font-size: 13px; color: var(--muted); }
-  .sources a { color: var(--muted); text-decoration: underline; }
-  .cta {
-    display: inline-block; background: var(--ink); color: #fff; padding: 10px 14px;
-    border-radius: var(--radius); font-size: 14px; font-weight: 600;
-  }
-  .cta:hover { background: var(--ink-2); text-decoration: none; }
-</style>
-<script type="application/ld+json">
-[
-  {
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Schools in Hillingdon, London | Ofsted Ratings &amp; Results | London Schools Explorer</title>
+  <meta name="description" content="109 schools in Hillingdon, London. 11 Outstanding, 79 Good-rated by Ofsted. Compare admissions oversubscription, exam results and crime data. Free.">
+  <script type="application/ld+json">{
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "name": "Top schools in Hillingdon, London",
-    "itemListOrder": "http://schema.org/ItemListOrderDescending",
-    "numberOfItems": 14,
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "url": "https://londonschool.directory/schools/hillingdon/newnham-junior-school/",
-        "name": "Newnham Junior School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "url": "https://londonschool.directory/schools/hillingdon/hillingdon-primary-school/",
-        "name": "Hillingdon Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "url": "https://londonschool.directory/schools/hillingdon/lady-bankes-primary-school/",
-        "name": "Lady Bankes Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 4,
-        "url": "https://londonschool.directory/schools/hillingdon/the-breakspear-school/",
-        "name": "The Breakspear School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 5,
-        "url": "https://londonschool.directory/schools/hillingdon/deanesfield-primary-school/",
-        "name": "Deanesfield Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 6,
-        "url": "https://londonschool.directory/schools/hillingdon/sacred-heart-catholic-primary-school/",
-        "name": "Sacred Heart Catholic Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 7,
-        "url": "https://londonschool.directory/schools/hillingdon/john-locke-academy/",
-        "name": "John Locke Academy"
-      },
-      {
-        "@type": "ListItem",
-        "position": 8,
-        "url": "https://londonschool.directory/schools/hillingdon/ruislip-high-school/",
-        "name": "Ruislip High School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 9,
-        "url": "https://londonschool.directory/schools/hillingdon/barnhill-community-high-school/",
-        "name": "Barnhill Community High School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 10,
-        "url": "https://londonschool.directory/schools/hillingdon/landon-school-harmondsworth/",
-        "name": "Landon School Harmondsworth"
-      },
-      {
-        "@type": "ListItem",
-        "position": 11,
-        "url": "https://londonschool.directory/schools/hillingdon/bishop-ramsey-church-of-england-school/",
-        "name": "Bishop Ramsey Church of England School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 12,
-        "url": "https://londonschool.directory/schools/hillingdon/bishopshalt-school/",
-        "name": "Bishopshalt School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 13,
-        "url": "https://londonschool.directory/schools/hillingdon/guru-nanak-sikh-academy/",
-        "name": "Guru Nanak Sikh Academy"
-      },
-      {
-        "@type": "ListItem",
-        "position": 14,
-        "url": "https://londonschool.directory/schools/hillingdon/queensmead-school/",
-        "name": "Queensmead School"
-      }
-    ]
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How many schools are there in Hillingdon?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Hillingdon has 109 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 71 are primary, 34 are secondary, and the remainder are special, all-through, or post-16."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What proportion of Hillingdon schools are Outstanding?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "As of the latest Ofsted Management Information release, 11 schools in Hillingdon (10.1%) are rated Outstanding, and 82.6% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "When do I apply for a Reception or Year 7 place in Hillingdon?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Hillingdon's applications are coordinated by the local authority through the eAdmissions system. See our full Reception timeline guide."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How does the school appeals process work in Hillingdon?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "If you are refused your preferred school place, you have a statutory right of appeal. Hillingdon appeals are typically heard in May (Reception) and June\u2013July (secondary). See our appeals tracker for Hillingdon-level success rates by year."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How can I tell which Hillingdon schools are over-subscribed?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release."
-        }
-      }
-    ]
-  },
-  {
+    "name": "Schools in Hillingdon, London",
+    "description": "109 schools in Hillingdon, London rated by Ofsted",
+    "numberOfItems": 109,
+    "url": "https://londonschool.directory/schools/hillingdon"
+  }</script>
+  <script type="application/ld+json">{
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": "https://londonschool.directory/"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Boroughs",
-        "item": "https://londonschool.directory/schools/"
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "name": "Hillingdon",
-        "item": "https://londonschool.directory/schools/hillingdon/"
-      }
+      {"@type": "ListItem", "position": 1, "name": "London Schools Explorer", "item": "https://londonschool.directory/"},
+      {"@type": "ListItem", "position": 2, "name": "Schools in Hillingdon", "item": "https://londonschool.directory/schools/hillingdon"}
     ]
-  }
-]
-</script>
+  }</script>
+  <link rel="canonical" href="https://londonschool.directory/schools/hillingdon">
+  <meta property="og:title" content="Schools in Hillingdon | London Schools Explorer">
+  <meta property="og:description" content="109 schools in Hillingdon. 11 Outstanding-rated. Compare Ofsted ratings, exam results and admissions.">
+  <meta property="og:url" content="https://londonschool.directory/schools/hillingdon">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, sans-serif; color: #1a1a1a; background: #f8f9fa; line-height: 1.6; }
+    a { color: #1565C0; }
+    .topbar { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 12px 20px; }
+    .topbar a { text-decoration: none; font-weight: 600; color: #1a1a1a; font-size: 15px; }
+    .topbar span { color: #888; margin: 0 8px; }
+    .container { max-width: 900px; margin: 0 auto; padding: 32px 20px; }
+    h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+    .intro { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; font-size: 15px; color: #333; line-height: 1.7; }
+    .stats-row { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+    .stat-box { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 14px 18px; flex: 1; min-width: 120px; }
+    .stat-num { font-size: 24px; font-weight: 700; color: #1a1a1a; line-height: 1; }
+    .stat-lbl { font-size: 12px; color: #888; margin-top: 4px; }
+    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #e0e0e0; }
+    th { background: #f5f5f5; padding: 12px 16px; text-align: left; font-size: 13px; color: #555; font-weight: 600; border-bottom: 1px solid #e0e0e0; }
+    td { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fafafa; }
+    .back { display: inline-block; margin-bottom: 20px; font-size: 14px; color: #555; text-decoration: none; }
+    .back:hover { color: #111; }
+    footer { text-align: center; padding: 32px 20px; font-size: 13px; color: #888; }
+    @media (max-width: 600px) {
+      .container { padding: 16px 12px; }
+      h1 { font-size: 22px; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .intro { padding: 14px 16px; font-size: 14px; }
+      table { font-size: 13px; }
+      th, td { padding: 10px 10px; }
+      .topbar { padding: 10px 12px; font-size: 13px; }
+    }
+    @media (max-width: 600px) { .stats-row { flex-direction: column; } }
+  </style>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 </head>
 <body>
-<header class="site">
-  <div class="inner">
-    <a class="brand" href="/">London School Directory</a>
-    <nav>
-      <a href="/">Search</a>
-      <a href="/appeals.html">Appeals</a>
-      <a href="/methodology.html">Methodology</a>
-      <a href="/about.html">About</a>
-    </nav>
+<div class="topbar">
+  <div style="max-width:900px;margin:0 auto">
+    <a href="/">London Schools Explorer</a>
+    <span>/</span>
+    Hillingdon
   </div>
-</header>
-<main>
-  <div class="crumbs">
-    <a href="/">Home</a> &rsaquo; <a href="/schools/">Boroughs</a> &rsaquo; Hillingdon
+</div>
+<div class="container">
+  <a class="back" href="/">&#8592; All boroughs</a>
+  <h1>Schools in Hillingdon</h1>
+
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-num">109</div><div class="stat-lbl">Total schools</div></div>
+    <div class="stat-box"><div class="stat-num">11</div><div class="stat-lbl">Outstanding</div></div>
+    <div class="stat-box"><div class="stat-num">79</div><div class="stat-lbl">Good</div></div>
+    <div class="stat-box"><div class="stat-num">5</div><div class="stat-lbl">School phases</div></div>
   </div>
 
-  <h1>Schools in Hillingdon, London</h1>
-  <p class="lede">Hillingdon is the second-largest London borough by area and covers Uxbridge, Hayes, Ruislip, Northwood and Heathrow's edge. The borough has a mix of community, faith and academy schools, with some grammar provision. Reception demand is concentrated in the south of the borough.</p>
-  <p class="stamp"><span class="dot"></span>Data last verified 1 September 2026. Sources: Ofsted, DfE GIAS, DfE Performance Tables, Metropolitan Police, MHCLG IMD. See <a href="/sources.html">all sources</a>.</p>
+  <div class="intro">Hillingdon in west London includes areas ranging from urban Hayes and Southall through to the greener suburbs of Ruislip, Northwood and Uxbridge. The borough has a wide range of school types and several schools rated Outstanding. Proximity to Heathrow and good Crossrail links make it popular with commuting families.</div>
 
-  <section>
-    <div class="grid-stats">
-      <div class="stat"><div class="v">109</div><div class="l">Schools in Hillingdon</div></div>
-      <div class="stat"><div class="v">10.1%</div><div class="l">Outstanding Ofsted</div></div>
-      <div class="stat"><div class="v">82.6%</div><div class="l">Good or Outstanding</div></div>
-      <div class="stat"><div class="v">71</div><div class="l">Primary schools</div></div>
-      <div class="stat"><div class="v">34</div><div class="l">Secondary schools</div></div>
-      <div class="stat"><div class="v">13%</div><div class="l">Secondary appeal success (2024)</div></div>
-    </div>
-  </section>
+  
+<div style="display:flex;gap:16px;flex-wrap:wrap;margin:20px 0;">
 
-  <section>
-    <div class="twocol">
-      <div>
-        <h2>Top primary schools in Hillingdon</h2>
-        <p class="sources">Ranked by Ofsted rating, then by latest KS2 performance. See <a href="/methodology.html">methodology</a>.</p>
-        <table class="schools">
-          <thead>
-            <tr><th>School</th><th>Ofsted</th><th>KS2 %</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><a href="/schools/hillingdon/newnham-junior-school/">Newnham Junior School</a></td><td class="rating Outstanding">Outstanding</td><td>86.0</td></tr>
-            <tr><td><a href="/schools/hillingdon/hillingdon-primary-school/">Hillingdon Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>83.0</td></tr>
-            <tr><td><a href="/schools/hillingdon/lady-bankes-primary-school/">Lady Bankes Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>83.0</td></tr>
-            <tr><td><a href="/schools/hillingdon/the-breakspear-school/">The Breakspear School</a></td><td class="rating Outstanding">Outstanding</td><td>81.0</td></tr>
-            <tr><td><a href="/schools/hillingdon/deanesfield-primary-school/">Deanesfield Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>81.0</td></tr>
-            <tr><td><a href="/schools/hillingdon/sacred-heart-catholic-primary-school/">Sacred Heart Catholic Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>80.0</td></tr>
-            <tr><td><a href="/schools/hillingdon/john-locke-academy/">John Locke Academy</a></td><td class="rating Outstanding">Outstanding</td><td>66.0</td></tr>
-          </tbody>
-        </table>
-
-        <h2 style="margin-top:28px">Top secondary schools in Hillingdon</h2>
-        <p class="sources">Ranked by Ofsted rating, then by latest KS4 Attainment 8.</p>
-        <table class="schools">
-          <thead>
-            <tr><th>School</th><th>Ofsted</th><th>Att 8</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><a href="/schools/hillingdon/ruislip-high-school/">Ruislip High School</a></td><td class="rating Outstanding">Outstanding</td><td>53.8</td></tr>
-            <tr><td><a href="/schools/hillingdon/barnhill-community-high-school/">Barnhill Community High School</a></td><td class="rating Outstanding">Outstanding</td><td>53.2</td></tr>
-            <tr><td><a href="/schools/hillingdon/landon-school-harmondsworth/">Landon School Harmondsworth</a></td><td class="rating Outstanding">Outstanding</td><td>—</td></tr>
-            <tr><td><a href="/schools/hillingdon/bishop-ramsey-church-of-england-school/">Bishop Ramsey Church of England School</a></td><td class="rating Good">Good</td><td>57.0</td></tr>
-            <tr><td><a href="/schools/hillingdon/bishopshalt-school/">Bishopshalt School</a></td><td class="rating Good">Good</td><td>56.6</td></tr>
-            <tr><td><a href="/schools/hillingdon/guru-nanak-sikh-academy/">Guru Nanak Sikh Academy</a></td><td class="rating Good">Good</td><td>56.5</td></tr>
-            <tr><td><a href="/schools/hillingdon/queensmead-school/">Queensmead School</a></td><td class="rating Good">Good</td><td>56.4</td></tr>
-          </tbody>
-        </table>
-
-        <p style="margin-top:14px"><a class="cta" href="#all-schools">Jump to all 109 schools in Hillingdon</a></p>
-      </div>
-      <div>
-        <h2>Map</h2>
-        <div id="map" aria-label="Map of schools in Hillingdon"></div>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <h2>What the data says about Hillingdon</h2>
-    <p><strong>82.6%</strong> of Hillingdon schools are currently rated Good or Outstanding by Ofsted, compared with a London average of roughly 90% for primary and 80% for secondary. The average number of applications per place across Hillingdon is <strong>1.18</strong>, a useful indicator of how competitive local admissions are. The average number of recorded crime incidents within 500 metres of a school in Hillingdon over the most recent reporting month is <strong>69.52</strong>, drawn from the Metropolitan Police open data API. The mean IMD (Index of Multiple Deprivation) decile of Hillingdon's schools is <strong>5.56</strong> — 1 is most deprived, 10 is least deprived. All metrics on this page are recomputed from source data on the 15th of every month. See our <a href='/methodology.html'>methodology</a> for definitions and limitations.</p>
-  </section>
-
-  <section id="all-schools">
-    <h2>All schools in Hillingdon</h2>
-    <p class="sources">Every school in Hillingdon, listed alphabetically. Click any school for the full record.</p>
-    <table class="schools">
-      <thead>
-        <tr><th>School</th><th>Phase</th><th>Ofsted</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><a href="/schools/hillingdon/acs-hillingdon-international-school/">ACS Hillingdon International School</a></td><td>All-through</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/hillingdon/barnhill-community-high-school/">Barnhill Community High School</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/hillingdon/belmore-primary-academy/">Belmore Primary Academy</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/bishop-ramsey-church-of-england-school/">Bishop Ramsey Church of England School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/bishop-winnington-ingram-cofe-primary-school/">Bishop Winnington-Ingram CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/bishopshalt-school/">Bishopshalt School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/botwell-house-catholic-primary-school/">Botwell House Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/bourne-primary-school/">Bourne Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/brookside-primary-school/">Brookside Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/charville-academy/">Charville Academy</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/cherry-lane-primary-school/">Cherry Lane Primary School</a></td><td>Primary</td><td class="rating Requiresimprovement">Requires improvement</td></tr>
-        <tr><td><a href="/schools/hillingdon/colham-manor-primary-school/">Colham Manor Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/coteford-infant-school/">Coteford Infant School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/coteford-junior-school/">Coteford Junior School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/cowley-st-laurence-cofe-primary-school/">Cowley St Laurence CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/cranford-park-academy/">Cranford Park Academy</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/de-salis-studio-college/">De Salis Studio College</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/deanesfield-primary-school/">Deanesfield Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/hillingdon/dr-tripletts-cofe-primary-school/">Dr Triplett's CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/field-end-infant-school/">Field End Infant School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/field-end-junior-school/">Field End Junior School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/frithwood-primary-school/">Frithwood Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/glebe-primary-school/">Glebe Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/global-academy/">Global Academy</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/grand-union-village-school/">Grand Union Village School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/hillingdon/grange-park-school/">Grange Park School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/green-corridor/">Green Corridor</a></td><td>Sixth form</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/hillingdon/guru-nanak-sikh-academy/">Guru Nanak Sikh Academy</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/harefield-infant-and-junior-school/">Harefield Infant and Junior School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/harefield-school/">Harefield School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/harlington-school/">Harlington School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/harlyn-primary-school/">Harlyn Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/harmondsworth-primary-school/">Harmondsworth Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/haydon-school/">Haydon School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/hayes-park-school/">Hayes Park School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/heathrow-primary-school/">Heathrow Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/hedgewood-school/">Hedgewood School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/hermitage-primary-school/">Hermitage Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/hewens-college/">Hewens College</a></td><td>Secondary</td><td class="rating Requiresimprovement">Requires improvement</td></tr>
-        <tr><td><a href="/schools/hillingdon/hewens-primary-school/">Hewens Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/highfield-primary-school/">Highfield Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/hillingdon-manor-school/">Hillingdon Manor School</a></td><td>Secondary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/hillingdon/hillingdon-primary-school/">Hillingdon Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/hillingdon/hillside-infant-school/">Hillside Infant School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/hillside-junior-school/">Hillside Junior School</a></td><td>Primary</td><td class="rating Requiresimprovement">Requires improvement</td></tr>
-        <tr><td><a href="/schools/hillingdon/holy-trinity-cofe-primary-school/">Holy Trinity CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/john-locke-academy/">John Locke Academy</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/hillingdon/lady-bankes-primary-school/">Lady Bankes Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/hillingdon/lady-nafisa-school/">Lady Nafisa School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/lake-farm-park-academy/">Lake Farm Park Academy</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/landon-school-harmondsworth/">Landon School Harmondsworth</a></td><td>All-through</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/hillingdon/laurel-lane-primary-school/">Laurel Lane Primary School</a></td><td>Primary</td><td class="rating Requiresimprovement">Requires improvement</td></tr>
-        <tr><td><a href="/schools/hillingdon/london-school-of-theology/">London School of Theology</a></td><td>Sixth form</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/hillingdon/mcmillan-nursery-school/">McMillan Nursery School</a></td><td>Nursery</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/meadow-high-school/">Meadow High School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/minet-infant-and-nursery-school/">Minet Infant and Nursery School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/minet-junior-school/">Minet Junior School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/moorcroft-school/">Moorcroft School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/nanaksar-primary-school/">Nanaksar Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/newnham-infant-and-nursery-school/">Newnham Infant and Nursery School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/newnham-junior-school/">Newnham Junior School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/hillingdon/northwood-college-for-girls-gdst/">Northwood College for Girls GDST</a></td><td>All-through</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/hillingdon/northwood-school/">Northwood School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/oak-farm-primary-school/">Oak Farm Primary School</a></td><td>Primary</td><td class="rating Requiresimprovement">Requires improvement</td></tr>
-        <tr><td><a href="/schools/hillingdon/oak-wood-school/">Oak Wood School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/park-academy-west-london/">Park Academy West London</a></td><td>Secondary</td><td class="rating Requiresimprovement">Requires improvement</td></tr>
-        <tr><td><a href="/schools/hillingdon/parkside-studio-college/">Parkside Studio College</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/pentland-field-school/">Pentland Field School</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/pield-heath-house-rc-school/">Pield Heath House RC School</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/pinkwell-primary-school/">Pinkwell Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/pinn-river-school/">Pinn River School</a></td><td>—</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/hillingdon/queensmead-school/">Queensmead School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/rabbsfarm-primary-school/">Rabbsfarm Primary School</a></td><td>Primary</td><td class="rating Requiresimprovement">Requires improvement</td></tr>
-        <tr><td><a href="/schools/hillingdon/rosedale-college/">Rosedale College</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/rosedale-primary-school/">Rosedale Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/ruislip-gardens-primary-school/">Ruislip Gardens Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/ruislip-high-school/">Ruislip High School</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/hillingdon/ryefield-primary-school/">Ryefield Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/sacred-heart-catholic-primary-school/">Sacred Heart Catholic Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/hillingdon/st-andrews-c-of-e-primary-school/">St Andrew's C of E Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/st-bernadette-catholic-primary-school/">St Bernadette Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/st-catherine-catholic-primary-school/">St Catherine Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/st-helens-college/">St Helen's College</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/hillingdon/st-helens-school/">St Helen's School</a></td><td>All-through</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/hillingdon/st-johns-school/">St John's School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/hillingdon/st-martins-church-of-england-primary-school/">St Martin's Church of England Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/st-martins-school/">St Martin's School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/hillingdon/st-marys-catholic-primary-school/">St Mary's Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/st-matthews-cofe-primary-school/">St Matthew's CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/st-swithun-wells-catholic-primary-school/">St Swithun Wells Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/swakeleys-school-for-girls/">Swakeleys School for Girls</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/the-breakspear-school/">The Breakspear School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/hillingdon/the-douay-martyrs-catholic-school/">The Douay Martyrs Catholic School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/the-pride-academy/">The PRIDE Academy</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/the-skills-hub/">The Skills Hub</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/the-willows-school/">The Willows School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/hillingdon/utc-heathrow/">UTC Heathrow</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/uxbridge-high-school/">Uxbridge High School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/vyners-school/">Vyners School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/warrender-primary-school/">Warrender Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/west-drayton-academy/">West Drayton Academy</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/west-middlesex-college/">West Middlesex College</a></td><td>Sixth form</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/hillingdon/whitehall-junior-school/">Whitehall Junior School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/whiteheath-infant-nursery-school/">Whiteheath Infant & Nursery School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/whiteheath-junior-school/">Whiteheath Junior School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/william-byrd-primary-academy/">William Byrd Primary Academy</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/wood-end-park-academy/">Wood End Park Academy</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/yeading-infant-and-nursery-school/">Yeading Infant and Nursery School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/hillingdon/yeading-junior-school/">Yeading Junior School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <section>
-    <h2>Frequently asked</h2>
-    <details class="faq"><summary>How many schools are there in Hillingdon?</summary><p>Hillingdon has 109 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 71 are primary, 34 are secondary, and the remainder are special, all-through, or post-16.</p></details>
-<details class="faq"><summary>What proportion of Hillingdon schools are Outstanding?</summary><p>As of the latest Ofsted Management Information release, 11 schools in Hillingdon (10.1%) are rated Outstanding, and 82.6% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication.</p></details>
-<details class="faq"><summary>When do I apply for a Reception or Year 7 place in Hillingdon?</summary><p>Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Hillingdon's applications are coordinated by the local authority through the eAdmissions system. See our <a href='/guides/london-reception-application-timeline/'>full Reception timeline guide</a>.</p></details>
-<details class="faq"><summary>How does the school appeals process work in Hillingdon?</summary><p>If you are refused your preferred school place, you have a statutory right of appeal. Hillingdon appeals are typically heard in May (Reception) and June–July (secondary). See our <a href='/appeals.html'>appeals tracker</a> for Hillingdon-level success rates by year.</p></details>
-<details class="faq"><summary>How can I tell which Hillingdon schools are over-subscribed?</summary><p>Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release.</p></details>
-  </section>
-
-  <section>
-    <h2>Sources</h2>
-    <p class="sources">
-      School list and phase from <a href="https://get-information-schools.service.gov.uk/" rel="nofollow">DfE Get Information About Schools</a> (refreshed monthly).
-      Ofsted ratings from <a href="https://www.gov.uk/government/statistical-data-sets/monthly-management-information-ofsteds-school-inspections-outcomes" rel="nofollow">Ofsted Management Information</a> (refreshed monthly).
-      Performance data from <a href="https://explore-education-statistics.service.gov.uk/" rel="nofollow">DfE Explore Education Statistics</a>.
-      Crime data within 500m from the <a href="https://data.police.uk/" rel="nofollow">Metropolitan Police open data API</a>.
-      Deprivation deciles from <a href="https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019" rel="nofollow">MHCLG English Indices of Deprivation 2019</a>.
-      Read our full <a href="/methodology.html">methodology</a> for how each metric is calculated.
-    </p>
-  </section>
-</main>
-<footer>
-  <div class="inner">
-    <div>&copy; London School Directory. Independent. Free to use.</div>
-    <div><a href="/about.html">About</a> &middot; <a href="/methodology.html">Methodology</a> &middot; <a href="/sources.html">Sources</a> &middot; <a href="/appeals.html">Appeals</a></div>
-    <div>Browse by type: <a href="/schools/outstanding">Outstanding</a> &middot; <a href="/schools/good">Good</a> &middot; <a href="/schools/grammar">Grammar</a> &middot; <a href="/schools/selective">Selective</a> &middot; <a href="/schools/faith">Faith</a> &middot; <a href="/schools/primary">Primary</a> &middot; <a href="/schools/secondary">Secondary</a> &middot; <a href="/schools/sixth-form">Sixth form</a> &middot; <a href="/schools/independent">Private &amp; independent</a></div>
+<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fdf4ff 0%,#ede9fe 100%);
+     border:1px solid #d8b4fe;border-radius:12px;padding:14px 20px;">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+    <span style="font-size:22px;">🎓</span>
+    <strong style="font-size:15px;color:#5b21b6;">11+ &amp; 13+ Exam Prep</strong>
   </div>
-</footer>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
+    PiAcademy resources for grammar school entrance, SATs &amp; GCSE.
+    Use code <strong>THIERR25</strong> for 25% off.
+  </p>
+  <a href="https://piacademy.co.uk/?aff=28"
+     target="_blank" rel="noopener sponsored"
+     style="display:inline-block;padding:9px 18px;background:#7e22ce;color:#fff;
+            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
+    Get 25% OFF →
+  </a>
+  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
+</div>
+<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%);
+     border:1px solid #fcd34d;border-radius:12px;padding:14px 20px;">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+    <span style="font-size:22px;">📚</span>
+    <strong style="font-size:15px;color:#92400e;">Children's Books</strong>
+  </div>
+  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
+    Great books at low prices. At checkout, choose your school — Scholastic donates
+    <strong>20p for every £1 spent</strong> back to the school in free books.
+  </p>
+  <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&ued=https%3A%2F%2Fwww.scholastic.co.uk%2Fteachers"
+     target="_blank" rel="noopener sponsored"
+     style="display:inline-block;padding:9px 18px;background:#d97706;color:#fff;
+            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
+    Shop at Scholastic →
+  </a>
+  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
+</div>
+<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fff8f0 0%,#fff3e0 100%);
+     border:1px solid #fed7aa;border-radius:12px;padding:14px 20px;">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+    <span style="font-size:22px;">🛒</span>
+    <strong style="font-size:15px;color:#92400e;">School Supplies</strong>
+  </div>
+  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
+    Stationery, bags, PE kit, lunchboxes and more — fast delivery from Amazon.
+  </p>
+  <a href="https://www.amazon.co.uk/s?k=school+supplies+stationery&tag=londonparents-21"
+     target="_blank" rel="noopener sponsored"
+     style="display:inline-block;padding:9px 18px;background:#FF9900;color:#111;
+            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
+    Shop on Amazon →
+  </a>
+  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
+</div>
+</div>
+
+  <!-- Borough share buttons -->
+  <div style="display:flex;gap:10px;margin:16px 0 8px;flex-wrap:wrap;align-items:center;">
+    <span style="font-size:13px;color:#555;font-weight:600;">Share Hillingdon schools:</span>
+    <button onclick="shareBoroughWhatsApp()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 WhatsApp</button>
+    <button onclick="shareBoroughEmail()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#1565C0;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Email</button>
+    <span style="font-size:12px;color:#999;margin-left:4px;">Or tick schools below to share a shortlist</span>
+  </div>
+
+  <!-- Sticky compare bar (appears when schools are ticked) -->
+  <div id="cmp-bar" style="display:none;position:sticky;top:0;z-index:100;background:#1A1A2E;color:#fff;padding:12px 16px;border-radius:10px;margin-bottom:12px;display:none;align-items:center;gap:10px;flex-wrap:wrap;">
+    <span id="cmp-count" style="font-weight:700;font-size:14px;">0 schools selected</span>
+    <button onclick="shareCompareWhatsApp()" style="padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 Share via WhatsApp</button>
+    <button onclick="shareCompareEmail()" style="padding:8px 16px;background:#fff;color:#1A1A2E;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Share via Email</button>
+    <button onclick="clearSelection()" style="padding:8px 12px;background:transparent;color:#aaa;border:1px solid #555;border-radius:8px;font-size:12px;cursor:pointer;">✕ Clear</button>
+  </div>
+
+  <table>
+    <thead><tr><th style="width:36px"></th><th>School</th><th>Phase</th><th>Ofsted</th><th>Pupils</th></tr></thead>
+    <tbody><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="ACS Hillingdon International School"
+            data-ofsted="Not yet rated"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/acs-hillingdon-international-school"></td>
+          <td><a href="/schools/hillingdon/acs-hillingdon-international-school">ACS Hillingdon International School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>494</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Barnhill Community High School"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="53.2"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/barnhill-community-high-school"></td>
+          <td><a href="/schools/hillingdon/barnhill-community-high-school">Barnhill Community High School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>1537</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Belmore Primary Academy"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="75.0"
+            data-url="https://londonschool.directory/schools/hillingdon/belmore-primary-academy"></td>
+          <td><a href="/schools/hillingdon/belmore-primary-academy">Belmore Primary Academy</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>533</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Bishop Ramsey Church of England School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="57.0"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/bishop-ramsey-church-of-england-school"></td>
+          <td><a href="/schools/hillingdon/bishop-ramsey-church-of-england-school">Bishop Ramsey Church of England School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1218</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Bishop Winnington-Ingram CofE Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="81.0"
+            data-url="https://londonschool.directory/schools/hillingdon/bishop-winnington-ingram-cofe-primary-school"></td>
+          <td><a href="/schools/hillingdon/bishop-winnington-ingram-cofe-primary-school">Bishop Winnington-Ingram CofE Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>236</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Bishopshalt School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="56.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/bishopshalt-school"></td>
+          <td><a href="/schools/hillingdon/bishopshalt-school">Bishopshalt School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1239</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Botwell House Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="66.0"
+            data-url="https://londonschool.directory/schools/hillingdon/botwell-house-catholic-primary-school"></td>
+          <td><a href="/schools/hillingdon/botwell-house-catholic-primary-school">Botwell House Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>683</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Bourne Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="94.0"
+            data-url="https://londonschool.directory/schools/hillingdon/bourne-primary-school"></td>
+          <td><a href="/schools/hillingdon/bourne-primary-school">Bourne Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>203</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Brookside Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="72.0"
+            data-url="https://londonschool.directory/schools/hillingdon/brookside-primary-school"></td>
+          <td><a href="/schools/hillingdon/brookside-primary-school">Brookside Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>357</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Charville Academy"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="74.0"
+            data-url="https://londonschool.directory/schools/hillingdon/charville-academy"></td>
+          <td><a href="/schools/hillingdon/charville-academy">Charville Academy</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>441</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Cherry Lane Primary School"
+            data-ofsted="Requires improvement"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="58.0"
+            data-url="https://londonschool.directory/schools/hillingdon/cherry-lane-primary-school"></td>
+          <td><a href="/schools/hillingdon/cherry-lane-primary-school">Cherry Lane Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
+          <td>562</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Colham Manor Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="65.0"
+            data-url="https://londonschool.directory/schools/hillingdon/colham-manor-primary-school"></td>
+          <td><a href="/schools/hillingdon/colham-manor-primary-school">Colham Manor Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>627</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Coteford Infant School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/coteford-infant-school"></td>
+          <td><a href="/schools/hillingdon/coteford-infant-school">Coteford Infant School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>175</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Coteford Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="71.0"
+            data-url="https://londonschool.directory/schools/hillingdon/coteford-junior-school"></td>
+          <td><a href="/schools/hillingdon/coteford-junior-school">Coteford Junior School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>224</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Cowley St Laurence CofE Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="72.0"
+            data-url="https://londonschool.directory/schools/hillingdon/cowley-st-laurence-cofe-primary-school"></td>
+          <td><a href="/schools/hillingdon/cowley-st-laurence-cofe-primary-school">Cowley St Laurence CofE Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>395</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Cranford Park Academy"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="74.0"
+            data-url="https://londonschool.directory/schools/hillingdon/cranford-park-academy"></td>
+          <td><a href="/schools/hillingdon/cranford-park-academy">Cranford Park Academy</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>831</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="De Salis Studio College"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="48.0"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/de-salis-studio-college"></td>
+          <td><a href="/schools/hillingdon/de-salis-studio-college">De Salis Studio College</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>174</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Deanesfield Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="81.0"
+            data-url="https://londonschool.directory/schools/hillingdon/deanesfield-primary-school"></td>
+          <td><a href="/schools/hillingdon/deanesfield-primary-school">Deanesfield Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>684</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Dr Triplett's CofE Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="79.0"
+            data-url="https://londonschool.directory/schools/hillingdon/dr-tripletts-cofe-primary-school"></td>
+          <td><a href="/schools/hillingdon/dr-tripletts-cofe-primary-school">Dr Triplett's CofE Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>439</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Field End Infant School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/field-end-infant-school"></td>
+          <td><a href="/schools/hillingdon/field-end-infant-school">Field End Infant School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>265</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Field End Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="61.0"
+            data-url="https://londonschool.directory/schools/hillingdon/field-end-junior-school"></td>
+          <td><a href="/schools/hillingdon/field-end-junior-school">Field End Junior School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>254</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Frithwood Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="59.0"
+            data-url="https://londonschool.directory/schools/hillingdon/frithwood-primary-school"></td>
+          <td><a href="/schools/hillingdon/frithwood-primary-school">Frithwood Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>374</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Glebe Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="80.0"
+            data-url="https://londonschool.directory/schools/hillingdon/glebe-primary-school"></td>
+          <td><a href="/schools/hillingdon/glebe-primary-school">Glebe Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>619</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Global Academy"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="30.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/global-academy"></td>
+          <td><a href="/schools/hillingdon/global-academy">Global Academy</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>526</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Grand Union Village School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/grand-union-village-school"></td>
+          <td><a href="/schools/hillingdon/grand-union-village-school">Grand Union Village School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>99</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Grange Park School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="63.0"
+            data-url="https://londonschool.directory/schools/hillingdon/grange-park-school"></td>
+          <td><a href="/schools/hillingdon/grange-park-school">Grange Park School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>628</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Green Corridor"
+            data-ofsted="Not yet rated"
+            data-phase="Sixth form"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/green-corridor"></td>
+          <td><a href="/schools/hillingdon/green-corridor">Green Corridor</a></td>
+          <td>Sixth form</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>N/A</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Guru Nanak Sikh Academy"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8="56.5"
+            data-ks2="74.0"
+            data-url="https://londonschool.directory/schools/hillingdon/guru-nanak-sikh-academy"></td>
+          <td><a href="/schools/hillingdon/guru-nanak-sikh-academy">Guru Nanak Sikh Academy</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1553</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Harefield Infant and Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="58.0"
+            data-url="https://londonschool.directory/schools/hillingdon/harefield-infant-and-junior-school"></td>
+          <td><a href="/schools/hillingdon/harefield-infant-and-junior-school">Harefield Infant and Junior School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>207</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Harefield School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="34.8"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/harefield-school"></td>
+          <td><a href="/schools/hillingdon/harefield-school">Harefield School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>287</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Harlington School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="43.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/harlington-school"></td>
+          <td><a href="/schools/hillingdon/harlington-school">Harlington School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1409</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Harlyn Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="71.0"
+            data-url="https://londonschool.directory/schools/hillingdon/harlyn-primary-school"></td>
+          <td><a href="/schools/hillingdon/harlyn-primary-school">Harlyn Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>364</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Harmondsworth Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="61.0"
+            data-url="https://londonschool.directory/schools/hillingdon/harmondsworth-primary-school"></td>
+          <td><a href="/schools/hillingdon/harmondsworth-primary-school">Harmondsworth Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>213</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Haydon School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="49.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/haydon-school"></td>
+          <td><a href="/schools/hillingdon/haydon-school">Haydon School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1399</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hayes Park School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="77.0"
+            data-url="https://londonschool.directory/schools/hillingdon/hayes-park-school"></td>
+          <td><a href="/schools/hillingdon/hayes-park-school">Hayes Park School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>655</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Heathrow Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="67.0"
+            data-url="https://londonschool.directory/schools/hillingdon/heathrow-primary-school"></td>
+          <td><a href="/schools/hillingdon/heathrow-primary-school">Heathrow Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>396</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hedgewood School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/hedgewood-school"></td>
+          <td><a href="/schools/hillingdon/hedgewood-school">Hedgewood School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>185</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hermitage Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="69.0"
+            data-url="https://londonschool.directory/schools/hillingdon/hermitage-primary-school"></td>
+          <td><a href="/schools/hillingdon/hermitage-primary-school">Hermitage Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>426</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hewens College"
+            data-ofsted="Requires improvement"
+            data-phase="Secondary"
+            data-att8="39.8"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/hewens-college"></td>
+          <td><a href="/schools/hillingdon/hewens-college">Hewens College</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
+          <td>410</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hewens Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="28.0"
+            data-url="https://londonschool.directory/schools/hillingdon/hewens-primary-school"></td>
+          <td><a href="/schools/hillingdon/hewens-primary-school">Hewens Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>412</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Highfield Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="53.0"
+            data-url="https://londonschool.directory/schools/hillingdon/highfield-primary-school"></td>
+          <td><a href="/schools/hillingdon/highfield-primary-school">Highfield Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>254</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hillingdon Manor School"
+            data-ofsted="Not yet rated"
+            data-phase="Secondary"
+            data-att8="5.5"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/hillingdon-manor-school"></td>
+          <td><a href="/schools/hillingdon/hillingdon-manor-school">Hillingdon Manor School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>167</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hillingdon Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="83.0"
+            data-url="https://londonschool.directory/schools/hillingdon/hillingdon-primary-school"></td>
+          <td><a href="/schools/hillingdon/hillingdon-primary-school">Hillingdon Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>695</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hillside Infant School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/hillside-infant-school"></td>
+          <td><a href="/schools/hillingdon/hillside-infant-school">Hillside Infant School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>201</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hillside Junior School"
+            data-ofsted="Requires improvement"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="67.0"
+            data-url="https://londonschool.directory/schools/hillingdon/hillside-junior-school"></td>
+          <td><a href="/schools/hillingdon/hillside-junior-school">Hillside Junior School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
+          <td>210</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Holy Trinity CofE Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="88.0"
+            data-url="https://londonschool.directory/schools/hillingdon/holy-trinity-cofe-primary-school"></td>
+          <td><a href="/schools/hillingdon/holy-trinity-cofe-primary-school">Holy Trinity CofE Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>211</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="John Locke Academy"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="66.0"
+            data-url="https://londonschool.directory/schools/hillingdon/john-locke-academy"></td>
+          <td><a href="/schools/hillingdon/john-locke-academy">John Locke Academy</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>674</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Lady Bankes Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="83.0"
+            data-url="https://londonschool.directory/schools/hillingdon/lady-bankes-primary-school"></td>
+          <td><a href="/schools/hillingdon/lady-bankes-primary-school">Lady Bankes Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>653</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Lady Nafisa School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="52.5"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/lady-nafisa-school"></td>
+          <td><a href="/schools/hillingdon/lady-nafisa-school">Lady Nafisa School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>85</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Lake Farm Park Academy"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="73.0"
+            data-url="https://londonschool.directory/schools/hillingdon/lake-farm-park-academy"></td>
+          <td><a href="/schools/hillingdon/lake-farm-park-academy">Lake Farm Park Academy</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>658</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Landon School Harmondsworth"
+            data-ofsted="Outstanding"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/landon-school-harmondsworth"></td>
+          <td><a href="/schools/hillingdon/landon-school-harmondsworth">Landon School Harmondsworth</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>51</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Laurel Lane Primary School"
+            data-ofsted="Requires improvement"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="75.0"
+            data-url="https://londonschool.directory/schools/hillingdon/laurel-lane-primary-school"></td>
+          <td><a href="/schools/hillingdon/laurel-lane-primary-school">Laurel Lane Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
+          <td>267</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="London School of Theology"
+            data-ofsted="Not yet rated"
+            data-phase="Sixth form"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/london-school-of-theology"></td>
+          <td><a href="/schools/hillingdon/london-school-of-theology">London School of Theology</a></td>
+          <td>Sixth form</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>N/A</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="McMillan Nursery School"
+            data-ofsted="Good"
+            data-phase="Nursery"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/mcmillan-nursery-school"></td>
+          <td><a href="/schools/hillingdon/mcmillan-nursery-school">McMillan Nursery School</a></td>
+          <td>Nursery</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>138</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Meadow High School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="0.3"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/meadow-high-school"></td>
+          <td><a href="/schools/hillingdon/meadow-high-school">Meadow High School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>305</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Minet Infant and Nursery School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/minet-infant-and-nursery-school"></td>
+          <td><a href="/schools/hillingdon/minet-infant-and-nursery-school">Minet Infant and Nursery School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>400</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Minet Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="65.0"
+            data-url="https://londonschool.directory/schools/hillingdon/minet-junior-school"></td>
+          <td><a href="/schools/hillingdon/minet-junior-school">Minet Junior School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>348</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Moorcroft School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/moorcroft-school"></td>
+          <td><a href="/schools/hillingdon/moorcroft-school">Moorcroft School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>131</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Nanaksar Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/nanaksar-primary-school"></td>
+          <td><a href="/schools/hillingdon/nanaksar-primary-school">Nanaksar Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>253</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Newnham Infant and Nursery School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/newnham-infant-and-nursery-school"></td>
+          <td><a href="/schools/hillingdon/newnham-infant-and-nursery-school">Newnham Infant and Nursery School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>302</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Newnham Junior School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="86.0"
+            data-url="https://londonschool.directory/schools/hillingdon/newnham-junior-school"></td>
+          <td><a href="/schools/hillingdon/newnham-junior-school">Newnham Junior School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>350</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Northwood College for Girls GDST"
+            data-ofsted="Not yet rated"
+            data-phase="All-through"
+            data-att8="56.5"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/northwood-college-for-girls-gdst"></td>
+          <td><a href="/schools/hillingdon/northwood-college-for-girls-gdst">Northwood College for Girls GDST</a></td>
+          <td>All-through</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>814</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Northwood School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="53.9"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/northwood-school"></td>
+          <td><a href="/schools/hillingdon/northwood-school">Northwood School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1044</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Oak Farm Primary School"
+            data-ofsted="Requires improvement"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/oak-farm-primary-school"></td>
+          <td><a href="/schools/hillingdon/oak-farm-primary-school">Oak Farm Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
+          <td>N/A</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Oak Wood School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="36.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/oak-wood-school"></td>
+          <td><a href="/schools/hillingdon/oak-wood-school">Oak Wood School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1275</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Park Academy West London"
+            data-ofsted="Requires improvement"
+            data-phase="Secondary"
+            data-att8="39.1"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/park-academy-west-london"></td>
+          <td><a href="/schools/hillingdon/park-academy-west-london">Park Academy West London</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
+          <td>795</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Parkside Studio College"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="32.1"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/parkside-studio-college"></td>
+          <td><a href="/schools/hillingdon/parkside-studio-college">Parkside Studio College</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>64</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Pentland Field School"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/pentland-field-school"></td>
+          <td><a href="/schools/hillingdon/pentland-field-school">Pentland Field School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>176</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Pield Heath House RC School"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/pield-heath-house-rc-school"></td>
+          <td><a href="/schools/hillingdon/pield-heath-house-rc-school">Pield Heath House RC School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>96</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Pinkwell Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="33.0"
+            data-url="https://londonschool.directory/schools/hillingdon/pinkwell-primary-school"></td>
+          <td><a href="/schools/hillingdon/pinkwell-primary-school">Pinkwell Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>569</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Pinn River School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/pinn-river-school"></td>
+          <td><a href="/schools/hillingdon/pinn-river-school">Pinn River School</a></td>
+          <td>N/A</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>115</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Queensmead School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="56.4"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/queensmead-school"></td>
+          <td><a href="/schools/hillingdon/queensmead-school">Queensmead School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1502</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Rabbsfarm Primary School"
+            data-ofsted="Requires improvement"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="70.0"
+            data-url="https://londonschool.directory/schools/hillingdon/rabbsfarm-primary-school"></td>
+          <td><a href="/schools/hillingdon/rabbsfarm-primary-school">Rabbsfarm Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
+          <td>616</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Rosedale College"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="55.7"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/rosedale-college"></td>
+          <td><a href="/schools/hillingdon/rosedale-college">Rosedale College</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>940</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Rosedale Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="88.0"
+            data-url="https://londonschool.directory/schools/hillingdon/rosedale-primary-school"></td>
+          <td><a href="/schools/hillingdon/rosedale-primary-school">Rosedale Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>402</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Ruislip Gardens Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="67.0"
+            data-url="https://londonschool.directory/schools/hillingdon/ruislip-gardens-primary-school"></td>
+          <td><a href="/schools/hillingdon/ruislip-gardens-primary-school">Ruislip Gardens Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>287</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Ruislip High School"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="53.8"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/ruislip-high-school"></td>
+          <td><a href="/schools/hillingdon/ruislip-high-school">Ruislip High School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>1311</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Ryefield Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="62.0"
+            data-url="https://londonschool.directory/schools/hillingdon/ryefield-primary-school"></td>
+          <td><a href="/schools/hillingdon/ryefield-primary-school">Ryefield Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>394</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Sacred Heart Catholic Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="80.0"
+            data-url="https://londonschool.directory/schools/hillingdon/sacred-heart-catholic-primary-school"></td>
+          <td><a href="/schools/hillingdon/sacred-heart-catholic-primary-school">Sacred Heart Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>642</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Andrew's C of E Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="45.0"
+            data-url="https://londonschool.directory/schools/hillingdon/st-andrews-c-of-e-primary-school"></td>
+          <td><a href="/schools/hillingdon/st-andrews-c-of-e-primary-school">St Andrew's C of E Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>197</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Bernadette Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/st-bernadette-catholic-primary-school"></td>
+          <td><a href="/schools/hillingdon/st-bernadette-catholic-primary-school">St Bernadette Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>414</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Catherine Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="88.0"
+            data-url="https://londonschool.directory/schools/hillingdon/st-catherine-catholic-primary-school"></td>
+          <td><a href="/schools/hillingdon/st-catherine-catholic-primary-school">St Catherine Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>235</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Helen's College"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/st-helens-college"></td>
+          <td><a href="/schools/hillingdon/st-helens-college">St Helen's College</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>353</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Helen's School"
+            data-ofsted="Not yet rated"
+            data-phase="All-through"
+            data-att8="78.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/st-helens-school"></td>
+          <td><a href="/schools/hillingdon/st-helens-school">St Helen's School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>1097</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St John's School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/st-johns-school"></td>
+          <td><a href="/schools/hillingdon/st-johns-school">St John's School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>266</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Martin's Church of England Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="50.0"
+            data-url="https://londonschool.directory/schools/hillingdon/st-martins-church-of-england-primary-school"></td>
+          <td><a href="/schools/hillingdon/st-martins-church-of-england-primary-school">St Martin's Church of England Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>206</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Martin's School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/st-martins-school"></td>
+          <td><a href="/schools/hillingdon/st-martins-school">St Martin's School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>337</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Mary's Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="83.0"
+            data-url="https://londonschool.directory/schools/hillingdon/st-marys-catholic-primary-school"></td>
+          <td><a href="/schools/hillingdon/st-marys-catholic-primary-school">St Mary's Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>235</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Matthew's CofE Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="53.0"
+            data-url="https://londonschool.directory/schools/hillingdon/st-matthews-cofe-primary-school"></td>
+          <td><a href="/schools/hillingdon/st-matthews-cofe-primary-school">St Matthew's CofE Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>399</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Swithun Wells Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="72.0"
+            data-url="https://londonschool.directory/schools/hillingdon/st-swithun-wells-catholic-primary-school"></td>
+          <td><a href="/schools/hillingdon/st-swithun-wells-catholic-primary-school">St Swithun Wells Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>231</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Swakeleys School for Girls"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="53.4"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/swakeleys-school-for-girls"></td>
+          <td><a href="/schools/hillingdon/swakeleys-school-for-girls">Swakeleys School for Girls</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1404</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Breakspear School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="81.0"
+            data-url="https://londonschool.directory/schools/hillingdon/the-breakspear-school"></td>
+          <td><a href="/schools/hillingdon/the-breakspear-school">The Breakspear School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>680</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Douay Martyrs Catholic School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="52.0"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/the-douay-martyrs-catholic-school"></td>
+          <td><a href="/schools/hillingdon/the-douay-martyrs-catholic-school">The Douay Martyrs Catholic School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1398</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The PRIDE Academy"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="1.0"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/the-pride-academy"></td>
+          <td><a href="/schools/hillingdon/the-pride-academy">The PRIDE Academy</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>126</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Skills Hub"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/the-skills-hub"></td>
+          <td><a href="/schools/hillingdon/the-skills-hub">The Skills Hub</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>48</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Willows School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="26.0"
+            data-url="https://londonschool.directory/schools/hillingdon/the-willows-school"></td>
+          <td><a href="/schools/hillingdon/the-willows-school">The Willows School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>106</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="UTC Heathrow"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="39.4"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/utc-heathrow"></td>
+          <td><a href="/schools/hillingdon/utc-heathrow">UTC Heathrow</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>240</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Uxbridge High School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="44.9"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/uxbridge-high-school"></td>
+          <td><a href="/schools/hillingdon/uxbridge-high-school">Uxbridge High School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1329</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Vyners School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="53.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/vyners-school"></td>
+          <td><a href="/schools/hillingdon/vyners-school">Vyners School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1537</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Warrender Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="76.0"
+            data-url="https://londonschool.directory/schools/hillingdon/warrender-primary-school"></td>
+          <td><a href="/schools/hillingdon/warrender-primary-school">Warrender Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>441</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="West Drayton Academy"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="70.0"
+            data-url="https://londonschool.directory/schools/hillingdon/west-drayton-academy"></td>
+          <td><a href="/schools/hillingdon/west-drayton-academy">West Drayton Academy</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>649</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="West Middlesex College"
+            data-ofsted="Not yet rated"
+            data-phase="Sixth form"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/west-middlesex-college"></td>
+          <td><a href="/schools/hillingdon/west-middlesex-college">West Middlesex College</a></td>
+          <td>Sixth form</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>N/A</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Whitehall Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="63.0"
+            data-url="https://londonschool.directory/schools/hillingdon/whitehall-junior-school"></td>
+          <td><a href="/schools/hillingdon/whitehall-junior-school">Whitehall Junior School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>408</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Whiteheath Infant & Nursery School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/whiteheath-infant-nursery-school"></td>
+          <td><a href="/schools/hillingdon/whiteheath-infant-nursery-school">Whiteheath Infant & Nursery School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>235</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Whiteheath Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="80.0"
+            data-url="https://londonschool.directory/schools/hillingdon/whiteheath-junior-school"></td>
+          <td><a href="/schools/hillingdon/whiteheath-junior-school">Whiteheath Junior School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>274</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="William Byrd Primary Academy"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="66.0"
+            data-url="https://londonschool.directory/schools/hillingdon/william-byrd-primary-academy"></td>
+          <td><a href="/schools/hillingdon/william-byrd-primary-academy">William Byrd Primary Academy</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>596</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Wood End Park Academy"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="72.0"
+            data-url="https://londonschool.directory/schools/hillingdon/wood-end-park-academy"></td>
+          <td><a href="/schools/hillingdon/wood-end-park-academy">Wood End Park Academy</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>846</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Yeading Infant and Nursery School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/hillingdon/yeading-infant-and-nursery-school"></td>
+          <td><a href="/schools/hillingdon/yeading-infant-and-nursery-school">Yeading Infant and Nursery School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>453</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Yeading Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="62.0"
+            data-url="https://londonschool.directory/schools/hillingdon/yeading-junior-school"></td>
+          <td><a href="/schools/hillingdon/yeading-junior-school">Yeading Junior School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>422</td>
+        </tr></tbody>
+  </table>
+</div>
+<footer><a href="/">London Schools Explorer</a> &mdash; helping families find the right school in London.<p style="margin-top:10px">Browse by type: <a href="/schools/outstanding">Outstanding</a> &middot; <a href="/schools/good">Good</a> &middot; <a href="/schools/grammar">Grammar</a> &middot; <a href="/schools/selective">Selective</a> &middot; <a href="/schools/faith">Faith</a> &middot; <a href="/schools/primary">Primary</a> &middot; <a href="/schools/secondary">Secondary</a> &middot; <a href="/schools/sixth-form">Sixth form</a> &middot; <a href="/schools/independent">Private &amp; independent</a></p></footer>
+<script defer src="/_vercel/insights/script.js"></script>
 <script>
-  (function() {
-    var points = [[51.517623, -0.438523, "/schools/hillingdon/mcmillan-nursery-school/", "McMillan Nursery School"], [51.553339, -0.394489, "/schools/hillingdon/bourne-primary-school/", "Bourne Primary School"], [51.569925, -0.451651, "/schools/hillingdon/the-breakspear-school/", "The Breakspear School"], [51.523, -0.457511, "/schools/hillingdon/colham-manor-primary-school/", "Colham Manor Primary School"], [51.584085, -0.410423, "/schools/hillingdon/coteford-infant-school/", "Coteford Infant School"], [51.55933, -0.3907, "/schools/hillingdon/deanesfield-primary-school/", "Deanesfield Primary School"], [51.566454, -0.388226, "/schools/hillingdon/field-end-infant-school/", "Field End Infant School"], [51.558791, -0.437286, "/schools/hillingdon/glebe-primary-school/", "Glebe Primary School"], [51.604557, -0.483556, "/schools/hillingdon/harefield-infant-and-junior-school/", "Harefield Infant and Junior School"], [51.596268, -0.401002, "/schools/hillingdon/harlyn-primary-school/", "Harlyn Primary School"], [51.487185, -0.48106, "/schools/hillingdon/harmondsworth-primary-school/", "Harmondsworth Primary School"], [51.489904, -0.459262, "/schools/hillingdon/heathrow-primary-school/", "Heathrow Primary School"], [51.57092, -0.406452, "/schools/hillingdon/lady-bankes-primary-school/", "Lady Bankes Primary School"], [51.511696, -0.409053, "/schools/hillingdon/minet-junior-school/", "Minet Junior School"], [51.511696, -0.409053, "/schools/hillingdon/minet-infant-and-nursery-school/", "Minet Infant and Nursery School"], [51.573654, -0.393224, "/schools/hillingdon/newnham-junior-school/", "Newnham Junior School"], [51.573654, -0.393224, "/schools/hillingdon/newnham-infant-and-nursery-school/", "Newnham Infant and Nursery School"], [51.539552, -0.481421, "/schools/hillingdon/whitehall-junior-school/", "Whitehall Junior School"], [51.579203, -0.440613, "/schools/hillingdon/whiteheath-junior-school/", "Whiteheath Junior School"], [51.522381, -0.39859, "/schools/hillingdon/yeading-junior-school/", "Yeading Junior School"], [51.522381, -0.39859, "/schools/hillingdon/yeading-infant-and-nursery-school/", "Yeading Infant and Nursery School"], [51.534571, -0.445138, "/schools/hillingdon/highfield-primary-school/", "Highfield Primary School"], [51.516688, -0.473347, "/schools/hillingdon/rabbsfarm-primary-school/", "Rabbsfarm Primary School"], [51.576772, -0.41355, "/schools/hillingdon/warrender-primary-school/", "Warrender Primary School"], [51.581169, -0.441036, "/schools/hillingdon/whiteheath-infant-nursery-school/", "Whiteheath Infant & Nursery School"], [51.613659, -0.418243, "/schools/hillingdon/frithwood-primary-school/", "Frithwood Primary School"], [51.562307, -0.419189, "/schools/hillingdon/ruislip-gardens-primary-school/", "Ruislip Gardens Primary School"], [51.577123, -0.433656, "/schools/hillingdon/bishop-winnington-ingram-cofe-primary-school/", "Bishop Winnington-Ingram CofE Primary School"], [51.614155, -0.437147, "/schools/hillingdon/holy-trinity-cofe-primary-school/", "Holy Trinity CofE Primary School"], [51.51726, -0.416152, "/schools/hillingdon/dr-tripletts-cofe-primary-school/", "Dr Triplett's CofE Primary School"], [51.56415, -0.392045, "/schools/hillingdon/st-swithun-wells-catholic-primary-school/", "St Swithun Wells Catholic Primary School"], [51.507422, -0.419491, "/schools/hillingdon/botwell-house-catholic-primary-school/", "Botwell House Catholic Primary School"], [51.503882, -0.478832, "/schools/hillingdon/st-catherine-catholic-primary-school/", "St Catherine Catholic Primary School"], [51.543767, -0.486847, "/schools/hillingdon/st-marys-catholic-primary-school/", "St Mary's Catholic Primary School"], [51.567766, -0.424555, "/schools/hillingdon/sacred-heart-catholic-primary-school/", "Sacred Heart Catholic Primary School"], [51.526766, -0.417567, "/schools/hillingdon/grange-park-school/", "Grange Park School"], [51.607641, -0.410726, "/schools/hillingdon/hillside-infant-school/", "Hillside Infant School"], [51.607641, -0.410726, "/schools/hillingdon/hillside-junior-school/", "Hillside Junior School"], [51.542605, -0.474873, "/schools/hillingdon/st-andrews-c-of-e-primary-school/", "St Andrew's C of E Primary School"], [51.528673, -0.420961, "/schools/hillingdon/hayes-park-school/", "Hayes Park School"], [51.540274, -0.443934, "/schools/hillingdon/oak-wood-school/", "Oak Wood School"], [51.497112, -0.436501, "/schools/hillingdon/harlington-school/", "Harlington School"], [51.60986, -0.42798, "/schools/hillingdon/northwood-college-for-girls-gdst/", "Northwood College for Girls GDST"], [51.613591, -0.422521, "/schools/hillingdon/st-helens-school/", "St Helen's School"], [51.616613, -0.432007, "/schools/hillingdon/st-martins-school/", "St Martin's School"], [51.546055, -0.451294, "/schools/hillingdon/st-helens-college/", "St Helen's College"], [51.612279, -0.404628, "/schools/hillingdon/st-johns-school/", "St John's School"], [51.542588, -0.46253, "/schools/hillingdon/acs-hillingdon-international-school/", "ACS Hillingdon International School"], [51.524936, -0.465244, "/schools/hillingdon/meadow-high-school/", "Meadow High School"], [51.528025, -0.466351, "/schools/hillingdon/pield-heath-house-rc-school/", "Pield Heath House RC School"], [51.534076, -0.424883, "/schools/hillingdon/hedgewood-school/", "Hedgewood School"], [51.497164, -0.460846, "/schools/hillingdon/cherry-lane-primary-school/", "Cherry Lane Primary School"], [51.52347, -0.449509, "/schools/hillingdon/hillingdon-manor-school/", "Hillingdon Manor School"], [51.539553, -0.493332, "/schools/hillingdon/west-middlesex-college/", "West Middlesex College"], [51.61295, -0.431729, "/schools/hillingdon/london-school-of-theology/", "London School of Theology"], [51.605815, -0.475153, "/schools/hillingdon/harefield-school/", "Harefield School"], [51.489645, -0.455943, "/schools/hillingdon/lady-nafisa-school/", "Lady Nafisa School"], [51.508768, -0.398045, "/schools/hillingdon/guru-nanak-sikh-academy/", "Guru Nanak Sikh Academy"], [51.594858, -0.413093, "/schools/hillingdon/haydon-school/", "Haydon School"], [51.537312, -0.445045, "/schools/hillingdon/swakeleys-school-for-girls/", "Swakeleys School for Girls"], [51.557592, -0.389218, "/schools/hillingdon/queensmead-school/", "Queensmead School"], [51.537408, -0.472856, "/schools/hillingdon/uxbridge-high-school/", "Uxbridge High School"], [51.519989, -0.429189, "/schools/hillingdon/rosedale-college/", "Rosedale College"], [51.528936, -0.439953, "/schools/hillingdon/hewens-college/", "Hewens College"], [51.579096, -0.408562, "/schools/hillingdon/bishop-ramsey-church-of-england-school/", "Bishop Ramsey Church of England School"], [51.532528, -0.459957, "/schools/hillingdon/bishopshalt-school/", "Bishopshalt School"], [51.558489, -0.46208, "/schools/hillingdon/vyners-school/", "Vyners School"], [51.526557, -0.387718, "/schools/hillingdon/the-willows-school/", "The Willows School"], [51.601791, -0.407032, "/schools/hillingdon/northwood-school/", "Northwood School"], [51.530415, -0.398871, "/schools/hillingdon/barnhill-community-high-school/", "Barnhill Community High School"], [51.559965, -0.444416, "/schools/hillingdon/the-douay-martyrs-catholic-school/", "The Douay Martyrs Catholic School"], [51.521615, -0.460267, "/schools/hillingdon/moorcroft-school/", "Moorcroft School"], [51.519989, -0.429189, "/schools/hillingdon/parkside-studio-college/", "Parkside Studio College"], [51.495483, -0.419659, "/schools/hillingdon/cranford-park-academy/", "Cranford Park Academy"], [51.517623, -0.438523, "/schools/hillingdon/wood-end-park-academy/", "Wood End Park Academy"], [51.531773, -0.401519, "/schools/hillingdon/belmore-primary-academy/", "Belmore Primary Academy"], [51.530569, -0.396357, "/schools/hillingdon/brookside-primary-school/", "Brookside Primary School"], [51.49925, -0.471826, "/schools/hillingdon/laurel-lane-primary-school/", "Laurel Lane Primary School"], [51.587637, -0.411713, "/schools/hillingdon/coteford-junior-school/", "Coteford Junior School"], [51.512833, -0.473562, "/schools/hillingdon/st-matthews-cofe-primary-school/", "St Matthew's CofE Primary School"], [51.526129, -0.479504, "/schools/hillingdon/cowley-st-laurence-cofe-primary-school/", "Cowley St Laurence CofE Primary School"], [51.536024, -0.428637, "/schools/hillingdon/charville-academy/", "Charville Academy"], [51.528936, -0.439953, "/schools/hillingdon/hewens-primary-school/", "Hewens Primary School"], [51.508768, -0.398045, "/schools/hillingdon/nanaksar-primary-school/", "Nanaksar Primary School"], [51.546227, -0.467858, "/schools/hillingdon/john-locke-academy/", "John Locke Academy"], [51.51266, -0.425838, "/schools/hillingdon/lake-farm-park-academy/", "Lake Farm Park Academy"], [51.497017, -0.473659, "/schools/hillingdon/st-martins-church-of-england-primary-school/", "St Martin's Church of England Primary School"], [51.498539, -0.439709, "/schools/hillingdon/pinkwell-primary-school/", "Pinkwell Primary School"], [51.564738, -0.408111, "/schools/hillingdon/ruislip-high-school/", "Ruislip High School"], [51.528936, -0.439953, "/schools/hillingdon/de-salis-studio-college/", "De Salis Studio College"], [51.531259, -0.451681, "/schools/hillingdon/hillingdon-primary-school/", "Hillingdon Primary School"], [51.519989, -0.429189, "/schools/hillingdon/rosedale-primary-school/", "Rosedale Primary School"], [51.566145, -0.439184, "/schools/hillingdon/pentland-field-school/", "Pentland Field School"], [51.542392, -0.437531, "/schools/hillingdon/ryefield-primary-school/", "Ryefield Primary School"], [51.504764, -0.427104, "/schools/hillingdon/global-academy/", "Global Academy"], [51.517012, -0.471981, "/schools/hillingdon/the-pride-academy/", "The PRIDE Academy"], [51.490647, -0.436579, "/schools/hillingdon/william-byrd-primary-academy/", "William Byrd Primary Academy"], [51.50525, -0.466467, "/schools/hillingdon/west-drayton-academy/", "West Drayton Academy"], [51.518835, -0.460822, "/schools/hillingdon/park-academy-west-london/", "Park Academy West London"], [51.459954, -0.494804, "/schools/hillingdon/green-corridor/", "Green Corridor"], [51.60308, -0.406655, "/schools/hillingdon/utc-heathrow/", "UTC Heathrow"], [51.566454, -0.388226, "/schools/hillingdon/field-end-junior-school/", "Field End Junior School"], [51.549654, -0.473426, "/schools/hillingdon/hermitage-primary-school/", "Hermitage Primary School"], [51.517012, -0.471981, "/schools/hillingdon/the-skills-hub/", "The Skills Hub"], [51.539642, -0.451209, "/schools/hillingdon/st-bernadette-catholic-primary-school/", "St Bernadette Catholic Primary School"], [51.528428, -0.3819, "/schools/hillingdon/grand-union-village-school/", "Grand Union Village School"], [51.587637, -0.411713, "/schools/hillingdon/pinn-river-school/", "Pinn River School"], [51.544015, -0.448695, "/schools/hillingdon/oak-farm-primary-school/", "Oak Farm Primary School"]];
-    if (!points.length) return;
-    var lats = points.map(function(p) { return p[0]; });
-    var lngs = points.map(function(p) { return p[1]; });
-    var avgLat = lats.reduce(function(a,b) { return a+b; }, 0) / lats.length;
-    var avgLng = lngs.reduce(function(a,b) { return a+b; }, 0) / lngs.length;
-    var map = L.map('map', { scrollWheelZoom: false }).setView([avgLat, avgLng], 12);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 18,
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-    points.forEach(function(p) {
-      L.circleMarker([p[0], p[1]], {
-        radius: 5, color: '#0b2545', fillColor: '#0b6efd', fillOpacity: 0.8, weight: 1
-      }).addTo(map).bindPopup('<a href="' + p[2] + '">' + p[3] + '</a>');
+(function(){
+  var borough="Hillingdon", boroughUrl="https://londonschool.directory/schools/hillingdon";
+  var outstanding=11, total=109;
+
+  // Borough-level share
+  window.shareBoroughWhatsApp=function(){
+    var t='🏙️ *Schools in '+borough+', London*\n'+
+        '📊 '+total+' schools · '+outstanding+' Outstanding\n\n'+
+        '🔗 '+boroughUrl;
+    window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank');
+  };
+  window.shareBoroughEmail=function(){
+    var s='Schools in '+borough+' — London Schools Explorer';
+    var b='Schools in '+borough+', London\n'+
+        total+' schools, '+outstanding+' rated Outstanding by Ofsted\n\n'+
+        'Browse them here: '+boroughUrl;
+    window.location.href='mailto:?subject='+encodeURIComponent(s)+'&body='+encodeURIComponent(b);
+  };
+
+  // Shortlist comparison share
+  function getSelected(){
+    return Array.from(document.querySelectorAll('.sch-sel:checked')).map(function(cb){
+      return {name:cb.dataset.name,ofsted:cb.dataset.ofsted,phase:cb.dataset.phase,
+               att8:cb.dataset.att8,ks2:cb.dataset.ks2,url:cb.dataset.url};
     });
-  })();
+  }
+  function updateBar(){
+    var sel=getSelected();
+    var bar=document.getElementById('cmp-bar');
+    document.getElementById('cmp-count').textContent=sel.length+' school'+(sel.length===1?'':' s')+' selected';
+    bar.style.display=sel.length>0?'flex':'none';
+  }
+  document.querySelectorAll('.sch-sel').forEach(function(cb){ cb.onchange=updateBar; });
+
+  function buildCompareText(sel,markdown){
+    var lines=['📋 *My '+borough+' school shortlist*',''];
+    sel.forEach(function(s,i){
+      lines.push((i+1)+'. '+(markdown?'*':'')+s.name+(markdown?'*':''));
+      lines.push('   ⭐ Ofsted: '+s.ofsted+(s.phase?' · '+s.phase:''));
+      if(s.att8)lines.push('   📊 Attainment 8: '+s.att8);
+      if(s.ks2)lines.push('   📝 KS2 expected: '+s.ks2+'%');
+      lines.push('   🔗 '+s.url);
+      lines.push('');
+    });
+    lines.push('via London Schools Explorer — '+boroughUrl);
+    return lines.join('\n');
+  }
+  window.shareCompareWhatsApp=function(){
+    var sel=getSelected();
+    if(!sel.length)return;
+    window.open('https://wa.me/?text='+encodeURIComponent(buildCompareText(sel,true)),'_blank');
+  };
+  window.shareCompareEmail=function(){
+    var sel=getSelected();
+    if(!sel.length)return;
+    var subj='My '+borough+' school shortlist — London Schools Explorer';
+    window.location.href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(buildCompareText(sel,false));
+  };
+  window.clearSelection=function(){
+    document.querySelectorAll('.sch-sel:checked').forEach(function(cb){cb.checked=false;});
+    updateBar();
+  };
+})();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/sw.js').catch(function () {});
+  });
+}
 </script>
 </body>
 </html>

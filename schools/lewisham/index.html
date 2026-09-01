@@ -1,511 +1,1391 @@
-<!doctype html>
-<html lang="en-GB">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Schools in Lewisham, London — Ofsted, Performance & Admissions</title>
-<meta name="description" content="All 96 schools in Lewisham, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
-<link rel="canonical" href="https://londonschool.directory/schools/lewisham/">
-<meta property="og:title" content="Schools in Lewisham, London — Ofsted, Performance & Admissions">
-<meta property="og:description" content="All 96 schools in Lewisham, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://londonschool.directory/schools/lewisham/">
-<meta property="og:site_name" content="London School Directory">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#0b2545">
-<meta name="robots" content="index,follow,max-image-preview:large">
-<link rel="preconnect" href="https://unpkg.com">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<style>
-  :root {
-    --ink: #0b2545;
-    --ink-2: #1e3a5f;
-    --muted: #5b6b85;
-    --line: #e3e8ef;
-    --bg: #ffffff;
-    --bg-2: #f6f8fb;
-    --accent: #0b6efd;
-    --good: #137333;
-    --warn: #a85b00;
-    --bad: #b3261e;
-    --radius: 10px;
-  }
-  * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    color: var(--ink);
-    background: var(--bg);
-    line-height: 1.55;
-    -webkit-font-smoothing: antialiased;
-  }
-  a { color: var(--accent); text-decoration: none; }
-  a:hover { text-decoration: underline; }
-  header.site {
-    border-bottom: 1px solid var(--line);
-    background: var(--bg);
-    position: sticky; top: 0; z-index: 50;
-  }
-  header.site .inner {
-    max-width: 1100px; margin: 0 auto; padding: 14px 20px;
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  header.site a.brand { color: var(--ink); font-weight: 700; letter-spacing: -0.01em; }
-  header.site nav a { margin-left: 18px; color: var(--ink-2); font-size: 14px; }
-  main { max-width: 1100px; margin: 0 auto; padding: 28px 20px 80px; }
-  .crumbs { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
-  .crumbs a { color: var(--muted); }
-  h1 { font-size: 32px; line-height: 1.2; margin: 0 0 8px; letter-spacing: -0.02em; }
-  .lede { color: var(--ink-2); font-size: 17px; max-width: 720px; }
-  .stamp { font-size: 12px; color: var(--muted); margin-top: 8px; }
-  .stamp .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--good); vertical-align: middle; margin-right: 6px; }
-  .grid-stats {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 12px; margin: 24px 0 8px;
-  }
-  .stat {
-    background: var(--bg-2); border: 1px solid var(--line);
-    border-radius: var(--radius); padding: 14px 16px;
-  }
-  .stat .v { font-size: 24px; font-weight: 700; color: var(--ink); }
-  .stat .l { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
-  section { margin-top: 36px; }
-  h2 { font-size: 22px; margin: 0 0 12px; letter-spacing: -0.01em; }
-  .twocol { display: grid; grid-template-columns: 1.4fr 1fr; gap: 28px; }
-  @media (max-width: 820px) { .twocol { grid-template-columns: 1fr; } }
-  table.schools { width: 100%; border-collapse: collapse; font-size: 14px; }
-  table.schools th, table.schools td {
-    text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line);
-  }
-  table.schools th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); font-weight: 600; }
-  .rating { font-weight: 600; }
-  .rating.Outstanding { color: var(--good); }
-  .rating.Good { color: var(--ink-2); }
-  .rating.RequiresImprovement, .rating.Requires { color: var(--warn); }
-  .rating.Inadequate { color: var(--bad); }
-  #map { height: 380px; border-radius: var(--radius); border: 1px solid var(--line); }
-  .pills { display: flex; flex-wrap: wrap; gap: 6px; }
-  .pill { background: var(--bg-2); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; font-size: 12px; color: var(--ink-2); }
-  details.faq { border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 8px; background: var(--bg); }
-  details.faq summary { cursor: pointer; font-weight: 600; color: var(--ink); }
-  details.faq[open] { background: var(--bg-2); }
-  footer { border-top: 1px solid var(--line); padding: 28px 20px; color: var(--muted); font-size: 13px; }
-  footer .inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 24px; flex-wrap: wrap; }
-  .sources { font-size: 13px; color: var(--muted); }
-  .sources a { color: var(--muted); text-decoration: underline; }
-  .cta {
-    display: inline-block; background: var(--ink); color: #fff; padding: 10px 14px;
-    border-radius: var(--radius); font-size: 14px; font-weight: 600;
-  }
-  .cta:hover { background: var(--ink-2); text-decoration: none; }
-</style>
-<script type="application/ld+json">
-[
-  {
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Schools in Lewisham, London | Ofsted Ratings &amp; Results | London Schools Explorer</title>
+  <meta name="description" content="96 schools in Lewisham, London. 14 Outstanding, 70 Good-rated by Ofsted. Compare admissions oversubscription, exam results and crime data. Free.">
+  <script type="application/ld+json">{
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "name": "Top schools in Lewisham, London",
-    "itemListOrder": "http://schema.org/ItemListOrderDescending",
-    "numberOfItems": 14,
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "url": "https://londonschool.directory/schools/lewisham/haberdashers-hatcham-free-school/",
-        "name": "Haberdashers' Hatcham Free School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "url": "https://londonschool.directory/schools/lewisham/downderry-primary-school/",
-        "name": "Downderry Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "url": "https://londonschool.directory/schools/lewisham/holy-cross-catholic-primary-school/",
-        "name": "Holy Cross Catholic Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 4,
-        "url": "https://londonschool.directory/schools/lewisham/brindishe-manor-school/",
-        "name": "Brindishe Manor School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 5,
-        "url": "https://londonschool.directory/schools/lewisham/john-stainer-community-primary-school/",
-        "name": "John Stainer Community Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 6,
-        "url": "https://londonschool.directory/schools/lewisham/st-margarets-lee-cofe-primary-school/",
-        "name": "St Margaret's Lee CofE Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 7,
-        "url": "https://londonschool.directory/schools/lewisham/st-matthew-academy/",
-        "name": "St Matthew Academy"
-      },
-      {
-        "@type": "ListItem",
-        "position": 8,
-        "url": "https://londonschool.directory/schools/lewisham/prendergast-school/",
-        "name": "Prendergast School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 9,
-        "url": "https://londonschool.directory/schools/lewisham/bonus-pastor-catholic-college/",
-        "name": "Bonus Pastor Catholic College"
-      },
-      {
-        "@type": "ListItem",
-        "position": 10,
-        "url": "https://londonschool.directory/schools/lewisham/st-matthew-academy/",
-        "name": "St Matthew Academy"
-      },
-      {
-        "@type": "ListItem",
-        "position": 11,
-        "url": "https://londonschool.directory/schools/lewisham/greenvale-school/",
-        "name": "Greenvale School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 12,
-        "url": "https://londonschool.directory/schools/lewisham/sydenham-school/",
-        "name": "Sydenham School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 13,
-        "url": "https://londonschool.directory/schools/lewisham/haberdashers-hatcham-college/",
-        "name": "Haberdashers' Hatcham College"
-      },
-      {
-        "@type": "ListItem",
-        "position": 14,
-        "url": "https://londonschool.directory/schools/lewisham/trinity-church-of-england-school-lewisham/",
-        "name": "Trinity Church of England School, Lewisham"
-      }
-    ]
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How many schools are there in Lewisham?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Lewisham has 96 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 75 are primary, 27 are secondary, and the remainder are special, all-through, or post-16."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What proportion of Lewisham schools are Outstanding?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "As of the latest Ofsted Management Information release, 14 schools in Lewisham (14.6%) are rated Outstanding, and 87.5% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "When do I apply for a Reception or Year 7 place in Lewisham?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Lewisham's applications are coordinated by the local authority through the eAdmissions system. See our full Reception timeline guide."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How does the school appeals process work in Lewisham?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "If you are refused your preferred school place, you have a statutory right of appeal. Lewisham appeals are typically heard in May (Reception) and June\u2013July (secondary). See our appeals tracker for Lewisham-level success rates by year."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How can I tell which Lewisham schools are over-subscribed?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release."
-        }
-      }
-    ]
-  },
-  {
+    "name": "Schools in Lewisham, London",
+    "description": "96 schools in Lewisham, London rated by Ofsted",
+    "numberOfItems": 96,
+    "url": "https://londonschool.directory/schools/lewisham"
+  }</script>
+  <script type="application/ld+json">{
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": "https://londonschool.directory/"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Boroughs",
-        "item": "https://londonschool.directory/schools/"
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "name": "Lewisham",
-        "item": "https://londonschool.directory/schools/lewisham/"
-      }
+      {"@type": "ListItem", "position": 1, "name": "London Schools Explorer", "item": "https://londonschool.directory/"},
+      {"@type": "ListItem", "position": 2, "name": "Schools in Lewisham", "item": "https://londonschool.directory/schools/lewisham"}
     ]
-  }
-]
-</script>
+  }</script>
+  <link rel="canonical" href="https://londonschool.directory/schools/lewisham">
+  <meta property="og:title" content="Schools in Lewisham | London Schools Explorer">
+  <meta property="og:description" content="96 schools in Lewisham. 14 Outstanding-rated. Compare Ofsted ratings, exam results and admissions.">
+  <meta property="og:url" content="https://londonschool.directory/schools/lewisham">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, sans-serif; color: #1a1a1a; background: #f8f9fa; line-height: 1.6; }
+    a { color: #1565C0; }
+    .topbar { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 12px 20px; }
+    .topbar a { text-decoration: none; font-weight: 600; color: #1a1a1a; font-size: 15px; }
+    .topbar span { color: #888; margin: 0 8px; }
+    .container { max-width: 900px; margin: 0 auto; padding: 32px 20px; }
+    h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+    .intro { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; font-size: 15px; color: #333; line-height: 1.7; }
+    .stats-row { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+    .stat-box { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 14px 18px; flex: 1; min-width: 120px; }
+    .stat-num { font-size: 24px; font-weight: 700; color: #1a1a1a; line-height: 1; }
+    .stat-lbl { font-size: 12px; color: #888; margin-top: 4px; }
+    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #e0e0e0; }
+    th { background: #f5f5f5; padding: 12px 16px; text-align: left; font-size: 13px; color: #555; font-weight: 600; border-bottom: 1px solid #e0e0e0; }
+    td { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fafafa; }
+    .back { display: inline-block; margin-bottom: 20px; font-size: 14px; color: #555; text-decoration: none; }
+    .back:hover { color: #111; }
+    footer { text-align: center; padding: 32px 20px; font-size: 13px; color: #888; }
+    @media (max-width: 600px) {
+      .container { padding: 16px 12px; }
+      h1 { font-size: 22px; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .intro { padding: 14px 16px; font-size: 14px; }
+      table { font-size: 13px; }
+      th, td { padding: 10px 10px; }
+      .topbar { padding: 10px 12px; font-size: 13px; }
+    }
+    @media (max-width: 600px) { .stats-row { flex-direction: column; } }
+  </style>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 </head>
 <body>
-<header class="site">
-  <div class="inner">
-    <a class="brand" href="/">London School Directory</a>
-    <nav>
-      <a href="/">Search</a>
-      <a href="/appeals.html">Appeals</a>
-      <a href="/methodology.html">Methodology</a>
-      <a href="/about.html">About</a>
-    </nav>
+<div class="topbar">
+  <div style="max-width:900px;margin:0 auto">
+    <a href="/">London Schools Explorer</a>
+    <span>/</span>
+    Lewisham
   </div>
-</header>
-<main>
-  <div class="crumbs">
-    <a href="/">Home</a> &rsaquo; <a href="/schools/">Boroughs</a> &rsaquo; Lewisham
+</div>
+<div class="container">
+  <a class="back" href="/">&#8592; All boroughs</a>
+  <h1>Schools in Lewisham</h1>
+
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-num">96</div><div class="stat-lbl">Total schools</div></div>
+    <div class="stat-box"><div class="stat-num">14</div><div class="stat-lbl">Outstanding</div></div>
+    <div class="stat-box"><div class="stat-num">70</div><div class="stat-lbl">Good</div></div>
+    <div class="stat-box"><div class="stat-num">5</div><div class="stat-lbl">School phases</div></div>
   </div>
 
-  <h1>Schools in Lewisham, London</h1>
-  <p class="lede">Lewisham schools serve a south-east London borough running from New Cross and Deptford through Catford, Brockley, Honor Oak and Lee. The borough has a strong primary offer and a growing reputation for improving secondaries. Admissions are coordinated centrally, with some Lewisham families applying into neighbouring Southwark or Greenwich.</p>
-  <p class="stamp"><span class="dot"></span>Data last verified 1 September 2026. Sources: Ofsted, DfE GIAS, DfE Performance Tables, Metropolitan Police, MHCLG IMD. See <a href="/sources.html">all sources</a>.</p>
+  <div class="intro">Lewisham is a south-east London borough with a strong community feel and an improving school landscape. The borough has invested significantly in education over the past decade and several schools are now rated Outstanding. Areas such as Blackheath, Forest Hill and Lee are particularly popular with families. Prendergast schools and Haberdashers' Boys' School are among the most sought-after secondaries.</div>
 
-  <section>
-    <div class="grid-stats">
-      <div class="stat"><div class="v">96</div><div class="l">Schools in Lewisham</div></div>
-      <div class="stat"><div class="v">14.6%</div><div class="l">Outstanding Ofsted</div></div>
-      <div class="stat"><div class="v">87.5%</div><div class="l">Good or Outstanding</div></div>
-      <div class="stat"><div class="v">75</div><div class="l">Primary schools</div></div>
-      <div class="stat"><div class="v">27</div><div class="l">Secondary schools</div></div>
-      <div class="stat"><div class="v">18%</div><div class="l">Secondary appeal success (2024)</div></div>
-    </div>
-  </section>
+  
+<div style="display:flex;gap:16px;flex-wrap:wrap;margin:20px 0;">
 
-  <section>
-    <div class="twocol">
-      <div>
-        <h2>Top primary schools in Lewisham</h2>
-        <p class="sources">Ranked by Ofsted rating, then by latest KS2 performance. See <a href="/methodology.html">methodology</a>.</p>
-        <table class="schools">
-          <thead>
-            <tr><th>School</th><th>Ofsted</th><th>KS2 %</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><a href="/schools/lewisham/haberdashers-hatcham-free-school/">Haberdashers' Hatcham Free School</a></td><td class="rating Outstanding">Outstanding</td><td>96.0</td></tr>
-            <tr><td><a href="/schools/lewisham/downderry-primary-school/">Downderry Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>85.0</td></tr>
-            <tr><td><a href="/schools/lewisham/holy-cross-catholic-primary-school/">Holy Cross Catholic Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>80.0</td></tr>
-            <tr><td><a href="/schools/lewisham/brindishe-manor-school/">Brindishe Manor School</a></td><td class="rating Outstanding">Outstanding</td><td>79.0</td></tr>
-            <tr><td><a href="/schools/lewisham/john-stainer-community-primary-school/">John Stainer Community Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>78.0</td></tr>
-            <tr><td><a href="/schools/lewisham/st-margarets-lee-cofe-primary-school/">St Margaret's Lee CofE Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>76.0</td></tr>
-            <tr><td><a href="/schools/lewisham/st-matthew-academy/">St Matthew Academy</a></td><td class="rating Outstanding">Outstanding</td><td>75.0</td></tr>
-          </tbody>
-        </table>
-
-        <h2 style="margin-top:28px">Top secondary schools in Lewisham</h2>
-        <p class="sources">Ranked by Ofsted rating, then by latest KS4 Attainment 8.</p>
-        <table class="schools">
-          <thead>
-            <tr><th>School</th><th>Ofsted</th><th>Att 8</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><a href="/schools/lewisham/prendergast-school/">Prendergast School</a></td><td class="rating Outstanding">Outstanding</td><td>64.0</td></tr>
-            <tr><td><a href="/schools/lewisham/bonus-pastor-catholic-college/">Bonus Pastor Catholic College</a></td><td class="rating Outstanding">Outstanding</td><td>50.7</td></tr>
-            <tr><td><a href="/schools/lewisham/st-matthew-academy/">St Matthew Academy</a></td><td class="rating Outstanding">Outstanding</td><td>48.7</td></tr>
-            <tr><td><a href="/schools/lewisham/greenvale-school/">Greenvale School</a></td><td class="rating Outstanding">Outstanding</td><td>—</td></tr>
-            <tr><td><a href="/schools/lewisham/sydenham-school/">Sydenham School</a></td><td class="rating Good">Good</td><td>51.6</td></tr>
-            <tr><td><a href="/schools/lewisham/haberdashers-hatcham-college/">Haberdashers' Hatcham College</a></td><td class="rating Good">Good</td><td>51.2</td></tr>
-            <tr><td><a href="/schools/lewisham/trinity-church-of-england-school-lewisham/">Trinity Church of England School, Lewisham</a></td><td class="rating Good">Good</td><td>50.1</td></tr>
-          </tbody>
-        </table>
-
-        <p style="margin-top:14px"><a class="cta" href="#all-schools">Jump to all 96 schools in Lewisham</a></p>
-      </div>
-      <div>
-        <h2>Map</h2>
-        <div id="map" aria-label="Map of schools in Lewisham"></div>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <h2>What the data says about Lewisham</h2>
-    <p><strong>87.5%</strong> of Lewisham schools are currently rated Good or Outstanding by Ofsted, compared with a London average of roughly 90% for primary and 80% for secondary. The average number of applications per place across Lewisham is <strong>1.35</strong>, a useful indicator of how competitive local admissions are. The average number of recorded crime incidents within 500 metres of a school in Lewisham over the most recent reporting month is <strong>111.67</strong>, drawn from the Metropolitan Police open data API. The mean IMD (Index of Multiple Deprivation) decile of Lewisham's schools is <strong>3.99</strong> — 1 is most deprived, 10 is least deprived. All metrics on this page are recomputed from source data on the 15th of every month. See our <a href='/methodology.html'>methodology</a> for definitions and limitations.</p>
-  </section>
-
-  <section id="all-schools">
-    <h2>All schools in Lewisham</h2>
-    <p class="sources">Every school in Lewisham, listed alphabetically. Click any school for the full record.</p>
-    <table class="schools">
-      <thead>
-        <tr><th>School</th><th>Phase</th><th>Ofsted</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><a href="/schools/lewisham/abbey-manor-college/">Abbey Manor College</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/adamsrill-primary-school/">Adamsrill Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/addey-and-stanhope-school/">Addey and Stanhope School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/all-saints-church-of-england-primary-school-blackheath/">All Saints' Church of England Primary School Blackheath</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/allenby-tutorial-trust/">Allenby Tutorial Trust</a></td><td>Secondary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/lewisham/ashmead-primary-school/">Ashmead Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/athelney-primary-school/">Athelney Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/baring-primary-school/">Baring Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/beecroft-garden-primary/">Beecroft Garden Primary</a></td><td>Primary</td><td class="rating Requiresimprovement">Requires improvement</td></tr>
-        <tr><td><a href="/schools/lewisham/bonus-pastor-catholic-college/">Bonus Pastor Catholic College</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/lewisham/brent-knoll-school/">Brent Knoll School</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/brindishe-green-school/">Brindishe Green School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/brindishe-lee-school/">Brindishe Lee School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/brindishe-manor-school/">Brindishe Manor School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/lewisham/chelwood-nursery-school/">Chelwood Nursery School</a></td><td>Nursery</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/lewisham/childeric-primary-school/">Childeric Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/clyde-nursery-school/">Clyde Nursery School.</a></td><td>Nursery</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/conisborough-college/">Conisborough College</a></td><td>Secondary</td><td class="rating Requiresimprovement">Requires improvement</td></tr>
-        <tr><td><a href="/schools/lewisham/coopers-lane-primary-school/">Cooper's Lane Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/dalmain-primary-school/">Dalmain Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/deptford-green-school/">Deptford Green School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/deptford-park-primary-school/">Deptford Park Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/downderry-primary-school/">Downderry Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/lewisham/drumbeat-school-and-asd-service/">Drumbeat School and ASD Service</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/edmund-waller-primary-school/">Edmund Waller Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/education-my-life-matters/">Education-My Life Matters</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/elfrida-primary-school/">Elfrida Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/eliot-bank-primary-school/">Eliot Bank Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/fairlawn-primary-school/">Fairlawn Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/forest-hill-school/">Forest Hill School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/forster-park-primary-school/">Forster Park Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/good-shepherd-rc-school/">Good Shepherd RC School</a></td><td>Primary</td><td class="rating Requiresimprovement">Requires improvement</td></tr>
-        <tr><td><a href="/schools/lewisham/gordonbrock-primary-school/">Gordonbrock Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/greenvale-school/">Greenvale School</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/lewisham/grinling-gibbons-primary-school/">Grinling Gibbons Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/haberdashers-hatcham-college/">Haberdashers' Hatcham College</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/haberdashers-hatcham-free-school/">Haberdashers' Hatcham Free School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/lewisham/haberdashers-hatcham-primary/">Haberdashers' Hatcham Primary</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/haberdashers-knights-academy/">Haberdashers' Knights Academy</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/haberdashers-knights-primary/">Haberdashers' Knights Primary</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/haseltine-primary-school/">Haseltine Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/heath-house-preparatory-school/">Heath House Preparatory School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/lewisham/holbeach-primary-school/">Holbeach Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/holy-cross-catholic-primary-school/">Holy Cross Catholic Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/lewisham/holy-trinity-church-of-england-primary-school/">Holy Trinity Church of England Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/horniman-primary-school/">Horniman Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/john-ball-primary-school/">John Ball Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/lewisham/john-stainer-community-primary-school/">John Stainer Community Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/lewisham/kelvin-grove-primary-school/">Kelvin Grove Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/kender-primary-school/">Kender Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/kilmorie-primary-school/">Kilmorie Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/launcelot-primary-school-and-nursery/">Launcelot Primary School and Nursery</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/marathon-science-school/">Marathon Science School</a></td><td>Secondary</td><td class="rating Requiresimprovement">Requires improvement</td></tr>
-        <tr><td><a href="/schools/lewisham/marvels-lane-primary-school/">Marvels Lane Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/myatt-garden-primary-school/">Myatt Garden Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/new-woodlands-school/">New Woodlands School</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/oak-gardens-primary-school/">Oak Gardens Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/our-lady-and-st-philip-neri-catholic-primary-school/">Our Lady and St Philip Neri Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/perrymount-primary-school/">Perrymount Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/prendergast-ladywell-school/">Prendergast Ladywell School</a></td><td>All-through</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/lewisham/prendergast-school/">Prendergast School</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/lewisham/prendergast-vale-school/">Prendergast Vale School</a></td><td>All-through</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/lewisham/rangefield-primary-school/">Rangefield Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/rathfern-primary-school/">Rathfern Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/lewisham/rushey-green-primary-school/">Rushey Green Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/sandhurst-primary-school/">Sandhurst Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/sedgehill-academy/">Sedgehill Academy</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/st-augustines-catholic-primary-school-and-nursery/">St Augustine's Catholic Primary School and Nursery</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/st-bartholomewss-church-of-england-primary-school/">St Bartholomews's Church of England Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/st-dunstans-college/">St Dunstan's College</a></td><td>All-through</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/lewisham/st-georges-cofe-primary-school/">St George's CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/st-jamess-hatcham-church-of-england-primary-school/">St James's Hatcham Church of England Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/st-john-baptist-southend-church-of-england-primary-school/">St John Baptist Southend Church of England Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/st-josephs-catholic-primary-school/">St Joseph's Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/st-margarets-lee-cofe-primary-school/">St Margaret's Lee CofE Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/lewisham/st-marys-lewisham-church-of-england-primary-school/">St Mary's Lewisham Church of England Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/st-matthew-academy/">St Matthew Academy</a></td><td>All-through</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/lewisham/st-michaels-church-of-england-primary-school/">St Michael's Church of England Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/st-saviours-catholic-primary-school/">St Saviour's Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/st-stephens-cofe-primary-school/">St Stephen's CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/st-william-of-york-catholic-primary-school/">St William of York Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/st-winifreds-rc-primary-school/">St Winifred's RC Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/stillness-infant-school/">Stillness Infant School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/stillness-junior-school/">Stillness Junior School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/sydenham-dulwich-girls-gdst/">Sydenham & Dulwich Girls GDST</a></td><td>All-through</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/lewisham/sydenham-and-forest-hill-sixth-form/">Sydenham and Forest Hill Sixth Form</a></td><td>Sixth form</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/lewisham/sydenham-school/">Sydenham School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/the-anchor-sendfriendly-centre/">The Anchor SENDfriendly Centre</a></td><td>All-through</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/lewisham/the-young-womens-hub/">The Young Women's Hub</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/tidemill-academy/">Tidemill Academy</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/torridon-primary-school/">Torridon Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/trinity-church-of-england-school-lewisham/">Trinity Church of England School, Lewisham</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/turnham-academy/">Turnham Academy</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/twin-oaks-primary-school/">Twin Oaks Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/urban-mission-school/">Urban Mission School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/lewisham/watergate-school/">Watergate School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <section>
-    <h2>Frequently asked</h2>
-    <details class="faq"><summary>How many schools are there in Lewisham?</summary><p>Lewisham has 96 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 75 are primary, 27 are secondary, and the remainder are special, all-through, or post-16.</p></details>
-<details class="faq"><summary>What proportion of Lewisham schools are Outstanding?</summary><p>As of the latest Ofsted Management Information release, 14 schools in Lewisham (14.6%) are rated Outstanding, and 87.5% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication.</p></details>
-<details class="faq"><summary>When do I apply for a Reception or Year 7 place in Lewisham?</summary><p>Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Lewisham's applications are coordinated by the local authority through the eAdmissions system. See our <a href='/guides/london-reception-application-timeline/'>full Reception timeline guide</a>.</p></details>
-<details class="faq"><summary>How does the school appeals process work in Lewisham?</summary><p>If you are refused your preferred school place, you have a statutory right of appeal. Lewisham appeals are typically heard in May (Reception) and June–July (secondary). See our <a href='/appeals.html'>appeals tracker</a> for Lewisham-level success rates by year.</p></details>
-<details class="faq"><summary>How can I tell which Lewisham schools are over-subscribed?</summary><p>Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release.</p></details>
-  </section>
-
-  <section>
-    <h2>Sources</h2>
-    <p class="sources">
-      School list and phase from <a href="https://get-information-schools.service.gov.uk/" rel="nofollow">DfE Get Information About Schools</a> (refreshed monthly).
-      Ofsted ratings from <a href="https://www.gov.uk/government/statistical-data-sets/monthly-management-information-ofsteds-school-inspections-outcomes" rel="nofollow">Ofsted Management Information</a> (refreshed monthly).
-      Performance data from <a href="https://explore-education-statistics.service.gov.uk/" rel="nofollow">DfE Explore Education Statistics</a>.
-      Crime data within 500m from the <a href="https://data.police.uk/" rel="nofollow">Metropolitan Police open data API</a>.
-      Deprivation deciles from <a href="https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019" rel="nofollow">MHCLG English Indices of Deprivation 2019</a>.
-      Read our full <a href="/methodology.html">methodology</a> for how each metric is calculated.
-    </p>
-  </section>
-</main>
-<footer>
-  <div class="inner">
-    <div>&copy; London School Directory. Independent. Free to use.</div>
-    <div><a href="/about.html">About</a> &middot; <a href="/methodology.html">Methodology</a> &middot; <a href="/sources.html">Sources</a> &middot; <a href="/appeals.html">Appeals</a></div>
-    <div>Browse by type: <a href="/schools/outstanding">Outstanding</a> &middot; <a href="/schools/good">Good</a> &middot; <a href="/schools/grammar">Grammar</a> &middot; <a href="/schools/selective">Selective</a> &middot; <a href="/schools/faith">Faith</a> &middot; <a href="/schools/primary">Primary</a> &middot; <a href="/schools/secondary">Secondary</a> &middot; <a href="/schools/sixth-form">Sixth form</a> &middot; <a href="/schools/independent">Private &amp; independent</a></div>
+<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fdf4ff 0%,#ede9fe 100%);
+     border:1px solid #d8b4fe;border-radius:12px;padding:14px 20px;">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+    <span style="font-size:22px;">🎓</span>
+    <strong style="font-size:15px;color:#5b21b6;">11+ &amp; 13+ Exam Prep</strong>
   </div>
-</footer>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
+    PiAcademy resources for grammar school entrance, SATs &amp; GCSE.
+    Use code <strong>THIERR25</strong> for 25% off.
+  </p>
+  <a href="https://piacademy.co.uk/?aff=28"
+     target="_blank" rel="noopener sponsored"
+     style="display:inline-block;padding:9px 18px;background:#7e22ce;color:#fff;
+            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
+    Get 25% OFF →
+  </a>
+  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
+</div>
+<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%);
+     border:1px solid #fcd34d;border-radius:12px;padding:14px 20px;">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+    <span style="font-size:22px;">📚</span>
+    <strong style="font-size:15px;color:#92400e;">Children's Books</strong>
+  </div>
+  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
+    Great books at low prices. At checkout, choose your school — Scholastic donates
+    <strong>20p for every £1 spent</strong> back to the school in free books.
+  </p>
+  <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&ued=https%3A%2F%2Fwww.scholastic.co.uk%2Fteachers"
+     target="_blank" rel="noopener sponsored"
+     style="display:inline-block;padding:9px 18px;background:#d97706;color:#fff;
+            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
+    Shop at Scholastic →
+  </a>
+  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
+</div>
+<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fff8f0 0%,#fff3e0 100%);
+     border:1px solid #fed7aa;border-radius:12px;padding:14px 20px;">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+    <span style="font-size:22px;">🛒</span>
+    <strong style="font-size:15px;color:#92400e;">School Supplies</strong>
+  </div>
+  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
+    Stationery, bags, PE kit, lunchboxes and more — fast delivery from Amazon.
+  </p>
+  <a href="https://www.amazon.co.uk/s?k=school+supplies+stationery&tag=londonparents-21"
+     target="_blank" rel="noopener sponsored"
+     style="display:inline-block;padding:9px 18px;background:#FF9900;color:#111;
+            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
+    Shop on Amazon →
+  </a>
+  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
+</div>
+</div>
+
+  <!-- Borough share buttons -->
+  <div style="display:flex;gap:10px;margin:16px 0 8px;flex-wrap:wrap;align-items:center;">
+    <span style="font-size:13px;color:#555;font-weight:600;">Share Lewisham schools:</span>
+    <button onclick="shareBoroughWhatsApp()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 WhatsApp</button>
+    <button onclick="shareBoroughEmail()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#1565C0;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Email</button>
+    <span style="font-size:12px;color:#999;margin-left:4px;">Or tick schools below to share a shortlist</span>
+  </div>
+
+  <!-- Sticky compare bar (appears when schools are ticked) -->
+  <div id="cmp-bar" style="display:none;position:sticky;top:0;z-index:100;background:#1A1A2E;color:#fff;padding:12px 16px;border-radius:10px;margin-bottom:12px;display:none;align-items:center;gap:10px;flex-wrap:wrap;">
+    <span id="cmp-count" style="font-weight:700;font-size:14px;">0 schools selected</span>
+    <button onclick="shareCompareWhatsApp()" style="padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 Share via WhatsApp</button>
+    <button onclick="shareCompareEmail()" style="padding:8px 16px;background:#fff;color:#1A1A2E;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Share via Email</button>
+    <button onclick="clearSelection()" style="padding:8px 12px;background:transparent;color:#aaa;border:1px solid #555;border-radius:8px;font-size:12px;cursor:pointer;">✕ Clear</button>
+  </div>
+
+  <table>
+    <thead><tr><th style="width:36px"></th><th>School</th><th>Phase</th><th>Ofsted</th><th>Pupils</th></tr></thead>
+    <tbody><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Abbey Manor College"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/lewisham/abbey-manor-college"></td>
+          <td><a href="/schools/lewisham/abbey-manor-college">Abbey Manor College</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>96</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Adamsrill Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="76.0"
+            data-url="https://londonschool.directory/schools/lewisham/adamsrill-primary-school"></td>
+          <td><a href="/schools/lewisham/adamsrill-primary-school">Adamsrill Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>361</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Addey and Stanhope School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="36.8"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/lewisham/addey-and-stanhope-school"></td>
+          <td><a href="/schools/lewisham/addey-and-stanhope-school">Addey and Stanhope School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>589</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="All Saints' Church of England Primary School Blackheath"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="71.0"
+            data-url="https://londonschool.directory/schools/lewisham/all-saints-church-of-england-primary-school-blackheath"></td>
+          <td><a href="/schools/lewisham/all-saints-church-of-england-primary-school-blackheath">All Saints' Church of England Primary School Blackheath</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>189</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Allenby Tutorial Trust"
+            data-ofsted="Not yet rated"
+            data-phase="Secondary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/lewisham/allenby-tutorial-trust"></td>
+          <td><a href="/schools/lewisham/allenby-tutorial-trust">Allenby Tutorial Trust</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>N/A</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Ashmead Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="64.0"
+            data-url="https://londonschool.directory/schools/lewisham/ashmead-primary-school"></td>
+          <td><a href="/schools/lewisham/ashmead-primary-school">Ashmead Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>390</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Athelney Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="40.0"
+            data-url="https://londonschool.directory/schools/lewisham/athelney-primary-school"></td>
+          <td><a href="/schools/lewisham/athelney-primary-school">Athelney Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>354</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Baring Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="42.0"
+            data-url="https://londonschool.directory/schools/lewisham/baring-primary-school"></td>
+          <td><a href="/schools/lewisham/baring-primary-school">Baring Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>193</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Beecroft Garden Primary"
+            data-ofsted="Requires improvement"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="82.0"
+            data-url="https://londonschool.directory/schools/lewisham/beecroft-garden-primary"></td>
+          <td><a href="/schools/lewisham/beecroft-garden-primary">Beecroft Garden Primary</a></td>
+          <td>Primary</td>
+          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
+          <td>382</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Bonus Pastor Catholic College"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="50.7"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/lewisham/bonus-pastor-catholic-college"></td>
+          <td><a href="/schools/lewisham/bonus-pastor-catholic-college">Bonus Pastor Catholic College</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>919</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Brent Knoll School"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8="2.2"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/lewisham/brent-knoll-school"></td>
+          <td><a href="/schools/lewisham/brent-knoll-school">Brent Knoll School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>181</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Brindishe Green School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="61.0"
+            data-url="https://londonschool.directory/schools/lewisham/brindishe-green-school"></td>
+          <td><a href="/schools/lewisham/brindishe-green-school">Brindishe Green School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>585</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Brindishe Lee School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="76.0"
+            data-url="https://londonschool.directory/schools/lewisham/brindishe-lee-school"></td>
+          <td><a href="/schools/lewisham/brindishe-lee-school">Brindishe Lee School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>196</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Brindishe Manor School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="79.0"
+            data-url="https://londonschool.directory/schools/lewisham/brindishe-manor-school"></td>
+          <td><a href="/schools/lewisham/brindishe-manor-school">Brindishe Manor School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>426</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Chelwood Nursery School"
+            data-ofsted="Outstanding"
+            data-phase="Nursery"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/lewisham/chelwood-nursery-school"></td>
+          <td><a href="/schools/lewisham/chelwood-nursery-school">Chelwood Nursery School</a></td>
+          <td>Nursery</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>127</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Childeric Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="44.0"
+            data-url="https://londonschool.directory/schools/lewisham/childeric-primary-school"></td>
+          <td><a href="/schools/lewisham/childeric-primary-school">Childeric Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>334</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Clyde Nursery School."
+            data-ofsted="Good"
+            data-phase="Nursery"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/lewisham/clyde-nursery-school"></td>
+          <td><a href="/schools/lewisham/clyde-nursery-school">Clyde Nursery School.</a></td>
+          <td>Nursery</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>72</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Conisborough College"
+            data-ofsted="Requires improvement"
+            data-phase="Secondary"
+            data-att8="37.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/lewisham/conisborough-college"></td>
+          <td><a href="/schools/lewisham/conisborough-college">Conisborough College</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
+          <td>703</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Cooper's Lane Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="74.0"
+            data-url="https://londonschool.directory/schools/lewisham/coopers-lane-primary-school"></td>
+          <td><a href="/schools/lewisham/coopers-lane-primary-school">Cooper's Lane Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>646</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Dalmain Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="88.0"
+            data-url="https://londonschool.directory/schools/lewisham/dalmain-primary-school"></td>
+          <td><a href="/schools/lewisham/dalmain-primary-school">Dalmain Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>381</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Deptford Green School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="43.4"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/lewisham/deptford-green-school"></td>
+          <td><a href="/schools/lewisham/deptford-green-school">Deptford Green School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>888</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Deptford Park Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="53.0"
+            data-url="https://londonschool.directory/schools/lewisham/deptford-park-primary-school"></td>
+          <td><a href="/schools/lewisham/deptford-park-primary-school">Deptford Park Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>217</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Downderry Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="85.0"
+            data-url="https://londonschool.directory/schools/lewisham/downderry-primary-school"></td>
+          <td><a href="/schools/lewisham/downderry-primary-school">Downderry Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>477</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Drumbeat School and ASD Service"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/lewisham/drumbeat-school-and-asd-service"></td>
+          <td><a href="/schools/lewisham/drumbeat-school-and-asd-service">Drumbeat School and ASD Service</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>298</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Edmund Waller Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="74.0"
+            data-url="https://londonschool.directory/schools/lewisham/edmund-waller-primary-school"></td>
+          <td><a href="/schools/lewisham/edmund-waller-primary-school">Edmund Waller Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>434</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Education-My Life Matters"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/lewisham/education-my-life-matters"></td>
+          <td><a href="/schools/lewisham/education-my-life-matters">Education-My Life Matters</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>20</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Elfrida Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="44.0"
+            data-url="https://londonschool.directory/schools/lewisham/elfrida-primary-school"></td>
+          <td><a href="/schools/lewisham/elfrida-primary-school">Elfrida Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>335</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Eliot Bank Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="86.0"
+            data-url="https://londonschool.directory/schools/lewisham/eliot-bank-primary-school"></td>
+          <td><a href="/schools/lewisham/eliot-bank-primary-school">Eliot Bank Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>397</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Fairlawn Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="79.0"
+            data-url="https://londonschool.directory/schools/lewisham/fairlawn-primary-school"></td>
+          <td><a href="/schools/lewisham/fairlawn-primary-school">Fairlawn Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>362</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Forest Hill School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="49.3"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/lewisham/forest-hill-school"></td>
+          <td><a href="/schools/lewisham/forest-hill-school">Forest Hill School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1080</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Forster Park Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="38.0"
+            data-url="https://londonschool.directory/schools/lewisham/forster-park-primary-school"></td>
+          <td><a href="/schools/lewisham/forster-park-primary-school">Forster Park Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>269</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Good Shepherd RC School"
+            data-ofsted="Requires improvement"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="67.0"
+            data-url="https://londonschool.directory/schools/lewisham/good-shepherd-rc-school"></td>
+          <td><a href="/schools/lewisham/good-shepherd-rc-school">Good Shepherd RC School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
+          <td>201</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Gordonbrock Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="87.0"
+            data-url="https://londonschool.directory/schools/lewisham/gordonbrock-primary-school"></td>
+          <td><a href="/schools/lewisham/gordonbrock-primary-school">Gordonbrock Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>626</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Greenvale School"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/lewisham/greenvale-school"></td>
+          <td><a href="/schools/lewisham/greenvale-school">Greenvale School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>216</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Grinling Gibbons Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="53.0"
+            data-url="https://londonschool.directory/schools/lewisham/grinling-gibbons-primary-school"></td>
+          <td><a href="/schools/lewisham/grinling-gibbons-primary-school">Grinling Gibbons Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>208</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Haberdashers' Hatcham College"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="51.2"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/lewisham/haberdashers-hatcham-college"></td>
+          <td><a href="/schools/lewisham/haberdashers-hatcham-college">Haberdashers' Hatcham College</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1375</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Haberdashers' Hatcham Free School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="96.0"
+            data-url="https://londonschool.directory/schools/lewisham/haberdashers-hatcham-free-school"></td>
+          <td><a href="/schools/lewisham/haberdashers-hatcham-free-school">Haberdashers' Hatcham Free School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>410</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Haberdashers' Hatcham Primary"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="82.0"
+            data-url="https://londonschool.directory/schools/lewisham/haberdashers-hatcham-primary"></td>
+          <td><a href="/schools/lewisham/haberdashers-hatcham-primary">Haberdashers' Hatcham Primary</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>395</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Haberdashers' Knights Academy"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="44.7"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/lewisham/haberdashers-knights-academy"></td>
+          <td><a href="/schools/lewisham/haberdashers-knights-academy">Haberdashers' Knights Academy</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1098</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Haberdashers' Knights Primary"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="75.0"
+            data-url="https://londonschool.directory/schools/lewisham/haberdashers-knights-primary"></td>
+          <td><a href="/schools/lewisham/haberdashers-knights-primary">Haberdashers' Knights Primary</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>207</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Haseltine Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="65.0"
+            data-url="https://londonschool.directory/schools/lewisham/haseltine-primary-school"></td>
+          <td><a href="/schools/lewisham/haseltine-primary-school">Haseltine Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>385</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Heath House Preparatory School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/lewisham/heath-house-preparatory-school"></td>
+          <td><a href="/schools/lewisham/heath-house-preparatory-school">Heath House Preparatory School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>105</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Holbeach Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="56.0"
+            data-url="https://londonschool.directory/schools/lewisham/holbeach-primary-school"></td>
+          <td><a href="/schools/lewisham/holbeach-primary-school">Holbeach Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>391</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Holy Cross Catholic Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="80.0"
+            data-url="https://londonschool.directory/schools/lewisham/holy-cross-catholic-primary-school"></td>
+          <td><a href="/schools/lewisham/holy-cross-catholic-primary-school">Holy Cross Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>231</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Holy Trinity Church of England Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="73.0"
+            data-url="https://londonschool.directory/schools/lewisham/holy-trinity-church-of-england-primary-school"></td>
+          <td><a href="/schools/lewisham/holy-trinity-church-of-england-primary-school">Holy Trinity Church of England Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>185</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Horniman Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="70.0"
+            data-url="https://londonschool.directory/schools/lewisham/horniman-primary-school"></td>
+          <td><a href="/schools/lewisham/horniman-primary-school">Horniman Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>201</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="John Ball Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="67.0"
+            data-url="https://londonschool.directory/schools/lewisham/john-ball-primary-school"></td>
+          <td><a href="/schools/lewisham/john-ball-primary-school">John Ball Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>672</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="John Stainer Community Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="78.0"
+            data-url="https://londonschool.directory/schools/lewisham/john-stainer-community-primary-school"></td>
+          <td><a href="/schools/lewisham/john-stainer-community-primary-school">John Stainer Community Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>400</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Kelvin Grove Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="63.0"
+            data-url="https://londonschool.directory/schools/lewisham/kelvin-grove-primary-school"></td>
+          <td><a href="/schools/lewisham/kelvin-grove-primary-school">Kelvin Grove Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>535</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Kender Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="62.0"
+            data-url="https://londonschool.directory/schools/lewisham/kender-primary-school"></td>
+          <td><a href="/schools/lewisham/kender-primary-school">Kender Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>351</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Kilmorie Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="75.0"
+            data-url="https://londonschool.directory/schools/lewisham/kilmorie-primary-school"></td>
+          <td><a href="/schools/lewisham/kilmorie-primary-school">Kilmorie Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>613</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Launcelot Primary School and Nursery"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="74.0"
+            data-url="https://londonschool.directory/schools/lewisham/launcelot-primary-school-and-nursery"></td>
+          <td><a href="/schools/lewisham/launcelot-primary-school-and-nursery">Launcelot Primary School and Nursery</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>307</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Marathon Science School"
+            data-ofsted="Requires improvement"
+            data-phase="Secondary"
+            data-att8="33.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/lewisham/marathon-science-school"></td>
+          <td><a href="/schools/lewisham/marathon-science-school">Marathon Science School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
+          <td>35</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Marvels Lane Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="67.0"
+            data-url="https://londonschool.directory/schools/lewisham/marvels-lane-primary-school"></td>
+          <td><a href="/schools/lewisham/marvels-lane-primary-school">Marvels Lane Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>385</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Myatt Garden Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="79.0"
+            data-url="https://londonschool.directory/schools/lewisham/myatt-garden-primary-school"></td>
+          <td><a href="/schools/lewisham/myatt-garden-primary-school">Myatt Garden Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>357</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="New Woodlands School"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8="2.3"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/lewisham/new-woodlands-school"></td>
+          <td><a href="/schools/lewisham/new-woodlands-school">New Woodlands School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>101</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Oak Gardens Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="77.0"
+            data-url="https://londonschool.directory/schools/lewisham/oak-gardens-primary-school"></td>
+          <td><a href="/schools/lewisham/oak-gardens-primary-school">Oak Gardens Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>166</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Our Lady and St Philip Neri Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="56.0"
+            data-url="https://londonschool.directory/schools/lewisham/our-lady-and-st-philip-neri-catholic-primary-school"></td>
+          <td><a href="/schools/lewisham/our-lady-and-st-philip-neri-catholic-primary-school">Our Lady and St Philip Neri Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>233</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Perrymount Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="76.0"
+            data-url="https://londonschool.directory/schools/lewisham/perrymount-primary-school"></td>
+          <td><a href="/schools/lewisham/perrymount-primary-school">Perrymount Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>202</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Prendergast Ladywell School"
+            data-ofsted="Not yet rated"
+            data-phase="All-through"
+            data-att8="49.2"
+            data-ks2="57.0"
+            data-url="https://londonschool.directory/schools/lewisham/prendergast-ladywell-school"></td>
+          <td><a href="/schools/lewisham/prendergast-ladywell-school">Prendergast Ladywell School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>1280</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Prendergast School"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="64.0"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/lewisham/prendergast-school"></td>
+          <td><a href="/schools/lewisham/prendergast-school">Prendergast School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>1052</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Prendergast Vale School"
+            data-ofsted="Not yet rated"
+            data-phase="All-through"
+            data-att8="42.2"
+            data-ks2="56.0"
+            data-url="https://londonschool.directory/schools/lewisham/prendergast-vale-school"></td>
+          <td><a href="/schools/lewisham/prendergast-vale-school">Prendergast Vale School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>806</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Rangefield Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="38.0"
+            data-url="https://londonschool.directory/schools/lewisham/rangefield-primary-school"></td>
+          <td><a href="/schools/lewisham/rangefield-primary-school">Rangefield Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>236</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Rathfern Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="72.0"
+            data-url="https://londonschool.directory/schools/lewisham/rathfern-primary-school"></td>
+          <td><a href="/schools/lewisham/rathfern-primary-school">Rathfern Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>484</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Rushey Green Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="48.0"
+            data-url="https://londonschool.directory/schools/lewisham/rushey-green-primary-school"></td>
+          <td><a href="/schools/lewisham/rushey-green-primary-school">Rushey Green Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>560</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Sandhurst Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="67.0"
+            data-url="https://londonschool.directory/schools/lewisham/sandhurst-primary-school"></td>
+          <td><a href="/schools/lewisham/sandhurst-primary-school">Sandhurst Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>648</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Sedgehill Academy"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="46.7"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/lewisham/sedgehill-academy"></td>
+          <td><a href="/schools/lewisham/sedgehill-academy">Sedgehill Academy</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>960</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Augustine's Catholic Primary School and Nursery"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="77.0"
+            data-url="https://londonschool.directory/schools/lewisham/st-augustines-catholic-primary-school-and-nursery"></td>
+          <td><a href="/schools/lewisham/st-augustines-catholic-primary-school-and-nursery">St Augustine's Catholic Primary School and Nursery</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>216</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Bartholomews's Church of England Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="76.0"
+            data-url="https://londonschool.directory/schools/lewisham/st-bartholomewss-church-of-england-primary-school"></td>
+          <td><a href="/schools/lewisham/st-bartholomewss-church-of-england-primary-school">St Bartholomews's Church of England Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>394</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Dunstan's College"
+            data-ofsted="Not yet rated"
+            data-phase="All-through"
+            data-att8="12.3"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/lewisham/st-dunstans-college"></td>
+          <td><a href="/schools/lewisham/st-dunstans-college">St Dunstan's College</a></td>
+          <td>All-through</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>1234</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St George's CofE Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="78.0"
+            data-url="https://londonschool.directory/schools/lewisham/st-georges-cofe-primary-school"></td>
+          <td><a href="/schools/lewisham/st-georges-cofe-primary-school">St George's CofE Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>206</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St James's Hatcham Church of England Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="75.0"
+            data-url="https://londonschool.directory/schools/lewisham/st-jamess-hatcham-church-of-england-primary-school"></td>
+          <td><a href="/schools/lewisham/st-jamess-hatcham-church-of-england-primary-school">St James's Hatcham Church of England Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>151</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St John Baptist Southend Church of England Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="63.0"
+            data-url="https://londonschool.directory/schools/lewisham/st-john-baptist-southend-church-of-england-primary-school"></td>
+          <td><a href="/schools/lewisham/st-john-baptist-southend-church-of-england-primary-school">St John Baptist Southend Church of England Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>177</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Joseph's Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="65.0"
+            data-url="https://londonschool.directory/schools/lewisham/st-josephs-catholic-primary-school"></td>
+          <td><a href="/schools/lewisham/st-josephs-catholic-primary-school">St Joseph's Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>122</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Margaret's Lee CofE Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="76.0"
+            data-url="https://londonschool.directory/schools/lewisham/st-margarets-lee-cofe-primary-school"></td>
+          <td><a href="/schools/lewisham/st-margarets-lee-cofe-primary-school">St Margaret's Lee CofE Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>206</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Mary's Lewisham Church of England Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="69.0"
+            data-url="https://londonschool.directory/schools/lewisham/st-marys-lewisham-church-of-england-primary-school"></td>
+          <td><a href="/schools/lewisham/st-marys-lewisham-church-of-england-primary-school">St Mary's Lewisham Church of England Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>231</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Matthew Academy"
+            data-ofsted="Outstanding"
+            data-phase="All-through"
+            data-att8="48.7"
+            data-ks2="75.0"
+            data-url="https://londonschool.directory/schools/lewisham/st-matthew-academy"></td>
+          <td><a href="/schools/lewisham/st-matthew-academy">St Matthew Academy</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>1063</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Michael's Church of England Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="75.0"
+            data-url="https://londonschool.directory/schools/lewisham/st-michaels-church-of-england-primary-school"></td>
+          <td><a href="/schools/lewisham/st-michaels-church-of-england-primary-school">St Michael's Church of England Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>197</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Saviour's Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="67.0"
+            data-url="https://londonschool.directory/schools/lewisham/st-saviours-catholic-primary-school"></td>
+          <td><a href="/schools/lewisham/st-saviours-catholic-primary-school">St Saviour's Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>188</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Stephen's CofE Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="59.0"
+            data-url="https://londonschool.directory/schools/lewisham/st-stephens-cofe-primary-school"></td>
+          <td><a href="/schools/lewisham/st-stephens-cofe-primary-school">St Stephen's CofE Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>186</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St William of York Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="72.0"
+            data-url="https://londonschool.directory/schools/lewisham/st-william-of-york-catholic-primary-school"></td>
+          <td><a href="/schools/lewisham/st-william-of-york-catholic-primary-school">St William of York Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>207</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Winifred's RC Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="59.0"
+            data-url="https://londonschool.directory/schools/lewisham/st-winifreds-rc-primary-school"></td>
+          <td><a href="/schools/lewisham/st-winifreds-rc-primary-school">St Winifred's RC Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>350</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Stillness Infant School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/lewisham/stillness-infant-school"></td>
+          <td><a href="/schools/lewisham/stillness-infant-school">Stillness Infant School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>284</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Stillness Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="88.0"
+            data-url="https://londonschool.directory/schools/lewisham/stillness-junior-school"></td>
+          <td><a href="/schools/lewisham/stillness-junior-school">Stillness Junior School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>276</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Sydenham & Dulwich Girls GDST"
+            data-ofsted="Not yet rated"
+            data-phase="All-through"
+            data-att8="54.1"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/lewisham/sydenham-dulwich-girls-gdst"></td>
+          <td><a href="/schools/lewisham/sydenham-dulwich-girls-gdst">Sydenham & Dulwich Girls GDST</a></td>
+          <td>All-through</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>716</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Sydenham School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="51.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/lewisham/sydenham-school"></td>
+          <td><a href="/schools/lewisham/sydenham-school">Sydenham School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1467</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Sydenham and Forest Hill Sixth Form"
+            data-ofsted="Not yet rated"
+            data-phase="Sixth form"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/lewisham/sydenham-and-forest-hill-sixth-form"></td>
+          <td><a href="/schools/lewisham/sydenham-and-forest-hill-sixth-form">Sydenham and Forest Hill Sixth Form</a></td>
+          <td>Sixth form</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>N/A</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Anchor SENDfriendly Centre"
+            data-ofsted="Not yet rated"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/lewisham/the-anchor-sendfriendly-centre"></td>
+          <td><a href="/schools/lewisham/the-anchor-sendfriendly-centre">The Anchor SENDfriendly Centre</a></td>
+          <td>All-through</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>45</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Young Women's Hub"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/lewisham/the-young-womens-hub"></td>
+          <td><a href="/schools/lewisham/the-young-womens-hub">The Young Women's Hub</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>9</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Tidemill Academy"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="74.0"
+            data-url="https://londonschool.directory/schools/lewisham/tidemill-academy"></td>
+          <td><a href="/schools/lewisham/tidemill-academy">Tidemill Academy</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>427</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Torridon Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="62.0"
+            data-url="https://londonschool.directory/schools/lewisham/torridon-primary-school"></td>
+          <td><a href="/schools/lewisham/torridon-primary-school">Torridon Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>632</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Trinity Church of England School, Lewisham"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8="50.1"
+            data-ks2="87.0"
+            data-url="https://londonschool.directory/schools/lewisham/trinity-church-of-england-school-lewisham"></td>
+          <td><a href="/schools/lewisham/trinity-church-of-england-school-lewisham">Trinity Church of England School, Lewisham</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1048</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Turnham Academy"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="87.0"
+            data-url="https://londonschool.directory/schools/lewisham/turnham-academy"></td>
+          <td><a href="/schools/lewisham/turnham-academy">Turnham Academy</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>168</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Twin Oaks Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="50.0"
+            data-url="https://londonschool.directory/schools/lewisham/twin-oaks-primary-school"></td>
+          <td><a href="/schools/lewisham/twin-oaks-primary-school">Twin Oaks Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>176</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Urban Mission School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/lewisham/urban-mission-school"></td>
+          <td><a href="/schools/lewisham/urban-mission-school">Urban Mission School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>14</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Watergate School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/lewisham/watergate-school"></td>
+          <td><a href="/schools/lewisham/watergate-school">Watergate School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>185</td>
+        </tr></tbody>
+  </table>
+</div>
+<footer><a href="/">London Schools Explorer</a> &mdash; helping families find the right school in London.<p style="margin-top:10px">Browse by type: <a href="/schools/outstanding">Outstanding</a> &middot; <a href="/schools/good">Good</a> &middot; <a href="/schools/grammar">Grammar</a> &middot; <a href="/schools/selective">Selective</a> &middot; <a href="/schools/faith">Faith</a> &middot; <a href="/schools/primary">Primary</a> &middot; <a href="/schools/secondary">Secondary</a> &middot; <a href="/schools/sixth-form">Sixth form</a> &middot; <a href="/schools/independent">Private &amp; independent</a></p></footer>
+<script defer src="/_vercel/insights/script.js"></script>
 <script>
-  (function() {
-    var points = [[51.466791, 0.010064, "/schools/lewisham/heath-house-preparatory-school/", "Heath House Preparatory School"], [51.484679, -0.034548, "/schools/lewisham/clyde-nursery-school/", "Clyde Nursery School."], [51.458546, -0.042653, "/schools/lewisham/chelwood-nursery-school/", "Chelwood Nursery School"], [51.430748, -0.040446, "/schools/lewisham/adamsrill-primary-school/", "Adamsrill Primary School"], [51.433725, -0.024406, "/schools/lewisham/athelney-primary-school/", "Athelney Primary School"], [51.444454, 0.012595, "/schools/lewisham/baring-primary-school/", "Baring Primary School"], [51.456837, -0.03776, "/schools/lewisham/beecroft-garden-primary/", "Beecroft Garden Primary"], [51.437282, 0.021229, "/schools/lewisham/coopers-lane-primary-school/", "Cooper's Lane Primary School"], [51.444049, -0.044222, "/schools/lewisham/dalmain-primary-school/", "Dalmain Primary School"], [51.488335, -0.038092, "/schools/lewisham/deptford-park-primary-school/", "Deptford Park Primary School"], [51.428206, 0.000401, "/schools/lewisham/downderry-primary-school/", "Downderry Primary School"], [51.470369, -0.04841, "/schools/lewisham/edmund-waller-primary-school/", "Edmund Waller Primary School"], [51.428627, -0.023921, "/schools/lewisham/elfrida-primary-school/", "Elfrida Primary School"], [51.434203, 0.003641, "/schools/lewisham/forster-park-primary-school/", "Forster Park Primary School"], [51.454788, -0.028247, "/schools/lewisham/gordonbrock-primary-school/", "Gordonbrock Primary School"], [51.481134, -0.029616, "/schools/lewisham/grinling-gibbons-primary-school/", "Grinling Gibbons Primary School"], [51.428192, -0.036541, "/schools/lewisham/haseltine-primary-school/", "Haseltine Primary School"], [51.451007, -0.005137, "/schools/lewisham/brindishe-green-school/", "Brindishe Green School"], [51.447906, -0.022758, "/schools/lewisham/holbeach-primary-school/", "Holbeach Primary School"], [51.464206, -0.040712, "/schools/lewisham/john-stainer-community-primary-school/", "John Stainer Community Primary School"], [51.432594, -0.062753, "/schools/lewisham/kelvin-grove-primary-school/", "Kelvin Grove Primary School"], [51.474959, -0.050792, "/schools/lewisham/kender-primary-school/", "Kender Primary School"], [51.426742, 0.016032, "/schools/lewisham/launcelot-primary-school-and-nursery/", "Launcelot Primary School and Nursery"], [51.452352, 0.001471, "/schools/lewisham/brindishe-manor-school/", "Brindishe Manor School"], [51.471789, -0.028464, "/schools/lewisham/oak-gardens-primary-school/", "Oak Gardens Primary School"], [51.429178, 0.032755, "/schools/lewisham/marvels-lane-primary-school/", "Marvels Lane Primary School"], [51.423969, 0.004186, "/schools/lewisham/rangefield-primary-school/", "Rangefield Primary School"], [51.439922, -0.032484, "/schools/lewisham/rathfern-primary-school/", "Rathfern Primary School"], [51.442237, -0.016167, "/schools/lewisham/rushey-green-primary-school/", "Rushey Green Primary School"], [51.443111, -0.000372, "/schools/lewisham/sandhurst-primary-school/", "Sandhurst Primary School"], [51.44949, -0.038895, "/schools/lewisham/stillness-junior-school/", "Stillness Junior School"], [51.44949, -0.038895, "/schools/lewisham/stillness-infant-school/", "Stillness Infant School"], [51.436441, -0.003167, "/schools/lewisham/torridon-primary-school/", "Torridon Primary School"], [51.466188, 0.006424, "/schools/lewisham/john-ball-primary-school/", "John Ball Primary School"], [51.446462, -0.054682, "/schools/lewisham/fairlawn-primary-school/", "Fairlawn Primary School"], [51.436477, -0.06102, "/schools/lewisham/eliot-bank-primary-school/", "Eliot Bank Primary School"], [51.486883, -0.04213, "/schools/lewisham/twin-oaks-primary-school/", "Twin Oaks Primary School"], [51.470985, -0.030918, "/schools/lewisham/myatt-garden-primary-school/", "Myatt Garden Primary School"], [51.444147, -0.058796, "/schools/lewisham/horniman-primary-school/", "Horniman Primary School"], [51.43606, -0.04675, "/schools/lewisham/perrymount-primary-school/", "Perrymount Primary School"], [51.46965, -0.025864, "/schools/lewisham/ashmead-primary-school/", "Ashmead Primary School"], [51.451942, 0.008592, "/schools/lewisham/brindishe-lee-school/", "Brindishe Lee School"], [51.437722, -0.040176, "/schools/lewisham/kilmorie-primary-school/", "Kilmorie Primary School"], [51.469337, 0.00423, "/schools/lewisham/all-saints-church-of-england-primary-school-blackheath/", "All Saints' Church of England Primary School Blackheath"], [51.426849, 0.009836, "/schools/lewisham/good-shepherd-rc-school/", "Good Shepherd RC School"], [51.435309, -0.05671, "/schools/lewisham/holy-trinity-church-of-england-primary-school/", "Holy Trinity Church of England Primary School"], [51.459601, 0.005099, "/schools/lewisham/st-margarets-lee-cofe-primary-school/", "St Margaret's Lee CofE Primary School"], [51.42436, -0.016697, "/schools/lewisham/st-augustines-catholic-primary-school-and-nursery/", "St Augustine's Catholic Primary School and Nursery"], [51.430993, -0.055124, "/schools/lewisham/st-bartholomewss-church-of-england-primary-school/", "St Bartholomews's Church of England Primary School"], [51.428461, -0.009844, "/schools/lewisham/st-john-baptist-southend-church-of-england-primary-school/", "St John Baptist Southend Church of England Primary School"], [51.47875, -0.024232, "/schools/lewisham/st-josephs-catholic-primary-school/", "St Joseph's Catholic Primary School"], [51.45503, -0.015368, "/schools/lewisham/st-marys-lewisham-church-of-england-primary-school/", "St Mary's Lewisham Church of England Primary School"], [51.459945, -0.010361, "/schools/lewisham/st-saviours-catholic-primary-school/", "St Saviour's Catholic Primary School"], [51.444306, -0.03916, "/schools/lewisham/st-william-of-york-catholic-primary-school/", "St William of York Catholic Primary School"], [51.442842, -0.016803, "/schools/lewisham/holy-cross-catholic-primary-school/", "Holy Cross Catholic Primary School"], [51.478251, -0.035732, "/schools/lewisham/deptford-green-school/", "Deptford Green School"], [51.43423, -0.058899, "/schools/lewisham/sydenham-school/", "Sydenham School"], [51.431914, -0.047776, "/schools/lewisham/forest-hill-school/", "Forest Hill School"], [51.474602, -0.027839, "/schools/lewisham/addey-and-stanhope-school/", "Addey and Stanhope School"], [51.455215, 0.007541, "/schools/lewisham/trinity-church-of-england-school-lewisham/", "Trinity Church of England School, Lewisham"], [51.443816, -0.028719, "/schools/lewisham/st-dunstans-college/", "St Dunstan's College"], [51.426833, -0.064075, "/schools/lewisham/sydenham-dulwich-girls-gdst/", "Sydenham & Dulwich Girls GDST"], [51.431461, -0.038976, "/schools/lewisham/brent-knoll-school/", "Brent Knoll School"], [51.429056, 0.00169, "/schools/lewisham/new-woodlands-school/", "New Woodlands School"], [51.432976, 0.001761, "/schools/lewisham/greenvale-school/", "Greenvale School"], [51.425259, -0.022009, "/schools/lewisham/watergate-school/", "Watergate School"], [51.454842, 0.024567, "/schools/lewisham/abbey-manor-college/", "Abbey Manor College"], [51.443532, -0.046691, "/schools/lewisham/allenby-tutorial-trust/", "Allenby Tutorial Trust"], [51.427912, 0.016486, "/schools/lewisham/haberdashers-knights-academy/", "Haberdashers' Knights Academy"], [51.467333, -0.043241, "/schools/lewisham/haberdashers-hatcham-college/", "Haberdashers' Hatcham College"], [51.464218, -0.000415, "/schools/lewisham/st-matthew-academy/", "St Matthew Academy"], [51.49028, -0.04197, "/schools/lewisham/marathon-science-school/", "Marathon Science School"], [51.432689, 0.012193, "/schools/lewisham/drumbeat-school-and-asd-service/", "Drumbeat School and ASD Service"], [51.47748, -0.023567, "/schools/lewisham/tidemill-academy/", "Tidemill Academy"], [51.467333, -0.043241, "/schools/lewisham/haberdashers-hatcham-free-school/", "Haberdashers' Hatcham Free School"], [51.447734, 0.009602, "/schools/lewisham/st-winifreds-rc-primary-school/", "St Winifred's RC Primary School"], [51.464008, -0.014489, "/schools/lewisham/urban-mission-school/", "Urban Mission School"], [51.430249, -0.012946, "/schools/lewisham/education-my-life-matters/", "Education-My Life Matters"], [51.439392, -0.051889, "/schools/lewisham/st-georges-cofe-primary-school/", "St George's CofE Primary School"], [51.459809, -0.042901, "/schools/lewisham/turnham-academy/", "Turnham Academy"], [51.476974, -0.037875, "/schools/lewisham/childeric-primary-school/", "Childeric Primary School"], [51.444855, -0.005088, "/schools/lewisham/the-young-womens-hub/", "The Young Women's Hub"], [51.479996, -0.04869, "/schools/lewisham/haberdashers-hatcham-primary/", "Haberdashers' Hatcham Primary"], [51.431464, 0.017577, "/schools/lewisham/haberdashers-knights-primary/", "Haberdashers' Knights Primary"], [51.423142, -0.020763, "/schools/lewisham/sedgehill-academy/", "Sedgehill Academy"], [51.451648, -0.02975, "/schools/lewisham/prendergast-ladywell-school/", "Prendergast Ladywell School"], [51.458059, -0.02753, "/schools/lewisham/prendergast-school/", "Prendergast School"], [51.463566, -0.016006, "/schools/lewisham/prendergast-vale-school/", "Prendergast Vale School"], [51.426431, -0.041465, "/schools/lewisham/our-lady-and-st-philip-neri-catholic-primary-school/", "Our Lady and St Philip Neri Catholic Primary School"], [51.427684, -0.001679, "/schools/lewisham/bonus-pastor-catholic-college/", "Bonus Pastor Catholic College"], [51.433495, -0.011295, "/schools/lewisham/conisborough-college/", "Conisborough College"], [51.474219, -0.038799, "/schools/lewisham/st-jamess-hatcham-church-of-england-primary-school/", "St James's Hatcham Church of England Primary School"], [51.429754, -0.041754, "/schools/lewisham/st-michaels-church-of-england-primary-school/", "St Michael's Church of England Primary School"], [51.470189, -0.023753, "/schools/lewisham/st-stephens-cofe-primary-school/", "St Stephen's CofE Primary School"], [51.44819, -0.000784, "/schools/lewisham/the-anchor-sendfriendly-centre/", "The Anchor SENDfriendly Centre"]];
-    if (!points.length) return;
-    var lats = points.map(function(p) { return p[0]; });
-    var lngs = points.map(function(p) { return p[1]; });
-    var avgLat = lats.reduce(function(a,b) { return a+b; }, 0) / lats.length;
-    var avgLng = lngs.reduce(function(a,b) { return a+b; }, 0) / lngs.length;
-    var map = L.map('map', { scrollWheelZoom: false }).setView([avgLat, avgLng], 12);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 18,
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-    points.forEach(function(p) {
-      L.circleMarker([p[0], p[1]], {
-        radius: 5, color: '#0b2545', fillColor: '#0b6efd', fillOpacity: 0.8, weight: 1
-      }).addTo(map).bindPopup('<a href="' + p[2] + '">' + p[3] + '</a>');
+(function(){
+  var borough="Lewisham", boroughUrl="https://londonschool.directory/schools/lewisham";
+  var outstanding=14, total=96;
+
+  // Borough-level share
+  window.shareBoroughWhatsApp=function(){
+    var t='🏙️ *Schools in '+borough+', London*\n'+
+        '📊 '+total+' schools · '+outstanding+' Outstanding\n\n'+
+        '🔗 '+boroughUrl;
+    window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank');
+  };
+  window.shareBoroughEmail=function(){
+    var s='Schools in '+borough+' — London Schools Explorer';
+    var b='Schools in '+borough+', London\n'+
+        total+' schools, '+outstanding+' rated Outstanding by Ofsted\n\n'+
+        'Browse them here: '+boroughUrl;
+    window.location.href='mailto:?subject='+encodeURIComponent(s)+'&body='+encodeURIComponent(b);
+  };
+
+  // Shortlist comparison share
+  function getSelected(){
+    return Array.from(document.querySelectorAll('.sch-sel:checked')).map(function(cb){
+      return {name:cb.dataset.name,ofsted:cb.dataset.ofsted,phase:cb.dataset.phase,
+               att8:cb.dataset.att8,ks2:cb.dataset.ks2,url:cb.dataset.url};
     });
-  })();
+  }
+  function updateBar(){
+    var sel=getSelected();
+    var bar=document.getElementById('cmp-bar');
+    document.getElementById('cmp-count').textContent=sel.length+' school'+(sel.length===1?'':' s')+' selected';
+    bar.style.display=sel.length>0?'flex':'none';
+  }
+  document.querySelectorAll('.sch-sel').forEach(function(cb){ cb.onchange=updateBar; });
+
+  function buildCompareText(sel,markdown){
+    var lines=['📋 *My '+borough+' school shortlist*',''];
+    sel.forEach(function(s,i){
+      lines.push((i+1)+'. '+(markdown?'*':'')+s.name+(markdown?'*':''));
+      lines.push('   ⭐ Ofsted: '+s.ofsted+(s.phase?' · '+s.phase:''));
+      if(s.att8)lines.push('   📊 Attainment 8: '+s.att8);
+      if(s.ks2)lines.push('   📝 KS2 expected: '+s.ks2+'%');
+      lines.push('   🔗 '+s.url);
+      lines.push('');
+    });
+    lines.push('via London Schools Explorer — '+boroughUrl);
+    return lines.join('\n');
+  }
+  window.shareCompareWhatsApp=function(){
+    var sel=getSelected();
+    if(!sel.length)return;
+    window.open('https://wa.me/?text='+encodeURIComponent(buildCompareText(sel,true)),'_blank');
+  };
+  window.shareCompareEmail=function(){
+    var sel=getSelected();
+    if(!sel.length)return;
+    var subj='My '+borough+' school shortlist — London Schools Explorer';
+    window.location.href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(buildCompareText(sel,false));
+  };
+  window.clearSelection=function(){
+    document.querySelectorAll('.sch-sel:checked').forEach(function(cb){cb.checked=false;});
+    updateBar();
+  };
+})();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/sw.js').catch(function () {});
+  });
+}
 </script>
 </body>
 </html>

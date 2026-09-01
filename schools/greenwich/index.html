@@ -1,520 +1,1499 @@
-<!doctype html>
-<html lang="en-GB">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Schools in Greenwich, London — Ofsted, Performance & Admissions</title>
-<meta name="description" content="All 105 schools in Greenwich, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
-<link rel="canonical" href="https://londonschool.directory/schools/greenwich/">
-<meta property="og:title" content="Schools in Greenwich, London — Ofsted, Performance & Admissions">
-<meta property="og:description" content="All 105 schools in Greenwich, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://londonschool.directory/schools/greenwich/">
-<meta property="og:site_name" content="London School Directory">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#0b2545">
-<meta name="robots" content="index,follow,max-image-preview:large">
-<link rel="preconnect" href="https://unpkg.com">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<style>
-  :root {
-    --ink: #0b2545;
-    --ink-2: #1e3a5f;
-    --muted: #5b6b85;
-    --line: #e3e8ef;
-    --bg: #ffffff;
-    --bg-2: #f6f8fb;
-    --accent: #0b6efd;
-    --good: #137333;
-    --warn: #a85b00;
-    --bad: #b3261e;
-    --radius: 10px;
-  }
-  * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    color: var(--ink);
-    background: var(--bg);
-    line-height: 1.55;
-    -webkit-font-smoothing: antialiased;
-  }
-  a { color: var(--accent); text-decoration: none; }
-  a:hover { text-decoration: underline; }
-  header.site {
-    border-bottom: 1px solid var(--line);
-    background: var(--bg);
-    position: sticky; top: 0; z-index: 50;
-  }
-  header.site .inner {
-    max-width: 1100px; margin: 0 auto; padding: 14px 20px;
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  header.site a.brand { color: var(--ink); font-weight: 700; letter-spacing: -0.01em; }
-  header.site nav a { margin-left: 18px; color: var(--ink-2); font-size: 14px; }
-  main { max-width: 1100px; margin: 0 auto; padding: 28px 20px 80px; }
-  .crumbs { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
-  .crumbs a { color: var(--muted); }
-  h1 { font-size: 32px; line-height: 1.2; margin: 0 0 8px; letter-spacing: -0.02em; }
-  .lede { color: var(--ink-2); font-size: 17px; max-width: 720px; }
-  .stamp { font-size: 12px; color: var(--muted); margin-top: 8px; }
-  .stamp .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--good); vertical-align: middle; margin-right: 6px; }
-  .grid-stats {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 12px; margin: 24px 0 8px;
-  }
-  .stat {
-    background: var(--bg-2); border: 1px solid var(--line);
-    border-radius: var(--radius); padding: 14px 16px;
-  }
-  .stat .v { font-size: 24px; font-weight: 700; color: var(--ink); }
-  .stat .l { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
-  section { margin-top: 36px; }
-  h2 { font-size: 22px; margin: 0 0 12px; letter-spacing: -0.01em; }
-  .twocol { display: grid; grid-template-columns: 1.4fr 1fr; gap: 28px; }
-  @media (max-width: 820px) { .twocol { grid-template-columns: 1fr; } }
-  table.schools { width: 100%; border-collapse: collapse; font-size: 14px; }
-  table.schools th, table.schools td {
-    text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line);
-  }
-  table.schools th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); font-weight: 600; }
-  .rating { font-weight: 600; }
-  .rating.Outstanding { color: var(--good); }
-  .rating.Good { color: var(--ink-2); }
-  .rating.RequiresImprovement, .rating.Requires { color: var(--warn); }
-  .rating.Inadequate { color: var(--bad); }
-  #map { height: 380px; border-radius: var(--radius); border: 1px solid var(--line); }
-  .pills { display: flex; flex-wrap: wrap; gap: 6px; }
-  .pill { background: var(--bg-2); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; font-size: 12px; color: var(--ink-2); }
-  details.faq { border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 8px; background: var(--bg); }
-  details.faq summary { cursor: pointer; font-weight: 600; color: var(--ink); }
-  details.faq[open] { background: var(--bg-2); }
-  footer { border-top: 1px solid var(--line); padding: 28px 20px; color: var(--muted); font-size: 13px; }
-  footer .inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 24px; flex-wrap: wrap; }
-  .sources { font-size: 13px; color: var(--muted); }
-  .sources a { color: var(--muted); text-decoration: underline; }
-  .cta {
-    display: inline-block; background: var(--ink); color: #fff; padding: 10px 14px;
-    border-radius: var(--radius); font-size: 14px; font-weight: 600;
-  }
-  .cta:hover { background: var(--ink-2); text-decoration: none; }
-</style>
-<script type="application/ld+json">
-[
-  {
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Schools in Greenwich, London | Ofsted Ratings &amp; Results | London Schools Explorer</title>
+  <meta name="description" content="105 schools in Greenwich, London. 20 Outstanding, 68 Good-rated by Ofsted. Compare admissions oversubscription, exam results and crime data. Free.">
+  <script type="application/ld+json">{
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "name": "Top schools in Greenwich, London",
-    "itemListOrder": "http://schema.org/ItemListOrderDescending",
-    "numberOfItems": 14,
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "url": "https://londonschool.directory/schools/greenwich/st-marys-catholic-primary-school/",
-        "name": "St Mary's Catholic Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "url": "https://londonschool.directory/schools/greenwich/wingfield-primary-school/",
-        "name": "Wingfield Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "url": "https://londonschool.directory/schools/greenwich/our-lady-of-grace-catholic-primary-school/",
-        "name": "Our Lady of Grace Catholic Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 4,
-        "url": "https://londonschool.directory/schools/greenwich/st-peters-catholic-primary-school/",
-        "name": "St Peter's Catholic Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 5,
-        "url": "https://londonschool.directory/schools/greenwich/bannockburn-primary-school/",
-        "name": "Bannockburn Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 6,
-        "url": "https://londonschool.directory/schools/greenwich/deansfield-primary-school/",
-        "name": "Deansfield Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 7,
-        "url": "https://londonschool.directory/schools/greenwich/foxfield-primary-school/",
-        "name": "Foxfield Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 8,
-        "url": "https://londonschool.directory/schools/greenwich/ark-greenwich-free-school/",
-        "name": "Ark Greenwich Free School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 9,
-        "url": "https://londonschool.directory/schools/greenwich/harris-academy-greenwich/",
-        "name": "Harris Academy Greenwich"
-      },
-      {
-        "@type": "ListItem",
-        "position": 10,
-        "url": "https://londonschool.directory/schools/greenwich/leigh-academy-blackheath/",
-        "name": "Leigh Academy Blackheath"
-      },
-      {
-        "@type": "ListItem",
-        "position": 11,
-        "url": "https://londonschool.directory/schools/greenwich/willow-dene-school/",
-        "name": "Willow Dene School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 12,
-        "url": "https://londonschool.directory/schools/greenwich/serenity-school-eltham/",
-        "name": "Serenity School Eltham"
-      },
-      {
-        "@type": "ListItem",
-        "position": 13,
-        "url": "https://londonschool.directory/schools/greenwich/st-thomas-more-catholic-comprehensive-school/",
-        "name": "St Thomas More Catholic Comprehensive School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 14,
-        "url": "https://londonschool.directory/schools/greenwich/eltham-hill-school/",
-        "name": "Eltham Hill School"
-      }
-    ]
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How many schools are there in Greenwich?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Greenwich has 105 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 75 are primary, 33 are secondary, and the remainder are special, all-through, or post-16."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What proportion of Greenwich schools are Outstanding?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "As of the latest Ofsted Management Information release, 20 schools in Greenwich (19.0%) are rated Outstanding, and 83.8% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "When do I apply for a Reception or Year 7 place in Greenwich?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Greenwich's applications are coordinated by the local authority through the eAdmissions system. See our full Reception timeline guide."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How does the school appeals process work in Greenwich?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "If you are refused your preferred school place, you have a statutory right of appeal. Greenwich appeals are typically heard in May (Reception) and June\u2013July (secondary). See our appeals tracker for Greenwich-level success rates by year."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How can I tell which Greenwich schools are over-subscribed?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release."
-        }
-      }
-    ]
-  },
-  {
+    "name": "Schools in Greenwich, London",
+    "description": "105 schools in Greenwich, London rated by Ofsted",
+    "numberOfItems": 105,
+    "url": "https://londonschool.directory/schools/greenwich"
+  }</script>
+  <script type="application/ld+json">{
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": "https://londonschool.directory/"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Boroughs",
-        "item": "https://londonschool.directory/schools/"
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "name": "Greenwich",
-        "item": "https://londonschool.directory/schools/greenwich/"
-      }
+      {"@type": "ListItem", "position": 1, "name": "London Schools Explorer", "item": "https://londonschool.directory/"},
+      {"@type": "ListItem", "position": 2, "name": "Schools in Greenwich", "item": "https://londonschool.directory/schools/greenwich"}
     ]
-  }
-]
-</script>
+  }</script>
+  <link rel="canonical" href="https://londonschool.directory/schools/greenwich">
+  <meta property="og:title" content="Schools in Greenwich | London Schools Explorer">
+  <meta property="og:description" content="105 schools in Greenwich. 20 Outstanding-rated. Compare Ofsted ratings, exam results and admissions.">
+  <meta property="og:url" content="https://londonschool.directory/schools/greenwich">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, sans-serif; color: #1a1a1a; background: #f8f9fa; line-height: 1.6; }
+    a { color: #1565C0; }
+    .topbar { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 12px 20px; }
+    .topbar a { text-decoration: none; font-weight: 600; color: #1a1a1a; font-size: 15px; }
+    .topbar span { color: #888; margin: 0 8px; }
+    .container { max-width: 900px; margin: 0 auto; padding: 32px 20px; }
+    h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+    .intro { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; font-size: 15px; color: #333; line-height: 1.7; }
+    .stats-row { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+    .stat-box { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 14px 18px; flex: 1; min-width: 120px; }
+    .stat-num { font-size: 24px; font-weight: 700; color: #1a1a1a; line-height: 1; }
+    .stat-lbl { font-size: 12px; color: #888; margin-top: 4px; }
+    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #e0e0e0; }
+    th { background: #f5f5f5; padding: 12px 16px; text-align: left; font-size: 13px; color: #555; font-weight: 600; border-bottom: 1px solid #e0e0e0; }
+    td { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fafafa; }
+    .back { display: inline-block; margin-bottom: 20px; font-size: 14px; color: #555; text-decoration: none; }
+    .back:hover { color: #111; }
+    footer { text-align: center; padding: 32px 20px; font-size: 13px; color: #888; }
+    @media (max-width: 600px) {
+      .container { padding: 16px 12px; }
+      h1 { font-size: 22px; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .intro { padding: 14px 16px; font-size: 14px; }
+      table { font-size: 13px; }
+      th, td { padding: 10px 10px; }
+      .topbar { padding: 10px 12px; font-size: 13px; }
+    }
+    @media (max-width: 600px) { .stats-row { flex-direction: column; } }
+  </style>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 </head>
 <body>
-<header class="site">
-  <div class="inner">
-    <a class="brand" href="/">London School Directory</a>
-    <nav>
-      <a href="/">Search</a>
-      <a href="/appeals.html">Appeals</a>
-      <a href="/methodology.html">Methodology</a>
-      <a href="/about.html">About</a>
-    </nav>
+<div class="topbar">
+  <div style="max-width:900px;margin:0 auto">
+    <a href="/">London Schools Explorer</a>
+    <span>/</span>
+    Greenwich
   </div>
-</header>
-<main>
-  <div class="crumbs">
-    <a href="/">Home</a> &rsaquo; <a href="/schools/">Boroughs</a> &rsaquo; Greenwich
+</div>
+<div class="container">
+  <a class="back" href="/">&#8592; All boroughs</a>
+  <h1>Schools in Greenwich</h1>
+
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-num">105</div><div class="stat-lbl">Total schools</div></div>
+    <div class="stat-box"><div class="stat-num">20</div><div class="stat-lbl">Outstanding</div></div>
+    <div class="stat-box"><div class="stat-num">68</div><div class="stat-lbl">Good</div></div>
+    <div class="stat-box"><div class="stat-num">5</div><div class="stat-lbl">School phases</div></div>
   </div>
 
-  <h1>Schools in Greenwich, London</h1>
-  <p class="lede">Greenwich's schools cover Woolwich, Eltham, Greenwich town, Charlton and Plumstead. The borough has invested significantly in secondary provision and has a number of recently rebuilt schools. Reception applications remain competitive in the west of the borough, particularly close to the river.</p>
-  <p class="stamp"><span class="dot"></span>Data last verified 1 September 2026. Sources: Ofsted, DfE GIAS, DfE Performance Tables, Metropolitan Police, MHCLG IMD. See <a href="/sources.html">all sources</a>.</p>
+  <div class="intro">Greenwich combines historic significance with a growing and improving school landscape. The borough has seen considerable investment in new school places due to population growth. Secondary schools including Thomas Tallis and Corelli College are well regarded. The borough also benefits from proximity to Blackheath and Eltham, areas popular with families.</div>
 
-  <section>
-    <div class="grid-stats">
-      <div class="stat"><div class="v">105</div><div class="l">Schools in Greenwich</div></div>
-      <div class="stat"><div class="v">19.0%</div><div class="l">Outstanding Ofsted</div></div>
-      <div class="stat"><div class="v">83.8%</div><div class="l">Good or Outstanding</div></div>
-      <div class="stat"><div class="v">75</div><div class="l">Primary schools</div></div>
-      <div class="stat"><div class="v">33</div><div class="l">Secondary schools</div></div>
-      <div class="stat"><div class="v">18%</div><div class="l">Secondary appeal success (2024)</div></div>
-    </div>
-  </section>
+  
+<div style="display:flex;gap:16px;flex-wrap:wrap;margin:20px 0;">
 
-  <section>
-    <div class="twocol">
-      <div>
-        <h2>Top primary schools in Greenwich</h2>
-        <p class="sources">Ranked by Ofsted rating, then by latest KS2 performance. See <a href="/methodology.html">methodology</a>.</p>
-        <table class="schools">
-          <thead>
-            <tr><th>School</th><th>Ofsted</th><th>KS2 %</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><a href="/schools/greenwich/st-marys-catholic-primary-school/">St Mary's Catholic Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>93.0</td></tr>
-            <tr><td><a href="/schools/greenwich/wingfield-primary-school/">Wingfield Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>93.0</td></tr>
-            <tr><td><a href="/schools/greenwich/our-lady-of-grace-catholic-primary-school/">Our Lady of Grace Catholic Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>86.0</td></tr>
-            <tr><td><a href="/schools/greenwich/st-peters-catholic-primary-school/">St Peter's Catholic Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>86.0</td></tr>
-            <tr><td><a href="/schools/greenwich/bannockburn-primary-school/">Bannockburn Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>83.0</td></tr>
-            <tr><td><a href="/schools/greenwich/deansfield-primary-school/">Deansfield Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>80.0</td></tr>
-            <tr><td><a href="/schools/greenwich/foxfield-primary-school/">Foxfield Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>80.0</td></tr>
-          </tbody>
-        </table>
-
-        <h2 style="margin-top:28px">Top secondary schools in Greenwich</h2>
-        <p class="sources">Ranked by Ofsted rating, then by latest KS4 Attainment 8.</p>
-        <table class="schools">
-          <thead>
-            <tr><th>School</th><th>Ofsted</th><th>Att 8</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><a href="/schools/greenwich/ark-greenwich-free-school/">Ark Greenwich Free School</a></td><td class="rating Outstanding">Outstanding</td><td>59.0</td></tr>
-            <tr><td><a href="/schools/greenwich/harris-academy-greenwich/">Harris Academy Greenwich</a></td><td class="rating Outstanding">Outstanding</td><td>51.1</td></tr>
-            <tr><td><a href="/schools/greenwich/leigh-academy-blackheath/">Leigh Academy Blackheath</a></td><td class="rating Outstanding">Outstanding</td><td>47.6</td></tr>
-            <tr><td><a href="/schools/greenwich/willow-dene-school/">Willow Dene School</a></td><td class="rating Outstanding">Outstanding</td><td>—</td></tr>
-            <tr><td><a href="/schools/greenwich/serenity-school-eltham/">Serenity School Eltham</a></td><td class="rating Outstanding">Outstanding</td><td>—</td></tr>
-            <tr><td><a href="/schools/greenwich/st-thomas-more-catholic-comprehensive-school/">St Thomas More Catholic Comprehensive School</a></td><td class="rating Good">Good</td><td>60.0</td></tr>
-            <tr><td><a href="/schools/greenwich/eltham-hill-school/">Eltham Hill School</a></td><td class="rating Good">Good</td><td>55.3</td></tr>
-          </tbody>
-        </table>
-
-        <p style="margin-top:14px"><a class="cta" href="#all-schools">Jump to all 105 schools in Greenwich</a></p>
-      </div>
-      <div>
-        <h2>Map</h2>
-        <div id="map" aria-label="Map of schools in Greenwich"></div>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <h2>What the data says about Greenwich</h2>
-    <p><strong>83.8%</strong> of Greenwich schools are currently rated Good or Outstanding by Ofsted, compared with a London average of roughly 90% for primary and 80% for secondary. The average number of applications per place across Greenwich is <strong>1.25</strong>, a useful indicator of how competitive local admissions are. The average number of recorded crime incidents within 500 metres of a school in Greenwich over the most recent reporting month is <strong>105.38</strong>, drawn from the Metropolitan Police open data API. The mean IMD (Index of Multiple Deprivation) decile of Greenwich's schools is <strong>4.29</strong> — 1 is most deprived, 10 is least deprived. All metrics on this page are recomputed from source data on the 15th of every month. See our <a href='/methodology.html'>methodology</a> for definitions and limitations.</p>
-  </section>
-
-  <section id="all-schools">
-    <h2>All schools in Greenwich</h2>
-    <p class="sources">Every school in Greenwich, listed alphabetically. Click any school for the full record.</p>
-    <table class="schools">
-      <thead>
-        <tr><th>School</th><th>Phase</th><th>Ofsted</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><a href="/schools/greenwich/abbey-wood-nursery-school/">Abbey Wood Nursery School</a></td><td>Nursery</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/alderwood-primary-school/">Alderwood Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/alexander-mcleod-primary-school/">Alexander McLeod Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/greenwich/ark-greenwich-free-school/">Ark Greenwich Free School</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/greenwich/bannockburn-primary-school/">Bannockburn Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/greenwich/bishop-john-robinson-church-of-england-primary-school/">Bishop John Robinson Church of England Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/blackheath-high-school-gdst/">Blackheath High School GDST</a></td><td>All-through</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/greenwich/blackheath-prep/">Blackheath Prep</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/greenwich/boxgrove-primary-school/">Boxgrove Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/brooklands-primary-school/">Brooklands Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/cardwell-primary-school/">Cardwell Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/greenwich/charlton-manor-primary-school/">Charlton Manor Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/charlton-park-academy/">Charlton Park Academy</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/cherry-orchard-primary-school/">Cherry Orchard Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/christ-church-church-of-england-primary-school/">Christ Church Church of England Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/christ-church-church-of-england-primary-school-shooters-hill/">Christ Church Church of England Primary School, Shooters Hill</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/colfes-school/">Colfe's School</a></td><td>All-through</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/greenwich/conway-primary-school/">Conway Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/de-lucy-primary-school/">De Lucy Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/deansfield-primary-school/">Deansfield Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/greenwich/discovery-primary-school/">Discovery Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/ealdham-primary-school/">Ealdham Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/eglinton-primary-school/">Eglinton Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/greenwich/eltham-church-of-england-primary-school/">Eltham Church of England Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/eltham-hill-school/">Eltham Hill School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/fossdene-primary-school/">Fossdene Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/foxfield-primary-school/">Foxfield Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/greenwich/gordon-primary-school/">Gordon Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/greenacres-primary-school-and-language-impairment-unit/">Greenacres Primary School and Language Impairment Unit</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/greenslade-primary-school/">Greenslade Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/greenwich-waldorf-school/">Greenwich Waldorf School</a></td><td>All-through</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/greenwich/haimo-primary-school/">Haimo Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/halstow-primary-school/">Halstow Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/harris-academy-greenwich/">Harris Academy Greenwich</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/greenwich/hawksmoor-school/">Hawksmoor School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/henwick-primary-school/">Henwick Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/heronsgate-primary-school/">Heronsgate Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/greenwich/horn-park-primary-school/">Horn Park Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/in-toto-ed-london/">In Toto Ed London</a></td><td>Secondary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/greenwich/invicta-primary-school/">Invicta Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/james-wolfe-primary-school-and-centre-for-the-deaf/">James Wolfe Primary School and Centre for the Deaf</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/kidbrooke-park-primary-school/">Kidbrooke Park Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/kings-oak-school/">King's Oak School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/leigh-academy-blackheath/">Leigh Academy Blackheath</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/greenwich/leigh-academy-halley/">Leigh Academy Halley</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/leigh-stationers-academy/">Leigh Stationers' Academy</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/linton-mead-primary-school/">Linton Mead Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/meridian-primary-school/">Meridian Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/middle-park-primary-school/">Middle Park Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/millennium-primary-school/">Millennium Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/montbelle-primary-school/">Montbelle Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/morden-mount-primary-school/">Morden Mount Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/mulgrave-primary-school/">Mulgrave Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/newhaven-pupil-referral-unit/">Newhaven Pupil Referral Unit</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/nightingale-primary-school/">Nightingale Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/notre-dame-catholic-primary-school/">Notre Dame Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/our-lady-of-grace-catholic-primary-school/">Our Lady of Grace Catholic Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/greenwich/plumcroft-primary-school/">Plumcroft Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/plumstead-manor-school/">Plumstead Manor School</a></td><td>Secondary</td><td class="rating Requiresimprovement">Requires improvement</td></tr>
-        <tr><td><a href="/schools/greenwich/pound-park-nursery-school/">Pound Park Nursery School</a></td><td>Nursery</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/pulse-and-water-college/">Pulse and Water College</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/rachel-mcmillan-nursery-school-and-childrens-centre/">Rachel McMillan Nursery School and Children's Centre</a></td><td>Nursery</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/greenwich/riverston-school/">Riverston School</a></td><td>All-through</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/greenwich/robert-owen-nursery-school/">Robert Owen Nursery School</a></td><td>Nursery</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/greenwich/rockliffe-manor-primary-school/">Rockliffe Manor Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/rowan-wood-school/">Rowan Wood School</a></td><td>All-through</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/greenwich/royal-greenwich-trust-school/">Royal Greenwich Trust School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/saint-mary-magdalene-church-of-england-all-through-school/">Saint Mary Magdalene Church of England All Through School</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/serenity-school-eltham/">Serenity School Eltham</a></td><td>All-through</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/greenwich/sherington-primary-school/">Sherington Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/shooters-hill-sixth-form-college/">Shooters Hill Sixth Form College</a></td><td>Sixth form</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/greenwich/social-arts-for-education/">Social Arts for Education</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/south-rise-primary-school/">South Rise Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/st-alfege-with-st-peters-church-of-england-primary-school/">St Alfege with St Peter's Church of England Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/st-josephs-catholic-primary-school/">St Joseph's Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/st-margaret-clitherow-catholic-primary-school/">St Margaret Clitherow Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/st-margarets-church-of-england-primary-school/">St Margaret's Church of England Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/st-marys-catholic-primary-school/">St Mary's Catholic Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/greenwich/st-olaves-prep-school/">St Olave's Prep School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/greenwich/st-patricks-catholic-primary-school/">St Patrick's Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/st-pauls-academy/">St Paul's Academy</a></td><td>Secondary</td><td class="rating Requiresimprovement">Requires improvement</td></tr>
-        <tr><td><a href="/schools/greenwich/st-peters-catholic-primary-school/">St Peter's Catholic Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/greenwich/st-thomas-a-becket-roman-catholic-primary-school/">St Thomas A Becket Roman Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/st-thomas-more-catholic-comprehensive-school/">St Thomas More Catholic Comprehensive School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/st-thomas-more-catholic-primary-school/">St Thomas More Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/st-ursulas-convent-school/">St Ursula's Convent School</a></td><td>Secondary</td><td class="rating Requiresimprovement">Requires improvement</td></tr>
-        <tr><td><a href="/schools/greenwich/streetvibes-media-academy/">StreetVibes Media Academy</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/the-anchor-sendfriendly-centre/">The Anchor Sendfriendly Centre</a></td><td>All-through</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/greenwich/the-john-roan-school/">The John Roan School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/the-pointer-school/">The Pointer School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/greenwich/thomas-tallis-school/">Thomas Tallis School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/thorntree-primary-school/">Thorntree Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/thrive-independent-school/">Thrive Independent School</a></td><td>Secondary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/greenwich/timbercroft-primary-school/">Timbercroft Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/waterside-school/">Waterside School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/greenwich/wildwood-montessori-school/">Wildwood Montessori School</a></td><td>—</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/greenwich/willow-dene-school/">Willow Dene School</a></td><td>All-through</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/greenwich/windrush-charlton-primary-school/">Windrush Charlton Primary School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/greenwich/windrush-thamesmead-primary-school/">Windrush Thamesmead Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/greenwich/wingfield-primary-school/">Wingfield Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/greenwich/wize-up/">Wize Up</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/woodhill-primary-school/">Woodhill Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/woolwich-polytechnic-school/">Woolwich Polytechnic School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/woolwich-polytechnic-school-for-girls/">Woolwich Polytechnic School for Girls</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/greenwich/wyborne-primary-school/">Wyborne Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <section>
-    <h2>Frequently asked</h2>
-    <details class="faq"><summary>How many schools are there in Greenwich?</summary><p>Greenwich has 105 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 75 are primary, 33 are secondary, and the remainder are special, all-through, or post-16.</p></details>
-<details class="faq"><summary>What proportion of Greenwich schools are Outstanding?</summary><p>As of the latest Ofsted Management Information release, 20 schools in Greenwich (19.0%) are rated Outstanding, and 83.8% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication.</p></details>
-<details class="faq"><summary>When do I apply for a Reception or Year 7 place in Greenwich?</summary><p>Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Greenwich's applications are coordinated by the local authority through the eAdmissions system. See our <a href='/guides/london-reception-application-timeline/'>full Reception timeline guide</a>.</p></details>
-<details class="faq"><summary>How does the school appeals process work in Greenwich?</summary><p>If you are refused your preferred school place, you have a statutory right of appeal. Greenwich appeals are typically heard in May (Reception) and June–July (secondary). See our <a href='/appeals.html'>appeals tracker</a> for Greenwich-level success rates by year.</p></details>
-<details class="faq"><summary>How can I tell which Greenwich schools are over-subscribed?</summary><p>Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release.</p></details>
-  </section>
-
-  <section>
-    <h2>Sources</h2>
-    <p class="sources">
-      School list and phase from <a href="https://get-information-schools.service.gov.uk/" rel="nofollow">DfE Get Information About Schools</a> (refreshed monthly).
-      Ofsted ratings from <a href="https://www.gov.uk/government/statistical-data-sets/monthly-management-information-ofsteds-school-inspections-outcomes" rel="nofollow">Ofsted Management Information</a> (refreshed monthly).
-      Performance data from <a href="https://explore-education-statistics.service.gov.uk/" rel="nofollow">DfE Explore Education Statistics</a>.
-      Crime data within 500m from the <a href="https://data.police.uk/" rel="nofollow">Metropolitan Police open data API</a>.
-      Deprivation deciles from <a href="https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019" rel="nofollow">MHCLG English Indices of Deprivation 2019</a>.
-      Read our full <a href="/methodology.html">methodology</a> for how each metric is calculated.
-    </p>
-  </section>
-</main>
-<footer>
-  <div class="inner">
-    <div>&copy; London School Directory. Independent. Free to use.</div>
-    <div><a href="/about.html">About</a> &middot; <a href="/methodology.html">Methodology</a> &middot; <a href="/sources.html">Sources</a> &middot; <a href="/appeals.html">Appeals</a></div>
-    <div>Browse by type: <a href="/schools/outstanding">Outstanding</a> &middot; <a href="/schools/good">Good</a> &middot; <a href="/schools/grammar">Grammar</a> &middot; <a href="/schools/selective">Selective</a> &middot; <a href="/schools/faith">Faith</a> &middot; <a href="/schools/primary">Primary</a> &middot; <a href="/schools/secondary">Secondary</a> &middot; <a href="/schools/sixth-form">Sixth form</a> &middot; <a href="/schools/independent">Private &amp; independent</a></div>
+<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fdf4ff 0%,#ede9fe 100%);
+     border:1px solid #d8b4fe;border-radius:12px;padding:14px 20px;">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+    <span style="font-size:22px;">🎓</span>
+    <strong style="font-size:15px;color:#5b21b6;">11+ &amp; 13+ Exam Prep</strong>
   </div>
-</footer>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
+    PiAcademy resources for grammar school entrance, SATs &amp; GCSE.
+    Use code <strong>THIERR25</strong> for 25% off.
+  </p>
+  <a href="https://piacademy.co.uk/?aff=28"
+     target="_blank" rel="noopener sponsored"
+     style="display:inline-block;padding:9px 18px;background:#7e22ce;color:#fff;
+            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
+    Get 25% OFF →
+  </a>
+  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
+</div>
+<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%);
+     border:1px solid #fcd34d;border-radius:12px;padding:14px 20px;">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+    <span style="font-size:22px;">📚</span>
+    <strong style="font-size:15px;color:#92400e;">Children's Books</strong>
+  </div>
+  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
+    Great books at low prices. At checkout, choose your school — Scholastic donates
+    <strong>20p for every £1 spent</strong> back to the school in free books.
+  </p>
+  <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&ued=https%3A%2F%2Fwww.scholastic.co.uk%2Fteachers"
+     target="_blank" rel="noopener sponsored"
+     style="display:inline-block;padding:9px 18px;background:#d97706;color:#fff;
+            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
+    Shop at Scholastic →
+  </a>
+  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
+</div>
+<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fff8f0 0%,#fff3e0 100%);
+     border:1px solid #fed7aa;border-radius:12px;padding:14px 20px;">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+    <span style="font-size:22px;">🛒</span>
+    <strong style="font-size:15px;color:#92400e;">School Supplies</strong>
+  </div>
+  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
+    Stationery, bags, PE kit, lunchboxes and more — fast delivery from Amazon.
+  </p>
+  <a href="https://www.amazon.co.uk/s?k=school+supplies+stationery&tag=londonparents-21"
+     target="_blank" rel="noopener sponsored"
+     style="display:inline-block;padding:9px 18px;background:#FF9900;color:#111;
+            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
+    Shop on Amazon →
+  </a>
+  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
+</div>
+</div>
+
+  <!-- Borough share buttons -->
+  <div style="display:flex;gap:10px;margin:16px 0 8px;flex-wrap:wrap;align-items:center;">
+    <span style="font-size:13px;color:#555;font-weight:600;">Share Greenwich schools:</span>
+    <button onclick="shareBoroughWhatsApp()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 WhatsApp</button>
+    <button onclick="shareBoroughEmail()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#1565C0;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Email</button>
+    <span style="font-size:12px;color:#999;margin-left:4px;">Or tick schools below to share a shortlist</span>
+  </div>
+
+  <!-- Sticky compare bar (appears when schools are ticked) -->
+  <div id="cmp-bar" style="display:none;position:sticky;top:0;z-index:100;background:#1A1A2E;color:#fff;padding:12px 16px;border-radius:10px;margin-bottom:12px;display:none;align-items:center;gap:10px;flex-wrap:wrap;">
+    <span id="cmp-count" style="font-weight:700;font-size:14px;">0 schools selected</span>
+    <button onclick="shareCompareWhatsApp()" style="padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 Share via WhatsApp</button>
+    <button onclick="shareCompareEmail()" style="padding:8px 16px;background:#fff;color:#1A1A2E;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Share via Email</button>
+    <button onclick="clearSelection()" style="padding:8px 12px;background:transparent;color:#aaa;border:1px solid #555;border-radius:8px;font-size:12px;cursor:pointer;">✕ Clear</button>
+  </div>
+
+  <table>
+    <thead><tr><th style="width:36px"></th><th>School</th><th>Phase</th><th>Ofsted</th><th>Pupils</th></tr></thead>
+    <tbody><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Abbey Wood Nursery School"
+            data-ofsted="Good"
+            data-phase="Nursery"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/abbey-wood-nursery-school"></td>
+          <td><a href="/schools/greenwich/abbey-wood-nursery-school">Abbey Wood Nursery School</a></td>
+          <td>Nursery</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>115</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Alderwood Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="63.0"
+            data-url="https://londonschool.directory/schools/greenwich/alderwood-primary-school"></td>
+          <td><a href="/schools/greenwich/alderwood-primary-school">Alderwood Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>192</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Alexander McLeod Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="53.0"
+            data-url="https://londonschool.directory/schools/greenwich/alexander-mcleod-primary-school"></td>
+          <td><a href="/schools/greenwich/alexander-mcleod-primary-school">Alexander McLeod Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>544</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Ark Greenwich Free School"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="59.0"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/ark-greenwich-free-school"></td>
+          <td><a href="/schools/greenwich/ark-greenwich-free-school">Ark Greenwich Free School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>615</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Bannockburn Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="83.0"
+            data-url="https://londonschool.directory/schools/greenwich/bannockburn-primary-school"></td>
+          <td><a href="/schools/greenwich/bannockburn-primary-school">Bannockburn Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>879</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Bishop John Robinson Church of England Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="71.0"
+            data-url="https://londonschool.directory/schools/greenwich/bishop-john-robinson-church-of-england-primary-school"></td>
+          <td><a href="/schools/greenwich/bishop-john-robinson-church-of-england-primary-school">Bishop John Robinson Church of England Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>209</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Blackheath High School GDST"
+            data-ofsted="Not yet rated"
+            data-phase="All-through"
+            data-att8="53.2"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/blackheath-high-school-gdst"></td>
+          <td><a href="/schools/greenwich/blackheath-high-school-gdst">Blackheath High School GDST</a></td>
+          <td>All-through</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>704</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Blackheath Prep"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/blackheath-prep"></td>
+          <td><a href="/schools/greenwich/blackheath-prep">Blackheath Prep</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>390</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Boxgrove Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="67.0"
+            data-url="https://londonschool.directory/schools/greenwich/boxgrove-primary-school"></td>
+          <td><a href="/schools/greenwich/boxgrove-primary-school">Boxgrove Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>382</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Brooklands Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="79.0"
+            data-url="https://londonschool.directory/schools/greenwich/brooklands-primary-school"></td>
+          <td><a href="/schools/greenwich/brooklands-primary-school">Brooklands Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>233</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Cardwell Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="67.0"
+            data-url="https://londonschool.directory/schools/greenwich/cardwell-primary-school"></td>
+          <td><a href="/schools/greenwich/cardwell-primary-school">Cardwell Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>423</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Charlton Manor Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="69.0"
+            data-url="https://londonschool.directory/schools/greenwich/charlton-manor-primary-school"></td>
+          <td><a href="/schools/greenwich/charlton-manor-primary-school">Charlton Manor Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>410</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Charlton Park Academy"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="0.7"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/charlton-park-academy"></td>
+          <td><a href="/schools/greenwich/charlton-park-academy">Charlton Park Academy</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>218</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Cherry Orchard Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="76.0"
+            data-url="https://londonschool.directory/schools/greenwich/cherry-orchard-primary-school"></td>
+          <td><a href="/schools/greenwich/cherry-orchard-primary-school">Cherry Orchard Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>174</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Christ Church Church of England Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="69.0"
+            data-url="https://londonschool.directory/schools/greenwich/christ-church-church-of-england-primary-school"></td>
+          <td><a href="/schools/greenwich/christ-church-church-of-england-primary-school">Christ Church Church of England Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>161</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Christ Church Church of England Primary School, Shooters Hill"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="83.0"
+            data-url="https://londonschool.directory/schools/greenwich/christ-church-church-of-england-primary-school-shooters-hill"></td>
+          <td><a href="/schools/greenwich/christ-church-church-of-england-primary-school-shooters-hill">Christ Church Church of England Primary School, Shooters Hill</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>207</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Colfe's School"
+            data-ofsted="Not yet rated"
+            data-phase="All-through"
+            data-att8="43.5"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/colfes-school"></td>
+          <td><a href="/schools/greenwich/colfes-school">Colfe's School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>1325</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Conway Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="85.0"
+            data-url="https://londonschool.directory/schools/greenwich/conway-primary-school"></td>
+          <td><a href="/schools/greenwich/conway-primary-school">Conway Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>430</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="De Lucy Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="71.0"
+            data-url="https://londonschool.directory/schools/greenwich/de-lucy-primary-school"></td>
+          <td><a href="/schools/greenwich/de-lucy-primary-school">De Lucy Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>251</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Deansfield Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="80.0"
+            data-url="https://londonschool.directory/schools/greenwich/deansfield-primary-school"></td>
+          <td><a href="/schools/greenwich/deansfield-primary-school">Deansfield Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>461</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Discovery Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="89.0"
+            data-url="https://londonschool.directory/schools/greenwich/discovery-primary-school"></td>
+          <td><a href="/schools/greenwich/discovery-primary-school">Discovery Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>523</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Ealdham Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="86.0"
+            data-url="https://londonschool.directory/schools/greenwich/ealdham-primary-school"></td>
+          <td><a href="/schools/greenwich/ealdham-primary-school">Ealdham Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>455</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Eglinton Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="69.0"
+            data-url="https://londonschool.directory/schools/greenwich/eglinton-primary-school"></td>
+          <td><a href="/schools/greenwich/eglinton-primary-school">Eglinton Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>360</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Eltham Church of England Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="77.0"
+            data-url="https://londonschool.directory/schools/greenwich/eltham-church-of-england-primary-school"></td>
+          <td><a href="/schools/greenwich/eltham-church-of-england-primary-school">Eltham Church of England Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>450</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Eltham Hill School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="55.3"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/eltham-hill-school"></td>
+          <td><a href="/schools/greenwich/eltham-hill-school">Eltham Hill School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1350</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Fossdene Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="90.0"
+            data-url="https://londonschool.directory/schools/greenwich/fossdene-primary-school"></td>
+          <td><a href="/schools/greenwich/fossdene-primary-school">Fossdene Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>206</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Foxfield Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="80.0"
+            data-url="https://londonschool.directory/schools/greenwich/foxfield-primary-school"></td>
+          <td><a href="/schools/greenwich/foxfield-primary-school">Foxfield Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>666</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Gordon Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="85.0"
+            data-url="https://londonschool.directory/schools/greenwich/gordon-primary-school"></td>
+          <td><a href="/schools/greenwich/gordon-primary-school">Gordon Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>439</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Greenacres Primary School and Language Impairment Unit"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="65.0"
+            data-url="https://londonschool.directory/schools/greenwich/greenacres-primary-school-and-language-impairment-unit"></td>
+          <td><a href="/schools/greenwich/greenacres-primary-school-and-language-impairment-unit">Greenacres Primary School and Language Impairment Unit</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>265</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Greenslade Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="65.0"
+            data-url="https://londonschool.directory/schools/greenwich/greenslade-primary-school"></td>
+          <td><a href="/schools/greenwich/greenslade-primary-school">Greenslade Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>198</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Greenwich Waldorf School"
+            data-ofsted="Not yet rated"
+            data-phase="All-through"
+            data-att8="12.3"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/greenwich-waldorf-school"></td>
+          <td><a href="/schools/greenwich/greenwich-waldorf-school">Greenwich Waldorf School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>123</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Haimo Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="66.0"
+            data-url="https://londonschool.directory/schools/greenwich/haimo-primary-school"></td>
+          <td><a href="/schools/greenwich/haimo-primary-school">Haimo Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>351</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Halstow Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="70.0"
+            data-url="https://londonschool.directory/schools/greenwich/halstow-primary-school"></td>
+          <td><a href="/schools/greenwich/halstow-primary-school">Halstow Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>410</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Harris Academy Greenwich"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="51.1"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/harris-academy-greenwich"></td>
+          <td><a href="/schools/greenwich/harris-academy-greenwich">Harris Academy Greenwich</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>1138</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hawksmoor School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="88.0"
+            data-url="https://londonschool.directory/schools/greenwich/hawksmoor-school"></td>
+          <td><a href="/schools/greenwich/hawksmoor-school">Hawksmoor School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>307</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Henwick Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="69.0"
+            data-url="https://londonschool.directory/schools/greenwich/henwick-primary-school"></td>
+          <td><a href="/schools/greenwich/henwick-primary-school">Henwick Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>332</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Heronsgate Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="73.0"
+            data-url="https://londonschool.directory/schools/greenwich/heronsgate-primary-school"></td>
+          <td><a href="/schools/greenwich/heronsgate-primary-school">Heronsgate Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>707</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Horn Park Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="79.0"
+            data-url="https://londonschool.directory/schools/greenwich/horn-park-primary-school"></td>
+          <td><a href="/schools/greenwich/horn-park-primary-school">Horn Park Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>257</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="In Toto Ed London"
+            data-ofsted="Not yet rated"
+            data-phase="Secondary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/in-toto-ed-london"></td>
+          <td><a href="/schools/greenwich/in-toto-ed-london">In Toto Ed London</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>N/A</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Invicta Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="68.0"
+            data-url="https://londonschool.directory/schools/greenwich/invicta-primary-school"></td>
+          <td><a href="/schools/greenwich/invicta-primary-school">Invicta Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>714</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="James Wolfe Primary School and Centre for the Deaf"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="65.0"
+            data-url="https://londonschool.directory/schools/greenwich/james-wolfe-primary-school-and-centre-for-the-deaf"></td>
+          <td><a href="/schools/greenwich/james-wolfe-primary-school-and-centre-for-the-deaf">James Wolfe Primary School and Centre for the Deaf</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>673</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Kidbrooke Park Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="74.0"
+            data-url="https://londonschool.directory/schools/greenwich/kidbrooke-park-primary-school"></td>
+          <td><a href="/schools/greenwich/kidbrooke-park-primary-school">Kidbrooke Park Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>424</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="King's Oak School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="15.5"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/kings-oak-school"></td>
+          <td><a href="/schools/greenwich/kings-oak-school">King's Oak School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>39</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Leigh Academy Blackheath"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="47.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/leigh-academy-blackheath"></td>
+          <td><a href="/schools/greenwich/leigh-academy-blackheath">Leigh Academy Blackheath</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>1060</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Leigh Academy Halley"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="43.9"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/leigh-academy-halley"></td>
+          <td><a href="/schools/greenwich/leigh-academy-halley">Leigh Academy Halley</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>987</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Leigh Stationers' Academy"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="50.4"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/leigh-stationers-academy"></td>
+          <td><a href="/schools/greenwich/leigh-stationers-academy">Leigh Stationers' Academy</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1764</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Linton Mead Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="44.0"
+            data-url="https://londonschool.directory/schools/greenwich/linton-mead-primary-school"></td>
+          <td><a href="/schools/greenwich/linton-mead-primary-school">Linton Mead Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>282</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Meridian Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="95.0"
+            data-url="https://londonschool.directory/schools/greenwich/meridian-primary-school"></td>
+          <td><a href="/schools/greenwich/meridian-primary-school">Meridian Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>231</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Middle Park Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="71.0"
+            data-url="https://londonschool.directory/schools/greenwich/middle-park-primary-school"></td>
+          <td><a href="/schools/greenwich/middle-park-primary-school">Middle Park Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>425</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Millennium Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="74.0"
+            data-url="https://londonschool.directory/schools/greenwich/millennium-primary-school"></td>
+          <td><a href="/schools/greenwich/millennium-primary-school">Millennium Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>384</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Montbelle Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="64.0"
+            data-url="https://londonschool.directory/schools/greenwich/montbelle-primary-school"></td>
+          <td><a href="/schools/greenwich/montbelle-primary-school">Montbelle Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>364</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Morden Mount Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="61.0"
+            data-url="https://londonschool.directory/schools/greenwich/morden-mount-primary-school"></td>
+          <td><a href="/schools/greenwich/morden-mount-primary-school">Morden Mount Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>383</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Mulgrave Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="57.0"
+            data-url="https://londonschool.directory/schools/greenwich/mulgrave-primary-school"></td>
+          <td><a href="/schools/greenwich/mulgrave-primary-school">Mulgrave Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>328</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Newhaven Pupil Referral Unit"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/newhaven-pupil-referral-unit"></td>
+          <td><a href="/schools/greenwich/newhaven-pupil-referral-unit">Newhaven Pupil Referral Unit</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>207</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Nightingale Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="81.0"
+            data-url="https://londonschool.directory/schools/greenwich/nightingale-primary-school"></td>
+          <td><a href="/schools/greenwich/nightingale-primary-school">Nightingale Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>224</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Notre Dame Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/notre-dame-catholic-primary-school"></td>
+          <td><a href="/schools/greenwich/notre-dame-catholic-primary-school">Notre Dame Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>184</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Our Lady of Grace Catholic Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="86.0"
+            data-url="https://londonschool.directory/schools/greenwich/our-lady-of-grace-catholic-primary-school"></td>
+          <td><a href="/schools/greenwich/our-lady-of-grace-catholic-primary-school">Our Lady of Grace Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>416</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Plumcroft Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="67.0"
+            data-url="https://londonschool.directory/schools/greenwich/plumcroft-primary-school"></td>
+          <td><a href="/schools/greenwich/plumcroft-primary-school">Plumcroft Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1056</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Plumstead Manor School"
+            data-ofsted="Requires improvement"
+            data-phase="Secondary"
+            data-att8="38.0"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/plumstead-manor-school"></td>
+          <td><a href="/schools/greenwich/plumstead-manor-school">Plumstead Manor School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
+          <td>1413</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Pound Park Nursery School"
+            data-ofsted="Good"
+            data-phase="Nursery"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/pound-park-nursery-school"></td>
+          <td><a href="/schools/greenwich/pound-park-nursery-school">Pound Park Nursery School</a></td>
+          <td>Nursery</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>137</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Pulse and Water College"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="14.2"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/pulse-and-water-college"></td>
+          <td><a href="/schools/greenwich/pulse-and-water-college">Pulse and Water College</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>13</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Rachel McMillan Nursery School and Children's Centre"
+            data-ofsted="Outstanding"
+            data-phase="Nursery"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/rachel-mcmillan-nursery-school-and-childrens-centre"></td>
+          <td><a href="/schools/greenwich/rachel-mcmillan-nursery-school-and-childrens-centre">Rachel McMillan Nursery School and Children's Centre</a></td>
+          <td>Nursery</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>123</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Riverston School"
+            data-ofsted="Not yet rated"
+            data-phase="All-through"
+            data-att8="13.4"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/riverston-school"></td>
+          <td><a href="/schools/greenwich/riverston-school">Riverston School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>206</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Robert Owen Nursery School"
+            data-ofsted="Outstanding"
+            data-phase="Nursery"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/robert-owen-nursery-school"></td>
+          <td><a href="/schools/greenwich/robert-owen-nursery-school">Robert Owen Nursery School</a></td>
+          <td>Nursery</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>135</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Rockliffe Manor Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="88.0"
+            data-url="https://londonschool.directory/schools/greenwich/rockliffe-manor-primary-school"></td>
+          <td><a href="/schools/greenwich/rockliffe-manor-primary-school">Rockliffe Manor Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>189</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Rowan Wood School"
+            data-ofsted="Not yet rated"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/rowan-wood-school"></td>
+          <td><a href="/schools/greenwich/rowan-wood-school">Rowan Wood School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>30</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Royal Greenwich Trust School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="36.4"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/royal-greenwich-trust-school"></td>
+          <td><a href="/schools/greenwich/royal-greenwich-trust-school">Royal Greenwich Trust School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>871</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Saint Mary Magdalene Church of England All Through School"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8="48.0"
+            data-ks2="69.0"
+            data-url="https://londonschool.directory/schools/greenwich/saint-mary-magdalene-church-of-england-all-through-school"></td>
+          <td><a href="/schools/greenwich/saint-mary-magdalene-church-of-england-all-through-school">Saint Mary Magdalene Church of England All Through School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1624</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Serenity School Eltham"
+            data-ofsted="Outstanding"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/serenity-school-eltham"></td>
+          <td><a href="/schools/greenwich/serenity-school-eltham">Serenity School Eltham</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>143</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Sherington Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="84.0"
+            data-url="https://londonschool.directory/schools/greenwich/sherington-primary-school"></td>
+          <td><a href="/schools/greenwich/sherington-primary-school">Sherington Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>436</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Shooters Hill Sixth Form College"
+            data-ofsted="Not yet rated"
+            data-phase="Sixth form"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/shooters-hill-sixth-form-college"></td>
+          <td><a href="/schools/greenwich/shooters-hill-sixth-form-college">Shooters Hill Sixth Form College</a></td>
+          <td>Sixth form</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>0</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Social Arts for Education"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="14.8"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/social-arts-for-education"></td>
+          <td><a href="/schools/greenwich/social-arts-for-education">Social Arts for Education</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>21</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="South Rise Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="76.0"
+            data-url="https://londonschool.directory/schools/greenwich/south-rise-primary-school"></td>
+          <td><a href="/schools/greenwich/south-rise-primary-school">South Rise Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>508</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Alfege with St Peter's Church of England Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="67.0"
+            data-url="https://londonschool.directory/schools/greenwich/st-alfege-with-st-peters-church-of-england-primary-school"></td>
+          <td><a href="/schools/greenwich/st-alfege-with-st-peters-church-of-england-primary-school">St Alfege with St Peter's Church of England Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>200</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Joseph's Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="62.0"
+            data-url="https://londonschool.directory/schools/greenwich/st-josephs-catholic-primary-school"></td>
+          <td><a href="/schools/greenwich/st-josephs-catholic-primary-school">St Joseph's Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>124</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Margaret Clitherow Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="75.0"
+            data-url="https://londonschool.directory/schools/greenwich/st-margaret-clitherow-catholic-primary-school"></td>
+          <td><a href="/schools/greenwich/st-margaret-clitherow-catholic-primary-school">St Margaret Clitherow Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>173</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Margaret's Church of England Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="58.0"
+            data-url="https://londonschool.directory/schools/greenwich/st-margarets-church-of-england-primary-school"></td>
+          <td><a href="/schools/greenwich/st-margarets-church-of-england-primary-school">St Margaret's Church of England Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>164</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Mary's Catholic Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="93.0"
+            data-url="https://londonschool.directory/schools/greenwich/st-marys-catholic-primary-school"></td>
+          <td><a href="/schools/greenwich/st-marys-catholic-primary-school">St Mary's Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>447</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Olave's Prep School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/st-olaves-prep-school"></td>
+          <td><a href="/schools/greenwich/st-olaves-prep-school">St Olave's Prep School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>217</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Patrick's Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="86.0"
+            data-url="https://londonschool.directory/schools/greenwich/st-patricks-catholic-primary-school"></td>
+          <td><a href="/schools/greenwich/st-patricks-catholic-primary-school">St Patrick's Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>314</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Paul's Academy"
+            data-ofsted="Requires improvement"
+            data-phase="Secondary"
+            data-att8="43.8"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/st-pauls-academy"></td>
+          <td><a href="/schools/greenwich/st-pauls-academy">St Paul's Academy</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
+          <td>1066</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Peter's Catholic Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="86.0"
+            data-url="https://londonschool.directory/schools/greenwich/st-peters-catholic-primary-school"></td>
+          <td><a href="/schools/greenwich/st-peters-catholic-primary-school">St Peter's Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>208</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Thomas A Becket Roman Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="63.0"
+            data-url="https://londonschool.directory/schools/greenwich/st-thomas-a-becket-roman-catholic-primary-school"></td>
+          <td><a href="/schools/greenwich/st-thomas-a-becket-roman-catholic-primary-school">St Thomas A Becket Roman Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>371</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Thomas More Catholic Comprehensive School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="60.0"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/st-thomas-more-catholic-comprehensive-school"></td>
+          <td><a href="/schools/greenwich/st-thomas-more-catholic-comprehensive-school">St Thomas More Catholic Comprehensive School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>637</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Thomas More Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="69.0"
+            data-url="https://londonschool.directory/schools/greenwich/st-thomas-more-catholic-primary-school"></td>
+          <td><a href="/schools/greenwich/st-thomas-more-catholic-primary-school">St Thomas More Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>201</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Ursula's Convent School"
+            data-ofsted="Requires improvement"
+            data-phase="Secondary"
+            data-att8="57.3"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/st-ursulas-convent-school"></td>
+          <td><a href="/schools/greenwich/st-ursulas-convent-school">St Ursula's Convent School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
+          <td>481</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="StreetVibes Media Academy"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="4.2"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/streetvibes-media-academy"></td>
+          <td><a href="/schools/greenwich/streetvibes-media-academy">StreetVibes Media Academy</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>13</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Anchor Sendfriendly Centre"
+            data-ofsted="Not yet rated"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/the-anchor-sendfriendly-centre"></td>
+          <td><a href="/schools/greenwich/the-anchor-sendfriendly-centre">The Anchor Sendfriendly Centre</a></td>
+          <td>All-through</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>22</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The John Roan School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="46.9"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/the-john-roan-school"></td>
+          <td><a href="/schools/greenwich/the-john-roan-school">The John Roan School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1112</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Pointer School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/the-pointer-school"></td>
+          <td><a href="/schools/greenwich/the-pointer-school">The Pointer School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>344</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Thomas Tallis School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="46.9"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/thomas-tallis-school"></td>
+          <td><a href="/schools/greenwich/thomas-tallis-school">Thomas Tallis School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>2092</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Thorntree Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="83.0"
+            data-url="https://londonschool.directory/schools/greenwich/thorntree-primary-school"></td>
+          <td><a href="/schools/greenwich/thorntree-primary-school">Thorntree Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>190</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Thrive Independent School"
+            data-ofsted="Not yet rated"
+            data-phase="Secondary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/thrive-independent-school"></td>
+          <td><a href="/schools/greenwich/thrive-independent-school">Thrive Independent School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>N/A</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Timbercroft Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="66.0"
+            data-url="https://londonschool.directory/schools/greenwich/timbercroft-primary-school"></td>
+          <td><a href="/schools/greenwich/timbercroft-primary-school">Timbercroft Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>363</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Waterside School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="27.0"
+            data-url="https://londonschool.directory/schools/greenwich/waterside-school"></td>
+          <td><a href="/schools/greenwich/waterside-school">Waterside School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>45</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Wildwood Montessori School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/wildwood-montessori-school"></td>
+          <td><a href="/schools/greenwich/wildwood-montessori-school">Wildwood Montessori School</a></td>
+          <td>N/A</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>N/A</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Willow Dene School"
+            data-ofsted="Outstanding"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/willow-dene-school"></td>
+          <td><a href="/schools/greenwich/willow-dene-school">Willow Dene School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>315</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Windrush Charlton Primary School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="65.0"
+            data-url="https://londonschool.directory/schools/greenwich/windrush-charlton-primary-school"></td>
+          <td><a href="/schools/greenwich/windrush-charlton-primary-school">Windrush Charlton Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>500</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Windrush Thamesmead Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="71.0"
+            data-url="https://londonschool.directory/schools/greenwich/windrush-thamesmead-primary-school"></td>
+          <td><a href="/schools/greenwich/windrush-thamesmead-primary-school">Windrush Thamesmead Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>237</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Wingfield Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="93.0"
+            data-url="https://londonschool.directory/schools/greenwich/wingfield-primary-school"></td>
+          <td><a href="/schools/greenwich/wingfield-primary-school">Wingfield Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>667</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Wize Up"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="3.7"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/wize-up"></td>
+          <td><a href="/schools/greenwich/wize-up">Wize Up</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>46</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Woodhill Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="60.0"
+            data-url="https://londonschool.directory/schools/greenwich/woodhill-primary-school"></td>
+          <td><a href="/schools/greenwich/woodhill-primary-school">Woodhill Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>331</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Woolwich Polytechnic School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="46.5"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/woolwich-polytechnic-school"></td>
+          <td><a href="/schools/greenwich/woolwich-polytechnic-school">Woolwich Polytechnic School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1565</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Woolwich Polytechnic School for Girls"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="47.5"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/greenwich/woolwich-polytechnic-school-for-girls"></td>
+          <td><a href="/schools/greenwich/woolwich-polytechnic-school-for-girls">Woolwich Polytechnic School for Girls</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1120</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Wyborne Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="64.0"
+            data-url="https://londonschool.directory/schools/greenwich/wyborne-primary-school"></td>
+          <td><a href="/schools/greenwich/wyborne-primary-school">Wyborne Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>408</td>
+        </tr></tbody>
+  </table>
+</div>
+<footer><a href="/">London Schools Explorer</a> &mdash; helping families find the right school in London.<p style="margin-top:10px">Browse by type: <a href="/schools/outstanding">Outstanding</a> &middot; <a href="/schools/good">Good</a> &middot; <a href="/schools/grammar">Grammar</a> &middot; <a href="/schools/selective">Selective</a> &middot; <a href="/schools/faith">Faith</a> &middot; <a href="/schools/primary">Primary</a> &middot; <a href="/schools/secondary">Secondary</a> &middot; <a href="/schools/sixth-form">Sixth form</a> &middot; <a href="/schools/independent">Private &amp; independent</a></p></footer>
+<script defer src="/_vercel/insights/script.js"></script>
 <script>
-  (function() {
-    var points = [[51.48135, -0.023227, "/schools/greenwich/rachel-mcmillan-nursery-school-and-childrens-centre/", "Rachel McMillan Nursery School and Children's Centre"], [51.488112, 0.04033, "/schools/greenwich/pound-park-nursery-school/", "Pound Park Nursery School"], [51.486178, 0.112437, "/schools/greenwich/abbey-wood-nursery-school/", "Abbey Wood Nursery School"], [51.487128, 0.006119, "/schools/greenwich/robert-owen-nursery-school/", "Robert Owen Nursery School"], [51.460799, 0.038377, "/schools/greenwich/newhaven-pupil-referral-unit/", "Newhaven Pupil Referral Unit"], [51.470157, -0.014395, "/schools/greenwich/morden-mount-primary-school/", "Morden Mount Primary School"], [51.475826, 0.03369, "/schools/greenwich/cherry-orchard-primary-school/", "Cherry Orchard Primary School"], [51.456733, 0.035303, "/schools/greenwich/ealdham-primary-school/", "Ealdham Primary School"], [51.483893, 0.026919, "/schools/greenwich/fossdene-primary-school/", "Fossdene Primary School"], [51.458611, 0.052963, "/schools/greenwich/gordon-primary-school/", "Gordon Primary School"], [51.455391, 0.041663, "/schools/greenwich/haimo-primary-school/", "Haimo Primary School"], [51.462784, 0.042612, "/schools/greenwich/henwick-primary-school/", "Henwick Primary School"], [51.478975, 0.020595, "/schools/greenwich/invicta-primary-school/", "Invicta Primary School"], [51.484211, -0.00049, "/schools/greenwich/meridian-primary-school/", "Meridian Primary School"], [51.477018, 0.073966, "/schools/greenwich/plumcroft-primary-school/", "Plumcroft Primary School"], [51.480092, 0.025713, "/schools/greenwich/sherington-primary-school/", "Sherington Primary School"], [51.487504, 0.041642, "/schools/greenwich/thorntree-primary-school/", "Thorntree Primary School"], [51.439851, 0.070381, "/schools/greenwich/wyborne-primary-school/", "Wyborne Primary School"], [51.427546, 0.061827, "/schools/greenwich/montbelle-primary-school/", "Montbelle Primary School"], [51.495476, 0.110015, "/schools/greenwich/de-lucy-primary-school/", "De Lucy Primary School"], [51.490741, 0.053513, "/schools/greenwich/cardwell-primary-school/", "Cardwell Primary School"], [51.494056, 0.082778, "/schools/greenwich/heronsgate-primary-school/", "Heronsgate Primary School"], [51.508016, 0.113275, "/schools/greenwich/linton-mead-primary-school/", "Linton Mead Primary School"], [51.479033, 0.085579, "/schools/greenwich/greenslade-primary-school/", "Greenslade Primary School"], [51.488555, 0.060776, "/schools/greenwich/mulgrave-primary-school/", "Mulgrave Primary School"], [51.477634, 0.036809, "/schools/greenwich/charlton-manor-primary-school/", "Charlton Manor Primary School"], [51.487437, 0.007026, "/schools/greenwich/christ-church-church-of-england-primary-school/", "Christ Church Church of England Primary School"], [51.469838, 0.060897, "/schools/greenwich/christ-church-church-of-england-primary-school-shooters-hill/", "Christ Church Church of England Primary School, Shooters Hill"], [51.451311, 0.056925, "/schools/greenwich/eltham-church-of-england-primary-school/", "Eltham Church of England Primary School"], [51.48143, 0.028408, "/schools/greenwich/our-lady-of-grace-catholic-primary-school/", "Our Lady of Grace Catholic Primary School"], [51.48629, 0.005737, "/schools/greenwich/st-josephs-catholic-primary-school/", "St Joseph's Catholic Primary School"], [51.482415, 0.074412, "/schools/greenwich/st-margarets-church-of-england-primary-school/", "St Margaret's Church of England Primary School"], [51.491373, 0.061076, "/schools/greenwich/saint-mary-magdalene-church-of-england-all-through-school/", "Saint Mary Magdalene Church of England All Through School"], [51.488479, 0.08539, "/schools/greenwich/st-patricks-catholic-primary-school/", "St Patrick's Catholic Primary School"], [51.481727, -0.012553, "/schools/greenwich/st-alfege-with-st-peters-church-of-england-primary-school/", "St Alfege with St Peter's Church of England Primary School"], [51.486614, 0.068855, "/schools/greenwich/st-peters-catholic-primary-school/", "St Peter's Catholic Primary School"], [51.462582, 0.044921, "/schools/greenwich/st-thomas-more-catholic-primary-school/", "St Thomas More Catholic Primary School"], [51.49156, 0.104201, "/schools/greenwich/st-thomas-a-becket-roman-catholic-primary-school/", "St Thomas A Becket Roman Catholic Primary School"], [51.500964, 0.113366, "/schools/greenwich/st-margaret-clitherow-catholic-primary-school/", "St Margaret Clitherow Catholic Primary School"], [51.508975, 0.117916, "/schools/greenwich/bishop-john-robinson-church-of-england-primary-school/", "Bishop John Robinson Church of England Primary School"], [51.450912, 0.04581, "/schools/greenwich/eltham-hill-school/", "Eltham Hill School"], [51.48191, 0.084644, "/schools/greenwich/plumstead-manor-school/", "Plumstead Manor School"], [51.466176, 0.02645, "/schools/greenwich/thomas-tallis-school/", "Thomas Tallis School"], [51.475785, -0.005784, "/schools/greenwich/st-ursulas-convent-school/", "St Ursula's Convent School"], [51.474732, 0.017383, "/schools/greenwich/the-pointer-school/", "The Pointer School"], [51.472423, 0.015668, "/schools/greenwich/blackheath-prep/", "Blackheath Prep"], [51.45574, 0.019396, "/schools/greenwich/riverston-school/", "Riverston School"], [51.435745, 0.066584, "/schools/greenwich/st-olaves-prep-school/", "St Olave's Prep School"], [51.449899, 0.021772, "/schools/greenwich/colfes-school/", "Colfe's School"], [51.449232, 0.036941, "/schools/greenwich/kings-oak-school/", "King's Oak School"], [51.477839, 0.015533, "/schools/greenwich/blackheath-high-school-gdst/", "Blackheath High School GDST"], [51.49251, 0.105412, "/schools/greenwich/st-pauls-academy/", "St Paul's Academy"], [51.444304, 0.037945, "/schools/greenwich/middle-park-primary-school/", "Middle Park Primary School"], [51.500283, 0.094647, "/schools/greenwich/discovery-primary-school/", "Discovery Primary School"], [51.476862, -0.008847, "/schools/greenwich/james-wolfe-primary-school-and-centre-for-the-deaf/", "James Wolfe Primary School and Centre for the Deaf"], [51.486497, 0.11372, "/schools/greenwich/alexander-mcleod-primary-school/", "Alexander McLeod Primary School"], [51.480166, 0.017248, "/schools/greenwich/greenwich-waldorf-school/", "Greenwich Waldorf School"], [51.487588, 0.089469, "/schools/greenwich/conway-primary-school/", "Conway Primary School"], [51.477839, 0.064642, "/schools/greenwich/eglinton-primary-school/", "Eglinton Primary School"], [51.479739, 0.01229, "/schools/greenwich/wildwood-montessori-school/", "Wildwood Montessori School"], [51.487342, 0.081046, "/schools/greenwich/waterside-school/", "Waterside School"], [51.455985, 0.040092, "/schools/greenwich/wize-up/", "Wize Up"], [51.451126, 0.04949, "/schools/greenwich/streetvibes-media-academy/", "StreetVibes Media Academy"], [51.47212, 0.051827, "/schools/greenwich/ark-greenwich-free-school/", "Ark Greenwich Free School"], [51.451383, 0.03944, "/schools/greenwich/harris-academy-greenwich/", "Harris Academy Greenwich"], [51.481696, 0.046251, "/schools/greenwich/charlton-park-academy/", "Charlton Park Academy"], [51.473102, 0.061462, "/schools/greenwich/shooters-hill-sixth-form-college/", "Shooters Hill Sixth Form College"], [51.503205, 0.108758, "/schools/greenwich/woolwich-polytechnic-school/", "Woolwich Polytechnic School"], [51.453397, 0.075802, "/schools/greenwich/leigh-stationers-academy/", "Leigh Stationers' Academy"], [51.493755, 0.110194, "/schools/greenwich/pulse-and-water-college/", "Pulse and Water College"], [51.447364, 0.062504, "/schools/greenwich/st-thomas-more-catholic-comprehensive-school/", "St Thomas More Catholic Comprehensive School"], [51.502952, 0.115821, "/schools/greenwich/windrush-thamesmead-primary-school/", "Windrush Thamesmead Primary School"], [51.476793, 0.0902, "/schools/greenwich/timbercroft-primary-school/", "Timbercroft Primary School"], [51.463964, 0.019168, "/schools/greenwich/brooklands-primary-school/", "Brooklands Primary School"], [51.493246, 0.011243, "/schools/greenwich/millennium-primary-school/", "Millennium Primary School"], [51.487143, 0.076024, "/schools/greenwich/foxfield-primary-school/", "Foxfield Primary School"], [51.479388, 0.093948, "/schools/greenwich/rockliffe-manor-primary-school/", "Rockliffe Manor Primary School"], [51.489131, 0.04945, "/schools/greenwich/woodhill-primary-school/", "Woodhill Primary School"], [51.472839, 0.091027, "/schools/greenwich/willow-dene-school/", "Willow Dene School"], [51.48617, 0.081223, "/schools/greenwich/south-rise-primary-school/", "South Rise Primary School"], [51.485093, 0.015205, "/schools/greenwich/halstow-primary-school/", "Halstow Primary School"], [51.444179, 0.026484, "/schools/greenwich/horn-park-primary-school/", "Horn Park Primary School"], [51.462068, 0.061972, "/schools/greenwich/deansfield-primary-school/", "Deansfield Primary School"], [51.446363, 0.086536, "/schools/greenwich/alderwood-primary-school/", "Alderwood Primary School"], [51.501237, 0.105195, "/schools/greenwich/woolwich-polytechnic-school-for-girls/", "Woolwich Polytechnic School for Girls"], [51.492421, 0.04434, "/schools/greenwich/royal-greenwich-trust-school/", "Royal Greenwich Trust School"], [51.453534, 0.063991, "/schools/greenwich/st-marys-catholic-primary-school/", "St Mary's Catholic Primary School"], [51.432939, 0.057394, "/schools/greenwich/greenacres-primary-school-and-language-impairment-unit/", "Greenacres Primary School and Language Impairment Unit"], [51.483956, 0.071141, "/schools/greenwich/nightingale-primary-school/", "Nightingale Primary School"], [51.468985, 0.04129, "/schools/greenwich/leigh-academy-halley/", "Leigh Academy Halley"], [51.475961, 0.027446, "/schools/greenwich/leigh-academy-blackheath/", "Leigh Academy Blackheath"], [51.450928, 0.063341, "/schools/greenwich/social-arts-for-education/", "Social Arts for Education"], [51.478692, 0.00932, "/schools/greenwich/the-john-roan-school/", "The John Roan School"], [51.445864, 0.052161, "/schools/greenwich/serenity-school-eltham/", "Serenity School Eltham"], [51.505195, 0.111098, "/schools/greenwich/hawksmoor-school/", "Hawksmoor School"], [51.461191, 0.022444, "/schools/greenwich/wingfield-primary-school/", "Wingfield Primary School"], [51.470379, 0.042332, "/schools/greenwich/kidbrooke-park-primary-school/", "Kidbrooke Park Primary School"], [51.493264, 0.116467, "/schools/greenwich/boxgrove-primary-school/", "Boxgrove Primary School"], [51.491153, 0.0943, "/schools/greenwich/the-anchor-sendfriendly-centre/", "The Anchor Sendfriendly Centre"], [51.486805, 0.09606, "/schools/greenwich/bannockburn-primary-school/", "Bannockburn Primary School"], [51.492083, 0.042077, "/schools/greenwich/windrush-charlton-primary-school/", "Windrush Charlton Primary School"], [51.480271, 0.065947, "/schools/greenwich/notre-dame-catholic-primary-school/", "Notre Dame Catholic Primary School"], [51.470134, 0.033149, "/schools/greenwich/rowan-wood-school/", "Rowan Wood School"], [51.46489, 0.010269, "/schools/greenwich/in-toto-ed-london/", "In Toto Ed London"], [51.486362, 0.096687, "/schools/greenwich/thrive-independent-school/", "Thrive Independent School"]];
-    if (!points.length) return;
-    var lats = points.map(function(p) { return p[0]; });
-    var lngs = points.map(function(p) { return p[1]; });
-    var avgLat = lats.reduce(function(a,b) { return a+b; }, 0) / lats.length;
-    var avgLng = lngs.reduce(function(a,b) { return a+b; }, 0) / lngs.length;
-    var map = L.map('map', { scrollWheelZoom: false }).setView([avgLat, avgLng], 12);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 18,
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-    points.forEach(function(p) {
-      L.circleMarker([p[0], p[1]], {
-        radius: 5, color: '#0b2545', fillColor: '#0b6efd', fillOpacity: 0.8, weight: 1
-      }).addTo(map).bindPopup('<a href="' + p[2] + '">' + p[3] + '</a>');
+(function(){
+  var borough="Greenwich", boroughUrl="https://londonschool.directory/schools/greenwich";
+  var outstanding=20, total=105;
+
+  // Borough-level share
+  window.shareBoroughWhatsApp=function(){
+    var t='🏙️ *Schools in '+borough+', London*\n'+
+        '📊 '+total+' schools · '+outstanding+' Outstanding\n\n'+
+        '🔗 '+boroughUrl;
+    window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank');
+  };
+  window.shareBoroughEmail=function(){
+    var s='Schools in '+borough+' — London Schools Explorer';
+    var b='Schools in '+borough+', London\n'+
+        total+' schools, '+outstanding+' rated Outstanding by Ofsted\n\n'+
+        'Browse them here: '+boroughUrl;
+    window.location.href='mailto:?subject='+encodeURIComponent(s)+'&body='+encodeURIComponent(b);
+  };
+
+  // Shortlist comparison share
+  function getSelected(){
+    return Array.from(document.querySelectorAll('.sch-sel:checked')).map(function(cb){
+      return {name:cb.dataset.name,ofsted:cb.dataset.ofsted,phase:cb.dataset.phase,
+               att8:cb.dataset.att8,ks2:cb.dataset.ks2,url:cb.dataset.url};
     });
-  })();
+  }
+  function updateBar(){
+    var sel=getSelected();
+    var bar=document.getElementById('cmp-bar');
+    document.getElementById('cmp-count').textContent=sel.length+' school'+(sel.length===1?'':' s')+' selected';
+    bar.style.display=sel.length>0?'flex':'none';
+  }
+  document.querySelectorAll('.sch-sel').forEach(function(cb){ cb.onchange=updateBar; });
+
+  function buildCompareText(sel,markdown){
+    var lines=['📋 *My '+borough+' school shortlist*',''];
+    sel.forEach(function(s,i){
+      lines.push((i+1)+'. '+(markdown?'*':'')+s.name+(markdown?'*':''));
+      lines.push('   ⭐ Ofsted: '+s.ofsted+(s.phase?' · '+s.phase:''));
+      if(s.att8)lines.push('   📊 Attainment 8: '+s.att8);
+      if(s.ks2)lines.push('   📝 KS2 expected: '+s.ks2+'%');
+      lines.push('   🔗 '+s.url);
+      lines.push('');
+    });
+    lines.push('via London Schools Explorer — '+boroughUrl);
+    return lines.join('\n');
+  }
+  window.shareCompareWhatsApp=function(){
+    var sel=getSelected();
+    if(!sel.length)return;
+    window.open('https://wa.me/?text='+encodeURIComponent(buildCompareText(sel,true)),'_blank');
+  };
+  window.shareCompareEmail=function(){
+    var sel=getSelected();
+    if(!sel.length)return;
+    var subj='My '+borough+' school shortlist — London Schools Explorer';
+    window.location.href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(buildCompareText(sel,false));
+  };
+  window.clearSelection=function(){
+    document.querySelectorAll('.sch-sel:checked').forEach(function(cb){cb.checked=false;});
+    updateBar();
+  };
+})();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/sw.js').catch(function () {});
+  });
+}
 </script>
 </body>
 </html>

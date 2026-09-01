@@ -1,506 +1,1331 @@
-<!doctype html>
-<html lang="en-GB">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Schools in Bexley, London — Ofsted, Performance & Admissions</title>
-<meta name="description" content="All 91 schools in Bexley, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
-<link rel="canonical" href="https://londonschool.directory/schools/bexley/">
-<meta property="og:title" content="Schools in Bexley, London — Ofsted, Performance & Admissions">
-<meta property="og:description" content="All 91 schools in Bexley, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://londonschool.directory/schools/bexley/">
-<meta property="og:site_name" content="London School Directory">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#0b2545">
-<meta name="robots" content="index,follow,max-image-preview:large">
-<link rel="preconnect" href="https://unpkg.com">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<style>
-  :root {
-    --ink: #0b2545;
-    --ink-2: #1e3a5f;
-    --muted: #5b6b85;
-    --line: #e3e8ef;
-    --bg: #ffffff;
-    --bg-2: #f6f8fb;
-    --accent: #0b6efd;
-    --good: #137333;
-    --warn: #a85b00;
-    --bad: #b3261e;
-    --radius: 10px;
-  }
-  * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    color: var(--ink);
-    background: var(--bg);
-    line-height: 1.55;
-    -webkit-font-smoothing: antialiased;
-  }
-  a { color: var(--accent); text-decoration: none; }
-  a:hover { text-decoration: underline; }
-  header.site {
-    border-bottom: 1px solid var(--line);
-    background: var(--bg);
-    position: sticky; top: 0; z-index: 50;
-  }
-  header.site .inner {
-    max-width: 1100px; margin: 0 auto; padding: 14px 20px;
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  header.site a.brand { color: var(--ink); font-weight: 700; letter-spacing: -0.01em; }
-  header.site nav a { margin-left: 18px; color: var(--ink-2); font-size: 14px; }
-  main { max-width: 1100px; margin: 0 auto; padding: 28px 20px 80px; }
-  .crumbs { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
-  .crumbs a { color: var(--muted); }
-  h1 { font-size: 32px; line-height: 1.2; margin: 0 0 8px; letter-spacing: -0.02em; }
-  .lede { color: var(--ink-2); font-size: 17px; max-width: 720px; }
-  .stamp { font-size: 12px; color: var(--muted); margin-top: 8px; }
-  .stamp .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--good); vertical-align: middle; margin-right: 6px; }
-  .grid-stats {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 12px; margin: 24px 0 8px;
-  }
-  .stat {
-    background: var(--bg-2); border: 1px solid var(--line);
-    border-radius: var(--radius); padding: 14px 16px;
-  }
-  .stat .v { font-size: 24px; font-weight: 700; color: var(--ink); }
-  .stat .l { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
-  section { margin-top: 36px; }
-  h2 { font-size: 22px; margin: 0 0 12px; letter-spacing: -0.01em; }
-  .twocol { display: grid; grid-template-columns: 1.4fr 1fr; gap: 28px; }
-  @media (max-width: 820px) { .twocol { grid-template-columns: 1fr; } }
-  table.schools { width: 100%; border-collapse: collapse; font-size: 14px; }
-  table.schools th, table.schools td {
-    text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line);
-  }
-  table.schools th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); font-weight: 600; }
-  .rating { font-weight: 600; }
-  .rating.Outstanding { color: var(--good); }
-  .rating.Good { color: var(--ink-2); }
-  .rating.RequiresImprovement, .rating.Requires { color: var(--warn); }
-  .rating.Inadequate { color: var(--bad); }
-  #map { height: 380px; border-radius: var(--radius); border: 1px solid var(--line); }
-  .pills { display: flex; flex-wrap: wrap; gap: 6px; }
-  .pill { background: var(--bg-2); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; font-size: 12px; color: var(--ink-2); }
-  details.faq { border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 8px; background: var(--bg); }
-  details.faq summary { cursor: pointer; font-weight: 600; color: var(--ink); }
-  details.faq[open] { background: var(--bg-2); }
-  footer { border-top: 1px solid var(--line); padding: 28px 20px; color: var(--muted); font-size: 13px; }
-  footer .inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 24px; flex-wrap: wrap; }
-  .sources { font-size: 13px; color: var(--muted); }
-  .sources a { color: var(--muted); text-decoration: underline; }
-  .cta {
-    display: inline-block; background: var(--ink); color: #fff; padding: 10px 14px;
-    border-radius: var(--radius); font-size: 14px; font-weight: 600;
-  }
-  .cta:hover { background: var(--ink-2); text-decoration: none; }
-</style>
-<script type="application/ld+json">
-[
-  {
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Schools in Bexley, London | Ofsted Ratings &amp; Results | London Schools Explorer</title>
+  <meta name="description" content="91 schools in Bexley, London. 11 Outstanding, 67 Good-rated by Ofsted. Compare admissions oversubscription, exam results and crime data. Free.">
+  <script type="application/ld+json">{
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "name": "Top schools in Bexley, London",
-    "itemListOrder": "http://schema.org/ItemListOrderDescending",
-    "numberOfItems": 14,
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "url": "https://londonschool.directory/schools/bexley/st-stephens-catholic-primary-school/",
-        "name": "St Stephen's Catholic Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "url": "https://londonschool.directory/schools/bexley/st-thomas-more-catholic-primary-school/",
-        "name": "St Thomas More Catholic Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "url": "https://londonschool.directory/schools/bexley/st-fidelis-catholic-primary-school/",
-        "name": "St Fidelis Catholic Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 4,
-        "url": "https://londonschool.directory/schools/bexley/upton-primary-school/",
-        "name": "Upton Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 5,
-        "url": "https://londonschool.directory/schools/bexley/barnehurst-junior-school/",
-        "name": "Barnehurst Junior School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 6,
-        "url": "https://londonschool.directory/schools/bexley/dulverton-primary-school/",
-        "name": "Dulverton Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 7,
-        "url": "https://londonschool.directory/schools/bexley/burnt-oak-junior-school/",
-        "name": "Burnt Oak Junior School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 8,
-        "url": "https://londonschool.directory/schools/bexley/townley-grammar-school/",
-        "name": "Townley Grammar School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 9,
-        "url": "https://londonschool.directory/schools/bexley/bexley-grammar-school/",
-        "name": "Bexley Grammar School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 10,
-        "url": "https://londonschool.directory/schools/bexley/shenstone-school/",
-        "name": "Shenstone School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 11,
-        "url": "https://londonschool.directory/schools/bexley/chislehurst-and-sidcup-grammar-school/",
-        "name": "Chislehurst and Sidcup Grammar School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 12,
-        "url": "https://londonschool.directory/schools/bexley/beths-grammar-school/",
-        "name": "Beths Grammar School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 13,
-        "url": "https://londonschool.directory/schools/bexley/st-catherines-catholic-school/",
-        "name": "St Catherine's Catholic School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 14,
-        "url": "https://londonschool.directory/schools/bexley/harris-academy-falconwood/",
-        "name": "Harris Academy Falconwood"
-      }
-    ]
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How many schools are there in Bexley?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Bexley has 91 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 65 are primary, 26 are secondary, and the remainder are special, all-through, or post-16."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What proportion of Bexley schools are Outstanding?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "As of the latest Ofsted Management Information release, 11 schools in Bexley (12.1%) are rated Outstanding, and 85.7% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "When do I apply for a Reception or Year 7 place in Bexley?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Bexley's applications are coordinated by the local authority through the eAdmissions system. See our full Reception timeline guide."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How does the school appeals process work in Bexley?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "If you are refused your preferred school place, you have a statutory right of appeal. Bexley appeals are typically heard in May (Reception) and June\u2013July (secondary). See our appeals tracker for Bexley-level success rates by year."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How can I tell which Bexley schools are over-subscribed?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release."
-        }
-      }
-    ]
-  },
-  {
+    "name": "Schools in Bexley, London",
+    "description": "91 schools in Bexley, London rated by Ofsted",
+    "numberOfItems": 91,
+    "url": "https://londonschool.directory/schools/bexley"
+  }</script>
+  <script type="application/ld+json">{
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": "https://londonschool.directory/"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Boroughs",
-        "item": "https://londonschool.directory/schools/"
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "name": "Bexley",
-        "item": "https://londonschool.directory/schools/bexley/"
-      }
+      {"@type": "ListItem", "position": 1, "name": "London Schools Explorer", "item": "https://londonschool.directory/"},
+      {"@type": "ListItem", "position": 2, "name": "Schools in Bexley", "item": "https://londonschool.directory/schools/bexley"}
     ]
-  }
-]
-</script>
+  }</script>
+  <link rel="canonical" href="https://londonschool.directory/schools/bexley">
+  <meta property="og:title" content="Schools in Bexley | London Schools Explorer">
+  <meta property="og:description" content="91 schools in Bexley. 11 Outstanding-rated. Compare Ofsted ratings, exam results and admissions.">
+  <meta property="og:url" content="https://londonschool.directory/schools/bexley">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, sans-serif; color: #1a1a1a; background: #f8f9fa; line-height: 1.6; }
+    a { color: #1565C0; }
+    .topbar { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 12px 20px; }
+    .topbar a { text-decoration: none; font-weight: 600; color: #1a1a1a; font-size: 15px; }
+    .topbar span { color: #888; margin: 0 8px; }
+    .container { max-width: 900px; margin: 0 auto; padding: 32px 20px; }
+    h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+    .intro { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; font-size: 15px; color: #333; line-height: 1.7; }
+    .stats-row { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+    .stat-box { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 14px 18px; flex: 1; min-width: 120px; }
+    .stat-num { font-size: 24px; font-weight: 700; color: #1a1a1a; line-height: 1; }
+    .stat-lbl { font-size: 12px; color: #888; margin-top: 4px; }
+    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #e0e0e0; }
+    th { background: #f5f5f5; padding: 12px 16px; text-align: left; font-size: 13px; color: #555; font-weight: 600; border-bottom: 1px solid #e0e0e0; }
+    td { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fafafa; }
+    .back { display: inline-block; margin-bottom: 20px; font-size: 14px; color: #555; text-decoration: none; }
+    .back:hover { color: #111; }
+    footer { text-align: center; padding: 32px 20px; font-size: 13px; color: #888; }
+    @media (max-width: 600px) {
+      .container { padding: 16px 12px; }
+      h1 { font-size: 22px; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .intro { padding: 14px 16px; font-size: 14px; }
+      table { font-size: 13px; }
+      th, td { padding: 10px 10px; }
+      .topbar { padding: 10px 12px; font-size: 13px; }
+    }
+    @media (max-width: 600px) { .stats-row { flex-direction: column; } }
+  </style>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 </head>
 <body>
-<header class="site">
-  <div class="inner">
-    <a class="brand" href="/">London School Directory</a>
-    <nav>
-      <a href="/">Search</a>
-      <a href="/appeals.html">Appeals</a>
-      <a href="/methodology.html">Methodology</a>
-      <a href="/about.html">About</a>
-    </nav>
+<div class="topbar">
+  <div style="max-width:900px;margin:0 auto">
+    <a href="/">London Schools Explorer</a>
+    <span>/</span>
+    Bexley
   </div>
-</header>
-<main>
-  <div class="crumbs">
-    <a href="/">Home</a> &rsaquo; <a href="/schools/">Boroughs</a> &rsaquo; Bexley
+</div>
+<div class="container">
+  <a class="back" href="/">&#8592; All boroughs</a>
+  <h1>Schools in Bexley</h1>
+
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-num">91</div><div class="stat-lbl">Total schools</div></div>
+    <div class="stat-box"><div class="stat-num">11</div><div class="stat-lbl">Outstanding</div></div>
+    <div class="stat-box"><div class="stat-num">67</div><div class="stat-lbl">Good</div></div>
+    <div class="stat-box"><div class="stat-num">4</div><div class="stat-lbl">School phases</div></div>
   </div>
 
-  <h1>Schools in Bexley, London</h1>
-  <p class="lede">Bexley's schools cover Bexleyheath, Erith, Sidcup, Welling and Crayford, with a notable grammar presence. The borough operates a partially selective system at secondary level. Reception applications are competitive in the north of the borough.</p>
-  <p class="stamp"><span class="dot"></span>Data last verified 1 September 2026. Sources: Ofsted, DfE GIAS, DfE Performance Tables, Metropolitan Police, MHCLG IMD. See <a href="/sources.html">all sources</a>.</p>
+  <div class="intro">Bexley is a south-east London borough with a well-regarded school system and some of the lowest crime rates in the capital. The borough retains a selective grammar school system, making it attractive to families seeking academic pathways. Schools in areas like Bexleyheath, Sidcup and Welling consistently perform above national averages.</div>
 
-  <section>
-    <div class="grid-stats">
-      <div class="stat"><div class="v">91</div><div class="l">Schools in Bexley</div></div>
-      <div class="stat"><div class="v">12.1%</div><div class="l">Outstanding Ofsted</div></div>
-      <div class="stat"><div class="v">85.7%</div><div class="l">Good or Outstanding</div></div>
-      <div class="stat"><div class="v">65</div><div class="l">Primary schools</div></div>
-      <div class="stat"><div class="v">26</div><div class="l">Secondary schools</div></div>
-      <div class="stat"><div class="v">11%</div><div class="l">Secondary appeal success (2024)</div></div>
-    </div>
-  </section>
+  
+<div style="display:flex;gap:16px;flex-wrap:wrap;margin:20px 0;">
 
-  <section>
-    <div class="twocol">
-      <div>
-        <h2>Top primary schools in Bexley</h2>
-        <p class="sources">Ranked by Ofsted rating, then by latest KS2 performance. See <a href="/methodology.html">methodology</a>.</p>
-        <table class="schools">
-          <thead>
-            <tr><th>School</th><th>Ofsted</th><th>KS2 %</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><a href="/schools/bexley/st-stephens-catholic-primary-school/">St Stephen's Catholic Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>90.0</td></tr>
-            <tr><td><a href="/schools/bexley/st-thomas-more-catholic-primary-school/">St Thomas More Catholic Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>90.0</td></tr>
-            <tr><td><a href="/schools/bexley/st-fidelis-catholic-primary-school/">St Fidelis Catholic Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>86.0</td></tr>
-            <tr><td><a href="/schools/bexley/upton-primary-school/">Upton Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>84.0</td></tr>
-            <tr><td><a href="/schools/bexley/barnehurst-junior-school/">Barnehurst Junior School</a></td><td class="rating Outstanding">Outstanding</td><td>82.0</td></tr>
-            <tr><td><a href="/schools/bexley/dulverton-primary-school/">Dulverton Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>77.0</td></tr>
-            <tr><td><a href="/schools/bexley/burnt-oak-junior-school/">Burnt Oak Junior School</a></td><td class="rating Outstanding">Outstanding</td><td>73.0</td></tr>
-          </tbody>
-        </table>
-
-        <h2 style="margin-top:28px">Top secondary schools in Bexley</h2>
-        <p class="sources">Ranked by Ofsted rating, then by latest KS4 Attainment 8.</p>
-        <table class="schools">
-          <thead>
-            <tr><th>School</th><th>Ofsted</th><th>Att 8</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><a href="/schools/bexley/townley-grammar-school/">Townley Grammar School</a></td><td class="rating Outstanding">Outstanding</td><td>75.6</td></tr>
-            <tr><td><a href="/schools/bexley/bexley-grammar-school/">Bexley Grammar School</a></td><td class="rating Outstanding">Outstanding</td><td>74.0</td></tr>
-            <tr><td><a href="/schools/bexley/shenstone-school/">Shenstone School</a></td><td class="rating Outstanding">Outstanding</td><td>—</td></tr>
-            <tr><td><a href="/schools/bexley/chislehurst-and-sidcup-grammar-school/">Chislehurst and Sidcup Grammar School</a></td><td class="rating Good">Good</td><td>73.0</td></tr>
-            <tr><td><a href="/schools/bexley/beths-grammar-school/">Beths Grammar School</a></td><td class="rating Good">Good</td><td>73.0</td></tr>
-            <tr><td><a href="/schools/bexley/st-catherines-catholic-school/">St Catherine's Catholic School</a></td><td class="rating Good">Good</td><td>53.9</td></tr>
-            <tr><td><a href="/schools/bexley/harris-academy-falconwood/">Harris Academy Falconwood</a></td><td class="rating Good">Good</td><td>47.7</td></tr>
-          </tbody>
-        </table>
-
-        <p style="margin-top:14px"><a class="cta" href="#all-schools">Jump to all 91 schools in Bexley</a></p>
-      </div>
-      <div>
-        <h2>Map</h2>
-        <div id="map" aria-label="Map of schools in Bexley"></div>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <h2>What the data says about Bexley</h2>
-    <p><strong>85.7%</strong> of Bexley schools are currently rated Good or Outstanding by Ofsted, compared with a London average of roughly 90% for primary and 80% for secondary. The average number of applications per place across Bexley is <strong>1.15</strong>, a useful indicator of how competitive local admissions are. The average number of recorded crime incidents within 500 metres of a school in Bexley over the most recent reporting month is <strong>94.82</strong>, drawn from the Metropolitan Police open data API. The mean IMD (Index of Multiple Deprivation) decile of Bexley's schools is <strong>6.81</strong> — 1 is most deprived, 10 is least deprived. All metrics on this page are recomputed from source data on the 15th of every month. See our <a href='/methodology.html'>methodology</a> for definitions and limitations.</p>
-  </section>
-
-  <section id="all-schools">
-    <h2>All schools in Bexley</h2>
-    <p class="sources">Every school in Bexley, listed alphabetically. Click any school for the full record.</p>
-    <table class="schools">
-      <thead>
-        <tr><th>School</th><th>Phase</th><th>Ofsted</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><a href="/schools/bexley/ado-river-valley-school/">ADO River Valley School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/aspire-academy/">Aspire Academy</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/barnehurst-infant-school/">Barnehurst Infant School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/bexley/barnehurst-junior-school/">Barnehurst Junior School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/bexley/barrington-primary-school/">Barrington Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/bedonwell-infant-and-nursery-school/">Bedonwell Infant and Nursery School</a></td><td>Primary</td><td class="rating Requiresimprovement">Requires improvement</td></tr>
-        <tr><td><a href="/schools/bexley/bedonwell-junior-school/">Bedonwell Junior School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/belmont-academy/">Belmont Academy</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/belvedere-infant-school/">Belvedere Infant School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/belvedere-junior-school/">Belvedere Junior School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/benedict-house-preparatory-school/">Benedict House Preparatory School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/bexley/beths-grammar-school/">Beths Grammar School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/bexley-grammar-school/">Bexley Grammar School</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/bexley/birkbeck-primary-school/">Birkbeck Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/bishop-ridley-church-of-england-va-primary-school/">Bishop Ridley Church of England VA Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/blackfen-school-for-girls/">Blackfen School for Girls</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/brampton-primary-academy/">Brampton Primary Academy</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/break-through-school/">Break Through School</a></td><td>Secondary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/bexley/brighter-futures-specialist-college-ltd/">Brighter Futures Specialist College Ltd</a></td><td>Sixth form</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/bexley/burnt-oak-junior-school/">Burnt Oak Junior School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/bexley/bursted-wood-primary-school/">Bursted Wood Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/castilion-primary-school/">Castilion Primary School</a></td><td>Primary</td><td class="rating Requiresimprovement">Requires improvement</td></tr>
-        <tr><td><a href="/schools/bexley/chatsworth-infant-school/">Chatsworth Infant School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/chislehurst-and-sidcup-grammar-school/">Chislehurst and Sidcup Grammar School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/christ-church-erith-cofe-primary-school/">Christ Church (Erith) CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/cleeve-meadow-school/">Cleeve Meadow School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/cleeve-park-school/">Cleeve Park School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/cornerstone-school/">Cornerstone School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/crook-log-primary-school/">Crook Log Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/danson-primary-school/">Danson Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/days-lane-primary-school/">Days Lane Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/dulverton-primary-school/">Dulverton Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/bexley/east-wickham-primary-academy/">East Wickham Primary Academy</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/endeavour-academy-bexley/">Endeavour Academy Bexley</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/fairford-academy-barnehurst/">Fairford Academy Barnehurst</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/fosters-primary-school/">Foster's Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/gravel-hill-primary-school/">Gravel Hill Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/haberdashers-crayford-academy/">Haberdashers' Crayford Academy</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/haberdashers-crayford-primary/">Haberdashers' Crayford Primary</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/haberdashers-slade-green-primary/">Haberdashers' Slade Green Primary</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/harris-academy-falconwood/">Harris Academy Falconwood</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/harris-garrard-academy/">Harris Garrard Academy</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/hillsgrove-primary-school/">Hillsgrove Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/holy-trinity-lamorbey-church-of-england-school/">Holy Trinity Lamorbey Church of England School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/hook-lane-primary-school/">Hook Lane Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/hope-community-school/">Hope Community School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/horizons-academy-bexley/">Horizons Academy Bexley</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/hurst-primary-school/">Hurst Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/hurstmere-school/">Hurstmere School</a></td><td>Secondary</td><td class="rating Requiresimprovement">Requires improvement</td></tr>
-        <tr><td><a href="/schools/bexley/jubilee-primary-school/">Jubilee Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/leigh-academy-bexley/">Leigh Academy Bexley</a></td><td>Secondary</td><td class="rating Inadequate">Inadequate</td></tr>
-        <tr><td><a href="/schools/bexley/leigh-stationers-primary-academy/">Leigh Stationers' Primary Academy</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/lessness-heath-primary-school/">Lessness Heath Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/lift-bexleyheath/">Lift Bexleyheath</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/lime-wood-primary-school/">Lime Wood Primary School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/bexley/longlands-primary-school/">Longlands Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/marlborough-school/">Marlborough School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/mayplace-primary-school/">Mayplace Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/merton-court-school/">Merton Court School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/bexley/northumberland-heath-primary-school/">Northumberland Heath Primary School</a></td><td>Primary</td><td class="rating Requiresimprovement">Requires improvement</td></tr>
-        <tr><td><a href="/schools/bexley/northwood-primary-school/">Northwood Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/old-bexley-church-of-england-school/">Old Bexley Church of England School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/orchard-primary-school/">Orchard Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/our-lady-of-the-rosary-catholic-primary-school/">Our Lady of the Rosary Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/park-view-academy/">Park View Academy</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/parkway-primary-school/">Parkway Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/peareswood-primary-school/">Peareswood Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/pelham-primary-school/">Pelham Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/royal-park-primary-academy/">Royal Park Primary Academy</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/shenstone-school/">Shenstone School</a></td><td>All-through</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/bexley/sherwood-park-primary-school/">Sherwood Park Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/st-augustine-of-canterbury-cofe-primary-school/">St Augustine of Canterbury CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/st-catherines-catholic-school/">St Catherine's Catholic School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/st-columbas-catholic-boys-school/">St Columba's Catholic Boys' School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/st-fidelis-catholic-primary-school/">St Fidelis Catholic Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/bexley/st-john-fisher-catholic-primary-school/">St John Fisher Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/st-josephs-catholic-primary-school/">St Joseph's Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/st-michaels-east-wickham-church-of-england-primary-school/">St Michael's East Wickham Church of England Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/st-paulinus-church-of-england-primary-school/">St Paulinus Church of England Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/st-peter-chanel-catholic-primary-school/">St Peter Chanel Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/st-stephens-catholic-primary-school/">St Stephen's Catholic Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/bexley/st-thomas-more-catholic-primary-school/">St Thomas More Catholic Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/bexley/st-pauls-slade-green-church-of-england-primary-school/">St. Paul's (Slade Green) Church of England Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/townley-grammar-school/">Townley Grammar School</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/bexley/trinity-church-of-england-school-belvedere/">Trinity Church of England School, Belvedere</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/upland-primary-school/">Upland Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/bexley/upton-primary-school/">Upton Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/bexley/welling-school/">Welling School</a></td><td>Secondary</td><td class="rating Requiresimprovement">Requires improvement</td></tr>
-        <tr><td><a href="/schools/bexley/west-lodge-school/">West Lodge School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/bexley/willow-bank-primary-school/">Willow Bank Primary School</a></td><td>Primary</td><td class="rating Requiresimprovement">Requires improvement</td></tr>
-        <tr><td><a href="/schools/bexley/woodside-academy/">Woodside Academy</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <section>
-    <h2>Frequently asked</h2>
-    <details class="faq"><summary>How many schools are there in Bexley?</summary><p>Bexley has 91 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 65 are primary, 26 are secondary, and the remainder are special, all-through, or post-16.</p></details>
-<details class="faq"><summary>What proportion of Bexley schools are Outstanding?</summary><p>As of the latest Ofsted Management Information release, 11 schools in Bexley (12.1%) are rated Outstanding, and 85.7% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication.</p></details>
-<details class="faq"><summary>When do I apply for a Reception or Year 7 place in Bexley?</summary><p>Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Bexley's applications are coordinated by the local authority through the eAdmissions system. See our <a href='/guides/london-reception-application-timeline/'>full Reception timeline guide</a>.</p></details>
-<details class="faq"><summary>How does the school appeals process work in Bexley?</summary><p>If you are refused your preferred school place, you have a statutory right of appeal. Bexley appeals are typically heard in May (Reception) and June–July (secondary). See our <a href='/appeals.html'>appeals tracker</a> for Bexley-level success rates by year.</p></details>
-<details class="faq"><summary>How can I tell which Bexley schools are over-subscribed?</summary><p>Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release.</p></details>
-  </section>
-
-  <section>
-    <h2>Sources</h2>
-    <p class="sources">
-      School list and phase from <a href="https://get-information-schools.service.gov.uk/" rel="nofollow">DfE Get Information About Schools</a> (refreshed monthly).
-      Ofsted ratings from <a href="https://www.gov.uk/government/statistical-data-sets/monthly-management-information-ofsteds-school-inspections-outcomes" rel="nofollow">Ofsted Management Information</a> (refreshed monthly).
-      Performance data from <a href="https://explore-education-statistics.service.gov.uk/" rel="nofollow">DfE Explore Education Statistics</a>.
-      Crime data within 500m from the <a href="https://data.police.uk/" rel="nofollow">Metropolitan Police open data API</a>.
-      Deprivation deciles from <a href="https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019" rel="nofollow">MHCLG English Indices of Deprivation 2019</a>.
-      Read our full <a href="/methodology.html">methodology</a> for how each metric is calculated.
-    </p>
-  </section>
-</main>
-<footer>
-  <div class="inner">
-    <div>&copy; London School Directory. Independent. Free to use.</div>
-    <div><a href="/about.html">About</a> &middot; <a href="/methodology.html">Methodology</a> &middot; <a href="/sources.html">Sources</a> &middot; <a href="/appeals.html">Appeals</a></div>
-    <div>Browse by type: <a href="/schools/outstanding">Outstanding</a> &middot; <a href="/schools/good">Good</a> &middot; <a href="/schools/grammar">Grammar</a> &middot; <a href="/schools/selective">Selective</a> &middot; <a href="/schools/faith">Faith</a> &middot; <a href="/schools/primary">Primary</a> &middot; <a href="/schools/secondary">Secondary</a> &middot; <a href="/schools/sixth-form">Sixth form</a> &middot; <a href="/schools/independent">Private &amp; independent</a></div>
+<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fdf4ff 0%,#ede9fe 100%);
+     border:1px solid #d8b4fe;border-radius:12px;padding:14px 20px;">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+    <span style="font-size:22px;">🎓</span>
+    <strong style="font-size:15px;color:#5b21b6;">11+ &amp; 13+ Exam Prep</strong>
   </div>
-</footer>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
+    PiAcademy resources for grammar school entrance, SATs &amp; GCSE.
+    Use code <strong>THIERR25</strong> for 25% off.
+  </p>
+  <a href="https://piacademy.co.uk/?aff=28"
+     target="_blank" rel="noopener sponsored"
+     style="display:inline-block;padding:9px 18px;background:#7e22ce;color:#fff;
+            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
+    Get 25% OFF →
+  </a>
+  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
+</div>
+<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%);
+     border:1px solid #fcd34d;border-radius:12px;padding:14px 20px;">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+    <span style="font-size:22px;">📚</span>
+    <strong style="font-size:15px;color:#92400e;">Children's Books</strong>
+  </div>
+  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
+    Great books at low prices. At checkout, choose your school — Scholastic donates
+    <strong>20p for every £1 spent</strong> back to the school in free books.
+  </p>
+  <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&ued=https%3A%2F%2Fwww.scholastic.co.uk%2Fteachers"
+     target="_blank" rel="noopener sponsored"
+     style="display:inline-block;padding:9px 18px;background:#d97706;color:#fff;
+            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
+    Shop at Scholastic →
+  </a>
+  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
+</div>
+<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fff8f0 0%,#fff3e0 100%);
+     border:1px solid #fed7aa;border-radius:12px;padding:14px 20px;">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+    <span style="font-size:22px;">🛒</span>
+    <strong style="font-size:15px;color:#92400e;">School Supplies</strong>
+  </div>
+  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
+    Stationery, bags, PE kit, lunchboxes and more — fast delivery from Amazon.
+  </p>
+  <a href="https://www.amazon.co.uk/s?k=school+supplies+stationery&tag=londonparents-21"
+     target="_blank" rel="noopener sponsored"
+     style="display:inline-block;padding:9px 18px;background:#FF9900;color:#111;
+            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
+    Shop on Amazon →
+  </a>
+  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
+</div>
+</div>
+
+  <!-- Borough share buttons -->
+  <div style="display:flex;gap:10px;margin:16px 0 8px;flex-wrap:wrap;align-items:center;">
+    <span style="font-size:13px;color:#555;font-weight:600;">Share Bexley schools:</span>
+    <button onclick="shareBoroughWhatsApp()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 WhatsApp</button>
+    <button onclick="shareBoroughEmail()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#1565C0;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Email</button>
+    <span style="font-size:12px;color:#999;margin-left:4px;">Or tick schools below to share a shortlist</span>
+  </div>
+
+  <!-- Sticky compare bar (appears when schools are ticked) -->
+  <div id="cmp-bar" style="display:none;position:sticky;top:0;z-index:100;background:#1A1A2E;color:#fff;padding:12px 16px;border-radius:10px;margin-bottom:12px;display:none;align-items:center;gap:10px;flex-wrap:wrap;">
+    <span id="cmp-count" style="font-weight:700;font-size:14px;">0 schools selected</span>
+    <button onclick="shareCompareWhatsApp()" style="padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 Share via WhatsApp</button>
+    <button onclick="shareCompareEmail()" style="padding:8px 16px;background:#fff;color:#1A1A2E;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Share via Email</button>
+    <button onclick="clearSelection()" style="padding:8px 12px;background:transparent;color:#aaa;border:1px solid #555;border-radius:8px;font-size:12px;cursor:pointer;">✕ Clear</button>
+  </div>
+
+  <table>
+    <thead><tr><th style="width:36px"></th><th>School</th><th>Phase</th><th>Ofsted</th><th>Pupils</th></tr></thead>
+    <tbody><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="ADO River Valley School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/bexley/ado-river-valley-school"></td>
+          <td><a href="/schools/bexley/ado-river-valley-school">ADO River Valley School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>29</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Aspire Academy"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/bexley/aspire-academy"></td>
+          <td><a href="/schools/bexley/aspire-academy">Aspire Academy</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>75</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Barnehurst Infant School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/bexley/barnehurst-infant-school"></td>
+          <td><a href="/schools/bexley/barnehurst-infant-school">Barnehurst Infant School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>218</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Barnehurst Junior School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="82.0"
+            data-url="https://londonschool.directory/schools/bexley/barnehurst-junior-school"></td>
+          <td><a href="/schools/bexley/barnehurst-junior-school">Barnehurst Junior School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>240</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Barrington Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="68.0"
+            data-url="https://londonschool.directory/schools/bexley/barrington-primary-school"></td>
+          <td><a href="/schools/bexley/barrington-primary-school">Barrington Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>213</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Bedonwell Infant and Nursery School"
+            data-ofsted="Requires improvement"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/bexley/bedonwell-infant-and-nursery-school"></td>
+          <td><a href="/schools/bexley/bedonwell-infant-and-nursery-school">Bedonwell Infant and Nursery School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
+          <td>309</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Bedonwell Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="67.0"
+            data-url="https://londonschool.directory/schools/bexley/bedonwell-junior-school"></td>
+          <td><a href="/schools/bexley/bedonwell-junior-school">Bedonwell Junior School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>460</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Belmont Academy"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="77.0"
+            data-url="https://londonschool.directory/schools/bexley/belmont-academy"></td>
+          <td><a href="/schools/bexley/belmont-academy">Belmont Academy</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>436</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Belvedere Infant School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/bexley/belvedere-infant-school"></td>
+          <td><a href="/schools/bexley/belvedere-infant-school">Belvedere Infant School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>246</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Belvedere Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="71.0"
+            data-url="https://londonschool.directory/schools/bexley/belvedere-junior-school"></td>
+          <td><a href="/schools/bexley/belvedere-junior-school">Belvedere Junior School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>326</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Benedict House Preparatory School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/bexley/benedict-house-preparatory-school"></td>
+          <td><a href="/schools/bexley/benedict-house-preparatory-school">Benedict House Preparatory School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>170</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Beths Grammar School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="73.0"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/bexley/beths-grammar-school"></td>
+          <td><a href="/schools/bexley/beths-grammar-school">Beths Grammar School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1701</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Bexley Grammar School"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="74.0"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/bexley/bexley-grammar-school"></td>
+          <td><a href="/schools/bexley/bexley-grammar-school">Bexley Grammar School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>1504</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Birkbeck Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="96.0"
+            data-url="https://londonschool.directory/schools/bexley/birkbeck-primary-school"></td>
+          <td><a href="/schools/bexley/birkbeck-primary-school">Birkbeck Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>664</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Bishop Ridley Church of England VA Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="72.0"
+            data-url="https://londonschool.directory/schools/bexley/bishop-ridley-church-of-england-va-primary-school"></td>
+          <td><a href="/schools/bexley/bishop-ridley-church-of-england-va-primary-school">Bishop Ridley Church of England VA Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>342</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Blackfen School for Girls"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="46.4"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/bexley/blackfen-school-for-girls"></td>
+          <td><a href="/schools/bexley/blackfen-school-for-girls">Blackfen School for Girls</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1324</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Brampton Primary Academy"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="65.0"
+            data-url="https://londonschool.directory/schools/bexley/brampton-primary-academy"></td>
+          <td><a href="/schools/bexley/brampton-primary-academy">Brampton Primary Academy</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>429</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Break Through School"
+            data-ofsted="Not yet rated"
+            data-phase="Secondary"
+            data-att8="4.5"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/bexley/break-through-school"></td>
+          <td><a href="/schools/bexley/break-through-school">Break Through School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>39</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Brighter Futures Specialist College Ltd"
+            data-ofsted="Not yet rated"
+            data-phase="Sixth form"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/bexley/brighter-futures-specialist-college-ltd"></td>
+          <td><a href="/schools/bexley/brighter-futures-specialist-college-ltd">Brighter Futures Specialist College Ltd</a></td>
+          <td>Sixth form</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>N/A</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Burnt Oak Junior School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="73.0"
+            data-url="https://londonschool.directory/schools/bexley/burnt-oak-junior-school"></td>
+          <td><a href="/schools/bexley/burnt-oak-junior-school">Burnt Oak Junior School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>245</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Bursted Wood Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="73.0"
+            data-url="https://londonschool.directory/schools/bexley/bursted-wood-primary-school"></td>
+          <td><a href="/schools/bexley/bursted-wood-primary-school">Bursted Wood Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>621</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Castilion Primary School"
+            data-ofsted="Requires improvement"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="61.0"
+            data-url="https://londonschool.directory/schools/bexley/castilion-primary-school"></td>
+          <td><a href="/schools/bexley/castilion-primary-school">Castilion Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
+          <td>159</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Chatsworth Infant School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/bexley/chatsworth-infant-school"></td>
+          <td><a href="/schools/bexley/chatsworth-infant-school">Chatsworth Infant School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>210</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Chislehurst and Sidcup Grammar School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="73.0"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/bexley/chislehurst-and-sidcup-grammar-school"></td>
+          <td><a href="/schools/bexley/chislehurst-and-sidcup-grammar-school">Chislehurst and Sidcup Grammar School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1561</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Christ Church (Erith) CofE Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="70.0"
+            data-url="https://londonschool.directory/schools/bexley/christ-church-erith-cofe-primary-school"></td>
+          <td><a href="/schools/bexley/christ-church-erith-cofe-primary-school">Christ Church (Erith) CofE Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>498</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Cleeve Meadow School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="1.0"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/bexley/cleeve-meadow-school"></td>
+          <td><a href="/schools/bexley/cleeve-meadow-school">Cleeve Meadow School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>137</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Cleeve Park School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="42.8"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/bexley/cleeve-park-school"></td>
+          <td><a href="/schools/bexley/cleeve-park-school">Cleeve Park School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>994</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Cornerstone School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="6.4"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/bexley/cornerstone-school"></td>
+          <td><a href="/schools/bexley/cornerstone-school">Cornerstone School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>112</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Crook Log Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="77.0"
+            data-url="https://londonschool.directory/schools/bexley/crook-log-primary-school"></td>
+          <td><a href="/schools/bexley/crook-log-primary-school">Crook Log Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>432</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Danson Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="87.0"
+            data-url="https://londonschool.directory/schools/bexley/danson-primary-school"></td>
+          <td><a href="/schools/bexley/danson-primary-school">Danson Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>592</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Days Lane Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="66.0"
+            data-url="https://londonschool.directory/schools/bexley/days-lane-primary-school"></td>
+          <td><a href="/schools/bexley/days-lane-primary-school">Days Lane Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>653</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Dulverton Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="77.0"
+            data-url="https://londonschool.directory/schools/bexley/dulverton-primary-school"></td>
+          <td><a href="/schools/bexley/dulverton-primary-school">Dulverton Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>444</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="East Wickham Primary Academy"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="88.0"
+            data-url="https://londonschool.directory/schools/bexley/east-wickham-primary-academy"></td>
+          <td><a href="/schools/bexley/east-wickham-primary-academy">East Wickham Primary Academy</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>585</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Endeavour Academy Bexley"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="15.8"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/bexley/endeavour-academy-bexley"></td>
+          <td><a href="/schools/bexley/endeavour-academy-bexley">Endeavour Academy Bexley</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>102</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Fairford Academy Barnehurst"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="69.0"
+            data-url="https://londonschool.directory/schools/bexley/fairford-academy-barnehurst"></td>
+          <td><a href="/schools/bexley/fairford-academy-barnehurst">Fairford Academy Barnehurst</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>452</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Foster's Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="82.0"
+            data-url="https://londonschool.directory/schools/bexley/fosters-primary-school"></td>
+          <td><a href="/schools/bexley/fosters-primary-school">Foster's Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>452</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Gravel Hill Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="86.0"
+            data-url="https://londonschool.directory/schools/bexley/gravel-hill-primary-school"></td>
+          <td><a href="/schools/bexley/gravel-hill-primary-school">Gravel Hill Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>434</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Haberdashers' Crayford Academy"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="44.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/bexley/haberdashers-crayford-academy"></td>
+          <td><a href="/schools/bexley/haberdashers-crayford-academy">Haberdashers' Crayford Academy</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1078</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Haberdashers' Crayford Primary"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="75.0"
+            data-url="https://londonschool.directory/schools/bexley/haberdashers-crayford-primary"></td>
+          <td><a href="/schools/bexley/haberdashers-crayford-primary">Haberdashers' Crayford Primary</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>243</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Haberdashers' Slade Green Primary"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="81.0"
+            data-url="https://londonschool.directory/schools/bexley/haberdashers-slade-green-primary"></td>
+          <td><a href="/schools/bexley/haberdashers-slade-green-primary">Haberdashers' Slade Green Primary</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>280</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Harris Academy Falconwood"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="47.7"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/bexley/harris-academy-falconwood"></td>
+          <td><a href="/schools/bexley/harris-academy-falconwood">Harris Academy Falconwood</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1295</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Harris Garrard Academy"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8="46.2"
+            data-ks2="63.0"
+            data-url="https://londonschool.directory/schools/bexley/harris-garrard-academy"></td>
+          <td><a href="/schools/bexley/harris-garrard-academy">Harris Garrard Academy</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1505</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hillsgrove Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="54.0"
+            data-url="https://londonschool.directory/schools/bexley/hillsgrove-primary-school"></td>
+          <td><a href="/schools/bexley/hillsgrove-primary-school">Hillsgrove Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>280</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Holy Trinity Lamorbey Church of England School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="57.0"
+            data-url="https://londonschool.directory/schools/bexley/holy-trinity-lamorbey-church-of-england-school"></td>
+          <td><a href="/schools/bexley/holy-trinity-lamorbey-church-of-england-school">Holy Trinity Lamorbey Church of England School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>241</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hook Lane Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="66.0"
+            data-url="https://londonschool.directory/schools/bexley/hook-lane-primary-school"></td>
+          <td><a href="/schools/bexley/hook-lane-primary-school">Hook Lane Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>447</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hope Community School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="29.0"
+            data-url="https://londonschool.directory/schools/bexley/hope-community-school"></td>
+          <td><a href="/schools/bexley/hope-community-school">Hope Community School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>112</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Horizons Academy Bexley"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/bexley/horizons-academy-bexley"></td>
+          <td><a href="/schools/bexley/horizons-academy-bexley">Horizons Academy Bexley</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>18</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hurst Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="75.0"
+            data-url="https://londonschool.directory/schools/bexley/hurst-primary-school"></td>
+          <td><a href="/schools/bexley/hurst-primary-school">Hurst Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>662</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hurstmere School"
+            data-ofsted="Requires improvement"
+            data-phase="Secondary"
+            data-att8="42.1"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/bexley/hurstmere-school"></td>
+          <td><a href="/schools/bexley/hurstmere-school">Hurstmere School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
+          <td>893</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Jubilee Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="57.0"
+            data-url="https://londonschool.directory/schools/bexley/jubilee-primary-school"></td>
+          <td><a href="/schools/bexley/jubilee-primary-school">Jubilee Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>146</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Leigh Academy Bexley"
+            data-ofsted="Inadequate"
+            data-phase="Secondary"
+            data-att8="35.4"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/bexley/leigh-academy-bexley"></td>
+          <td><a href="/schools/bexley/leigh-academy-bexley">Leigh Academy Bexley</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#FFEBEE;color:#B71C1C;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Inadequate</span></td>
+          <td>873</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Leigh Stationers' Primary Academy"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="87.0"
+            data-url="https://londonschool.directory/schools/bexley/leigh-stationers-primary-academy"></td>
+          <td><a href="/schools/bexley/leigh-stationers-primary-academy">Leigh Stationers' Primary Academy</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>235</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Lessness Heath Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="65.0"
+            data-url="https://londonschool.directory/schools/bexley/lessness-heath-primary-school"></td>
+          <td><a href="/schools/bexley/lessness-heath-primary-school">Lessness Heath Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>638</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Lift Bexleyheath"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="43.3"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/bexley/lift-bexleyheath"></td>
+          <td><a href="/schools/bexley/lift-bexleyheath">Lift Bexleyheath</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1474</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Lime Wood Primary School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/bexley/lime-wood-primary-school"></td>
+          <td><a href="/schools/bexley/lime-wood-primary-school">Lime Wood Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>192</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Longlands Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="81.0"
+            data-url="https://londonschool.directory/schools/bexley/longlands-primary-school"></td>
+          <td><a href="/schools/bexley/longlands-primary-school">Longlands Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>293</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Marlborough School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/bexley/marlborough-school"></td>
+          <td><a href="/schools/bexley/marlborough-school">Marlborough School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>92</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Mayplace Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="56.0"
+            data-url="https://londonschool.directory/schools/bexley/mayplace-primary-school"></td>
+          <td><a href="/schools/bexley/mayplace-primary-school">Mayplace Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>623</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Merton Court School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/bexley/merton-court-school"></td>
+          <td><a href="/schools/bexley/merton-court-school">Merton Court School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>311</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Northumberland Heath Primary School"
+            data-ofsted="Requires improvement"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="63.0"
+            data-url="https://londonschool.directory/schools/bexley/northumberland-heath-primary-school"></td>
+          <td><a href="/schools/bexley/northumberland-heath-primary-school">Northumberland Heath Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
+          <td>442</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Northwood Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="65.0"
+            data-url="https://londonschool.directory/schools/bexley/northwood-primary-school"></td>
+          <td><a href="/schools/bexley/northwood-primary-school">Northwood Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>144</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Old Bexley Church of England School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="63.0"
+            data-url="https://londonschool.directory/schools/bexley/old-bexley-church-of-england-school"></td>
+          <td><a href="/schools/bexley/old-bexley-church-of-england-school">Old Bexley Church of England School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>615</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Orchard Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="68.0"
+            data-url="https://londonschool.directory/schools/bexley/orchard-primary-school"></td>
+          <td><a href="/schools/bexley/orchard-primary-school">Orchard Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>207</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Our Lady of the Rosary Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="73.0"
+            data-url="https://londonschool.directory/schools/bexley/our-lady-of-the-rosary-catholic-primary-school"></td>
+          <td><a href="/schools/bexley/our-lady-of-the-rosary-catholic-primary-school">Our Lady of the Rosary Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>397</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Park View Academy"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/bexley/park-view-academy"></td>
+          <td><a href="/schools/bexley/park-view-academy">Park View Academy</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>48</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Parkway Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="55.0"
+            data-url="https://londonschool.directory/schools/bexley/parkway-primary-school"></td>
+          <td><a href="/schools/bexley/parkway-primary-school">Parkway Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>247</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Peareswood Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="95.0"
+            data-url="https://londonschool.directory/schools/bexley/peareswood-primary-school"></td>
+          <td><a href="/schools/bexley/peareswood-primary-school">Peareswood Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>418</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Pelham Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="67.0"
+            data-url="https://londonschool.directory/schools/bexley/pelham-primary-school"></td>
+          <td><a href="/schools/bexley/pelham-primary-school">Pelham Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>394</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Royal Park Primary Academy"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="92.0"
+            data-url="https://londonschool.directory/schools/bexley/royal-park-primary-academy"></td>
+          <td><a href="/schools/bexley/royal-park-primary-academy">Royal Park Primary Academy</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>338</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Shenstone School"
+            data-ofsted="Outstanding"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/bexley/shenstone-school"></td>
+          <td><a href="/schools/bexley/shenstone-school">Shenstone School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>240</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Sherwood Park Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="68.0"
+            data-url="https://londonschool.directory/schools/bexley/sherwood-park-primary-school"></td>
+          <td><a href="/schools/bexley/sherwood-park-primary-school">Sherwood Park Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>282</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Augustine of Canterbury CofE Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="48.0"
+            data-url="https://londonschool.directory/schools/bexley/st-augustine-of-canterbury-cofe-primary-school"></td>
+          <td><a href="/schools/bexley/st-augustine-of-canterbury-cofe-primary-school">St Augustine of Canterbury CofE Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>192</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Catherine's Catholic School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="53.9"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/bexley/st-catherines-catholic-school"></td>
+          <td><a href="/schools/bexley/st-catherines-catholic-school">St Catherine's Catholic School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1021</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Columba's Catholic Boys' School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="43.4"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/bexley/st-columbas-catholic-boys-school"></td>
+          <td><a href="/schools/bexley/st-columbas-catholic-boys-school">St Columba's Catholic Boys' School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>805</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Fidelis Catholic Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="86.0"
+            data-url="https://londonschool.directory/schools/bexley/st-fidelis-catholic-primary-school"></td>
+          <td><a href="/schools/bexley/st-fidelis-catholic-primary-school">St Fidelis Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>459</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St John Fisher Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="95.0"
+            data-url="https://londonschool.directory/schools/bexley/st-john-fisher-catholic-primary-school"></td>
+          <td><a href="/schools/bexley/st-john-fisher-catholic-primary-school">St John Fisher Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>177</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Joseph's Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="90.0"
+            data-url="https://londonschool.directory/schools/bexley/st-josephs-catholic-primary-school"></td>
+          <td><a href="/schools/bexley/st-josephs-catholic-primary-school">St Joseph's Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>211</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Michael's East Wickham Church of England Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="61.0"
+            data-url="https://londonschool.directory/schools/bexley/st-michaels-east-wickham-church-of-england-primary-school"></td>
+          <td><a href="/schools/bexley/st-michaels-east-wickham-church-of-england-primary-school">St Michael's East Wickham Church of England Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>221</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Paulinus Church of England Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="67.0"
+            data-url="https://londonschool.directory/schools/bexley/st-paulinus-church-of-england-primary-school"></td>
+          <td><a href="/schools/bexley/st-paulinus-church-of-england-primary-school">St Paulinus Church of England Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>203</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Peter Chanel Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="55.0"
+            data-url="https://londonschool.directory/schools/bexley/st-peter-chanel-catholic-primary-school"></td>
+          <td><a href="/schools/bexley/st-peter-chanel-catholic-primary-school">St Peter Chanel Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>182</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Stephen's Catholic Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="90.0"
+            data-url="https://londonschool.directory/schools/bexley/st-stephens-catholic-primary-school"></td>
+          <td><a href="/schools/bexley/st-stephens-catholic-primary-school">St Stephen's Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>419</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Thomas More Catholic Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="90.0"
+            data-url="https://londonschool.directory/schools/bexley/st-thomas-more-catholic-primary-school"></td>
+          <td><a href="/schools/bexley/st-thomas-more-catholic-primary-school">St Thomas More Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>421</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St. Paul's (Slade Green) Church of England Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="59.0"
+            data-url="https://londonschool.directory/schools/bexley/st-pauls-slade-green-church-of-england-primary-school"></td>
+          <td><a href="/schools/bexley/st-pauls-slade-green-church-of-england-primary-school">St. Paul's (Slade Green) Church of England Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>348</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Townley Grammar School"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="75.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/bexley/townley-grammar-school"></td>
+          <td><a href="/schools/bexley/townley-grammar-school">Townley Grammar School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>1669</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Trinity Church of England School, Belvedere"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="40.7"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/bexley/trinity-church-of-england-school-belvedere"></td>
+          <td><a href="/schools/bexley/trinity-church-of-england-school-belvedere">Trinity Church of England School, Belvedere</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1028</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Upland Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="69.0"
+            data-url="https://londonschool.directory/schools/bexley/upland-primary-school"></td>
+          <td><a href="/schools/bexley/upland-primary-school">Upland Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>444</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Upton Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="84.0"
+            data-url="https://londonschool.directory/schools/bexley/upton-primary-school"></td>
+          <td><a href="/schools/bexley/upton-primary-school">Upton Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>454</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Welling School"
+            data-ofsted="Requires improvement"
+            data-phase="Secondary"
+            data-att8="33.7"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/bexley/welling-school"></td>
+          <td><a href="/schools/bexley/welling-school">Welling School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
+          <td>1084</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="West Lodge School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/bexley/west-lodge-school"></td>
+          <td><a href="/schools/bexley/west-lodge-school">West Lodge School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>174</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Willow Bank Primary School"
+            data-ofsted="Requires improvement"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="75.0"
+            data-url="https://londonschool.directory/schools/bexley/willow-bank-primary-school"></td>
+          <td><a href="/schools/bexley/willow-bank-primary-school">Willow Bank Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
+          <td>182</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Woodside Academy"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/bexley/woodside-academy"></td>
+          <td><a href="/schools/bexley/woodside-academy">Woodside Academy</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>206</td>
+        </tr></tbody>
+  </table>
+</div>
+<footer><a href="/">London Schools Explorer</a> &mdash; helping families find the right school in London.<p style="margin-top:10px">Browse by type: <a href="/schools/outstanding">Outstanding</a> &middot; <a href="/schools/good">Good</a> &middot; <a href="/schools/grammar">Grammar</a> &middot; <a href="/schools/selective">Selective</a> &middot; <a href="/schools/faith">Faith</a> &middot; <a href="/schools/primary">Primary</a> &middot; <a href="/schools/secondary">Secondary</a> &middot; <a href="/schools/sixth-form">Sixth form</a> &middot; <a href="/schools/independent">Private &amp; independent</a></p></footer>
+<script defer src="/_vercel/insights/script.js"></script>
 <script>
-  (function() {
-    var points = [[51.458968, 0.127245, "/schools/bexley/crook-log-primary-school/", "Crook Log Primary School"], [51.457385, 0.108818, "/schools/bexley/danson-primary-school/", "Danson Primary School"], [51.449384, 0.135032, "/schools/bexley/upton-primary-school/", "Upton Primary School"], [51.431935, 0.105832, "/schools/bexley/birkbeck-primary-school/", "Birkbeck Primary School"], [51.430798, 0.090991, "/schools/bexley/longlands-primary-school/", "Longlands Primary School"], [51.43549, 0.08099, "/schools/bexley/dulverton-primary-school/", "Dulverton Primary School"], [51.493564, 0.134619, "/schools/bexley/parkway-primary-school/", "Parkway Primary School"], [51.463108, 0.121593, "/schools/bexley/fosters-primary-school/", "Foster's Primary School"], [51.464153, 0.104048, "/schools/bexley/st-stephens-catholic-primary-school/", "St Stephen's Catholic Primary School"], [51.44793, 0.092954, "/schools/bexley/our-lady-of-the-rosary-catholic-primary-school/", "Our Lady of the Rosary Catholic Primary School"], [51.453956, 0.172036, "/schools/bexley/st-josephs-catholic-primary-school/", "St Joseph's Catholic Primary School"], [51.476275, 0.162887, "/schools/bexley/st-fidelis-catholic-primary-school/", "St Fidelis Catholic Primary School"], [51.495021, 0.13218, "/schools/bexley/st-john-fisher-catholic-primary-school/", "St John Fisher Catholic Primary School"], [51.431463, 0.102574, "/schools/bexley/west-lodge-school/", "West Lodge School"], [51.423049, 0.112371, "/schools/bexley/merton-court-school/", "Merton Court School"], [51.428735, 0.099212, "/schools/bexley/benedict-house-preparatory-school/", "Benedict House Preparatory School"], [51.44153, 0.103353, "/schools/bexley/marlborough-school/", "Marlborough School"], [51.420708, 0.110508, "/schools/bexley/orchard-primary-school/", "Orchard Primary School"], [51.459792, 0.087422, "/schools/bexley/bishop-ridley-church-of-england-va-primary-school/", "Bishop Ridley Church of England VA Primary School"], [51.457804, 0.088425, "/schools/bexley/harris-academy-falconwood/", "Harris Academy Falconwood"], [51.455234, 0.18308, "/schools/bexley/haberdashers-crayford-academy/", "Haberdashers' Crayford Academy"], [51.44656, 0.150774, "/schools/bexley/beths-grammar-school/", "Beths Grammar School"], [51.456744, 0.108472, "/schools/bexley/bexley-grammar-school/", "Bexley Grammar School"], [51.485254, 0.160705, "/schools/bexley/trinity-church-of-england-school-belvedere/", "Trinity Church of England School, Belvedere"], [51.469185, 0.100262, "/schools/bexley/east-wickham-primary-academy/", "East Wickham Primary Academy"], [51.46841, 0.112826, "/schools/bexley/welling-school/", "Welling School"], [51.497376, 0.125303, "/schools/bexley/willow-bank-primary-school/", "Willow Bank Primary School"], [51.459548, 0.145267, "/schools/bexley/lift-bexleyheath/", "Lift Bexleyheath"], [51.473528, 0.156737, "/schools/bexley/northumberland-heath-primary-school/", "Northumberland Heath Primary School"], [51.470988, 0.182205, "/schools/bexley/peareswood-primary-school/", "Peareswood Primary School"], [51.435793, 0.107808, "/schools/bexley/chislehurst-and-sidcup-grammar-school/", "Chislehurst and Sidcup Grammar School"], [51.454731, 0.154382, "/schools/bexley/st-catherines-catholic-school/", "St Catherine's Catholic School"], [51.45025, 0.139793, "/schools/bexley/townley-grammar-school/", "Townley Grammar School"], [51.449172, 0.111937, "/schools/bexley/blackfen-school-for-girls/", "Blackfen School for Girls"], [51.461384, 0.115481, "/schools/bexley/park-view-academy/", "Park View Academy"], [51.452692, 0.155222, "/schools/bexley/st-columbas-catholic-boys-school/", "St Columba's Catholic Boys' School"], [51.428799, 0.119642, "/schools/bexley/cleeve-park-school/", "Cleeve Park School"], [51.491001, 0.159695, "/schools/bexley/belvedere-junior-school/", "Belvedere Junior School"], [51.478054, 0.172677, "/schools/bexley/christ-church-erith-cofe-primary-school/", "Christ Church (Erith) CofE Primary School"], [51.490151, 0.143751, "/schools/bexley/st-augustine-of-canterbury-cofe-primary-school/", "St Augustine of Canterbury CofE Primary School"], [51.459173, 0.149049, "/schools/bexley/pelham-primary-school/", "Pelham Primary School"], [51.419388, 0.119365, "/schools/bexley/hope-community-school/", "Hope Community School"], [51.480156, 0.143973, "/schools/bexley/break-through-school/", "Break Through School"], [51.440977, 0.126049, "/schools/bexley/hurst-primary-school/", "Hurst Primary School"], [51.469757, 0.161757, "/schools/bexley/barnehurst-infant-school/", "Barnehurst Infant School"], [51.469757, 0.161757, "/schools/bexley/barnehurst-junior-school/", "Barnehurst Junior School"], [51.468723, 0.152508, "/schools/bexley/bursted-wood-primary-school/", "Bursted Wood Primary School"], [51.446954, 0.111791, "/schools/bexley/sherwood-park-primary-school/", "Sherwood Park Primary School"], [51.446295, 0.095887, "/schools/bexley/days-lane-primary-school/", "Days Lane Primary School"], [51.466855, 0.129196, "/schools/bexley/brampton-primary-academy/", "Brampton Primary Academy"], [51.456878, 0.166719, "/schools/bexley/mayplace-primary-school/", "Mayplace Primary School"], [51.483952, 0.150331, "/schools/bexley/lessness-heath-primary-school/", "Lessness Heath Primary School"], [51.468945, 0.172158, "/schools/bexley/fairford-academy-barnehurst/", "Fairford Academy Barnehurst"], [51.437654, 0.100815, "/schools/bexley/burnt-oak-junior-school/", "Burnt Oak Junior School"], [51.439493, 0.138383, "/schools/bexley/old-bexley-church-of-england-school/", "Old Bexley Church of England School"], [51.437129, 0.10151, "/schools/bexley/holy-trinity-lamorbey-church-of-england-school/", "Holy Trinity Lamorbey Church of England School"], [51.454479, 0.177271, "/schools/bexley/st-paulinus-church-of-england-primary-school/", "St Paulinus Church of England Primary School"], [51.473917, 0.119128, "/schools/bexley/hillsgrove-primary-school/", "Hillsgrove Primary School"], [51.464013, 0.084173, "/schools/bexley/leigh-stationers-primary-academy/", "Leigh Stationers' Primary Academy"], [51.430638, 0.129352, "/schools/bexley/royal-park-primary-academy/", "Royal Park Primary Academy"], [51.440631, 0.106319, "/schools/bexley/chatsworth-infant-school/", "Chatsworth Infant School"], [51.46165, 0.136987, "/schools/bexley/upland-primary-school/", "Upland Primary School"], [51.479732, 0.133699, "/schools/bexley/bedonwell-infant-and-nursery-school/", "Bedonwell Infant and Nursery School"], [51.479732, 0.133699, "/schools/bexley/bedonwell-junior-school/", "Bedonwell Junior School"], [51.464169, 0.127041, "/schools/bexley/barrington-primary-school/", "Barrington Primary School"], [51.482053, 0.164053, "/schools/bexley/lime-wood-primary-school/", "Lime Wood Primary School"], [51.453956, 0.172036, "/schools/bexley/shenstone-school/", "Shenstone School"], [51.455254, 0.167952, "/schools/bexley/endeavour-academy-bexley/", "Endeavour Academy Bexley"], [51.461133, 0.122423, "/schools/bexley/aspire-academy/", "Aspire Academy"], [51.494639, 0.123965, "/schools/bexley/horizons-academy-bexley/", "Horizons Academy Bexley"], [51.492974, 0.137934, "/schools/bexley/northwood-primary-school/", "Northwood Primary School"], [51.469279, 0.12247, "/schools/bexley/st-michaels-east-wickham-church-of-england-primary-school/", "St Michael's East Wickham Church of England Primary School"], [51.4723, 0.186126, "/schools/bexley/st-pauls-slade-green-church-of-england-primary-school/", "St. Paul's (Slade Green) Church of England Primary School"], [51.504817, 0.121571, "/schools/bexley/jubilee-primary-school/", "Jubilee Primary School"], [51.496378, 0.133224, "/schools/bexley/harris-garrard-academy/", "Harris Garrard Academy"], [51.454731, 0.154382, "/schools/bexley/gravel-hill-primary-school/", "Gravel Hill Primary School"], [51.472906, 0.148975, "/schools/bexley/belmont-academy/", "Belmont Academy"], [51.471451, 0.170362, "/schools/bexley/woodside-academy/", "Woodside Academy"], [51.510298, 0.12135, "/schools/bexley/castilion-primary-school/", "Castilion Primary School"], [51.428799, 0.119642, "/schools/bexley/cleeve-meadow-school/", "Cleeve Meadow School"], [51.461812, 0.102702, "/schools/bexley/hook-lane-primary-school/", "Hook Lane Primary School"], [51.491001, 0.159695, "/schools/bexley/belvedere-infant-school/", "Belvedere Infant School"], [51.473114, 0.190701, "/schools/bexley/haberdashers-slade-green-primary/", "Haberdashers' Slade Green Primary"], [51.455234, 0.18308, "/schools/bexley/haberdashers-crayford-primary/", "Haberdashers' Crayford Primary"], [51.489288, 0.154572, "/schools/bexley/cornerstone-school/", "Cornerstone School"], [51.420351, 0.118345, "/schools/bexley/st-peter-chanel-catholic-primary-school/", "St Peter Chanel Catholic Primary School"], [51.471635, 0.09401, "/schools/bexley/ado-river-valley-school/", "ADO River Valley School"], [51.466788, 0.139315, "/schools/bexley/st-thomas-more-catholic-primary-school/", "St Thomas More Catholic Primary School"], [51.474235, 0.166188, "/schools/bexley/leigh-academy-bexley/", "Leigh Academy Bexley"], [51.438872, 0.112152, "/schools/bexley/hurstmere-school/", "Hurstmere School"], [51.498046, 0.121573, "/schools/bexley/brighter-futures-specialist-college-ltd/", "Brighter Futures Specialist College Ltd"]];
-    if (!points.length) return;
-    var lats = points.map(function(p) { return p[0]; });
-    var lngs = points.map(function(p) { return p[1]; });
-    var avgLat = lats.reduce(function(a,b) { return a+b; }, 0) / lats.length;
-    var avgLng = lngs.reduce(function(a,b) { return a+b; }, 0) / lngs.length;
-    var map = L.map('map', { scrollWheelZoom: false }).setView([avgLat, avgLng], 12);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 18,
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-    points.forEach(function(p) {
-      L.circleMarker([p[0], p[1]], {
-        radius: 5, color: '#0b2545', fillColor: '#0b6efd', fillOpacity: 0.8, weight: 1
-      }).addTo(map).bindPopup('<a href="' + p[2] + '">' + p[3] + '</a>');
+(function(){
+  var borough="Bexley", boroughUrl="https://londonschool.directory/schools/bexley";
+  var outstanding=11, total=91;
+
+  // Borough-level share
+  window.shareBoroughWhatsApp=function(){
+    var t='🏙️ *Schools in '+borough+', London*\n'+
+        '📊 '+total+' schools · '+outstanding+' Outstanding\n\n'+
+        '🔗 '+boroughUrl;
+    window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank');
+  };
+  window.shareBoroughEmail=function(){
+    var s='Schools in '+borough+' — London Schools Explorer';
+    var b='Schools in '+borough+', London\n'+
+        total+' schools, '+outstanding+' rated Outstanding by Ofsted\n\n'+
+        'Browse them here: '+boroughUrl;
+    window.location.href='mailto:?subject='+encodeURIComponent(s)+'&body='+encodeURIComponent(b);
+  };
+
+  // Shortlist comparison share
+  function getSelected(){
+    return Array.from(document.querySelectorAll('.sch-sel:checked')).map(function(cb){
+      return {name:cb.dataset.name,ofsted:cb.dataset.ofsted,phase:cb.dataset.phase,
+               att8:cb.dataset.att8,ks2:cb.dataset.ks2,url:cb.dataset.url};
     });
-  })();
+  }
+  function updateBar(){
+    var sel=getSelected();
+    var bar=document.getElementById('cmp-bar');
+    document.getElementById('cmp-count').textContent=sel.length+' school'+(sel.length===1?'':' s')+' selected';
+    bar.style.display=sel.length>0?'flex':'none';
+  }
+  document.querySelectorAll('.sch-sel').forEach(function(cb){ cb.onchange=updateBar; });
+
+  function buildCompareText(sel,markdown){
+    var lines=['📋 *My '+borough+' school shortlist*',''];
+    sel.forEach(function(s,i){
+      lines.push((i+1)+'. '+(markdown?'*':'')+s.name+(markdown?'*':''));
+      lines.push('   ⭐ Ofsted: '+s.ofsted+(s.phase?' · '+s.phase:''));
+      if(s.att8)lines.push('   📊 Attainment 8: '+s.att8);
+      if(s.ks2)lines.push('   📝 KS2 expected: '+s.ks2+'%');
+      lines.push('   🔗 '+s.url);
+      lines.push('');
+    });
+    lines.push('via London Schools Explorer — '+boroughUrl);
+    return lines.join('\n');
+  }
+  window.shareCompareWhatsApp=function(){
+    var sel=getSelected();
+    if(!sel.length)return;
+    window.open('https://wa.me/?text='+encodeURIComponent(buildCompareText(sel,true)),'_blank');
+  };
+  window.shareCompareEmail=function(){
+    var sel=getSelected();
+    if(!sel.length)return;
+    var subj='My '+borough+' school shortlist — London Schools Explorer';
+    window.location.href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(buildCompareText(sel,false));
+  };
+  window.clearSelection=function(){
+    document.querySelectorAll('.sch-sel:checked').forEach(function(cb){cb.checked=false;});
+    updateBar();
+  };
+})();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/sw.js').catch(function () {});
+  });
+}
 </script>
 </body>
 </html>

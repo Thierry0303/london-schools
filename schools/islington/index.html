@@ -1,486 +1,1091 @@
-<!doctype html>
-<html lang="en-GB">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Schools in Islington, London — Ofsted, Performance & Admissions</title>
-<meta name="description" content="All 71 schools in Islington, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
-<link rel="canonical" href="https://londonschool.directory/schools/islington/">
-<meta property="og:title" content="Schools in Islington, London — Ofsted, Performance & Admissions">
-<meta property="og:description" content="All 71 schools in Islington, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://londonschool.directory/schools/islington/">
-<meta property="og:site_name" content="London School Directory">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#0b2545">
-<meta name="robots" content="index,follow,max-image-preview:large">
-<link rel="preconnect" href="https://unpkg.com">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<style>
-  :root {
-    --ink: #0b2545;
-    --ink-2: #1e3a5f;
-    --muted: #5b6b85;
-    --line: #e3e8ef;
-    --bg: #ffffff;
-    --bg-2: #f6f8fb;
-    --accent: #0b6efd;
-    --good: #137333;
-    --warn: #a85b00;
-    --bad: #b3261e;
-    --radius: 10px;
-  }
-  * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    color: var(--ink);
-    background: var(--bg);
-    line-height: 1.55;
-    -webkit-font-smoothing: antialiased;
-  }
-  a { color: var(--accent); text-decoration: none; }
-  a:hover { text-decoration: underline; }
-  header.site {
-    border-bottom: 1px solid var(--line);
-    background: var(--bg);
-    position: sticky; top: 0; z-index: 50;
-  }
-  header.site .inner {
-    max-width: 1100px; margin: 0 auto; padding: 14px 20px;
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  header.site a.brand { color: var(--ink); font-weight: 700; letter-spacing: -0.01em; }
-  header.site nav a { margin-left: 18px; color: var(--ink-2); font-size: 14px; }
-  main { max-width: 1100px; margin: 0 auto; padding: 28px 20px 80px; }
-  .crumbs { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
-  .crumbs a { color: var(--muted); }
-  h1 { font-size: 32px; line-height: 1.2; margin: 0 0 8px; letter-spacing: -0.02em; }
-  .lede { color: var(--ink-2); font-size: 17px; max-width: 720px; }
-  .stamp { font-size: 12px; color: var(--muted); margin-top: 8px; }
-  .stamp .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--good); vertical-align: middle; margin-right: 6px; }
-  .grid-stats {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 12px; margin: 24px 0 8px;
-  }
-  .stat {
-    background: var(--bg-2); border: 1px solid var(--line);
-    border-radius: var(--radius); padding: 14px 16px;
-  }
-  .stat .v { font-size: 24px; font-weight: 700; color: var(--ink); }
-  .stat .l { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
-  section { margin-top: 36px; }
-  h2 { font-size: 22px; margin: 0 0 12px; letter-spacing: -0.01em; }
-  .twocol { display: grid; grid-template-columns: 1.4fr 1fr; gap: 28px; }
-  @media (max-width: 820px) { .twocol { grid-template-columns: 1fr; } }
-  table.schools { width: 100%; border-collapse: collapse; font-size: 14px; }
-  table.schools th, table.schools td {
-    text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line);
-  }
-  table.schools th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); font-weight: 600; }
-  .rating { font-weight: 600; }
-  .rating.Outstanding { color: var(--good); }
-  .rating.Good { color: var(--ink-2); }
-  .rating.RequiresImprovement, .rating.Requires { color: var(--warn); }
-  .rating.Inadequate { color: var(--bad); }
-  #map { height: 380px; border-radius: var(--radius); border: 1px solid var(--line); }
-  .pills { display: flex; flex-wrap: wrap; gap: 6px; }
-  .pill { background: var(--bg-2); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; font-size: 12px; color: var(--ink-2); }
-  details.faq { border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 8px; background: var(--bg); }
-  details.faq summary { cursor: pointer; font-weight: 600; color: var(--ink); }
-  details.faq[open] { background: var(--bg-2); }
-  footer { border-top: 1px solid var(--line); padding: 28px 20px; color: var(--muted); font-size: 13px; }
-  footer .inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 24px; flex-wrap: wrap; }
-  .sources { font-size: 13px; color: var(--muted); }
-  .sources a { color: var(--muted); text-decoration: underline; }
-  .cta {
-    display: inline-block; background: var(--ink); color: #fff; padding: 10px 14px;
-    border-radius: var(--radius); font-size: 14px; font-weight: 600;
-  }
-  .cta:hover { background: var(--ink-2); text-decoration: none; }
-</style>
-<script type="application/ld+json">
-[
-  {
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Schools in Islington, London | Ofsted Ratings &amp; Results | London Schools Explorer</title>
+  <meta name="description" content="71 schools in Islington, London. 17 Outstanding, 45 Good-rated by Ofsted. Compare admissions oversubscription, exam results and crime data. Free.">
+  <script type="application/ld+json">{
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "name": "Top schools in Islington, London",
-    "itemListOrder": "http://schema.org/ItemListOrderDescending",
-    "numberOfItems": 14,
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "url": "https://londonschool.directory/schools/islington/winton-primary-school/",
-        "name": "Winton Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "url": "https://londonschool.directory/schools/islington/ambler-primary-school-and-childrens-centre/",
-        "name": "Ambler Primary School and Children's Centre"
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "url": "https://londonschool.directory/schools/islington/hugh-myddelton-primary-school/",
-        "name": "Hugh Myddelton Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 4,
-        "url": "https://londonschool.directory/schools/islington/gillespie-primary-school/",
-        "name": "Gillespie Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 5,
-        "url": "https://londonschool.directory/schools/islington/st-josephs-catholic-primary-school/",
-        "name": "St Joseph's Catholic Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 6,
-        "url": "https://londonschool.directory/schools/islington/st-mary-magdalene-academy/",
-        "name": "St Mary Magdalene Academy"
-      },
-      {
-        "@type": "ListItem",
-        "position": 7,
-        "url": "https://londonschool.directory/schools/islington/yerbury-primary-school/",
-        "name": "Yerbury Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 8,
-        "url": "https://londonschool.directory/schools/islington/central-foundation-boys-school/",
-        "name": "Central Foundation Boys' School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 9,
-        "url": "https://londonschool.directory/schools/islington/highbury-fields-school/",
-        "name": "Highbury Fields School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 10,
-        "url": "https://londonschool.directory/schools/islington/st-mary-magdalene-academy/",
-        "name": "St Mary Magdalene Academy"
-      },
-      {
-        "@type": "ListItem",
-        "position": 11,
-        "url": "https://londonschool.directory/schools/islington/elizabeth-garrett-anderson-school/",
-        "name": "Elizabeth Garrett Anderson School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 12,
-        "url": "https://londonschool.directory/schools/islington/richard-cloudesley-school/",
-        "name": "Richard Cloudesley School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 13,
-        "url": "https://londonschool.directory/schools/islington/samuel-rhodes-mld-school/",
-        "name": "Samuel Rhodes MLD School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 14,
-        "url": "https://londonschool.directory/schools/islington/new-river-college-medical/",
-        "name": "New River College Medical"
-      }
-    ]
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How many schools are there in Islington?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Islington has 71 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 53 are primary, 21 are secondary, and the remainder are special, all-through, or post-16."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What proportion of Islington schools are Outstanding?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "As of the latest Ofsted Management Information release, 17 schools in Islington (23.9%) are rated Outstanding, and 87.3% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "When do I apply for a Reception or Year 7 place in Islington?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Islington's applications are coordinated by the local authority through the eAdmissions system. See our full Reception timeline guide."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How does the school appeals process work in Islington?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "If you are refused your preferred school place, you have a statutory right of appeal. Islington appeals are typically heard in May (Reception) and June\u2013July (secondary). See our appeals tracker for Islington-level success rates by year."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How can I tell which Islington schools are over-subscribed?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release."
-        }
-      }
-    ]
-  },
-  {
+    "name": "Schools in Islington, London",
+    "description": "71 schools in Islington, London rated by Ofsted",
+    "numberOfItems": 71,
+    "url": "https://londonschool.directory/schools/islington"
+  }</script>
+  <script type="application/ld+json">{
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": "https://londonschool.directory/"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Boroughs",
-        "item": "https://londonschool.directory/schools/"
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "name": "Islington",
-        "item": "https://londonschool.directory/schools/islington/"
-      }
+      {"@type": "ListItem", "position": 1, "name": "London Schools Explorer", "item": "https://londonschool.directory/"},
+      {"@type": "ListItem", "position": 2, "name": "Schools in Islington", "item": "https://londonschool.directory/schools/islington"}
     ]
-  }
-]
-</script>
+  }</script>
+  <link rel="canonical" href="https://londonschool.directory/schools/islington">
+  <meta property="og:title" content="Schools in Islington | London Schools Explorer">
+  <meta property="og:description" content="71 schools in Islington. 17 Outstanding-rated. Compare Ofsted ratings, exam results and admissions.">
+  <meta property="og:url" content="https://londonschool.directory/schools/islington">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, sans-serif; color: #1a1a1a; background: #f8f9fa; line-height: 1.6; }
+    a { color: #1565C0; }
+    .topbar { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 12px 20px; }
+    .topbar a { text-decoration: none; font-weight: 600; color: #1a1a1a; font-size: 15px; }
+    .topbar span { color: #888; margin: 0 8px; }
+    .container { max-width: 900px; margin: 0 auto; padding: 32px 20px; }
+    h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+    .intro { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; font-size: 15px; color: #333; line-height: 1.7; }
+    .stats-row { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+    .stat-box { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 14px 18px; flex: 1; min-width: 120px; }
+    .stat-num { font-size: 24px; font-weight: 700; color: #1a1a1a; line-height: 1; }
+    .stat-lbl { font-size: 12px; color: #888; margin-top: 4px; }
+    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #e0e0e0; }
+    th { background: #f5f5f5; padding: 12px 16px; text-align: left; font-size: 13px; color: #555; font-weight: 600; border-bottom: 1px solid #e0e0e0; }
+    td { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fafafa; }
+    .back { display: inline-block; margin-bottom: 20px; font-size: 14px; color: #555; text-decoration: none; }
+    .back:hover { color: #111; }
+    footer { text-align: center; padding: 32px 20px; font-size: 13px; color: #888; }
+    @media (max-width: 600px) {
+      .container { padding: 16px 12px; }
+      h1 { font-size: 22px; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .intro { padding: 14px 16px; font-size: 14px; }
+      table { font-size: 13px; }
+      th, td { padding: 10px 10px; }
+      .topbar { padding: 10px 12px; font-size: 13px; }
+    }
+    @media (max-width: 600px) { .stats-row { flex-direction: column; } }
+  </style>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 </head>
 <body>
-<header class="site">
-  <div class="inner">
-    <a class="brand" href="/">London School Directory</a>
-    <nav>
-      <a href="/">Search</a>
-      <a href="/appeals.html">Appeals</a>
-      <a href="/methodology.html">Methodology</a>
-      <a href="/about.html">About</a>
-    </nav>
+<div class="topbar">
+  <div style="max-width:900px;margin:0 auto">
+    <a href="/">London Schools Explorer</a>
+    <span>/</span>
+    Islington
   </div>
-</header>
-<main>
-  <div class="crumbs">
-    <a href="/">Home</a> &rsaquo; <a href="/schools/">Boroughs</a> &rsaquo; Islington
+</div>
+<div class="container">
+  <a class="back" href="/">&#8592; All boroughs</a>
+  <h1>Schools in Islington</h1>
+
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-num">71</div><div class="stat-lbl">Total schools</div></div>
+    <div class="stat-box"><div class="stat-num">17</div><div class="stat-lbl">Outstanding</div></div>
+    <div class="stat-box"><div class="stat-num">45</div><div class="stat-lbl">Good</div></div>
+    <div class="stat-box"><div class="stat-num">5</div><div class="stat-lbl">School phases</div></div>
   </div>
 
-  <h1>Schools in Islington, London</h1>
-  <p class="lede">Islington's schools serve a densely populated inner-London borough running from Angel up through Highbury to Archway. The borough has invested heavily in school improvement and now has a high proportion of Good and Outstanding Ofsted ratings. Travel times to school are typically short, and waiting lists move regularly during the autumn term.</p>
-  <p class="stamp"><span class="dot"></span>Data last verified 1 September 2026. Sources: Ofsted, DfE GIAS, DfE Performance Tables, Metropolitan Police, MHCLG IMD. See <a href="/sources.html">all sources</a>.</p>
+  <div class="intro">Islington is an inner-London borough with a highly competitive school landscape and some of the most oversubscribed schools in the capital. The borough borders Camden and Hackney and is popular with young professional families. Highbury Fields School, Elizabeth Garrett Anderson and Highgate Wood School are among the most popular secondaries. Primary catchments can be extremely tight.</div>
 
-  <section>
-    <div class="grid-stats">
-      <div class="stat"><div class="v">71</div><div class="l">Schools in Islington</div></div>
-      <div class="stat"><div class="v">23.9%</div><div class="l">Outstanding Ofsted</div></div>
-      <div class="stat"><div class="v">87.3%</div><div class="l">Good or Outstanding</div></div>
-      <div class="stat"><div class="v">53</div><div class="l">Primary schools</div></div>
-      <div class="stat"><div class="v">21</div><div class="l">Secondary schools</div></div>
-      <div class="stat"><div class="v">23%</div><div class="l">Secondary appeal success (2024)</div></div>
-    </div>
-  </section>
+  
+<div style="display:flex;gap:16px;flex-wrap:wrap;margin:20px 0;">
 
-  <section>
-    <div class="twocol">
-      <div>
-        <h2>Top primary schools in Islington</h2>
-        <p class="sources">Ranked by Ofsted rating, then by latest KS2 performance. See <a href="/methodology.html">methodology</a>.</p>
-        <table class="schools">
-          <thead>
-            <tr><th>School</th><th>Ofsted</th><th>KS2 %</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><a href="/schools/islington/winton-primary-school/">Winton Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>100.0</td></tr>
-            <tr><td><a href="/schools/islington/ambler-primary-school-and-childrens-centre/">Ambler Primary School and Children's Centre</a></td><td class="rating Outstanding">Outstanding</td><td>89.0</td></tr>
-            <tr><td><a href="/schools/islington/hugh-myddelton-primary-school/">Hugh Myddelton Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>88.0</td></tr>
-            <tr><td><a href="/schools/islington/gillespie-primary-school/">Gillespie Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>86.0</td></tr>
-            <tr><td><a href="/schools/islington/st-josephs-catholic-primary-school/">St Joseph's Catholic Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>86.0</td></tr>
-            <tr><td><a href="/schools/islington/st-mary-magdalene-academy/">St Mary Magdalene Academy</a></td><td class="rating Outstanding">Outstanding</td><td>84.0</td></tr>
-            <tr><td><a href="/schools/islington/yerbury-primary-school/">Yerbury Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>81.0</td></tr>
-          </tbody>
-        </table>
-
-        <h2 style="margin-top:28px">Top secondary schools in Islington</h2>
-        <p class="sources">Ranked by Ofsted rating, then by latest KS4 Attainment 8.</p>
-        <table class="schools">
-          <thead>
-            <tr><th>School</th><th>Ofsted</th><th>Att 8</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><a href="/schools/islington/central-foundation-boys-school/">Central Foundation Boys' School</a></td><td class="rating Outstanding">Outstanding</td><td>57.2</td></tr>
-            <tr><td><a href="/schools/islington/highbury-fields-school/">Highbury Fields School</a></td><td class="rating Outstanding">Outstanding</td><td>57.1</td></tr>
-            <tr><td><a href="/schools/islington/st-mary-magdalene-academy/">St Mary Magdalene Academy</a></td><td class="rating Outstanding">Outstanding</td><td>54.9</td></tr>
-            <tr><td><a href="/schools/islington/elizabeth-garrett-anderson-school/">Elizabeth Garrett Anderson School</a></td><td class="rating Outstanding">Outstanding</td><td>51.6</td></tr>
-            <tr><td><a href="/schools/islington/richard-cloudesley-school/">Richard Cloudesley School</a></td><td class="rating Outstanding">Outstanding</td><td>—</td></tr>
-            <tr><td><a href="/schools/islington/samuel-rhodes-mld-school/">Samuel Rhodes MLD School</a></td><td class="rating Outstanding">Outstanding</td><td>—</td></tr>
-            <tr><td><a href="/schools/islington/new-river-college-medical/">New River College Medical</a></td><td class="rating Outstanding">Outstanding</td><td>—</td></tr>
-          </tbody>
-        </table>
-
-        <p style="margin-top:14px"><a class="cta" href="#all-schools">Jump to all 71 schools in Islington</a></p>
-      </div>
-      <div>
-        <h2>Map</h2>
-        <div id="map" aria-label="Map of schools in Islington"></div>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <h2>What the data says about Islington</h2>
-    <p><strong>87.3%</strong> of Islington schools are currently rated Good or Outstanding by Ofsted, compared with a London average of roughly 90% for primary and 80% for secondary. The average number of applications per place across Islington is <strong>1.26</strong>, a useful indicator of how competitive local admissions are. The average number of recorded crime incidents within 500 metres of a school in Islington over the most recent reporting month is <strong>293.17</strong>, drawn from the Metropolitan Police open data API. The mean IMD (Index of Multiple Deprivation) decile of Islington's schools is <strong>3.89</strong> — 1 is most deprived, 10 is least deprived. All metrics on this page are recomputed from source data on the 15th of every month. See our <a href='/methodology.html'>methodology</a> for definitions and limitations.</p>
-  </section>
-
-  <section id="all-schools">
-    <h2>All schools in Islington</h2>
-    <p class="sources">Every school in Islington, listed alphabetically. Click any school for the full record.</p>
-    <table class="schools">
-      <thead>
-        <tr><th>School</th><th>Phase</th><th>Ofsted</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><a href="/schools/islington/ambler-primary-school-and-childrens-centre/">Ambler Primary School and Children's Centre</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/islington/arts-and-media-school-islington/">Arts and Media School Islington</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/ashmount-primary-school/">Ashmount Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/canonbury-primary-school/">Canonbury Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/central-foundation-boys-school/">Central Foundation Boys' School</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/islington/christ-the-king-catholic-primary-school/">Christ The King Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/city-of-london-academy-highbury-grove/">City of London Academy Highbury Grove</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/city-of-london-academy-islington/">City of London Academy Islington</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/city-of-london-academy-highgate-hill/">City of London Academy, Highgate Hill</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/city-of-london-primary-academy-islington/">City of London Primary Academy, Islington</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/islington/dallington-school/">Dallington School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/islington/drayton-park-primary-school/">Drayton Park Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/duncombe-primary-school/">Duncombe Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/elizabeth-garrett-anderson-school/">Elizabeth Garrett Anderson School</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/islington/gillespie-primary-school/">Gillespie Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/islington/grafton-primary-school/">Grafton Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/hanover-primary-school/">Hanover Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/hargrave-park-primary-school/">Hargrave Park Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/highbury-fields-school/">Highbury Fields School</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/islington/hugh-myddelton-primary-school/">Hugh Myddelton Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/islington/hungerford-school/">Hungerford School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/kate-greenaway-nursery-school-and-childrens-centre/">Kate Greenaway Nursery School and Children's Centre</a></td><td>Nursery</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/laycock-primary-school/">Laycock Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/lift-beacon-high/">Lift Beacon High</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/london-scandinavian-school/">London Scandinavian School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/islington/margaret-mcmillan-nursery-school/">Margaret McMillan Nursery School</a></td><td>Nursery</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/moreland-primary-school/">Moreland Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/new-river-college-medical/">New River College Medical</a></td><td>All-through</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/islington/new-river-college-primary/">New River College Primary</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/new-river-college-secondary/">New River College Secondary</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/newington-green-primary-school/">Newington Green Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/islington/north-bridge-house-senior-canonbury-school/">North Bridge House Senior Canonbury School</a></td><td>Secondary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/islington/north-islington-nursery-school/">North Islington Nursery School</a></td><td>Nursery</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/pakeman-primary-school/">Pakeman Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/pooles-park-primary-school/">Pooles Park Primary School</a></td><td>Primary</td><td class="rating Inadequate">Inadequate</td></tr>
-        <tr><td><a href="/schools/islington/prior-weston-primary-school-and-childrens-centre/">Prior Weston Primary School and Children's Centre</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/richard-cloudesley-school/">Richard Cloudesley School</a></td><td>All-through</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/islington/robert-blair-school-and-childrens-centre/">Robert Blair School and Children's Centre</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/rotherfield-primary-school/">Rotherfield Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/royal-mencap-society/">Royal Mencap Society</a></td><td>Sixth form</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/islington/sacred-heart-catholic-primary-school/">Sacred Heart Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/samuel-rhodes-mld-school/">Samuel Rhodes MLD School</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/islington/st-aloysius-college/">St Aloysius' College</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/st-andrews-barnsbury-cofe-primary-school/">St Andrew's (Barnsbury) CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/st-joan-of-arc-rc-primary-school/">St Joan of Arc RC Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/st-john-evangelist-catholic-primary-school/">St John Evangelist Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/st-johns-highbury-vale-cofe-primary-school/">St John's Highbury Vale CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/st-johns-upper-holloway-cofe-primary-school/">St John's Upper Holloway CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/st-josephs-catholic-primary-school/">St Joseph's Catholic Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/islington/st-lukes-cofe-primary-school/">St Luke's CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/st-marks-cofe-primary-school/">St Mark's CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/st-mary-magdalene-academy/">St Mary Magdalene Academy</a></td><td>All-through</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/islington/st-marys-cofe-primary-school/">St Mary's CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/st-pauls-waldorf-school/">St Paul's Waldorf School</a></td><td>All-through</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/islington/st-peter-and-st-paul-catholic-primary-school/">St Peter and St Paul Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/the-bridge-integrated-learning-space/">The Bridge Integrated Learning Space</a></td><td>All-through</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/islington/the-bridge-keystone/">The Bridge Keystone</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/the-bridge-school/">The Bridge School</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/the-childrens-house-school/">The Children's House School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/islington/the-courtyard-islington/">The Courtyard Islington</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/the-gower-school/">The Gower School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/islington/the-london-screen-academy/">The London Screen Academy</a></td><td>Sixth form</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/islington/the-new-north-academy/">The New North Academy</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/the-pears-family-school/">The Pears Family School</a></td><td>All-through</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/islington/thornhill-primary-school/">Thornhill Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/tufnell-park-primary-school/">Tufnell Park Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/vittoria-primary-school/">Vittoria Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/whitehall-park-school/">Whitehall Park School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/william-tyndale-primary-school/">William Tyndale Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/islington/winton-primary-school/">Winton Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/islington/yerbury-primary-school/">Yerbury Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <section>
-    <h2>Frequently asked</h2>
-    <details class="faq"><summary>How many schools are there in Islington?</summary><p>Islington has 71 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 53 are primary, 21 are secondary, and the remainder are special, all-through, or post-16.</p></details>
-<details class="faq"><summary>What proportion of Islington schools are Outstanding?</summary><p>As of the latest Ofsted Management Information release, 17 schools in Islington (23.9%) are rated Outstanding, and 87.3% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication.</p></details>
-<details class="faq"><summary>When do I apply for a Reception or Year 7 place in Islington?</summary><p>Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Islington's applications are coordinated by the local authority through the eAdmissions system. See our <a href='/guides/london-reception-application-timeline/'>full Reception timeline guide</a>.</p></details>
-<details class="faq"><summary>How does the school appeals process work in Islington?</summary><p>If you are refused your preferred school place, you have a statutory right of appeal. Islington appeals are typically heard in May (Reception) and June–July (secondary). See our <a href='/appeals.html'>appeals tracker</a> for Islington-level success rates by year.</p></details>
-<details class="faq"><summary>How can I tell which Islington schools are over-subscribed?</summary><p>Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release.</p></details>
-  </section>
-
-  <section>
-    <h2>Sources</h2>
-    <p class="sources">
-      School list and phase from <a href="https://get-information-schools.service.gov.uk/" rel="nofollow">DfE Get Information About Schools</a> (refreshed monthly).
-      Ofsted ratings from <a href="https://www.gov.uk/government/statistical-data-sets/monthly-management-information-ofsteds-school-inspections-outcomes" rel="nofollow">Ofsted Management Information</a> (refreshed monthly).
-      Performance data from <a href="https://explore-education-statistics.service.gov.uk/" rel="nofollow">DfE Explore Education Statistics</a>.
-      Crime data within 500m from the <a href="https://data.police.uk/" rel="nofollow">Metropolitan Police open data API</a>.
-      Deprivation deciles from <a href="https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019" rel="nofollow">MHCLG English Indices of Deprivation 2019</a>.
-      Read our full <a href="/methodology.html">methodology</a> for how each metric is calculated.
-    </p>
-  </section>
-</main>
-<footer>
-  <div class="inner">
-    <div>&copy; London School Directory. Independent. Free to use.</div>
-    <div><a href="/about.html">About</a> &middot; <a href="/methodology.html">Methodology</a> &middot; <a href="/sources.html">Sources</a> &middot; <a href="/appeals.html">Appeals</a></div>
-    <div>Browse by type: <a href="/schools/outstanding">Outstanding</a> &middot; <a href="/schools/good">Good</a> &middot; <a href="/schools/grammar">Grammar</a> &middot; <a href="/schools/selective">Selective</a> &middot; <a href="/schools/faith">Faith</a> &middot; <a href="/schools/primary">Primary</a> &middot; <a href="/schools/secondary">Secondary</a> &middot; <a href="/schools/sixth-form">Sixth form</a> &middot; <a href="/schools/independent">Private &amp; independent</a></div>
+<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fdf4ff 0%,#ede9fe 100%);
+     border:1px solid #d8b4fe;border-radius:12px;padding:14px 20px;">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+    <span style="font-size:22px;">🎓</span>
+    <strong style="font-size:15px;color:#5b21b6;">11+ &amp; 13+ Exam Prep</strong>
   </div>
-</footer>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
+    PiAcademy resources for grammar school entrance, SATs &amp; GCSE.
+    Use code <strong>THIERR25</strong> for 25% off.
+  </p>
+  <a href="https://piacademy.co.uk/?aff=28"
+     target="_blank" rel="noopener sponsored"
+     style="display:inline-block;padding:9px 18px;background:#7e22ce;color:#fff;
+            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
+    Get 25% OFF →
+  </a>
+  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
+</div>
+<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%);
+     border:1px solid #fcd34d;border-radius:12px;padding:14px 20px;">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+    <span style="font-size:22px;">📚</span>
+    <strong style="font-size:15px;color:#92400e;">Children's Books</strong>
+  </div>
+  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
+    Great books at low prices. At checkout, choose your school — Scholastic donates
+    <strong>20p for every £1 spent</strong> back to the school in free books.
+  </p>
+  <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&ued=https%3A%2F%2Fwww.scholastic.co.uk%2Fteachers"
+     target="_blank" rel="noopener sponsored"
+     style="display:inline-block;padding:9px 18px;background:#d97706;color:#fff;
+            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
+    Shop at Scholastic →
+  </a>
+  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
+</div>
+<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fff8f0 0%,#fff3e0 100%);
+     border:1px solid #fed7aa;border-radius:12px;padding:14px 20px;">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+    <span style="font-size:22px;">🛒</span>
+    <strong style="font-size:15px;color:#92400e;">School Supplies</strong>
+  </div>
+  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
+    Stationery, bags, PE kit, lunchboxes and more — fast delivery from Amazon.
+  </p>
+  <a href="https://www.amazon.co.uk/s?k=school+supplies+stationery&tag=londonparents-21"
+     target="_blank" rel="noopener sponsored"
+     style="display:inline-block;padding:9px 18px;background:#FF9900;color:#111;
+            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
+    Shop on Amazon →
+  </a>
+  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
+</div>
+</div>
+
+  <!-- Borough share buttons -->
+  <div style="display:flex;gap:10px;margin:16px 0 8px;flex-wrap:wrap;align-items:center;">
+    <span style="font-size:13px;color:#555;font-weight:600;">Share Islington schools:</span>
+    <button onclick="shareBoroughWhatsApp()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 WhatsApp</button>
+    <button onclick="shareBoroughEmail()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#1565C0;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Email</button>
+    <span style="font-size:12px;color:#999;margin-left:4px;">Or tick schools below to share a shortlist</span>
+  </div>
+
+  <!-- Sticky compare bar (appears when schools are ticked) -->
+  <div id="cmp-bar" style="display:none;position:sticky;top:0;z-index:100;background:#1A1A2E;color:#fff;padding:12px 16px;border-radius:10px;margin-bottom:12px;display:none;align-items:center;gap:10px;flex-wrap:wrap;">
+    <span id="cmp-count" style="font-weight:700;font-size:14px;">0 schools selected</span>
+    <button onclick="shareCompareWhatsApp()" style="padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 Share via WhatsApp</button>
+    <button onclick="shareCompareEmail()" style="padding:8px 16px;background:#fff;color:#1A1A2E;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Share via Email</button>
+    <button onclick="clearSelection()" style="padding:8px 12px;background:transparent;color:#aaa;border:1px solid #555;border-radius:8px;font-size:12px;cursor:pointer;">✕ Clear</button>
+  </div>
+
+  <table>
+    <thead><tr><th style="width:36px"></th><th>School</th><th>Phase</th><th>Ofsted</th><th>Pupils</th></tr></thead>
+    <tbody><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Ambler Primary School and Children's Centre"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="89.0"
+            data-url="https://londonschool.directory/schools/islington/ambler-primary-school-and-childrens-centre"></td>
+          <td><a href="/schools/islington/ambler-primary-school-and-childrens-centre">Ambler Primary School and Children's Centre</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>515</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Arts and Media School Islington"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="39.7"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/islington/arts-and-media-school-islington"></td>
+          <td><a href="/schools/islington/arts-and-media-school-islington">Arts and Media School Islington</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>577</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Ashmount Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="69.0"
+            data-url="https://londonschool.directory/schools/islington/ashmount-primary-school"></td>
+          <td><a href="/schools/islington/ashmount-primary-school">Ashmount Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>390</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Canonbury Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="89.0"
+            data-url="https://londonschool.directory/schools/islington/canonbury-primary-school"></td>
+          <td><a href="/schools/islington/canonbury-primary-school">Canonbury Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>441</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Central Foundation Boys' School"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="57.2"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/islington/central-foundation-boys-school"></td>
+          <td><a href="/schools/islington/central-foundation-boys-school">Central Foundation Boys' School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>1152</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Christ The King Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="73.0"
+            data-url="https://londonschool.directory/schools/islington/christ-the-king-catholic-primary-school"></td>
+          <td><a href="/schools/islington/christ-the-king-catholic-primary-school">Christ The King Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>240</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="City of London Academy Highbury Grove"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="40.8"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/islington/city-of-london-academy-highbury-grove"></td>
+          <td><a href="/schools/islington/city-of-london-academy-highbury-grove">City of London Academy Highbury Grove</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>892</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="City of London Academy Islington"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="47.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/islington/city-of-london-academy-islington"></td>
+          <td><a href="/schools/islington/city-of-london-academy-islington">City of London Academy Islington</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>852</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="City of London Academy, Highgate Hill"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="42.4"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/islington/city-of-london-academy-highgate-hill"></td>
+          <td><a href="/schools/islington/city-of-london-academy-highgate-hill">City of London Academy, Highgate Hill</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>641</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="City of London Primary Academy, Islington"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="80.0"
+            data-url="https://londonschool.directory/schools/islington/city-of-london-primary-academy-islington"></td>
+          <td><a href="/schools/islington/city-of-london-primary-academy-islington">City of London Primary Academy, Islington</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>348</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Dallington School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/islington/dallington-school"></td>
+          <td><a href="/schools/islington/dallington-school">Dallington School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>45</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Drayton Park Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="77.0"
+            data-url="https://londonschool.directory/schools/islington/drayton-park-primary-school"></td>
+          <td><a href="/schools/islington/drayton-park-primary-school">Drayton Park Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>277</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Duncombe Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="53.0"
+            data-url="https://londonschool.directory/schools/islington/duncombe-primary-school"></td>
+          <td><a href="/schools/islington/duncombe-primary-school">Duncombe Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>378</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Elizabeth Garrett Anderson School"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="51.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/islington/elizabeth-garrett-anderson-school"></td>
+          <td><a href="/schools/islington/elizabeth-garrett-anderson-school">Elizabeth Garrett Anderson School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>888</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Gillespie Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="86.0"
+            data-url="https://londonschool.directory/schools/islington/gillespie-primary-school"></td>
+          <td><a href="/schools/islington/gillespie-primary-school">Gillespie Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>227</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Grafton Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="79.0"
+            data-url="https://londonschool.directory/schools/islington/grafton-primary-school"></td>
+          <td><a href="/schools/islington/grafton-primary-school">Grafton Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>435</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hanover Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="72.0"
+            data-url="https://londonschool.directory/schools/islington/hanover-primary-school"></td>
+          <td><a href="/schools/islington/hanover-primary-school">Hanover Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>244</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hargrave Park Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="70.0"
+            data-url="https://londonschool.directory/schools/islington/hargrave-park-primary-school"></td>
+          <td><a href="/schools/islington/hargrave-park-primary-school">Hargrave Park Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>333</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Highbury Fields School"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="57.1"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/islington/highbury-fields-school"></td>
+          <td><a href="/schools/islington/highbury-fields-school">Highbury Fields School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>733</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hugh Myddelton Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="88.0"
+            data-url="https://londonschool.directory/schools/islington/hugh-myddelton-primary-school"></td>
+          <td><a href="/schools/islington/hugh-myddelton-primary-school">Hugh Myddelton Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>502</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hungerford School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="100.0"
+            data-url="https://londonschool.directory/schools/islington/hungerford-school"></td>
+          <td><a href="/schools/islington/hungerford-school">Hungerford School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>140</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Kate Greenaway Nursery School and Children's Centre"
+            data-ofsted="Good"
+            data-phase="Nursery"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/islington/kate-greenaway-nursery-school-and-childrens-centre"></td>
+          <td><a href="/schools/islington/kate-greenaway-nursery-school-and-childrens-centre">Kate Greenaway Nursery School and Children's Centre</a></td>
+          <td>Nursery</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>76</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Laycock Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="52.0"
+            data-url="https://londonschool.directory/schools/islington/laycock-primary-school"></td>
+          <td><a href="/schools/islington/laycock-primary-school">Laycock Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>217</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Lift Beacon High"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/islington/lift-beacon-high"></td>
+          <td><a href="/schools/islington/lift-beacon-high">Lift Beacon High</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>414</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="London Scandinavian School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/islington/london-scandinavian-school"></td>
+          <td><a href="/schools/islington/london-scandinavian-school">London Scandinavian School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>15</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Margaret McMillan Nursery School"
+            data-ofsted="Good"
+            data-phase="Nursery"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/islington/margaret-mcmillan-nursery-school"></td>
+          <td><a href="/schools/islington/margaret-mcmillan-nursery-school">Margaret McMillan Nursery School</a></td>
+          <td>Nursery</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>76</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Moreland Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="64.0"
+            data-url="https://londonschool.directory/schools/islington/moreland-primary-school"></td>
+          <td><a href="/schools/islington/moreland-primary-school">Moreland Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>469</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="New River College Medical"
+            data-ofsted="Outstanding"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/islington/new-river-college-medical"></td>
+          <td><a href="/schools/islington/new-river-college-medical">New River College Medical</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>28</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="New River College Primary"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/islington/new-river-college-primary"></td>
+          <td><a href="/schools/islington/new-river-college-primary">New River College Primary</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>2</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="New River College Secondary"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/islington/new-river-college-secondary"></td>
+          <td><a href="/schools/islington/new-river-college-secondary">New River College Secondary</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>26</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Newington Green Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="65.0"
+            data-url="https://londonschool.directory/schools/islington/newington-green-primary-school"></td>
+          <td><a href="/schools/islington/newington-green-primary-school">Newington Green Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>478</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="North Bridge House Senior Canonbury School"
+            data-ofsted="Not yet rated"
+            data-phase="Secondary"
+            data-att8="60.0"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/islington/north-bridge-house-senior-canonbury-school"></td>
+          <td><a href="/schools/islington/north-bridge-house-senior-canonbury-school">North Bridge House Senior Canonbury School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>195</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="North Islington Nursery School"
+            data-ofsted="Good"
+            data-phase="Nursery"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/islington/north-islington-nursery-school"></td>
+          <td><a href="/schools/islington/north-islington-nursery-school">North Islington Nursery School</a></td>
+          <td>Nursery</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>98</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Pakeman Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="60.0"
+            data-url="https://londonschool.directory/schools/islington/pakeman-primary-school"></td>
+          <td><a href="/schools/islington/pakeman-primary-school">Pakeman Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>338</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Pooles Park Primary School"
+            data-ofsted="Inadequate"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/islington/pooles-park-primary-school"></td>
+          <td><a href="/schools/islington/pooles-park-primary-school">Pooles Park Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#FFEBEE;color:#B71C1C;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Inadequate</span></td>
+          <td>184</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Prior Weston Primary School and Children's Centre"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="61.0"
+            data-url="https://londonschool.directory/schools/islington/prior-weston-primary-school-and-childrens-centre"></td>
+          <td><a href="/schools/islington/prior-weston-primary-school-and-childrens-centre">Prior Weston Primary School and Children's Centre</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>270</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Richard Cloudesley School"
+            data-ofsted="Outstanding"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/islington/richard-cloudesley-school"></td>
+          <td><a href="/schools/islington/richard-cloudesley-school">Richard Cloudesley School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>109</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Robert Blair School and Children's Centre"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="80.0"
+            data-url="https://londonschool.directory/schools/islington/robert-blair-school-and-childrens-centre"></td>
+          <td><a href="/schools/islington/robert-blair-school-and-childrens-centre">Robert Blair School and Children's Centre</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>214</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Rotherfield Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="54.0"
+            data-url="https://londonschool.directory/schools/islington/rotherfield-primary-school"></td>
+          <td><a href="/schools/islington/rotherfield-primary-school">Rotherfield Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>331</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Royal Mencap Society"
+            data-ofsted="Not yet rated"
+            data-phase="Sixth form"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/islington/royal-mencap-society"></td>
+          <td><a href="/schools/islington/royal-mencap-society">Royal Mencap Society</a></td>
+          <td>Sixth form</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>N/A</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Sacred Heart Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="63.0"
+            data-url="https://londonschool.directory/schools/islington/sacred-heart-catholic-primary-school"></td>
+          <td><a href="/schools/islington/sacred-heart-catholic-primary-school">Sacred Heart Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>434</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Samuel Rhodes MLD School"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/islington/samuel-rhodes-mld-school"></td>
+          <td><a href="/schools/islington/samuel-rhodes-mld-school">Samuel Rhodes MLD School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>130</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Aloysius' College"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/islington/st-aloysius-college"></td>
+          <td><a href="/schools/islington/st-aloysius-college">St Aloysius' College</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>341</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Andrew's (Barnsbury) CofE Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="43.0"
+            data-url="https://londonschool.directory/schools/islington/st-andrews-barnsbury-cofe-primary-school"></td>
+          <td><a href="/schools/islington/st-andrews-barnsbury-cofe-primary-school">St Andrew's (Barnsbury) CofE Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>165</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Joan of Arc RC Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="82.0"
+            data-url="https://londonschool.directory/schools/islington/st-joan-of-arc-rc-primary-school"></td>
+          <td><a href="/schools/islington/st-joan-of-arc-rc-primary-school">St Joan of Arc RC Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>427</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St John Evangelist Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="55.0"
+            data-url="https://londonschool.directory/schools/islington/st-john-evangelist-catholic-primary-school"></td>
+          <td><a href="/schools/islington/st-john-evangelist-catholic-primary-school">St John Evangelist Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>204</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St John's Highbury Vale CofE Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="88.0"
+            data-url="https://londonschool.directory/schools/islington/st-johns-highbury-vale-cofe-primary-school"></td>
+          <td><a href="/schools/islington/st-johns-highbury-vale-cofe-primary-school">St John's Highbury Vale CofE Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>206</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St John's Upper Holloway CofE Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="78.0"
+            data-url="https://londonschool.directory/schools/islington/st-johns-upper-holloway-cofe-primary-school"></td>
+          <td><a href="/schools/islington/st-johns-upper-holloway-cofe-primary-school">St John's Upper Holloway CofE Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>206</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Joseph's Catholic Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="86.0"
+            data-url="https://londonschool.directory/schools/islington/st-josephs-catholic-primary-school"></td>
+          <td><a href="/schools/islington/st-josephs-catholic-primary-school">St Joseph's Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>523</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Luke's CofE Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="79.0"
+            data-url="https://londonschool.directory/schools/islington/st-lukes-cofe-primary-school"></td>
+          <td><a href="/schools/islington/st-lukes-cofe-primary-school">St Luke's CofE Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>208</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Mark's CofE Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="70.0"
+            data-url="https://londonschool.directory/schools/islington/st-marks-cofe-primary-school"></td>
+          <td><a href="/schools/islington/st-marks-cofe-primary-school">St Mark's CofE Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>231</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Mary Magdalene Academy"
+            data-ofsted="Outstanding"
+            data-phase="All-through"
+            data-att8="54.9"
+            data-ks2="84.0"
+            data-url="https://londonschool.directory/schools/islington/st-mary-magdalene-academy"></td>
+          <td><a href="/schools/islington/st-mary-magdalene-academy">St Mary Magdalene Academy</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>1561</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Mary's CofE Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="71.0"
+            data-url="https://londonschool.directory/schools/islington/st-marys-cofe-primary-school"></td>
+          <td><a href="/schools/islington/st-marys-cofe-primary-school">St Mary's CofE Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>171</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Paul's Waldorf School"
+            data-ofsted="Not yet rated"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/islington/st-pauls-waldorf-school"></td>
+          <td><a href="/schools/islington/st-pauls-waldorf-school">St Paul's Waldorf School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>214</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Peter and St Paul Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="100.0"
+            data-url="https://londonschool.directory/schools/islington/st-peter-and-st-paul-catholic-primary-school"></td>
+          <td><a href="/schools/islington/st-peter-and-st-paul-catholic-primary-school">St Peter and St Paul Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>222</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Bridge Integrated Learning Space"
+            data-ofsted="Outstanding"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/islington/the-bridge-integrated-learning-space"></td>
+          <td><a href="/schools/islington/the-bridge-integrated-learning-space">The Bridge Integrated Learning Space</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>32</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Bridge Keystone"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/islington/the-bridge-keystone"></td>
+          <td><a href="/schools/islington/the-bridge-keystone">The Bridge Keystone</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>56</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Bridge School"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/islington/the-bridge-school"></td>
+          <td><a href="/schools/islington/the-bridge-school">The Bridge School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>260</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Children's House School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/islington/the-childrens-house-school"></td>
+          <td><a href="/schools/islington/the-childrens-house-school">The Children's House School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>133</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Courtyard Islington"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="1.3"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/islington/the-courtyard-islington"></td>
+          <td><a href="/schools/islington/the-courtyard-islington">The Courtyard Islington</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>76</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Gower School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/islington/the-gower-school"></td>
+          <td><a href="/schools/islington/the-gower-school">The Gower School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>266</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The London Screen Academy"
+            data-ofsted="Not yet rated"
+            data-phase="Sixth form"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/islington/the-london-screen-academy"></td>
+          <td><a href="/schools/islington/the-london-screen-academy">The London Screen Academy</a></td>
+          <td>Sixth form</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>867</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The New North Academy"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="63.0"
+            data-url="https://londonschool.directory/schools/islington/the-new-north-academy"></td>
+          <td><a href="/schools/islington/the-new-north-academy">The New North Academy</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>116</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Pears Family School"
+            data-ofsted="Outstanding"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/islington/the-pears-family-school"></td>
+          <td><a href="/schools/islington/the-pears-family-school">The Pears Family School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>0</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Thornhill Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="91.0"
+            data-url="https://londonschool.directory/schools/islington/thornhill-primary-school"></td>
+          <td><a href="/schools/islington/thornhill-primary-school">Thornhill Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>446</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Tufnell Park Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="81.0"
+            data-url="https://londonschool.directory/schools/islington/tufnell-park-primary-school"></td>
+          <td><a href="/schools/islington/tufnell-park-primary-school">Tufnell Park Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>453</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Vittoria Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="54.0"
+            data-url="https://londonschool.directory/schools/islington/vittoria-primary-school"></td>
+          <td><a href="/schools/islington/vittoria-primary-school">Vittoria Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>220</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Whitehall Park School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="81.0"
+            data-url="https://londonschool.directory/schools/islington/whitehall-park-school"></td>
+          <td><a href="/schools/islington/whitehall-park-school">Whitehall Park School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>202</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="William Tyndale Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="94.0"
+            data-url="https://londonschool.directory/schools/islington/william-tyndale-primary-school"></td>
+          <td><a href="/schools/islington/william-tyndale-primary-school">William Tyndale Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>448</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Winton Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="100.0"
+            data-url="https://londonschool.directory/schools/islington/winton-primary-school"></td>
+          <td><a href="/schools/islington/winton-primary-school">Winton Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>239</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Yerbury Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="81.0"
+            data-url="https://londonschool.directory/schools/islington/yerbury-primary-school"></td>
+          <td><a href="/schools/islington/yerbury-primary-school">Yerbury Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>453</td>
+        </tr></tbody>
+  </table>
+</div>
+<footer><a href="/">London Schools Explorer</a> &mdash; helping families find the right school in London.<p style="margin-top:10px">Browse by type: <a href="/schools/outstanding">Outstanding</a> &middot; <a href="/schools/good">Good</a> &middot; <a href="/schools/grammar">Grammar</a> &middot; <a href="/schools/selective">Selective</a> &middot; <a href="/schools/faith">Faith</a> &middot; <a href="/schools/primary">Primary</a> &middot; <a href="/schools/secondary">Secondary</a> &middot; <a href="/schools/sixth-form">Sixth form</a> &middot; <a href="/schools/independent">Private &amp; independent</a></p></footer>
+<script defer src="/_vercel/insights/script.js"></script>
 <script>
-  (function() {
-    var points = [[51.57208, -0.125792, "/schools/islington/margaret-mcmillan-nursery-school/", "Margaret McMillan Nursery School"], [51.536341, -0.120585, "/schools/islington/kate-greenaway-nursery-school-and-childrens-centre/", "Kate Greenaway Nursery School and Children's Centre"], [51.566445, -0.113673, "/schools/islington/north-islington-nursery-school/", "North Islington Nursery School"], [51.537763, -0.108327, "/schools/islington/new-river-college-primary/", "New River College Primary"], [51.547897, -0.113315, "/schools/islington/new-river-college-secondary/", "New River College Secondary"], [51.562126, -0.100694, "/schools/islington/ambler-primary-school-and-childrens-centre/", "Ambler Primary School and Children's Centre"], [51.551551, -0.105721, "/schools/islington/drayton-park-primary-school/", "Drayton Park Primary School"], [51.566993, -0.123679, "/schools/islington/duncombe-primary-school/", "Duncombe Primary School"], [51.559721, -0.100996, "/schools/islington/gillespie-primary-school/", "Gillespie Primary School"], [51.559388, -0.119389, "/schools/islington/grafton-primary-school/", "Grafton Primary School"], [51.532949, -0.098722, "/schools/islington/hanover-primary-school/", "Hanover Primary School"], [51.564286, -0.140051, "/schools/islington/hargrave-park-primary-school/", "Hargrave Park Primary School"], [51.5445, -0.105653, "/schools/islington/laycock-primary-school/", "Laycock Primary School"], [51.528599, -0.09997, "/schools/islington/moreland-primary-school/", "Moreland Primary School"], [51.559499, -0.114537, "/schools/islington/pakeman-primary-school/", "Pakeman Primary School"], [51.545124, -0.119848, "/schools/islington/robert-blair-school-and-childrens-centre/", "Robert Blair School and Children's Centre"], [51.540335, -0.10946, "/schools/islington/thornhill-primary-school/", "Thornhill Primary School"], [51.535629, -0.118783, "/schools/islington/vittoria-primary-school/", "Vittoria Primary School"], [51.532667, -0.118011, "/schools/islington/winton-primary-school/", "Winton Primary School"], [51.56006, -0.131596, "/schools/islington/yerbury-primary-school/", "Yerbury Primary School"], [51.554338, -0.129724, "/schools/islington/tufnell-park-primary-school/", "Tufnell Park Primary School"], [51.574506, -0.121739, "/schools/islington/ashmount-primary-school/", "Ashmount Primary School"], [51.521946, -0.093443, "/schools/islington/prior-weston-primary-school-and-childrens-centre/", "Prior Weston Primary School and Children's Centre"], [51.550426, -0.112864, "/schools/islington/sacred-heart-catholic-primary-school/", "Sacred Heart Catholic Primary School"], [51.533953, -0.104044, "/schools/islington/st-john-evangelist-catholic-primary-school/", "St John Evangelist Catholic Primary School"], [51.56265, -0.131605, "/schools/islington/st-johns-upper-holloway-cofe-primary-school/", "St John's Upper Holloway CofE Primary School"], [51.558278, -0.100161, "/schools/islington/st-johns-highbury-vale-cofe-primary-school/", "St John's Highbury Vale CofE Primary School"], [51.567449, -0.138767, "/schools/islington/st-josephs-catholic-primary-school/", "St Joseph's Catholic Primary School"], [51.526544, -0.091939, "/schools/islington/st-lukes-cofe-primary-school/", "St Luke's CofE Primary School"], [51.564359, -0.120916, "/schools/islington/st-marks-cofe-primary-school/", "St Mark's CofE Primary School"], [51.539352, -0.099854, "/schools/islington/st-marys-cofe-primary-school/", "St Mary's CofE Primary School"], [51.524972, -0.100914, "/schools/islington/st-peter-and-st-paul-catholic-primary-school/", "St Peter and St Paul Catholic Primary School"], [51.538187, -0.114596, "/schools/islington/st-andrews-barnsbury-cofe-primary-school/", "St Andrew's (Barnsbury) CofE Primary School"], [51.556611, -0.096076, "/schools/islington/st-joan-of-arc-rc-primary-school/", "St Joan of Arc RC Primary School"], [51.566881, -0.113929, "/schools/islington/christ-the-king-catholic-primary-school/", "Christ The King Catholic Primary School"], [51.552805, -0.1015, "/schools/islington/highbury-fields-school/", "Highbury Fields School"], [51.532955, -0.113587, "/schools/islington/elizabeth-garrett-anderson-school/", "Elizabeth Garrett Anderson School"], [51.525211, -0.085753, "/schools/islington/central-foundation-boys-school/", "Central Foundation Boys' School"], [51.524641, -0.100452, "/schools/islington/dallington-school/", "Dallington School"], [51.535998, -0.098205, "/schools/islington/richard-cloudesley-school/", "Richard Cloudesley School"], [51.549801, -0.096476, "/schools/islington/samuel-rhodes-mld-school/", "Samuel Rhodes MLD School"], [51.54728, -0.081408, "/schools/islington/the-childrens-house-school/", "The Children's House School"], [51.550981, -0.083358, "/schools/islington/newington-green-primary-school/", "Newington Green Primary School"], [51.546445, -0.087558, "/schools/islington/st-pauls-waldorf-school/", "St Paul's Waldorf School"], [51.567108, -0.115752, "/schools/islington/arts-and-media-school-islington/", "Arts and Media School Islington"], [51.538501, -0.090055, "/schools/islington/rotherfield-primary-school/", "Rotherfield Primary School"], [51.545009, -0.101565, "/schools/islington/canonbury-primary-school/", "Canonbury Primary School"], [51.527772, -0.106117, "/schools/islington/hugh-myddelton-primary-school/", "Hugh Myddelton Primary School"], [51.535296, -0.113202, "/schools/islington/new-river-college-medical/", "New River College Medical"], [51.547651, -0.109763, "/schools/islington/st-mary-magdalene-academy/", "St Mary Magdalene Academy"], [51.531943, -0.113254, "/schools/islington/the-gower-school/", "The Gower School"], [51.535947, -0.097833, "/schools/islington/city-of-london-academy-islington/", "City of London Academy Islington"], [51.538607, -0.095501, "/schools/islington/the-new-north-academy/", "The New North Academy"], [51.54253, -0.101163, "/schools/islington/william-tyndale-primary-school/", "William Tyndale Primary School"], [51.54818, -0.106899, "/schools/islington/the-courtyard-islington/", "The Courtyard Islington"], [51.547342, -0.104554, "/schools/islington/london-scandinavian-school/", "London Scandinavian School"], [51.572608, -0.133549, "/schools/islington/whitehall-park-school/", "Whitehall Park School"], [51.532228, -0.11418, "/schools/islington/the-pears-family-school/", "The Pears Family School"], [51.54413, -0.097765, "/schools/islington/north-bridge-house-senior-canonbury-school/", "North Bridge House Senior Canonbury School"], [51.538232, -0.108956, "/schools/islington/the-bridge-integrated-learning-space/", "The Bridge Integrated Learning Space"], [51.523218, -0.096446, "/schools/islington/city-of-london-primary-academy-islington/", "City of London Primary Academy, Islington"], [51.549577, -0.125578, "/schools/islington/the-bridge-school/", "The Bridge School"], [51.567974, -0.12941, "/schools/islington/city-of-london-academy-highgate-hill/", "City of London Academy, Highgate Hill"], [51.568718, -0.128701, "/schools/islington/the-bridge-keystone/", "The Bridge Keystone"], [51.516339, -0.072274, "/schools/islington/royal-mencap-society/", "Royal Mencap Society"], [51.549004, -0.097778, "/schools/islington/city-of-london-academy-highbury-grove/", "City of London Academy Highbury Grove"], [51.548694, -0.126566, "/schools/islington/hungerford-school/", "Hungerford School"], [51.552244, -0.097989, "/schools/islington/the-london-screen-academy/", "The London Screen Academy"], [51.564922, -0.112308, "/schools/islington/pooles-park-primary-school/", "Pooles Park Primary School"], [51.569821, -0.138642, "/schools/islington/st-aloysius-college/", "St Aloysius' College"], [51.553081, -0.129329, "/schools/islington/lift-beacon-high/", "Lift Beacon High"]];
-    if (!points.length) return;
-    var lats = points.map(function(p) { return p[0]; });
-    var lngs = points.map(function(p) { return p[1]; });
-    var avgLat = lats.reduce(function(a,b) { return a+b; }, 0) / lats.length;
-    var avgLng = lngs.reduce(function(a,b) { return a+b; }, 0) / lngs.length;
-    var map = L.map('map', { scrollWheelZoom: false }).setView([avgLat, avgLng], 12);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 18,
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-    points.forEach(function(p) {
-      L.circleMarker([p[0], p[1]], {
-        radius: 5, color: '#0b2545', fillColor: '#0b6efd', fillOpacity: 0.8, weight: 1
-      }).addTo(map).bindPopup('<a href="' + p[2] + '">' + p[3] + '</a>');
+(function(){
+  var borough="Islington", boroughUrl="https://londonschool.directory/schools/islington";
+  var outstanding=17, total=71;
+
+  // Borough-level share
+  window.shareBoroughWhatsApp=function(){
+    var t='🏙️ *Schools in '+borough+', London*\n'+
+        '📊 '+total+' schools · '+outstanding+' Outstanding\n\n'+
+        '🔗 '+boroughUrl;
+    window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank');
+  };
+  window.shareBoroughEmail=function(){
+    var s='Schools in '+borough+' — London Schools Explorer';
+    var b='Schools in '+borough+', London\n'+
+        total+' schools, '+outstanding+' rated Outstanding by Ofsted\n\n'+
+        'Browse them here: '+boroughUrl;
+    window.location.href='mailto:?subject='+encodeURIComponent(s)+'&body='+encodeURIComponent(b);
+  };
+
+  // Shortlist comparison share
+  function getSelected(){
+    return Array.from(document.querySelectorAll('.sch-sel:checked')).map(function(cb){
+      return {name:cb.dataset.name,ofsted:cb.dataset.ofsted,phase:cb.dataset.phase,
+               att8:cb.dataset.att8,ks2:cb.dataset.ks2,url:cb.dataset.url};
     });
-  })();
+  }
+  function updateBar(){
+    var sel=getSelected();
+    var bar=document.getElementById('cmp-bar');
+    document.getElementById('cmp-count').textContent=sel.length+' school'+(sel.length===1?'':' s')+' selected';
+    bar.style.display=sel.length>0?'flex':'none';
+  }
+  document.querySelectorAll('.sch-sel').forEach(function(cb){ cb.onchange=updateBar; });
+
+  function buildCompareText(sel,markdown){
+    var lines=['📋 *My '+borough+' school shortlist*',''];
+    sel.forEach(function(s,i){
+      lines.push((i+1)+'. '+(markdown?'*':'')+s.name+(markdown?'*':''));
+      lines.push('   ⭐ Ofsted: '+s.ofsted+(s.phase?' · '+s.phase:''));
+      if(s.att8)lines.push('   📊 Attainment 8: '+s.att8);
+      if(s.ks2)lines.push('   📝 KS2 expected: '+s.ks2+'%');
+      lines.push('   🔗 '+s.url);
+      lines.push('');
+    });
+    lines.push('via London Schools Explorer — '+boroughUrl);
+    return lines.join('\n');
+  }
+  window.shareCompareWhatsApp=function(){
+    var sel=getSelected();
+    if(!sel.length)return;
+    window.open('https://wa.me/?text='+encodeURIComponent(buildCompareText(sel,true)),'_blank');
+  };
+  window.shareCompareEmail=function(){
+    var sel=getSelected();
+    if(!sel.length)return;
+    var subj='My '+borough+' school shortlist — London Schools Explorer';
+    window.location.href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(buildCompareText(sel,false));
+  };
+  window.clearSelection=function(){
+    document.querySelectorAll('.sch-sel:checked').forEach(function(cb){cb.checked=false;});
+    updateBar();
+  };
+})();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/sw.js').catch(function () {});
+  });
+}
 </script>
 </body>
 </html>

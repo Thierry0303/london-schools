@@ -1,526 +1,1571 @@
-<!doctype html>
-<html lang="en-GB">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Schools in Wandsworth, London — Ofsted, Performance & Admissions</title>
-<meta name="description" content="All 111 schools in Wandsworth, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
-<link rel="canonical" href="https://londonschool.directory/schools/wandsworth/">
-<meta property="og:title" content="Schools in Wandsworth, London — Ofsted, Performance & Admissions">
-<meta property="og:description" content="All 111 schools in Wandsworth, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://londonschool.directory/schools/wandsworth/">
-<meta property="og:site_name" content="London School Directory">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#0b2545">
-<meta name="robots" content="index,follow,max-image-preview:large">
-<link rel="preconnect" href="https://unpkg.com">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<style>
-  :root {
-    --ink: #0b2545;
-    --ink-2: #1e3a5f;
-    --muted: #5b6b85;
-    --line: #e3e8ef;
-    --bg: #ffffff;
-    --bg-2: #f6f8fb;
-    --accent: #0b6efd;
-    --good: #137333;
-    --warn: #a85b00;
-    --bad: #b3261e;
-    --radius: 10px;
-  }
-  * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    color: var(--ink);
-    background: var(--bg);
-    line-height: 1.55;
-    -webkit-font-smoothing: antialiased;
-  }
-  a { color: var(--accent); text-decoration: none; }
-  a:hover { text-decoration: underline; }
-  header.site {
-    border-bottom: 1px solid var(--line);
-    background: var(--bg);
-    position: sticky; top: 0; z-index: 50;
-  }
-  header.site .inner {
-    max-width: 1100px; margin: 0 auto; padding: 14px 20px;
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  header.site a.brand { color: var(--ink); font-weight: 700; letter-spacing: -0.01em; }
-  header.site nav a { margin-left: 18px; color: var(--ink-2); font-size: 14px; }
-  main { max-width: 1100px; margin: 0 auto; padding: 28px 20px 80px; }
-  .crumbs { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
-  .crumbs a { color: var(--muted); }
-  h1 { font-size: 32px; line-height: 1.2; margin: 0 0 8px; letter-spacing: -0.02em; }
-  .lede { color: var(--ink-2); font-size: 17px; max-width: 720px; }
-  .stamp { font-size: 12px; color: var(--muted); margin-top: 8px; }
-  .stamp .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--good); vertical-align: middle; margin-right: 6px; }
-  .grid-stats {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 12px; margin: 24px 0 8px;
-  }
-  .stat {
-    background: var(--bg-2); border: 1px solid var(--line);
-    border-radius: var(--radius); padding: 14px 16px;
-  }
-  .stat .v { font-size: 24px; font-weight: 700; color: var(--ink); }
-  .stat .l { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
-  section { margin-top: 36px; }
-  h2 { font-size: 22px; margin: 0 0 12px; letter-spacing: -0.01em; }
-  .twocol { display: grid; grid-template-columns: 1.4fr 1fr; gap: 28px; }
-  @media (max-width: 820px) { .twocol { grid-template-columns: 1fr; } }
-  table.schools { width: 100%; border-collapse: collapse; font-size: 14px; }
-  table.schools th, table.schools td {
-    text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line);
-  }
-  table.schools th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); font-weight: 600; }
-  .rating { font-weight: 600; }
-  .rating.Outstanding { color: var(--good); }
-  .rating.Good { color: var(--ink-2); }
-  .rating.RequiresImprovement, .rating.Requires { color: var(--warn); }
-  .rating.Inadequate { color: var(--bad); }
-  #map { height: 380px; border-radius: var(--radius); border: 1px solid var(--line); }
-  .pills { display: flex; flex-wrap: wrap; gap: 6px; }
-  .pill { background: var(--bg-2); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; font-size: 12px; color: var(--ink-2); }
-  details.faq { border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 8px; background: var(--bg); }
-  details.faq summary { cursor: pointer; font-weight: 600; color: var(--ink); }
-  details.faq[open] { background: var(--bg-2); }
-  footer { border-top: 1px solid var(--line); padding: 28px 20px; color: var(--muted); font-size: 13px; }
-  footer .inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 24px; flex-wrap: wrap; }
-  .sources { font-size: 13px; color: var(--muted); }
-  .sources a { color: var(--muted); text-decoration: underline; }
-  .cta {
-    display: inline-block; background: var(--ink); color: #fff; padding: 10px 14px;
-    border-radius: var(--radius); font-size: 14px; font-weight: 600;
-  }
-  .cta:hover { background: var(--ink-2); text-decoration: none; }
-</style>
-<script type="application/ld+json">
-[
-  {
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Schools in Wandsworth, London | Ofsted Ratings &amp; Results | London Schools Explorer</title>
+  <meta name="description" content="111 schools in Wandsworth, London. 27 Outstanding, 61 Good-rated by Ofsted. Compare admissions oversubscription, exam results and crime data. Free.">
+  <script type="application/ld+json">{
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "name": "Top schools in Wandsworth, London",
-    "itemListOrder": "http://schema.org/ItemListOrderDescending",
-    "numberOfItems": 14,
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "url": "https://londonschool.directory/schools/wandsworth/sheringdale-primary-school/",
-        "name": "Sheringdale Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "url": "https://londonschool.directory/schools/wandsworth/hotham-primary-school/",
-        "name": "Hotham Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "url": "https://londonschool.directory/schools/wandsworth/belleville-primary-school/",
-        "name": "Belleville Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 4,
-        "url": "https://londonschool.directory/schools/wandsworth/chesterton-primary-school/",
-        "name": "Chesterton Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 5,
-        "url": "https://londonschool.directory/schools/wandsworth/penwortham-primary-school/",
-        "name": "Penwortham Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 6,
-        "url": "https://londonschool.directory/schools/wandsworth/earlsfield-primary-school/",
-        "name": "Earlsfield Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 7,
-        "url": "https://londonschool.directory/schools/wandsworth/st-anselms-catholic-primary-school/",
-        "name": "St Anselm's Catholic Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 8,
-        "url": "https://londonschool.directory/schools/wandsworth/ashcroft-technology-academy/",
-        "name": "Ashcroft Technology Academy"
-      },
-      {
-        "@type": "ListItem",
-        "position": 9,
-        "url": "https://londonschool.directory/schools/wandsworth/graveney-school/",
-        "name": "Graveney School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 10,
-        "url": "https://londonschool.directory/schools/wandsworth/ark-bolingbroke-academy/",
-        "name": "Ark Bolingbroke Academy"
-      },
-      {
-        "@type": "ListItem",
-        "position": 11,
-        "url": "https://londonschool.directory/schools/wandsworth/harris-academy-battersea/",
-        "name": "Harris Academy Battersea"
-      },
-      {
-        "@type": "ListItem",
-        "position": 12,
-        "url": "https://londonschool.directory/schools/wandsworth/paddock-school/",
-        "name": "Paddock School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 13,
-        "url": "https://londonschool.directory/schools/wandsworth/wandsworth-hospital-and-home-tuition-service/",
-        "name": "Wandsworth Hospital and Home Tuition Service"
-      },
-      {
-        "@type": "ListItem",
-        "position": 14,
-        "url": "https://londonschool.directory/schools/wandsworth/tram-house-school/",
-        "name": "Tram House School"
-      }
-    ]
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How many schools are there in Wandsworth?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Wandsworth has 111 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 84 are primary, 29 are secondary, and the remainder are special, all-through, or post-16."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What proportion of Wandsworth schools are Outstanding?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "As of the latest Ofsted Management Information release, 27 schools in Wandsworth (24.3%) are rated Outstanding, and 79.3% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "When do I apply for a Reception or Year 7 place in Wandsworth?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Wandsworth's applications are coordinated by the local authority through the eAdmissions system. See our full Reception timeline guide."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How does the school appeals process work in Wandsworth?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "If you are refused your preferred school place, you have a statutory right of appeal. Wandsworth appeals are typically heard in May (Reception) and June\u2013July (secondary). See our appeals tracker for Wandsworth-level success rates by year."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How can I tell which Wandsworth schools are over-subscribed?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release."
-        }
-      }
-    ]
-  },
-  {
+    "name": "Schools in Wandsworth, London",
+    "description": "111 schools in Wandsworth, London rated by Ofsted",
+    "numberOfItems": 111,
+    "url": "https://londonschool.directory/schools/wandsworth"
+  }</script>
+  <script type="application/ld+json">{
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": "https://londonschool.directory/"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Boroughs",
-        "item": "https://londonschool.directory/schools/"
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "name": "Wandsworth",
-        "item": "https://londonschool.directory/schools/wandsworth/"
-      }
+      {"@type": "ListItem", "position": 1, "name": "London Schools Explorer", "item": "https://londonschool.directory/"},
+      {"@type": "ListItem", "position": 2, "name": "Schools in Wandsworth", "item": "https://londonschool.directory/schools/wandsworth"}
     ]
-  }
-]
-</script>
+  }</script>
+  <link rel="canonical" href="https://londonschool.directory/schools/wandsworth">
+  <meta property="og:title" content="Schools in Wandsworth | London Schools Explorer">
+  <meta property="og:description" content="111 schools in Wandsworth. 27 Outstanding-rated. Compare Ofsted ratings, exam results and admissions.">
+  <meta property="og:url" content="https://londonschool.directory/schools/wandsworth">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, sans-serif; color: #1a1a1a; background: #f8f9fa; line-height: 1.6; }
+    a { color: #1565C0; }
+    .topbar { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 12px 20px; }
+    .topbar a { text-decoration: none; font-weight: 600; color: #1a1a1a; font-size: 15px; }
+    .topbar span { color: #888; margin: 0 8px; }
+    .container { max-width: 900px; margin: 0 auto; padding: 32px 20px; }
+    h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+    .intro { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; font-size: 15px; color: #333; line-height: 1.7; }
+    .stats-row { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+    .stat-box { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 14px 18px; flex: 1; min-width: 120px; }
+    .stat-num { font-size: 24px; font-weight: 700; color: #1a1a1a; line-height: 1; }
+    .stat-lbl { font-size: 12px; color: #888; margin-top: 4px; }
+    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #e0e0e0; }
+    th { background: #f5f5f5; padding: 12px 16px; text-align: left; font-size: 13px; color: #555; font-weight: 600; border-bottom: 1px solid #e0e0e0; }
+    td { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fafafa; }
+    .back { display: inline-block; margin-bottom: 20px; font-size: 14px; color: #555; text-decoration: none; }
+    .back:hover { color: #111; }
+    footer { text-align: center; padding: 32px 20px; font-size: 13px; color: #888; }
+    @media (max-width: 600px) {
+      .container { padding: 16px 12px; }
+      h1 { font-size: 22px; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .intro { padding: 14px 16px; font-size: 14px; }
+      table { font-size: 13px; }
+      th, td { padding: 10px 10px; }
+      .topbar { padding: 10px 12px; font-size: 13px; }
+    }
+    @media (max-width: 600px) { .stats-row { flex-direction: column; } }
+  </style>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 </head>
 <body>
-<header class="site">
-  <div class="inner">
-    <a class="brand" href="/">London School Directory</a>
-    <nav>
-      <a href="/">Search</a>
-      <a href="/appeals.html">Appeals</a>
-      <a href="/methodology.html">Methodology</a>
-      <a href="/about.html">About</a>
-    </nav>
+<div class="topbar">
+  <div style="max-width:900px;margin:0 auto">
+    <a href="/">London Schools Explorer</a>
+    <span>/</span>
+    Wandsworth
   </div>
-</header>
-<main>
-  <div class="crumbs">
-    <a href="/">Home</a> &rsaquo; <a href="/schools/">Boroughs</a> &rsaquo; Wandsworth
+</div>
+<div class="container">
+  <a class="back" href="/">&#8592; All boroughs</a>
+  <h1>Schools in Wandsworth</h1>
+
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-num">111</div><div class="stat-lbl">Total schools</div></div>
+    <div class="stat-box"><div class="stat-num">27</div><div class="stat-lbl">Outstanding</div></div>
+    <div class="stat-box"><div class="stat-num">61</div><div class="stat-lbl">Good</div></div>
+    <div class="stat-box"><div class="stat-num">4</div><div class="stat-lbl">School phases</div></div>
   </div>
 
-  <h1>Schools in Wandsworth, London</h1>
-  <p class="lede">Wandsworth has historically had one of the highest concentrations of Outstanding-rated schools in London, particularly in primary phase. The borough covers Battersea, Putney, Tooting, Balham and Wandsworth Town. Admissions are competitive across most of the borough, and catchment distances are tight for the most popular primaries.</p>
-  <p class="stamp"><span class="dot"></span>Data last verified 1 September 2026. Sources: Ofsted, DfE GIAS, DfE Performance Tables, Metropolitan Police, MHCLG IMD. See <a href="/sources.html">all sources</a>.</p>
+  <div class="intro">Wandsworth is a south London borough with one of the strongest state school systems in the capital. The borough consistently produces some of the best primary and secondary results in London. Areas such as Battersea, Tooting, Balham and Putney are highly sought after for their school catchments. Ernest Bevin College and Burntwood School are among the most popular secondaries.</div>
 
-  <section>
-    <div class="grid-stats">
-      <div class="stat"><div class="v">111</div><div class="l">Schools in Wandsworth</div></div>
-      <div class="stat"><div class="v">24.3%</div><div class="l">Outstanding Ofsted</div></div>
-      <div class="stat"><div class="v">79.3%</div><div class="l">Good or Outstanding</div></div>
-      <div class="stat"><div class="v">84</div><div class="l">Primary schools</div></div>
-      <div class="stat"><div class="v">29</div><div class="l">Secondary schools</div></div>
-      <div class="stat"><div class="v">20%</div><div class="l">Secondary appeal success (2024)</div></div>
-    </div>
-  </section>
+  
+<div style="display:flex;gap:16px;flex-wrap:wrap;margin:20px 0;">
 
-  <section>
-    <div class="twocol">
-      <div>
-        <h2>Top primary schools in Wandsworth</h2>
-        <p class="sources">Ranked by Ofsted rating, then by latest KS2 performance. See <a href="/methodology.html">methodology</a>.</p>
-        <table class="schools">
-          <thead>
-            <tr><th>School</th><th>Ofsted</th><th>KS2 %</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><a href="/schools/wandsworth/sheringdale-primary-school/">Sheringdale Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>95.0</td></tr>
-            <tr><td><a href="/schools/wandsworth/hotham-primary-school/">Hotham Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>89.0</td></tr>
-            <tr><td><a href="/schools/wandsworth/belleville-primary-school/">Belleville Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>84.0</td></tr>
-            <tr><td><a href="/schools/wandsworth/chesterton-primary-school/">Chesterton Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>84.0</td></tr>
-            <tr><td><a href="/schools/wandsworth/penwortham-primary-school/">Penwortham Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>82.0</td></tr>
-            <tr><td><a href="/schools/wandsworth/earlsfield-primary-school/">Earlsfield Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>81.0</td></tr>
-            <tr><td><a href="/schools/wandsworth/st-anselms-catholic-primary-school/">St Anselm's Catholic Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>81.0</td></tr>
-          </tbody>
-        </table>
-
-        <h2 style="margin-top:28px">Top secondary schools in Wandsworth</h2>
-        <p class="sources">Ranked by Ofsted rating, then by latest KS4 Attainment 8.</p>
-        <table class="schools">
-          <thead>
-            <tr><th>School</th><th>Ofsted</th><th>Att 8</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><a href="/schools/wandsworth/ashcroft-technology-academy/">Ashcroft Technology Academy</a></td><td class="rating Outstanding">Outstanding</td><td>63.3</td></tr>
-            <tr><td><a href="/schools/wandsworth/graveney-school/">Graveney School</a></td><td class="rating Outstanding">Outstanding</td><td>61.5</td></tr>
-            <tr><td><a href="/schools/wandsworth/ark-bolingbroke-academy/">Ark Bolingbroke Academy</a></td><td class="rating Outstanding">Outstanding</td><td>56.2</td></tr>
-            <tr><td><a href="/schools/wandsworth/harris-academy-battersea/">Harris Academy Battersea</a></td><td class="rating Outstanding">Outstanding</td><td>48.6</td></tr>
-            <tr><td><a href="/schools/wandsworth/paddock-school/">Paddock School</a></td><td class="rating Outstanding">Outstanding</td><td>—</td></tr>
-            <tr><td><a href="/schools/wandsworth/wandsworth-hospital-and-home-tuition-service/">Wandsworth Hospital and Home Tuition Service</a></td><td class="rating Outstanding">Outstanding</td><td>—</td></tr>
-            <tr><td><a href="/schools/wandsworth/tram-house-school/">Tram House School</a></td><td class="rating Outstanding">Outstanding</td><td>—</td></tr>
-          </tbody>
-        </table>
-
-        <p style="margin-top:14px"><a class="cta" href="#all-schools">Jump to all 111 schools in Wandsworth</a></p>
-      </div>
-      <div>
-        <h2>Map</h2>
-        <div id="map" aria-label="Map of schools in Wandsworth"></div>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <h2>What the data says about Wandsworth</h2>
-    <p><strong>79.3%</strong> of Wandsworth schools are currently rated Good or Outstanding by Ofsted, compared with a London average of roughly 90% for primary and 80% for secondary. The average number of applications per place across Wandsworth is <strong>1.32</strong>, a useful indicator of how competitive local admissions are. The average number of recorded crime incidents within 500 metres of a school in Wandsworth over the most recent reporting month is <strong>127.45</strong>, drawn from the Metropolitan Police open data API. The mean IMD (Index of Multiple Deprivation) decile of Wandsworth's schools is <strong>6.72</strong> — 1 is most deprived, 10 is least deprived. All metrics on this page are recomputed from source data on the 15th of every month. See our <a href='/methodology.html'>methodology</a> for definitions and limitations.</p>
-  </section>
-
-  <section id="all-schools">
-    <h2>All schools in Wandsworth</h2>
-    <p class="sources">Every school in Wandsworth, listed alphabetically. Click any school for the full record.</p>
-    <table class="schools">
-      <thead>
-        <tr><th>School</th><th>Phase</th><th>Ofsted</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><a href="/schools/wandsworth/al-risalah-boys-school/">Al Risalah Boys' School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/al-risalah-secondary-school/">Al Risalah Secondary School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/albemarle-primary-school/">Albemarle Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/alderbrook-primary-school/">Alderbrook Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/all-saints-cofe-primary-school-putney/">All Saints' CofE Primary School, Putney</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/allfarthing-primary-school/">Allfarthing Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/anglo-portuguese-school-of-london/">Anglo Portuguese School of London</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/ark-bolingbroke-academy/">Ark Bolingbroke Academy</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/wandsworth/ark-john-archer-primary-academy/">ARK John Archer Primary Academy</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/ark-putney-academy/">Ark Putney Academy</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/ashcroft-technology-academy/">Ashcroft Technology Academy</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/wandsworth/balham-nursery-school/">Balham Nursery School</a></td><td>Nursery</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/beatrix-potter-primary-school/">Beatrix Potter Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/belleville-primary-school/">Belleville Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/wandsworth/belleville-wix-academy/">Belleville Wix Academy</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/brandlehow-primary-school/">Brandlehow Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/broomwood-pre-prep-broomwood-prep-girls/">Broomwood Pre-Prep & Broomwood Prep-Girls</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/wandsworth/broomwood-prep---boys/">Broomwood Prep - Boys</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/wandsworth/burntwood-school/">Burntwood School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/centre-academy-london/">Centre Academy London</a></td><td>Secondary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/wandsworth/chelsea-hall-school/">Chelsea Hall School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/wandsworth/chesterton-primary-school/">Chesterton Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/wandsworth/chestnut-grove-academy/">Chestnut Grove Academy</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/dolphin-school-incorporating-noahs-ark-nursery-schools/">Dolphin School (Incorporating Noahs Ark Nursery Schools)</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/wandsworth/earlsfield-primary-school/">Earlsfield Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/wandsworth/eastwood-nursery-school/">Eastwood Nursery School</a></td><td>Nursery</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/wandsworth/eaton-house-the-manor-school/">Eaton House the Manor School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/wandsworth/emanuel-school/">Emanuel School</a></td><td>Secondary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/wandsworth/ernest-bevin-academy/">Ernest Bevin Academy</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/eveline-day-school/">Eveline Day School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/wandsworth/falconbrook-primary-school/">Falconbrook Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/finton-house-school/">Finton House School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/wandsworth/fircroft-primary-school/">Fircroft Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/floreat-wandsworth-primary-school/">Floreat Wandsworth Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/wandsworth/francis-barber-pupil-referral-unit/">Francis Barber Pupil Referral Unit</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/franciscan-primary-school/">Franciscan Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/furzedown-primary-school/">Furzedown Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/garratt-park-school/">Garratt Park School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/gatton-va-primary-school/">Gatton (VA) Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/wandsworth/granard-primary-school/">Granard Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/graveney-school/">Graveney School</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/wandsworth/greenmead-school/">Greenmead School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/wandsworth/griffin-primary-school/">Griffin Primary School</a></td><td>Primary</td><td class="rating Requiresimprovement">Requires improvement</td></tr>
-        <tr><td><a href="/schools/wandsworth/harris-academy-battersea/">Harris Academy Battersea</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/wandsworth/heathmere-primary-school/">Heathmere Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/hillbrook-school/">Hillbrook School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/holy-ghost-catholic-primary-school/">Holy Ghost Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/honeywell-infant-school/">Honeywell Infant School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/honeywell-junior-school/">Honeywell Junior School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/hornsby-house-school/">Hornsby House School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/wandsworth/hotham-primary-school/">Hotham Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/wandsworth/hurlingham-school/">Hurlingham School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/wandsworth/ibstock-place-school/">Ibstock Place School</a></td><td>All-through</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/wandsworth/john-burns-primary-school/">John Burns Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/lecole-de-battersea/">L'Ecole de Battersea</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/wandsworth/linden-lodge-school/">Linden Lodge School</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/london-park-school-clapham/">London Park School Clapham</a></td><td>Secondary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/wandsworth/merlin-school/">Merlin School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/wandsworth/mosaic-jewish-primary-school/">Mosaic Jewish Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/newton-preparatory-school/">Newton Preparatory School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/wandsworth/nightingale-community-academy/">Nightingale Community Academy</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/oak-lodge-school/">Oak Lodge School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/oasis-academy-putney/">Oasis Academy Putney</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/our-lady-of-victories-catholic-primary-school/">Our Lady of Victories Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/our-lady-queen-of-heaven-rc-school/">Our Lady Queen of Heaven RC School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/wandsworth/paddock-school/">Paddock School</a></td><td>All-through</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/wandsworth/park-house-school/">Park House School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/wandsworth/parkgate-house-school/">Parkgate House School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/wandsworth/penwortham-primary-school/">Penwortham Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/wandsworth/prospect-house-school/">Prospect House School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/wandsworth/putney-high-school-gdst/">Putney High School GDST</a></td><td>All-through</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/wandsworth/ravenstone-primary-school/">Ravenstone Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/riversdale-primary-school/">Riversdale Primary School</a></td><td>Primary</td><td class="rating Requiresimprovement">Requires improvement</td></tr>
-        <tr><td><a href="/schools/wandsworth/roehampton-church-forest-primary-school/">Roehampton Church Forest Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/roehampton-gate-school/">Roehampton Gate School</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/roehampton-hospital-school/">Roehampton Hospital School</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/wandsworth/ronald-ross-primary-school/">Ronald Ross Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/wandsworth/rutherford-house-school/">Rutherford House School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/sacred-heart-catholic-primary-school-battersea/">Sacred Heart Catholic Primary School, Battersea</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/sacred-heart-catholic-primary-school-roehampton/">Sacred Heart Catholic Primary School, Roehampton</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/saint-cecilias-church-of-england-school/">Saint Cecilia's Church of England School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/saint-john-bosco-college/">Saint John Bosco College</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/sellincourt-primary-school/">Sellincourt Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/shaftesbury-park-primary-school/">Shaftesbury Park Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/sheringdale-primary-school/">Sheringdale Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/wandsworth/smallwood-primary-school-and-language-unit/">Smallwood Primary School and Language Unit</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/somerset-nursery-school-and-childrens-centre/">Somerset Nursery School and Children's Centre</a></td><td>Nursery</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/wandsworth/southfields-academy/">Southfields Academy</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/southmead-primary-school/">Southmead Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/st-anselms-catholic-primary-school/">St Anselm's Catholic Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/wandsworth/st-boniface-rc-primary-school/">St Boniface RC Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/st-faiths-cofe-primary-school/">St Faith's CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/st-georges-cofe-primary-school/">St George's CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/st-josephs-catholic-primary-and-nursery-school/">St Joseph's Catholic Primary and Nursery School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/st-marys-cofe-nursery-and-primary-school/">St Mary's CofE Nursery and Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/st-marys-rc-voluntary-aided-primary-school/">St Mary's RC Voluntary Aided Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/st-michaels-cofe-primary-school/">St Michael's CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/swaffield-school/">Swaffield School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/thames-christian-school/">Thames Christian School</a></td><td>Secondary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/wandsworth/the-alton-school/">The Alton School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/the-roche-school/">The Roche School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/wandsworth/thomass-battersea/">Thomas's Battersea</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/wandsworth/thomass-clapham/">Thomas's Clapham</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/wandsworth/tooting-primary-school/">Tooting Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/tram-house-school/">Tram House School</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/wandsworth/trinity-st-marys-cofe-primary-school/">Trinity St Mary's CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/victoria-drive-primary-pupil-referral-unit/">Victoria Drive Primary Pupil Referral Unit</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/wandsworth/wandsworth-hospital-and-home-tuition-service/">Wandsworth Hospital and Home Tuition Service</a></td><td>All-through</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/wandsworth/wandsworth-preparatory-school/">Wandsworth Preparatory School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/wandsworth/west-hill-primary-school/">West Hill Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/wandsworth/westbridge-academy/">Westbridge Academy</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <section>
-    <h2>Frequently asked</h2>
-    <details class="faq"><summary>How many schools are there in Wandsworth?</summary><p>Wandsworth has 111 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 84 are primary, 29 are secondary, and the remainder are special, all-through, or post-16.</p></details>
-<details class="faq"><summary>What proportion of Wandsworth schools are Outstanding?</summary><p>As of the latest Ofsted Management Information release, 27 schools in Wandsworth (24.3%) are rated Outstanding, and 79.3% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication.</p></details>
-<details class="faq"><summary>When do I apply for a Reception or Year 7 place in Wandsworth?</summary><p>Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Wandsworth's applications are coordinated by the local authority through the eAdmissions system. See our <a href='/guides/london-reception-application-timeline/'>full Reception timeline guide</a>.</p></details>
-<details class="faq"><summary>How does the school appeals process work in Wandsworth?</summary><p>If you are refused your preferred school place, you have a statutory right of appeal. Wandsworth appeals are typically heard in May (Reception) and June–July (secondary). See our <a href='/appeals.html'>appeals tracker</a> for Wandsworth-level success rates by year.</p></details>
-<details class="faq"><summary>How can I tell which Wandsworth schools are over-subscribed?</summary><p>Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release.</p></details>
-  </section>
-
-  <section>
-    <h2>Sources</h2>
-    <p class="sources">
-      School list and phase from <a href="https://get-information-schools.service.gov.uk/" rel="nofollow">DfE Get Information About Schools</a> (refreshed monthly).
-      Ofsted ratings from <a href="https://www.gov.uk/government/statistical-data-sets/monthly-management-information-ofsteds-school-inspections-outcomes" rel="nofollow">Ofsted Management Information</a> (refreshed monthly).
-      Performance data from <a href="https://explore-education-statistics.service.gov.uk/" rel="nofollow">DfE Explore Education Statistics</a>.
-      Crime data within 500m from the <a href="https://data.police.uk/" rel="nofollow">Metropolitan Police open data API</a>.
-      Deprivation deciles from <a href="https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019" rel="nofollow">MHCLG English Indices of Deprivation 2019</a>.
-      Read our full <a href="/methodology.html">methodology</a> for how each metric is calculated.
-    </p>
-  </section>
-</main>
-<footer>
-  <div class="inner">
-    <div>&copy; London School Directory. Independent. Free to use.</div>
-    <div><a href="/about.html">About</a> &middot; <a href="/methodology.html">Methodology</a> &middot; <a href="/sources.html">Sources</a> &middot; <a href="/appeals.html">Appeals</a></div>
-    <div>Browse by type: <a href="/schools/outstanding">Outstanding</a> &middot; <a href="/schools/good">Good</a> &middot; <a href="/schools/grammar">Grammar</a> &middot; <a href="/schools/selective">Selective</a> &middot; <a href="/schools/faith">Faith</a> &middot; <a href="/schools/primary">Primary</a> &middot; <a href="/schools/secondary">Secondary</a> &middot; <a href="/schools/sixth-form">Sixth form</a> &middot; <a href="/schools/independent">Private &amp; independent</a></div>
+<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fdf4ff 0%,#ede9fe 100%);
+     border:1px solid #d8b4fe;border-radius:12px;padding:14px 20px;">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+    <span style="font-size:22px;">🎓</span>
+    <strong style="font-size:15px;color:#5b21b6;">11+ &amp; 13+ Exam Prep</strong>
   </div>
-</footer>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
+    PiAcademy resources for grammar school entrance, SATs &amp; GCSE.
+    Use code <strong>THIERR25</strong> for 25% off.
+  </p>
+  <a href="https://piacademy.co.uk/?aff=28"
+     target="_blank" rel="noopener sponsored"
+     style="display:inline-block;padding:9px 18px;background:#7e22ce;color:#fff;
+            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
+    Get 25% OFF →
+  </a>
+  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
+</div>
+<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%);
+     border:1px solid #fcd34d;border-radius:12px;padding:14px 20px;">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+    <span style="font-size:22px;">📚</span>
+    <strong style="font-size:15px;color:#92400e;">Children's Books</strong>
+  </div>
+  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
+    Great books at low prices. At checkout, choose your school — Scholastic donates
+    <strong>20p for every £1 spent</strong> back to the school in free books.
+  </p>
+  <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&ued=https%3A%2F%2Fwww.scholastic.co.uk%2Fteachers"
+     target="_blank" rel="noopener sponsored"
+     style="display:inline-block;padding:9px 18px;background:#d97706;color:#fff;
+            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
+    Shop at Scholastic →
+  </a>
+  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
+</div>
+<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fff8f0 0%,#fff3e0 100%);
+     border:1px solid #fed7aa;border-radius:12px;padding:14px 20px;">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+    <span style="font-size:22px;">🛒</span>
+    <strong style="font-size:15px;color:#92400e;">School Supplies</strong>
+  </div>
+  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
+    Stationery, bags, PE kit, lunchboxes and more — fast delivery from Amazon.
+  </p>
+  <a href="https://www.amazon.co.uk/s?k=school+supplies+stationery&tag=londonparents-21"
+     target="_blank" rel="noopener sponsored"
+     style="display:inline-block;padding:9px 18px;background:#FF9900;color:#111;
+            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
+    Shop on Amazon →
+  </a>
+  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
+</div>
+</div>
+
+  <!-- Borough share buttons -->
+  <div style="display:flex;gap:10px;margin:16px 0 8px;flex-wrap:wrap;align-items:center;">
+    <span style="font-size:13px;color:#555;font-weight:600;">Share Wandsworth schools:</span>
+    <button onclick="shareBoroughWhatsApp()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 WhatsApp</button>
+    <button onclick="shareBoroughEmail()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#1565C0;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Email</button>
+    <span style="font-size:12px;color:#999;margin-left:4px;">Or tick schools below to share a shortlist</span>
+  </div>
+
+  <!-- Sticky compare bar (appears when schools are ticked) -->
+  <div id="cmp-bar" style="display:none;position:sticky;top:0;z-index:100;background:#1A1A2E;color:#fff;padding:12px 16px;border-radius:10px;margin-bottom:12px;display:none;align-items:center;gap:10px;flex-wrap:wrap;">
+    <span id="cmp-count" style="font-weight:700;font-size:14px;">0 schools selected</span>
+    <button onclick="shareCompareWhatsApp()" style="padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 Share via WhatsApp</button>
+    <button onclick="shareCompareEmail()" style="padding:8px 16px;background:#fff;color:#1A1A2E;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Share via Email</button>
+    <button onclick="clearSelection()" style="padding:8px 12px;background:transparent;color:#aaa;border:1px solid #555;border-radius:8px;font-size:12px;cursor:pointer;">✕ Clear</button>
+  </div>
+
+  <table>
+    <thead><tr><th style="width:36px"></th><th>School</th><th>Phase</th><th>Ofsted</th><th>Pupils</th></tr></thead>
+    <tbody><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="ARK John Archer Primary Academy"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="63.0"
+            data-url="https://londonschool.directory/schools/wandsworth/ark-john-archer-primary-academy"></td>
+          <td><a href="/schools/wandsworth/ark-john-archer-primary-academy">ARK John Archer Primary Academy</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>195</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Al Risalah Boys' School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="53.2"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/al-risalah-boys-school"></td>
+          <td><a href="/schools/wandsworth/al-risalah-boys-school">Al Risalah Boys' School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>109</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Al Risalah Secondary School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="55.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/al-risalah-secondary-school"></td>
+          <td><a href="/schools/wandsworth/al-risalah-secondary-school">Al Risalah Secondary School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>113</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Albemarle Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="67.0"
+            data-url="https://londonschool.directory/schools/wandsworth/albemarle-primary-school"></td>
+          <td><a href="/schools/wandsworth/albemarle-primary-school">Albemarle Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>348</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Alderbrook Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="65.0"
+            data-url="https://londonschool.directory/schools/wandsworth/alderbrook-primary-school"></td>
+          <td><a href="/schools/wandsworth/alderbrook-primary-school">Alderbrook Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>216</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="All Saints' CofE Primary School, Putney"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="75.0"
+            data-url="https://londonschool.directory/schools/wandsworth/all-saints-cofe-primary-school-putney"></td>
+          <td><a href="/schools/wandsworth/all-saints-cofe-primary-school-putney">All Saints' CofE Primary School, Putney</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>161</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Allfarthing Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="81.0"
+            data-url="https://londonschool.directory/schools/wandsworth/allfarthing-primary-school"></td>
+          <td><a href="/schools/wandsworth/allfarthing-primary-school">Allfarthing Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>397</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Anglo Portuguese School of London"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/anglo-portuguese-school-of-london"></td>
+          <td><a href="/schools/wandsworth/anglo-portuguese-school-of-london">Anglo Portuguese School of London</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>159</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Ark Bolingbroke Academy"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="56.2"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/ark-bolingbroke-academy"></td>
+          <td><a href="/schools/wandsworth/ark-bolingbroke-academy">Ark Bolingbroke Academy</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>793</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Ark Putney Academy"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="42.4"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/ark-putney-academy"></td>
+          <td><a href="/schools/wandsworth/ark-putney-academy">Ark Putney Academy</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>746</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Ashcroft Technology Academy"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="63.3"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/ashcroft-technology-academy"></td>
+          <td><a href="/schools/wandsworth/ashcroft-technology-academy">Ashcroft Technology Academy</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>1524</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Balham Nursery School"
+            data-ofsted="Good"
+            data-phase="Nursery"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/balham-nursery-school"></td>
+          <td><a href="/schools/wandsworth/balham-nursery-school">Balham Nursery School</a></td>
+          <td>Nursery</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>48</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Beatrix Potter Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="67.0"
+            data-url="https://londonschool.directory/schools/wandsworth/beatrix-potter-primary-school"></td>
+          <td><a href="/schools/wandsworth/beatrix-potter-primary-school">Beatrix Potter Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>362</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Belleville Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="84.0"
+            data-url="https://londonschool.directory/schools/wandsworth/belleville-primary-school"></td>
+          <td><a href="/schools/wandsworth/belleville-primary-school">Belleville Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>1031</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Belleville Wix Academy"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="87.0"
+            data-url="https://londonschool.directory/schools/wandsworth/belleville-wix-academy"></td>
+          <td><a href="/schools/wandsworth/belleville-wix-academy">Belleville Wix Academy</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>309</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Brandlehow Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="82.0"
+            data-url="https://londonschool.directory/schools/wandsworth/brandlehow-primary-school"></td>
+          <td><a href="/schools/wandsworth/brandlehow-primary-school">Brandlehow Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>393</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Broomwood Pre-Prep & Broomwood Prep-Girls"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/broomwood-pre-prep-broomwood-prep-girls"></td>
+          <td><a href="/schools/wandsworth/broomwood-pre-prep-broomwood-prep-girls">Broomwood Pre-Prep & Broomwood Prep-Girls</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>321</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Broomwood Prep - Boys"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/broomwood-prep-boys"></td>
+          <td><a href="/schools/wandsworth/broomwood-prep-boys">Broomwood Prep - Boys</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>203</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Burntwood School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="51.0"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/burntwood-school"></td>
+          <td><a href="/schools/wandsworth/burntwood-school">Burntwood School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1462</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Centre Academy London"
+            data-ofsted="Not yet rated"
+            data-phase="Secondary"
+            data-att8="24.5"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/centre-academy-london"></td>
+          <td><a href="/schools/wandsworth/centre-academy-london">Centre Academy London</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>48</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Chelsea Hall School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/chelsea-hall-school"></td>
+          <td><a href="/schools/wandsworth/chelsea-hall-school">Chelsea Hall School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>47</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Chesterton Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="84.0"
+            data-url="https://londonschool.directory/schools/wandsworth/chesterton-primary-school"></td>
+          <td><a href="/schools/wandsworth/chesterton-primary-school">Chesterton Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>416</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Chestnut Grove Academy"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="58.2"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/chestnut-grove-academy"></td>
+          <td><a href="/schools/wandsworth/chestnut-grove-academy">Chestnut Grove Academy</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1327</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Dolphin School (Incorporating Noahs Ark Nursery Schools)"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/dolphin-school-incorporating-noahs-ark-nursery-schools"></td>
+          <td><a href="/schools/wandsworth/dolphin-school-incorporating-noahs-ark-nursery-schools">Dolphin School (Incorporating Noahs Ark Nursery Schools)</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>140</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Earlsfield Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="81.0"
+            data-url="https://londonschool.directory/schools/wandsworth/earlsfield-primary-school"></td>
+          <td><a href="/schools/wandsworth/earlsfield-primary-school">Earlsfield Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>459</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Eastwood Nursery School"
+            data-ofsted="Outstanding"
+            data-phase="Nursery"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/eastwood-nursery-school"></td>
+          <td><a href="/schools/wandsworth/eastwood-nursery-school">Eastwood Nursery School</a></td>
+          <td>Nursery</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>32</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Eaton House the Manor School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/eaton-house-the-manor-school"></td>
+          <td><a href="/schools/wandsworth/eaton-house-the-manor-school">Eaton House the Manor School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>668</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Emanuel School"
+            data-ofsted="Not yet rated"
+            data-phase="Secondary"
+            data-att8="40.0"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/emanuel-school"></td>
+          <td><a href="/schools/wandsworth/emanuel-school">Emanuel School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>1112</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Ernest Bevin Academy"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="49.5"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/ernest-bevin-academy"></td>
+          <td><a href="/schools/wandsworth/ernest-bevin-academy">Ernest Bevin Academy</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>572</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Eveline Day School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/eveline-day-school"></td>
+          <td><a href="/schools/wandsworth/eveline-day-school">Eveline Day School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>78</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Falconbrook Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="67.0"
+            data-url="https://londonschool.directory/schools/wandsworth/falconbrook-primary-school"></td>
+          <td><a href="/schools/wandsworth/falconbrook-primary-school">Falconbrook Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>180</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Finton House School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/finton-house-school"></td>
+          <td><a href="/schools/wandsworth/finton-house-school">Finton House School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>350</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Fircroft Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/fircroft-primary-school"></td>
+          <td><a href="/schools/wandsworth/fircroft-primary-school">Fircroft Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>266</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Floreat Wandsworth Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="68.0"
+            data-url="https://londonschool.directory/schools/wandsworth/floreat-wandsworth-primary-school"></td>
+          <td><a href="/schools/wandsworth/floreat-wandsworth-primary-school">Floreat Wandsworth Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>364</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Francis Barber Pupil Referral Unit"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/francis-barber-pupil-referral-unit"></td>
+          <td><a href="/schools/wandsworth/francis-barber-pupil-referral-unit">Francis Barber Pupil Referral Unit</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>62</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Franciscan Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="62.0"
+            data-url="https://londonschool.directory/schools/wandsworth/franciscan-primary-school"></td>
+          <td><a href="/schools/wandsworth/franciscan-primary-school">Franciscan Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>286</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Furzedown Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="77.0"
+            data-url="https://londonschool.directory/schools/wandsworth/furzedown-primary-school"></td>
+          <td><a href="/schools/wandsworth/furzedown-primary-school">Furzedown Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>400</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Garratt Park School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="5.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/garratt-park-school"></td>
+          <td><a href="/schools/wandsworth/garratt-park-school">Garratt Park School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>207</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Gatton (VA) Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="66.0"
+            data-url="https://londonschool.directory/schools/wandsworth/gatton-va-primary-school"></td>
+          <td><a href="/schools/wandsworth/gatton-va-primary-school">Gatton (VA) Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>629</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Granard Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="70.0"
+            data-url="https://londonschool.directory/schools/wandsworth/granard-primary-school"></td>
+          <td><a href="/schools/wandsworth/granard-primary-school">Granard Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>330</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Graveney School"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="61.5"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/graveney-school"></td>
+          <td><a href="/schools/wandsworth/graveney-school">Graveney School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>2332</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Greenmead School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/greenmead-school"></td>
+          <td><a href="/schools/wandsworth/greenmead-school">Greenmead School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>53</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Griffin Primary School"
+            data-ofsted="Requires improvement"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="75.0"
+            data-url="https://londonschool.directory/schools/wandsworth/griffin-primary-school"></td>
+          <td><a href="/schools/wandsworth/griffin-primary-school">Griffin Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
+          <td>155</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Harris Academy Battersea"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="48.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/harris-academy-battersea"></td>
+          <td><a href="/schools/wandsworth/harris-academy-battersea">Harris Academy Battersea</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>890</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Heathmere Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="60.0"
+            data-url="https://londonschool.directory/schools/wandsworth/heathmere-primary-school"></td>
+          <td><a href="/schools/wandsworth/heathmere-primary-school">Heathmere Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>234</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hillbrook School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="59.0"
+            data-url="https://londonschool.directory/schools/wandsworth/hillbrook-school"></td>
+          <td><a href="/schools/wandsworth/hillbrook-school">Hillbrook School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>567</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Holy Ghost Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="86.0"
+            data-url="https://londonschool.directory/schools/wandsworth/holy-ghost-catholic-primary-school"></td>
+          <td><a href="/schools/wandsworth/holy-ghost-catholic-primary-school">Holy Ghost Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>197</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Honeywell Infant School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/honeywell-infant-school"></td>
+          <td><a href="/schools/wandsworth/honeywell-infant-school">Honeywell Infant School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>318</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Honeywell Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="84.0"
+            data-url="https://londonschool.directory/schools/wandsworth/honeywell-junior-school"></td>
+          <td><a href="/schools/wandsworth/honeywell-junior-school">Honeywell Junior School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>349</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hornsby House School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/hornsby-house-school"></td>
+          <td><a href="/schools/wandsworth/hornsby-house-school">Hornsby House School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>433</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hotham Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="89.0"
+            data-url="https://londonschool.directory/schools/wandsworth/hotham-primary-school"></td>
+          <td><a href="/schools/wandsworth/hotham-primary-school">Hotham Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>400</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hurlingham School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/hurlingham-school"></td>
+          <td><a href="/schools/wandsworth/hurlingham-school">Hurlingham School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>395</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Ibstock Place School"
+            data-ofsted="Not yet rated"
+            data-phase="All-through"
+            data-att8="42.4"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/ibstock-place-school"></td>
+          <td><a href="/schools/wandsworth/ibstock-place-school">Ibstock Place School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>1048</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="John Burns Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="100.0"
+            data-url="https://londonschool.directory/schools/wandsworth/john-burns-primary-school"></td>
+          <td><a href="/schools/wandsworth/john-burns-primary-school">John Burns Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>158</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="L'Ecole de Battersea"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/lecole-de-battersea"></td>
+          <td><a href="/schools/wandsworth/lecole-de-battersea">L'Ecole de Battersea</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>258</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Linden Lodge School"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8="0.1"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/linden-lodge-school"></td>
+          <td><a href="/schools/wandsworth/linden-lodge-school">Linden Lodge School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>153</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="London Park School Clapham"
+            data-ofsted="Not yet rated"
+            data-phase="Secondary"
+            data-att8="50.4"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/london-park-school-clapham"></td>
+          <td><a href="/schools/wandsworth/london-park-school-clapham">London Park School Clapham</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>106</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Merlin School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/merlin-school"></td>
+          <td><a href="/schools/wandsworth/merlin-school">Merlin School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>90</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Mosaic Jewish Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="62.0"
+            data-url="https://londonschool.directory/schools/wandsworth/mosaic-jewish-primary-school"></td>
+          <td><a href="/schools/wandsworth/mosaic-jewish-primary-school">Mosaic Jewish Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>151</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Newton Preparatory School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/newton-preparatory-school"></td>
+          <td><a href="/schools/wandsworth/newton-preparatory-school">Newton Preparatory School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>559</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Nightingale Community Academy"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8="9.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/nightingale-community-academy"></td>
+          <td><a href="/schools/wandsworth/nightingale-community-academy">Nightingale Community Academy</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>139</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Oak Lodge School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="4.1"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/oak-lodge-school"></td>
+          <td><a href="/schools/wandsworth/oak-lodge-school">Oak Lodge School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>96</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Oasis Academy Putney"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="88.0"
+            data-url="https://londonschool.directory/schools/wandsworth/oasis-academy-putney"></td>
+          <td><a href="/schools/wandsworth/oasis-academy-putney">Oasis Academy Putney</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>112</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Our Lady Queen of Heaven RC School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="70.0"
+            data-url="https://londonschool.directory/schools/wandsworth/our-lady-queen-of-heaven-rc-school"></td>
+          <td><a href="/schools/wandsworth/our-lady-queen-of-heaven-rc-school">Our Lady Queen of Heaven RC School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>221</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Our Lady of Victories Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="96.0"
+            data-url="https://londonschool.directory/schools/wandsworth/our-lady-of-victories-catholic-primary-school"></td>
+          <td><a href="/schools/wandsworth/our-lady-of-victories-catholic-primary-school">Our Lady of Victories Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>168</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Paddock School"
+            data-ofsted="Outstanding"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/paddock-school"></td>
+          <td><a href="/schools/wandsworth/paddock-school">Paddock School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>246</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Park House School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/park-house-school"></td>
+          <td><a href="/schools/wandsworth/park-house-school">Park House School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>54</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Parkgate House School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/parkgate-house-school"></td>
+          <td><a href="/schools/wandsworth/parkgate-house-school">Parkgate House School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>141</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Penwortham Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="82.0"
+            data-url="https://londonschool.directory/schools/wandsworth/penwortham-primary-school"></td>
+          <td><a href="/schools/wandsworth/penwortham-primary-school">Penwortham Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>675</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Prospect House School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/prospect-house-school"></td>
+          <td><a href="/schools/wandsworth/prospect-house-school">Prospect House School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>245</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Putney High School GDST"
+            data-ofsted="Not yet rated"
+            data-phase="All-through"
+            data-att8="22.3"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/putney-high-school-gdst"></td>
+          <td><a href="/schools/wandsworth/putney-high-school-gdst">Putney High School GDST</a></td>
+          <td>All-through</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>1058</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Ravenstone Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="74.0"
+            data-url="https://londonschool.directory/schools/wandsworth/ravenstone-primary-school"></td>
+          <td><a href="/schools/wandsworth/ravenstone-primary-school">Ravenstone Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>283</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Riversdale Primary School"
+            data-ofsted="Requires improvement"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="56.0"
+            data-url="https://londonschool.directory/schools/wandsworth/riversdale-primary-school"></td>
+          <td><a href="/schools/wandsworth/riversdale-primary-school">Riversdale Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
+          <td>324</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Roehampton Church Forest Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="69.0"
+            data-url="https://londonschool.directory/schools/wandsworth/roehampton-church-forest-primary-school"></td>
+          <td><a href="/schools/wandsworth/roehampton-church-forest-primary-school">Roehampton Church Forest Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>130</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Roehampton Gate School"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8="20.5"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/roehampton-gate-school"></td>
+          <td><a href="/schools/wandsworth/roehampton-gate-school">Roehampton Gate School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>44</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Roehampton Hospital School"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/roehampton-hospital-school"></td>
+          <td><a href="/schools/wandsworth/roehampton-hospital-school">Roehampton Hospital School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>18</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Ronald Ross Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="56.0"
+            data-url="https://londonschool.directory/schools/wandsworth/ronald-ross-primary-school"></td>
+          <td><a href="/schools/wandsworth/ronald-ross-primary-school">Ronald Ross Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>236</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Rutherford House School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="84.0"
+            data-url="https://londonschool.directory/schools/wandsworth/rutherford-house-school"></td>
+          <td><a href="/schools/wandsworth/rutherford-house-school">Rutherford House School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>376</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Sacred Heart Catholic Primary School, Battersea"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="82.0"
+            data-url="https://londonschool.directory/schools/wandsworth/sacred-heart-catholic-primary-school-battersea"></td>
+          <td><a href="/schools/wandsworth/sacred-heart-catholic-primary-school-battersea">Sacred Heart Catholic Primary School, Battersea</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>354</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Sacred Heart Catholic Primary School, Roehampton"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="72.0"
+            data-url="https://londonschool.directory/schools/wandsworth/sacred-heart-catholic-primary-school-roehampton"></td>
+          <td><a href="/schools/wandsworth/sacred-heart-catholic-primary-school-roehampton">Sacred Heart Catholic Primary School, Roehampton</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>354</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Saint Cecilia's Church of England School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="52.8"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/saint-cecilias-church-of-england-school"></td>
+          <td><a href="/schools/wandsworth/saint-cecilias-church-of-england-school">Saint Cecilia's Church of England School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1129</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Saint John Bosco College"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="43.7"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/saint-john-bosco-college"></td>
+          <td><a href="/schools/wandsworth/saint-john-bosco-college">Saint John Bosco College</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>828</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Sellincourt Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="76.0"
+            data-url="https://londonschool.directory/schools/wandsworth/sellincourt-primary-school"></td>
+          <td><a href="/schools/wandsworth/sellincourt-primary-school">Sellincourt Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>396</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Shaftesbury Park Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="71.0"
+            data-url="https://londonschool.directory/schools/wandsworth/shaftesbury-park-primary-school"></td>
+          <td><a href="/schools/wandsworth/shaftesbury-park-primary-school">Shaftesbury Park Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>332</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Sheringdale Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="95.0"
+            data-url="https://londonschool.directory/schools/wandsworth/sheringdale-primary-school"></td>
+          <td><a href="/schools/wandsworth/sheringdale-primary-school">Sheringdale Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>436</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Smallwood Primary School and Language Unit"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="57.0"
+            data-url="https://londonschool.directory/schools/wandsworth/smallwood-primary-school-and-language-unit"></td>
+          <td><a href="/schools/wandsworth/smallwood-primary-school-and-language-unit">Smallwood Primary School and Language Unit</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>253</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Somerset Nursery School and Children's Centre"
+            data-ofsted="Outstanding"
+            data-phase="Nursery"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/somerset-nursery-school-and-childrens-centre"></td>
+          <td><a href="/schools/wandsworth/somerset-nursery-school-and-childrens-centre">Somerset Nursery School and Children's Centre</a></td>
+          <td>Nursery</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>67</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Southfields Academy"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="45.1"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/southfields-academy"></td>
+          <td><a href="/schools/wandsworth/southfields-academy">Southfields Academy</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1148</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Southmead Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="41.0"
+            data-url="https://londonschool.directory/schools/wandsworth/southmead-primary-school"></td>
+          <td><a href="/schools/wandsworth/southmead-primary-school">Southmead Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>263</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Anselm's Catholic Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="81.0"
+            data-url="https://londonschool.directory/schools/wandsworth/st-anselms-catholic-primary-school"></td>
+          <td><a href="/schools/wandsworth/st-anselms-catholic-primary-school">St Anselm's Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>201</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Boniface RC Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="72.0"
+            data-url="https://londonschool.directory/schools/wandsworth/st-boniface-rc-primary-school"></td>
+          <td><a href="/schools/wandsworth/st-boniface-rc-primary-school">St Boniface RC Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>259</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Faith's CofE Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="74.0"
+            data-url="https://londonschool.directory/schools/wandsworth/st-faiths-cofe-primary-school"></td>
+          <td><a href="/schools/wandsworth/st-faiths-cofe-primary-school">St Faith's CofE Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>187</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St George's CofE Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="50.0"
+            data-url="https://londonschool.directory/schools/wandsworth/st-georges-cofe-primary-school"></td>
+          <td><a href="/schools/wandsworth/st-georges-cofe-primary-school">St George's CofE Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>207</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Joseph's Catholic Primary and Nursery School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="85.0"
+            data-url="https://londonschool.directory/schools/wandsworth/st-josephs-catholic-primary-and-nursery-school"></td>
+          <td><a href="/schools/wandsworth/st-josephs-catholic-primary-and-nursery-school">St Joseph's Catholic Primary and Nursery School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>139</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Mary's CofE Nursery and Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="76.0"
+            data-url="https://londonschool.directory/schools/wandsworth/st-marys-cofe-nursery-and-primary-school"></td>
+          <td><a href="/schools/wandsworth/st-marys-cofe-nursery-and-primary-school">St Mary's CofE Nursery and Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>196</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Mary's RC Voluntary Aided Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="100.0"
+            data-url="https://londonschool.directory/schools/wandsworth/st-marys-rc-voluntary-aided-primary-school"></td>
+          <td><a href="/schools/wandsworth/st-marys-rc-voluntary-aided-primary-school">St Mary's RC Voluntary Aided Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>194</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Michael's CofE Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="83.0"
+            data-url="https://londonschool.directory/schools/wandsworth/st-michaels-cofe-primary-school"></td>
+          <td><a href="/schools/wandsworth/st-michaels-cofe-primary-school">St Michael's CofE Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>446</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Swaffield School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="83.0"
+            data-url="https://londonschool.directory/schools/wandsworth/swaffield-school"></td>
+          <td><a href="/schools/wandsworth/swaffield-school">Swaffield School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>271</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Thames Christian School"
+            data-ofsted="Not yet rated"
+            data-phase="Secondary"
+            data-att8="29.8"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/thames-christian-school"></td>
+          <td><a href="/schools/wandsworth/thames-christian-school">Thames Christian School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>188</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Alton School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="67.0"
+            data-url="https://londonschool.directory/schools/wandsworth/the-alton-school"></td>
+          <td><a href="/schools/wandsworth/the-alton-school">The Alton School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>233</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Roche School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/the-roche-school"></td>
+          <td><a href="/schools/wandsworth/the-roche-school">The Roche School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>207</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Thomas's Battersea"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/thomass-battersea"></td>
+          <td><a href="/schools/wandsworth/thomass-battersea">Thomas's Battersea</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>547</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Thomas's Clapham"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/thomass-clapham"></td>
+          <td><a href="/schools/wandsworth/thomass-clapham">Thomas's Clapham</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>644</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Tooting Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="88.0"
+            data-url="https://londonschool.directory/schools/wandsworth/tooting-primary-school"></td>
+          <td><a href="/schools/wandsworth/tooting-primary-school">Tooting Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>399</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Tram House School"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/tram-house-school"></td>
+          <td><a href="/schools/wandsworth/tram-house-school">Tram House School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>70</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Trinity St Mary's CofE Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="71.0"
+            data-url="https://londonschool.directory/schools/wandsworth/trinity-st-marys-cofe-primary-school"></td>
+          <td><a href="/schools/wandsworth/trinity-st-marys-cofe-primary-school">Trinity St Mary's CofE Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>103</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Victoria Drive Primary Pupil Referral Unit"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/victoria-drive-primary-pupil-referral-unit"></td>
+          <td><a href="/schools/wandsworth/victoria-drive-primary-pupil-referral-unit">Victoria Drive Primary Pupil Referral Unit</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>0</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Wandsworth Hospital and Home Tuition Service"
+            data-ofsted="Outstanding"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/wandsworth-hospital-and-home-tuition-service"></td>
+          <td><a href="/schools/wandsworth/wandsworth-hospital-and-home-tuition-service">Wandsworth Hospital and Home Tuition Service</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>9</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Wandsworth Preparatory School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/wandsworth/wandsworth-preparatory-school"></td>
+          <td><a href="/schools/wandsworth/wandsworth-preparatory-school">Wandsworth Preparatory School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>80</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="West Hill Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="65.0"
+            data-url="https://londonschool.directory/schools/wandsworth/west-hill-primary-school"></td>
+          <td><a href="/schools/wandsworth/west-hill-primary-school">West Hill Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>162</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Westbridge Academy"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="40.0"
+            data-url="https://londonschool.directory/schools/wandsworth/westbridge-academy"></td>
+          <td><a href="/schools/wandsworth/westbridge-academy">Westbridge Academy</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>169</td>
+        </tr></tbody>
+  </table>
+</div>
+<footer><a href="/">London Schools Explorer</a> &mdash; helping families find the right school in London.<p style="margin-top:10px">Browse by type: <a href="/schools/outstanding">Outstanding</a> &middot; <a href="/schools/good">Good</a> &middot; <a href="/schools/grammar">Grammar</a> &middot; <a href="/schools/selective">Selective</a> &middot; <a href="/schools/faith">Faith</a> &middot; <a href="/schools/primary">Primary</a> &middot; <a href="/schools/secondary">Secondary</a> &middot; <a href="/schools/sixth-form">Sixth form</a> &middot; <a href="/schools/independent">Private &amp; independent</a></p></footer>
+<script defer src="/_vercel/insights/script.js"></script>
 <script>
-  (function() {
-    var points = [[51.474312, -0.174256, "/schools/wandsworth/thomass-battersea/", "Thomas's Battersea"], [51.446312, -0.154375, "/schools/wandsworth/balham-nursery-school/", "Balham Nursery School"], [51.45209, -0.244876, "/schools/wandsworth/eastwood-nursery-school/", "Eastwood Nursery School"], [51.475694, -0.175238, "/schools/wandsworth/somerset-nursery-school-and-childrens-centre/", "Somerset Nursery School and Children's Centre"], [51.426925, -0.161918, "/schools/wandsworth/francis-barber-pupil-referral-unit/", "Francis Barber Pupil Referral Unit"], [51.448528, -0.148904, "/schools/wandsworth/alderbrook-primary-school/", "Alderbrook Primary School"], [51.454218, -0.186169, "/schools/wandsworth/allfarthing-primary-school/", "Allfarthing Primary School"], [51.443969, -0.182272, "/schools/wandsworth/beatrix-potter-primary-school/", "Beatrix Potter Primary School"], [51.461379, -0.207393, "/schools/wandsworth/brandlehow-primary-school/", "Brandlehow Primary School"], [51.441436, -0.185942, "/schools/wandsworth/earlsfield-primary-school/", "Earlsfield Primary School"], [51.468158, -0.174055, "/schools/wandsworth/falconbrook-primary-school/", "Falconbrook Primary School"], [51.421958, -0.153113, "/schools/wandsworth/furzedown-primary-school/", "Furzedown Primary School"], [51.454739, -0.16188, "/schools/wandsworth/honeywell-junior-school/", "Honeywell Junior School"], [51.454739, -0.16188, "/schools/wandsworth/honeywell-infant-school/", "Honeywell Infant School"], [51.464233, -0.221174, "/schools/wandsworth/hotham-primary-school/", "Hotham Primary School"], [51.469506, -0.152763, "/schools/wandsworth/john-burns-primary-school/", "John Burns Primary School"], [51.422392, -0.145846, "/schools/wandsworth/penwortham-primary-school/", "Penwortham Primary School"], [51.446548, -0.199065, "/schools/wandsworth/riversdale-primary-school/", "Riversdale Primary School"], [51.423173, -0.167534, "/schools/wandsworth/sellincourt-primary-school/", "Sellincourt Primary School"], [51.468766, -0.156609, "/schools/wandsworth/shaftesbury-park-primary-school/", "Shaftesbury Park Primary School"], [51.431215, -0.178074, "/schools/wandsworth/smallwood-primary-school-and-language-unit/", "Smallwood Primary School and Language Unit"], [51.451527, -0.186031, "/schools/wandsworth/swaffield-school/", "Swaffield School"], [51.455576, -0.199013, "/schools/wandsworth/west-hill-primary-school/", "West Hill Primary School"], [51.446915, -0.203642, "/schools/wandsworth/sheringdale-primary-school/", "Sheringdale Primary School"], [51.445216, -0.216056, "/schools/wandsworth/southmead-primary-school/", "Southmead Primary School"], [51.455652, -0.232951, "/schools/wandsworth/granard-primary-school/", "Granard Primary School"], [51.444673, -0.24139, "/schools/wandsworth/heathmere-primary-school/", "Heathmere Primary School"], [51.448313, -0.215676, "/schools/wandsworth/ronald-ross-primary-school/", "Ronald Ross Primary School"], [51.442025, -0.213777, "/schools/wandsworth/albemarle-primary-school/", "Albemarle Primary School"], [51.467884, -0.227741, "/schools/wandsworth/all-saints-cofe-primary-school-putney/", "All Saints' CofE Primary School, Putney"], [51.447881, -0.156341, "/schools/wandsworth/holy-ghost-catholic-primary-school/", "Holy Ghost Catholic Primary School"], [51.463805, -0.223206, "/schools/wandsworth/our-lady-of-victories-catholic-primary-school/", "Our Lady of Victories Catholic Primary School"], [51.448265, -0.23751, "/schools/wandsworth/roehampton-church-forest-primary-school/", "Roehampton Church Forest Primary School"], [51.427353, -0.164576, "/schools/wandsworth/st-boniface-rc-primary-school/", "St Boniface RC Primary School"], [51.459412, -0.186482, "/schools/wandsworth/st-faiths-cofe-primary-school/", "St Faith's CofE Primary School"], [51.477171, -0.139306, "/schools/wandsworth/st-georges-cofe-primary-school/", "St George's CofE Primary School"], [51.459195, -0.200439, "/schools/wandsworth/st-josephs-catholic-primary-and-nursery-school/", "St Joseph's Catholic Primary and Nursery School"], [51.466431, -0.22201, "/schools/wandsworth/st-marys-cofe-nursery-and-primary-school/", "St Mary's CofE Nursery and Primary School"], [51.442568, -0.155303, "/schools/wandsworth/trinity-st-marys-cofe-primary-school/", "Trinity St Mary's CofE Primary School"], [51.476569, -0.146156, "/schools/wandsworth/st-marys-rc-voluntary-aided-primary-school/", "St Mary's RC Voluntary Aided Primary School"], [51.450232, -0.203569, "/schools/wandsworth/st-michaels-cofe-primary-school/", "St Michael's CofE Primary School"], [51.457612, -0.241943, "/schools/wandsworth/sacred-heart-catholic-primary-school-roehampton/", "Sacred Heart Catholic Primary School, Roehampton"], [51.44797, -0.220367, "/schools/wandsworth/our-lady-queen-of-heaven-rc-school/", "Our Lady Queen of Heaven RC School"], [51.435271, -0.15623, "/schools/wandsworth/st-anselms-catholic-primary-school/", "St Anselm's Catholic Primary School"], [51.432467, -0.160904, "/schools/wandsworth/hillbrook-school/", "Hillbrook School"], [51.454735, -0.253382, "/schools/wandsworth/ibstock-place-school/", "Ibstock Place School"], [51.457147, -0.215879, "/schools/wandsworth/merlin-school/", "Merlin School"], [51.462968, -0.208986, "/schools/wandsworth/hurlingham-school/", "Hurlingham School"], [51.456653, -0.17329, "/schools/wandsworth/emanuel-school/", "Emanuel School"], [51.456847, -0.218064, "/schools/wandsworth/putney-high-school-gdst/", "Putney High School GDST"], [51.450123, -0.159403, "/schools/wandsworth/broomwood-pre-prep-broomwood-prep-girls/", "Broomwood Pre-Prep & Broomwood Prep-Girls"], [51.4591, -0.197737, "/schools/wandsworth/the-roche-school/", "The Roche School"], [51.441222, -0.165848, "/schools/wandsworth/finton-house-school/", "Finton House School"], [51.444764, -0.156553, "/schools/wandsworth/hornsby-house-school/", "Hornsby House School"], [51.439975, -0.154573, "/schools/wandsworth/eveline-day-school/", "Eveline Day School"], [51.451493, -0.220805, "/schools/wandsworth/prospect-house-school/", "Prospect House School"], [51.477213, -0.145972, "/schools/wandsworth/newton-preparatory-school/", "Newton Preparatory School"], [51.457312, -0.165952, "/schools/wandsworth/dolphin-school-incorporating-noahs-ark-nursery-schools/", "Dolphin School (Incorporating Noahs Ark Nursery Schools)"], [51.462025, -0.151136, "/schools/wandsworth/eaton-house-the-manor-school/", "Eaton House the Manor School"], [51.451647, -0.165373, "/schools/wandsworth/broomwood-prep---boys/", "Broomwood Prep - Boys"], [51.432025, -0.163684, "/schools/wandsworth/al-risalah-secondary-school/", "Al Risalah Secondary School"], [51.461528, -0.153805, "/schools/wandsworth/parkgate-house-school/", "Parkgate House School"], [51.448744, -0.158019, "/schools/wandsworth/oak-lodge-school/", "Oak Lodge School"], [51.448313, -0.215676, "/schools/wandsworth/greenmead-school/", "Greenmead School"], [51.430885, -0.173628, "/schools/wandsworth/paddock-school/", "Paddock School"], [51.437543, -0.184858, "/schools/wandsworth/garratt-park-school/", "Garratt Park School"], [51.460791, -0.175702, "/schools/wandsworth/centre-academy-london/", "Centre Academy London"], [51.435746, -0.169894, "/schools/wandsworth/wandsworth-hospital-and-home-tuition-service/", "Wandsworth Hospital and Home Tuition Service"], [51.455078, -0.158786, "/schools/wandsworth/thomass-clapham/", "Thomas's Clapham"], [51.469378, -0.166951, "/schools/wandsworth/sacred-heart-catholic-primary-school-battersea/", "Sacred Heart Catholic Primary School, Battersea"], [51.440632, -0.18511, "/schools/wandsworth/chelsea-hall-school/", "Chelsea Hall School"], [51.442312, -0.217291, "/schools/wandsworth/victoria-drive-primary-pupil-referral-unit/", "Victoria Drive Primary Pupil Referral Unit"], [51.465125, -0.172751, "/schools/wandsworth/thames-christian-school/", "Thames Christian School"], [51.430334, -0.167118, "/schools/wandsworth/gatton-va-primary-school/", "Gatton (VA) Primary School"], [51.458567, -0.177245, "/schools/wandsworth/park-house-school/", "Park House School"], [51.4734, -0.172276, "/schools/wandsworth/lecole-de-battersea/", "L'Ecole de Battersea"], [51.456321, -0.207706, "/schools/wandsworth/ashcroft-technology-academy/", "Ashcroft Technology Academy"], [51.474734, -0.171935, "/schools/wandsworth/saint-john-bosco-college/", "Saint John Bosco College"], [51.462539, -0.251486, "/schools/wandsworth/roehampton-gate-school/", "Roehampton Gate School"], [51.444657, -0.155464, "/schools/wandsworth/chestnut-grove-academy/", "Chestnut Grove Academy"], [51.423518, -0.152273, "/schools/wandsworth/graveney-school/", "Graveney School"], [51.456887, -0.164673, "/schools/wandsworth/belleville-primary-school/", "Belleville Primary School"], [51.456372, -0.167932, "/schools/wandsworth/ark-bolingbroke-academy/", "Ark Bolingbroke Academy"], [51.454002, -0.183832, "/schools/wandsworth/wandsworth-preparatory-school/", "Wandsworth Preparatory School"], [51.454795, -0.225614, "/schools/wandsworth/ark-putney-academy/", "Ark Putney Academy"], [51.445071, -0.197728, "/schools/wandsworth/southfields-academy/", "Southfields Academy"], [51.426925, -0.161918, "/schools/wandsworth/tooting-primary-school/", "Tooting Primary School"], [51.45209, -0.244876, "/schools/wandsworth/mosaic-jewish-primary-school/", "Mosaic Jewish Primary School"], [51.438125, -0.180058, "/schools/wandsworth/burntwood-school/", "Burntwood School"], [51.469217, -0.228496, "/schools/wandsworth/oasis-academy-putney/", "Oasis Academy Putney"], [51.44734, -0.189133, "/schools/wandsworth/floreat-wandsworth-primary-school/", "Floreat Wandsworth Primary School"], [51.477062, -0.171871, "/schools/wandsworth/westbridge-academy/", "Westbridge Academy"], [51.473245, -0.159496, "/schools/wandsworth/harris-academy-battersea/", "Harris Academy Battersea"], [51.446964, -0.208576, "/schools/wandsworth/saint-cecilias-church-of-england-school/", "Saint Cecilia's Church of England School"], [51.437596, -0.168007, "/schools/wandsworth/nightingale-community-academy/", "Nightingale Community Academy"], [51.456069, -0.191278, "/schools/wandsworth/anglo-portuguese-school-of-london/", "Anglo Portuguese School of London"], [51.463864, -0.151422, "/schools/wandsworth/belleville-wix-academy/", "Belleville Wix Academy"], [51.452758, -0.253486, "/schools/wandsworth/the-alton-school/", "The Alton School"], [51.474242, -0.13836, "/schools/wandsworth/griffin-primary-school/", "Griffin Primary School"], [51.436869, -0.187173, "/schools/wandsworth/tram-house-school/", "Tram House School"], [51.473688, -0.157375, "/schools/wandsworth/chesterton-primary-school/", "Chesterton Primary School"], [51.443714, -0.213064, "/schools/wandsworth/linden-lodge-school/", "Linden Lodge School"], [51.427688, -0.16065, "/schools/wandsworth/franciscan-primary-school/", "Franciscan Primary School"], [51.46189, -0.174031, "/schools/wandsworth/ark-john-archer-primary-academy/", "ARK John Archer Primary Academy"], [51.432025, -0.163684, "/schools/wandsworth/al-risalah-boys-school/", "Al Risalah Boys' School"], [51.44169, -0.152648, "/schools/wandsworth/ravenstone-primary-school/", "Ravenstone Primary School"], [51.462539, -0.251486, "/schools/wandsworth/roehampton-hospital-school/", "Roehampton Hospital School"], [51.437596, -0.168007, "/schools/wandsworth/ernest-bevin-academy/", "Ernest Bevin Academy"], [51.452614, -0.149127, "/schools/wandsworth/london-park-school-clapham/", "London Park School Clapham"], [51.436881, -0.164237, "/schools/wandsworth/fircroft-primary-school/", "Fircroft Primary School"]];
-    if (!points.length) return;
-    var lats = points.map(function(p) { return p[0]; });
-    var lngs = points.map(function(p) { return p[1]; });
-    var avgLat = lats.reduce(function(a,b) { return a+b; }, 0) / lats.length;
-    var avgLng = lngs.reduce(function(a,b) { return a+b; }, 0) / lngs.length;
-    var map = L.map('map', { scrollWheelZoom: false }).setView([avgLat, avgLng], 12);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 18,
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-    points.forEach(function(p) {
-      L.circleMarker([p[0], p[1]], {
-        radius: 5, color: '#0b2545', fillColor: '#0b6efd', fillOpacity: 0.8, weight: 1
-      }).addTo(map).bindPopup('<a href="' + p[2] + '">' + p[3] + '</a>');
+(function(){
+  var borough="Wandsworth", boroughUrl="https://londonschool.directory/schools/wandsworth";
+  var outstanding=27, total=111;
+
+  // Borough-level share
+  window.shareBoroughWhatsApp=function(){
+    var t='🏙️ *Schools in '+borough+', London*\n'+
+        '📊 '+total+' schools · '+outstanding+' Outstanding\n\n'+
+        '🔗 '+boroughUrl;
+    window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank');
+  };
+  window.shareBoroughEmail=function(){
+    var s='Schools in '+borough+' — London Schools Explorer';
+    var b='Schools in '+borough+', London\n'+
+        total+' schools, '+outstanding+' rated Outstanding by Ofsted\n\n'+
+        'Browse them here: '+boroughUrl;
+    window.location.href='mailto:?subject='+encodeURIComponent(s)+'&body='+encodeURIComponent(b);
+  };
+
+  // Shortlist comparison share
+  function getSelected(){
+    return Array.from(document.querySelectorAll('.sch-sel:checked')).map(function(cb){
+      return {name:cb.dataset.name,ofsted:cb.dataset.ofsted,phase:cb.dataset.phase,
+               att8:cb.dataset.att8,ks2:cb.dataset.ks2,url:cb.dataset.url};
     });
-  })();
+  }
+  function updateBar(){
+    var sel=getSelected();
+    var bar=document.getElementById('cmp-bar');
+    document.getElementById('cmp-count').textContent=sel.length+' school'+(sel.length===1?'':' s')+' selected';
+    bar.style.display=sel.length>0?'flex':'none';
+  }
+  document.querySelectorAll('.sch-sel').forEach(function(cb){ cb.onchange=updateBar; });
+
+  function buildCompareText(sel,markdown){
+    var lines=['📋 *My '+borough+' school shortlist*',''];
+    sel.forEach(function(s,i){
+      lines.push((i+1)+'. '+(markdown?'*':'')+s.name+(markdown?'*':''));
+      lines.push('   ⭐ Ofsted: '+s.ofsted+(s.phase?' · '+s.phase:''));
+      if(s.att8)lines.push('   📊 Attainment 8: '+s.att8);
+      if(s.ks2)lines.push('   📝 KS2 expected: '+s.ks2+'%');
+      lines.push('   🔗 '+s.url);
+      lines.push('');
+    });
+    lines.push('via London Schools Explorer — '+boroughUrl);
+    return lines.join('\n');
+  }
+  window.shareCompareWhatsApp=function(){
+    var sel=getSelected();
+    if(!sel.length)return;
+    window.open('https://wa.me/?text='+encodeURIComponent(buildCompareText(sel,true)),'_blank');
+  };
+  window.shareCompareEmail=function(){
+    var sel=getSelected();
+    if(!sel.length)return;
+    var subj='My '+borough+' school shortlist — London Schools Explorer';
+    window.location.href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(buildCompareText(sel,false));
+  };
+  window.clearSelection=function(){
+    document.querySelectorAll('.sch-sel:checked').forEach(function(cb){cb.checked=false;});
+    updateBar();
+  };
+})();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/sw.js').catch(function () {});
+  });
+}
 </script>
 </body>
 </html>

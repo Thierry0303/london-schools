@@ -1,510 +1,1380 @@
-<!doctype html>
-<html lang="en-GB">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Schools in Redbridge, London — Ofsted, Performance & Admissions</title>
-<meta name="description" content="All 95 schools in Redbridge, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
-<link rel="canonical" href="https://londonschool.directory/schools/redbridge/">
-<meta property="og:title" content="Schools in Redbridge, London — Ofsted, Performance & Admissions">
-<meta property="og:description" content="All 95 schools in Redbridge, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://londonschool.directory/schools/redbridge/">
-<meta property="og:site_name" content="London School Directory">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#0b2545">
-<meta name="robots" content="index,follow,max-image-preview:large">
-<link rel="preconnect" href="https://unpkg.com">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<style>
-  :root {
-    --ink: #0b2545;
-    --ink-2: #1e3a5f;
-    --muted: #5b6b85;
-    --line: #e3e8ef;
-    --bg: #ffffff;
-    --bg-2: #f6f8fb;
-    --accent: #0b6efd;
-    --good: #137333;
-    --warn: #a85b00;
-    --bad: #b3261e;
-    --radius: 10px;
-  }
-  * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    color: var(--ink);
-    background: var(--bg);
-    line-height: 1.55;
-    -webkit-font-smoothing: antialiased;
-  }
-  a { color: var(--accent); text-decoration: none; }
-  a:hover { text-decoration: underline; }
-  header.site {
-    border-bottom: 1px solid var(--line);
-    background: var(--bg);
-    position: sticky; top: 0; z-index: 50;
-  }
-  header.site .inner {
-    max-width: 1100px; margin: 0 auto; padding: 14px 20px;
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  header.site a.brand { color: var(--ink); font-weight: 700; letter-spacing: -0.01em; }
-  header.site nav a { margin-left: 18px; color: var(--ink-2); font-size: 14px; }
-  main { max-width: 1100px; margin: 0 auto; padding: 28px 20px 80px; }
-  .crumbs { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
-  .crumbs a { color: var(--muted); }
-  h1 { font-size: 32px; line-height: 1.2; margin: 0 0 8px; letter-spacing: -0.02em; }
-  .lede { color: var(--ink-2); font-size: 17px; max-width: 720px; }
-  .stamp { font-size: 12px; color: var(--muted); margin-top: 8px; }
-  .stamp .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--good); vertical-align: middle; margin-right: 6px; }
-  .grid-stats {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 12px; margin: 24px 0 8px;
-  }
-  .stat {
-    background: var(--bg-2); border: 1px solid var(--line);
-    border-radius: var(--radius); padding: 14px 16px;
-  }
-  .stat .v { font-size: 24px; font-weight: 700; color: var(--ink); }
-  .stat .l { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
-  section { margin-top: 36px; }
-  h2 { font-size: 22px; margin: 0 0 12px; letter-spacing: -0.01em; }
-  .twocol { display: grid; grid-template-columns: 1.4fr 1fr; gap: 28px; }
-  @media (max-width: 820px) { .twocol { grid-template-columns: 1fr; } }
-  table.schools { width: 100%; border-collapse: collapse; font-size: 14px; }
-  table.schools th, table.schools td {
-    text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line);
-  }
-  table.schools th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); font-weight: 600; }
-  .rating { font-weight: 600; }
-  .rating.Outstanding { color: var(--good); }
-  .rating.Good { color: var(--ink-2); }
-  .rating.RequiresImprovement, .rating.Requires { color: var(--warn); }
-  .rating.Inadequate { color: var(--bad); }
-  #map { height: 380px; border-radius: var(--radius); border: 1px solid var(--line); }
-  .pills { display: flex; flex-wrap: wrap; gap: 6px; }
-  .pill { background: var(--bg-2); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; font-size: 12px; color: var(--ink-2); }
-  details.faq { border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 8px; background: var(--bg); }
-  details.faq summary { cursor: pointer; font-weight: 600; color: var(--ink); }
-  details.faq[open] { background: var(--bg-2); }
-  footer { border-top: 1px solid var(--line); padding: 28px 20px; color: var(--muted); font-size: 13px; }
-  footer .inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 24px; flex-wrap: wrap; }
-  .sources { font-size: 13px; color: var(--muted); }
-  .sources a { color: var(--muted); text-decoration: underline; }
-  .cta {
-    display: inline-block; background: var(--ink); color: #fff; padding: 10px 14px;
-    border-radius: var(--radius); font-size: 14px; font-weight: 600;
-  }
-  .cta:hover { background: var(--ink-2); text-decoration: none; }
-</style>
-<script type="application/ld+json">
-[
-  {
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Schools in Redbridge, London | Ofsted Ratings &amp; Results | London Schools Explorer</title>
+  <meta name="description" content="95 schools in Redbridge, London. 13 Outstanding, 65 Good-rated by Ofsted. Compare admissions oversubscription, exam results and crime data. Free.">
+  <script type="application/ld+json">{
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "name": "Top schools in Redbridge, London",
-    "itemListOrder": "http://schema.org/ItemListOrderDescending",
-    "numberOfItems": 14,
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "url": "https://londonschool.directory/schools/redbridge/our-lady-of-lourdes-rc-primary-school/",
-        "name": "Our Lady of Lourdes RC Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "url": "https://londonschool.directory/schools/redbridge/churchfields-junior-school/",
-        "name": "Churchfields Junior School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "url": "https://londonschool.directory/schools/redbridge/wells-primary-school/",
-        "name": "Wells Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 4,
-        "url": "https://londonschool.directory/schools/redbridge/aldersbrook-primary-school/",
-        "name": "Aldersbrook Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 5,
-        "url": "https://londonschool.directory/schools/redbridge/cleveland-road-primary-school/",
-        "name": "Cleveland Road Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 6,
-        "url": "https://londonschool.directory/schools/redbridge/fullwood-primary-school/",
-        "name": "Fullwood Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 7,
-        "url": "https://londonschool.directory/schools/redbridge/gearies-primary-school/",
-        "name": "Gearies Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 8,
-        "url": "https://londonschool.directory/schools/redbridge/valentines-high-school/",
-        "name": "Valentines High School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 9,
-        "url": "https://londonschool.directory/schools/redbridge/loxford-school/",
-        "name": "Loxford School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 10,
-        "url": "https://londonschool.directory/schools/redbridge/woodbridge-high-school/",
-        "name": "Woodbridge High School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 11,
-        "url": "https://londonschool.directory/schools/redbridge/new-rush-hall-school/",
-        "name": "New Rush Hall School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 12,
-        "url": "https://londonschool.directory/schools/redbridge/woodford-county-high-school/",
-        "name": "Woodford County High School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 13,
-        "url": "https://londonschool.directory/schools/redbridge/ilford-county-high-school/",
-        "name": "Ilford County High School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 14,
-        "url": "https://londonschool.directory/schools/redbridge/seven-kings-school/",
-        "name": "Seven Kings School"
-      }
-    ]
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How many schools are there in Redbridge?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Redbridge has 95 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 67 are primary, 32 are secondary, and the remainder are special, all-through, or post-16."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What proportion of Redbridge schools are Outstanding?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "As of the latest Ofsted Management Information release, 13 schools in Redbridge (13.7%) are rated Outstanding, and 82.1% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "When do I apply for a Reception or Year 7 place in Redbridge?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Redbridge's applications are coordinated by the local authority through the eAdmissions system. See our full Reception timeline guide."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How does the school appeals process work in Redbridge?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "If you are refused your preferred school place, you have a statutory right of appeal. Redbridge appeals are typically heard in May (Reception) and June\u2013July (secondary). See our appeals tracker for Redbridge-level success rates by year."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How can I tell which Redbridge schools are over-subscribed?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release."
-        }
-      }
-    ]
-  },
-  {
+    "name": "Schools in Redbridge, London",
+    "description": "95 schools in Redbridge, London rated by Ofsted",
+    "numberOfItems": 95,
+    "url": "https://londonschool.directory/schools/redbridge"
+  }</script>
+  <script type="application/ld+json">{
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": "https://londonschool.directory/"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Boroughs",
-        "item": "https://londonschool.directory/schools/"
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "name": "Redbridge",
-        "item": "https://londonschool.directory/schools/redbridge/"
-      }
+      {"@type": "ListItem", "position": 1, "name": "London Schools Explorer", "item": "https://londonschool.directory/"},
+      {"@type": "ListItem", "position": 2, "name": "Schools in Redbridge", "item": "https://londonschool.directory/schools/redbridge"}
     ]
-  }
-]
-</script>
+  }</script>
+  <link rel="canonical" href="https://londonschool.directory/schools/redbridge">
+  <meta property="og:title" content="Schools in Redbridge | London Schools Explorer">
+  <meta property="og:description" content="95 schools in Redbridge. 13 Outstanding-rated. Compare Ofsted ratings, exam results and admissions.">
+  <meta property="og:url" content="https://londonschool.directory/schools/redbridge">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, sans-serif; color: #1a1a1a; background: #f8f9fa; line-height: 1.6; }
+    a { color: #1565C0; }
+    .topbar { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 12px 20px; }
+    .topbar a { text-decoration: none; font-weight: 600; color: #1a1a1a; font-size: 15px; }
+    .topbar span { color: #888; margin: 0 8px; }
+    .container { max-width: 900px; margin: 0 auto; padding: 32px 20px; }
+    h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+    .intro { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; font-size: 15px; color: #333; line-height: 1.7; }
+    .stats-row { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+    .stat-box { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 14px 18px; flex: 1; min-width: 120px; }
+    .stat-num { font-size: 24px; font-weight: 700; color: #1a1a1a; line-height: 1; }
+    .stat-lbl { font-size: 12px; color: #888; margin-top: 4px; }
+    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #e0e0e0; }
+    th { background: #f5f5f5; padding: 12px 16px; text-align: left; font-size: 13px; color: #555; font-weight: 600; border-bottom: 1px solid #e0e0e0; }
+    td { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fafafa; }
+    .back { display: inline-block; margin-bottom: 20px; font-size: 14px; color: #555; text-decoration: none; }
+    .back:hover { color: #111; }
+    footer { text-align: center; padding: 32px 20px; font-size: 13px; color: #888; }
+    @media (max-width: 600px) {
+      .container { padding: 16px 12px; }
+      h1 { font-size: 22px; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .intro { padding: 14px 16px; font-size: 14px; }
+      table { font-size: 13px; }
+      th, td { padding: 10px 10px; overflow-wrap: anywhere; word-break: break-word; }
+      th:nth-child(5), td:nth-child(5) { display: none; }
+      .topbar { padding: 10px 12px; font-size: 13px; }
+    }
+    @media (max-width: 600px) { .stats-row { flex-direction: column; } }
+  </style>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 </head>
 <body>
-<header class="site">
-  <div class="inner">
-    <a class="brand" href="/">London School Directory</a>
-    <nav>
-      <a href="/">Search</a>
-      <a href="/appeals.html">Appeals</a>
-      <a href="/methodology.html">Methodology</a>
-      <a href="/about.html">About</a>
-    </nav>
+<div class="topbar">
+  <div style="max-width:900px;margin:0 auto">
+    <a href="/">London Schools Explorer</a>
+    <span>/</span>
+    Redbridge
   </div>
-</header>
-<main>
-  <div class="crumbs">
-    <a href="/">Home</a> &rsaquo; <a href="/schools/">Boroughs</a> &rsaquo; Redbridge
+</div>
+<div class="container">
+  <a class="back" href="/">&#8592; All boroughs</a>
+  <h1>Schools in Redbridge</h1>
+
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-num">95</div><div class="stat-lbl">Total schools</div></div>
+    <div class="stat-box"><div class="stat-num">13</div><div class="stat-lbl">Outstanding</div></div>
+    <div class="stat-box"><div class="stat-num">65</div><div class="stat-lbl">Good</div></div>
+    <div class="stat-box"><div class="stat-num">3</div><div class="stat-lbl">School phases</div></div>
   </div>
 
-  <h1>Schools in Redbridge, London</h1>
-  <p class="lede">Redbridge schools cover Ilford, Wanstead, Woodford and South Woodford, with a notable selective and grammar presence. The borough's primaries are heavily oversubscribed in central and southern wards. Many parents prepare for the 11+ from Year 4 onwards.</p>
-  <p class="stamp"><span class="dot"></span>Data last verified 1 September 2026. Sources: Ofsted, DfE GIAS, DfE Performance Tables, Metropolitan Police, MHCLG IMD. See <a href="/sources.html">all sources</a>.</p>
+  <div class="intro">Redbridge is a north-east London borough with a highly competitive school system and a large number of selective and faith school options. The borough has one of the highest proportions of grammar school places in London. Ilford County High and Woodford County High are among the most academically selective schools in the country. The borough borders Essex and has a large South Asian community.</div>
 
-  <section>
-    <div class="grid-stats">
-      <div class="stat"><div class="v">95</div><div class="l">Schools in Redbridge</div></div>
-      <div class="stat"><div class="v">13.7%</div><div class="l">Outstanding Ofsted</div></div>
-      <div class="stat"><div class="v">82.1%</div><div class="l">Good or Outstanding</div></div>
-      <div class="stat"><div class="v">67</div><div class="l">Primary schools</div></div>
-      <div class="stat"><div class="v">32</div><div class="l">Secondary schools</div></div>
-      <div class="stat"><div class="v">15%</div><div class="l">Secondary appeal success (2024)</div></div>
-    </div>
-  </section>
+  
+<div style="display:flex;gap:16px;flex-wrap:wrap;margin:20px 0;">
 
-  <section>
-    <div class="twocol">
-      <div>
-        <h2>Top primary schools in Redbridge</h2>
-        <p class="sources">Ranked by Ofsted rating, then by latest KS2 performance. See <a href="/methodology.html">methodology</a>.</p>
-        <table class="schools">
-          <thead>
-            <tr><th>School</th><th>Ofsted</th><th>KS2 %</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><a href="/schools/redbridge/our-lady-of-lourdes-rc-primary-school/">Our Lady of Lourdes RC Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>94.0</td></tr>
-            <tr><td><a href="/schools/redbridge/churchfields-junior-school/">Churchfields Junior School</a></td><td class="rating Outstanding">Outstanding</td><td>92.0</td></tr>
-            <tr><td><a href="/schools/redbridge/wells-primary-school/">Wells Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>89.0</td></tr>
-            <tr><td><a href="/schools/redbridge/aldersbrook-primary-school/">Aldersbrook Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>88.0</td></tr>
-            <tr><td><a href="/schools/redbridge/cleveland-road-primary-school/">Cleveland Road Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>87.0</td></tr>
-            <tr><td><a href="/schools/redbridge/fullwood-primary-school/">Fullwood Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>80.0</td></tr>
-            <tr><td><a href="/schools/redbridge/gearies-primary-school/">Gearies Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>79.0</td></tr>
-          </tbody>
-        </table>
-
-        <h2 style="margin-top:28px">Top secondary schools in Redbridge</h2>
-        <p class="sources">Ranked by Ofsted rating, then by latest KS4 Attainment 8.</p>
-        <table class="schools">
-          <thead>
-            <tr><th>School</th><th>Ofsted</th><th>Att 8</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><a href="/schools/redbridge/valentines-high-school/">Valentines High School</a></td><td class="rating Outstanding">Outstanding</td><td>57.1</td></tr>
-            <tr><td><a href="/schools/redbridge/loxford-school/">Loxford School</a></td><td class="rating Outstanding">Outstanding</td><td>54.8</td></tr>
-            <tr><td><a href="/schools/redbridge/woodbridge-high-school/">Woodbridge High School</a></td><td class="rating Outstanding">Outstanding</td><td>51.1</td></tr>
-            <tr><td><a href="/schools/redbridge/new-rush-hall-school/">New Rush Hall School</a></td><td class="rating Outstanding">Outstanding</td><td>22.4</td></tr>
-            <tr><td><a href="/schools/redbridge/woodford-county-high-school/">Woodford County High School</a></td><td class="rating Good">Good</td><td>79.0</td></tr>
-            <tr><td><a href="/schools/redbridge/ilford-county-high-school/">Ilford County High School</a></td><td class="rating Good">Good</td><td>77.4</td></tr>
-            <tr><td><a href="/schools/redbridge/seven-kings-school/">Seven Kings School</a></td><td class="rating Good">Good</td><td>61.7</td></tr>
-          </tbody>
-        </table>
-
-        <p style="margin-top:14px"><a class="cta" href="#all-schools">Jump to all 95 schools in Redbridge</a></p>
-      </div>
-      <div>
-        <h2>Map</h2>
-        <div id="map" aria-label="Map of schools in Redbridge"></div>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <h2>What the data says about Redbridge</h2>
-    <p><strong>82.1%</strong> of Redbridge schools are currently rated Good or Outstanding by Ofsted, compared with a London average of roughly 90% for primary and 80% for secondary. The average number of applications per place across Redbridge is <strong>1.3</strong>, a useful indicator of how competitive local admissions are. The average number of recorded crime incidents within 500 metres of a school in Redbridge over the most recent reporting month is <strong>181.84</strong>, drawn from the Metropolitan Police open data API. The mean IMD (Index of Multiple Deprivation) decile of Redbridge's schools is <strong>5.53</strong> — 1 is most deprived, 10 is least deprived. All metrics on this page are recomputed from source data on the 15th of every month. See our <a href='/methodology.html'>methodology</a> for definitions and limitations.</p>
-  </section>
-
-  <section id="all-schools">
-    <h2>All schools in Redbridge</h2>
-    <p class="sources">Every school in Redbridge, listed alphabetically. Click any school for the full record.</p>
-    <table class="schools">
-      <thead>
-        <tr><th>School</th><th>Phase</th><th>Ofsted</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><a href="/schools/redbridge/al-noor-voluntary-aided-muslim-primary-school/">Al-Noor Voluntary Aided Muslim Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/aldborough-primary-school/">Aldborough Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/aldersbrook-primary-school/">Aldersbrook Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/redbridge/apex-primary-school/">Apex Primary School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/redbridge/apex-secondary-school-for-boys/">Apex Secondary School for Boys</a></td><td>Secondary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/redbridge/apex-secondary-school-for-girls/">Apex Secondary School for Girls</a></td><td>Secondary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/redbridge/ark-isaac-newton-academy/">Ark Isaac Newton Academy</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/atam-academy/">Atam Academy</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/avanti-court-primary-school/">Avanti Court Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/avon-house-preparatory-school/">Avon House Preparatory School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/redbridge/bancrofts-preparatory-school/">Bancroft's Preparatory School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/redbridge/bancrofts-school/">Bancroft's School</a></td><td>Secondary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/redbridge/barley-lane-primary-school/">Barley Lane Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/beacon-business-innovation-hub/">Beacon Business Innovation Hub</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/beal-high-school/">Beal High School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/beehive-preparatory-school/">Beehive Preparatory School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/redbridge/caterham-high-school/">Caterham High School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/chadwell-heath-academy/">Chadwell Heath Academy</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/chadwell-primary-school/">Chadwell Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/christchurch-primary-school/">Christchurch Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/churchfields-infants-school/">Churchfields Infants' School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/redbridge/churchfields-junior-school/">Churchfields Junior School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/redbridge/cleveland-road-primary-school/">Cleveland Road Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/redbridge/clore-tikva-school/">Clore Tikva School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/coppice-primary-school/">Coppice Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/cranbrook-primary-school/">Cranbrook Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/downshall-primary-school/">Downshall Primary School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/redbridge/early-years-assessment-service-and-centre-co-manford-primary-school/">Early Years Assessment Service and Centre Co Manford Primary School</a></td><td>—</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/redbridge/eastcourt-independent-school/">Eastcourt Independent School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/redbridge/endeavour-house-school/">Endeavour House School</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/fairlop-primary-school/">Fairlop Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/farnham-green-primary-school/">Farnham Green Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/forest-academy/">Forest Academy</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/fullwood-primary-school/">Fullwood Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/redbridge/gearies-primary-school/">Gearies Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/redbridge/gilbert-colvin-primary-school/">Gilbert Colvin Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/glade-primary-school/">Glade Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/goodmayes-primary-school/">Goodmayes Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/gordon-primary-school/">Gordon Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/grove-primary-school/">Grove Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/hatchside-school/">Hatchside School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/hatton-special-school/">Hatton Special School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/highlands-primary-school/">Highlands Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/ilford-county-high-school/">Ilford County High School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/john-bramston-primary-school/">John Bramston Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/king-solomon-high-school/">King Solomon High School</a></td><td>Secondary</td><td class="rating Requiresimprovement">Requires improvement</td></tr>
-        <tr><td><a href="/schools/redbridge/little-heath-school/">Little Heath School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/loxford-school/">Loxford School</a></td><td>All-through</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/redbridge/manford-primary-school/">Manford Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/mayespark-primary-school/">Mayespark Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/mayfield-school/">Mayfield School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/mossford-green-primary-school/">Mossford Green Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/new-rush-hall-school/">New Rush Hall School</a></td><td>All-through</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/redbridge/newbridge-school/">Newbridge School</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/newbury-park-primary-school/">Newbury Park Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/nightingale-primary-school/">Nightingale Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/oak-house-school/">Oak House School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/oakdale-infants-school/">Oakdale Infants' School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/oakdale-junior-school/">Oakdale Junior School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/oaks-park-high-school/">Oaks Park High School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/our-lady-of-lourdes-rc-primary-school/">Our Lady of Lourdes RC Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/redbridge/parkhill-infants-school/">Parkhill Infants' School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/parkhill-junior-school/">Parkhill Junior School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/ray-lodge-primary-school/">Ray Lodge Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/redbridge/read-academy-education/">Read Academy Education</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/redbridge-alternative-provision/">Redbridge Alternative Provision</a></td><td>All-through</td><td class="rating Requiresimprovement">Requires improvement</td></tr>
-        <tr><td><a href="/schools/redbridge/redbridge-primary-school/">Redbridge Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/roding-primary-school/">Roding Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/seven-kings-school/">Seven Kings School</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/snaresbrook-prep-school/">Snaresbrook Prep School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/redbridge/snaresbrook-primary-school/">Snaresbrook Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/south-park-primary-school/">South Park Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/ss-peter-and-pauls-catholic-primary-school/">SS Peter and Paul's Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/st-aidans-catholic-primary-academy/">St Aidan's Catholic Primary Academy</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/st-antonys-catholic-primary-school/">St Antony's Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/st-aubyns-school/">St Aubyn's School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/redbridge/st-augustines-catholic-primary-school/">St Augustine's Catholic Primary School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/redbridge/st-bedes-catholic-primary-school/">St Bede's Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/stradbroke/">Stradbroke</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/the-constance-bridgeman-centre/">The Constance Bridgeman Centre</a></td><td>Secondary</td><td class="rating Requiresimprovement">Requires improvement</td></tr>
-        <tr><td><a href="/schools/redbridge/the-palmer-catholic-academy/">The Palmer Catholic Academy</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/the-ursuline-academy-ilford/">The Ursuline Academy Ilford</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/trinity-catholic-high-school/">Trinity Catholic High School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/uphall-primary-school/">Uphall Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/valentines-high-school/">Valentines High School</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/redbridge/wanstead-church-school/">Wanstead Church School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/wanstead-high-school/">Wanstead High School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/wells-primary-school/">Wells Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/redbridge/william-torbitt-primary-school/">William Torbitt Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/winston-way-academy/">Winston Way Academy</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/wohl-ilford-jewish-primary-school/">Wohl Ilford Jewish Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/woodbridge-high-school/">Woodbridge High School</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/redbridge/woodford-county-high-school/">Woodford County High School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/redbridge/woodford-green-preparatory-school/">Woodford Green Preparatory School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/redbridge/woodlands-primary-school/">Woodlands Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <section>
-    <h2>Frequently asked</h2>
-    <details class="faq"><summary>How many schools are there in Redbridge?</summary><p>Redbridge has 95 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 67 are primary, 32 are secondary, and the remainder are special, all-through, or post-16.</p></details>
-<details class="faq"><summary>What proportion of Redbridge schools are Outstanding?</summary><p>As of the latest Ofsted Management Information release, 13 schools in Redbridge (13.7%) are rated Outstanding, and 82.1% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication.</p></details>
-<details class="faq"><summary>When do I apply for a Reception or Year 7 place in Redbridge?</summary><p>Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Redbridge's applications are coordinated by the local authority through the eAdmissions system. See our <a href='/guides/london-reception-application-timeline/'>full Reception timeline guide</a>.</p></details>
-<details class="faq"><summary>How does the school appeals process work in Redbridge?</summary><p>If you are refused your preferred school place, you have a statutory right of appeal. Redbridge appeals are typically heard in May (Reception) and June–July (secondary). See our <a href='/appeals.html'>appeals tracker</a> for Redbridge-level success rates by year.</p></details>
-<details class="faq"><summary>How can I tell which Redbridge schools are over-subscribed?</summary><p>Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release.</p></details>
-  </section>
-
-  <section>
-    <h2>Sources</h2>
-    <p class="sources">
-      School list and phase from <a href="https://get-information-schools.service.gov.uk/" rel="nofollow">DfE Get Information About Schools</a> (refreshed monthly).
-      Ofsted ratings from <a href="https://www.gov.uk/government/statistical-data-sets/monthly-management-information-ofsteds-school-inspections-outcomes" rel="nofollow">Ofsted Management Information</a> (refreshed monthly).
-      Performance data from <a href="https://explore-education-statistics.service.gov.uk/" rel="nofollow">DfE Explore Education Statistics</a>.
-      Crime data within 500m from the <a href="https://data.police.uk/" rel="nofollow">Metropolitan Police open data API</a>.
-      Deprivation deciles from <a href="https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019" rel="nofollow">MHCLG English Indices of Deprivation 2019</a>.
-      Read our full <a href="/methodology.html">methodology</a> for how each metric is calculated.
-    </p>
-  </section>
-</main>
-<footer>
-  <div class="inner">
-    <div>&copy; London School Directory. Independent. Free to use.</div>
-    <div><a href="/about.html">About</a> &middot; <a href="/methodology.html">Methodology</a> &middot; <a href="/sources.html">Sources</a> &middot; <a href="/appeals.html">Appeals</a></div>
-    <div>Browse by type: <a href="/schools/outstanding">Outstanding</a> &middot; <a href="/schools/good">Good</a> &middot; <a href="/schools/grammar">Grammar</a> &middot; <a href="/schools/selective">Selective</a> &middot; <a href="/schools/faith">Faith</a> &middot; <a href="/schools/primary">Primary</a> &middot; <a href="/schools/secondary">Secondary</a> &middot; <a href="/schools/sixth-form">Sixth form</a> &middot; <a href="/schools/independent">Private &amp; independent</a></div>
+<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fdf4ff 0%,#ede9fe 100%);
+     border:1px solid #d8b4fe;border-radius:12px;padding:14px 20px;">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+    <span style="font-size:22px;">🎓</span>
+    <strong style="font-size:15px;color:#5b21b6;">11+ &amp; 13+ Exam Prep</strong>
   </div>
-</footer>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
+    PiAcademy resources for grammar school entrance, SATs &amp; GCSE.
+    Use code <strong>THIERR25</strong> for 25% off.
+  </p>
+  <a href="https://piacademy.co.uk/?aff=28"
+     target="_blank" rel="noopener sponsored"
+     style="display:inline-block;padding:9px 18px;background:#7e22ce;color:#fff;
+            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
+    Get 25% OFF →
+  </a>
+  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
+</div>
+<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%);
+     border:1px solid #fcd34d;border-radius:12px;padding:14px 20px;">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+    <span style="font-size:22px;">📚</span>
+    <strong style="font-size:15px;color:#92400e;">Children's Books</strong>
+  </div>
+  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
+    Great books at low prices. At checkout, choose your school — Scholastic donates
+    <strong>20p for every £1 spent</strong> back to the school in free books.
+  </p>
+  <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&ued=https%3A%2F%2Fwww.scholastic.co.uk%2Fteachers"
+     target="_blank" rel="noopener sponsored"
+     style="display:inline-block;padding:9px 18px;background:#d97706;color:#fff;
+            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
+    Shop at Scholastic →
+  </a>
+  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
+</div>
+<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fff8f0 0%,#fff3e0 100%);
+     border:1px solid #fed7aa;border-radius:12px;padding:14px 20px;">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+    <span style="font-size:22px;">🛒</span>
+    <strong style="font-size:15px;color:#92400e;">School Supplies</strong>
+  </div>
+  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
+    Stationery, bags, PE kit, lunchboxes and more — fast delivery from Amazon.
+  </p>
+  <a href="https://www.amazon.co.uk/s?k=school+supplies+stationery&tag=londonparents-21"
+     target="_blank" rel="noopener sponsored"
+     style="display:inline-block;padding:9px 18px;background:#FF9900;color:#111;
+            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
+    Shop on Amazon →
+  </a>
+  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
+</div>
+</div>
+
+  <!-- Borough share buttons -->
+  <div style="display:flex;gap:10px;margin:16px 0 8px;flex-wrap:wrap;align-items:center;">
+    <span style="font-size:13px;color:#555;font-weight:600;">Share Redbridge schools:</span>
+    <button onclick="shareBoroughWhatsApp()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 WhatsApp</button>
+    <button onclick="shareBoroughEmail()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#1565C0;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Email</button>
+    <span style="font-size:12px;color:#999;margin-left:4px;">Or tick schools below to share a shortlist</span>
+  </div>
+
+  <!-- Sticky compare bar (appears when schools are ticked) -->
+  <div id="cmp-bar" style="display:none;position:sticky;top:0;z-index:100;background:#1A1A2E;color:#fff;padding:12px 16px;border-radius:10px;margin-bottom:12px;display:none;align-items:center;gap:10px;flex-wrap:wrap;">
+    <span id="cmp-count" style="font-weight:700;font-size:14px;">0 schools selected</span>
+    <button onclick="shareCompareWhatsApp()" style="padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 Share via WhatsApp</button>
+    <button onclick="shareCompareEmail()" style="padding:8px 16px;background:#fff;color:#1A1A2E;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Share via Email</button>
+    <button onclick="clearSelection()" style="padding:8px 12px;background:transparent;color:#aaa;border:1px solid #555;border-radius:8px;font-size:12px;cursor:pointer;">✕ Clear</button>
+  </div>
+
+  <table>
+    <thead><tr><th style="width:36px"></th><th>School</th><th>Phase</th><th>Ofsted</th><th>Pupils</th></tr></thead>
+    <tbody><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Al-Noor Voluntary Aided Muslim Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="79.0"
+            data-url="https://londonschool.directory/schools/redbridge/al-noor-voluntary-aided-muslim-primary-school"></td>
+          <td><a href="/schools/redbridge/al-noor-voluntary-aided-muslim-primary-school">Al-Noor Voluntary Aided Muslim Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>420</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Aldborough Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="69.0"
+            data-url="https://londonschool.directory/schools/redbridge/aldborough-primary-school"></td>
+          <td><a href="/schools/redbridge/aldborough-primary-school">Aldborough Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>347</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Aldersbrook Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="88.0"
+            data-url="https://londonschool.directory/schools/redbridge/aldersbrook-primary-school"></td>
+          <td><a href="/schools/redbridge/aldersbrook-primary-school">Aldersbrook Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>667</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Apex Primary School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/apex-primary-school"></td>
+          <td><a href="/schools/redbridge/apex-primary-school">Apex Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>109</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Apex Secondary School for Boys"
+            data-ofsted="Not yet rated"
+            data-phase="Secondary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/apex-secondary-school-for-boys"></td>
+          <td><a href="/schools/redbridge/apex-secondary-school-for-boys">Apex Secondary School for Boys</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>39</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Apex Secondary School for Girls"
+            data-ofsted="Not yet rated"
+            data-phase="Secondary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/apex-secondary-school-for-girls"></td>
+          <td><a href="/schools/redbridge/apex-secondary-school-for-girls">Apex Secondary School for Girls</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>33</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Ark Isaac Newton Academy"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8="58.6"
+            data-ks2="86.0"
+            data-url="https://londonschool.directory/schools/redbridge/ark-isaac-newton-academy"></td>
+          <td><a href="/schools/redbridge/ark-isaac-newton-academy">Ark Isaac Newton Academy</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1777</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Atam Academy"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8="57.2"
+            data-ks2="81.0"
+            data-url="https://londonschool.directory/schools/redbridge/atam-academy"></td>
+          <td><a href="/schools/redbridge/atam-academy">Atam Academy</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1083</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Avanti Court Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="83.0"
+            data-url="https://londonschool.directory/schools/redbridge/avanti-court-primary-school"></td>
+          <td><a href="/schools/redbridge/avanti-court-primary-school">Avanti Court Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>598</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Avon House Preparatory School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/avon-house-preparatory-school"></td>
+          <td><a href="/schools/redbridge/avon-house-preparatory-school">Avon House Preparatory School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>214</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Bancroft's Preparatory School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/bancrofts-preparatory-school"></td>
+          <td><a href="/schools/redbridge/bancrofts-preparatory-school">Bancroft's Preparatory School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>271</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Bancroft's School"
+            data-ofsted="Not yet rated"
+            data-phase="Secondary"
+            data-att8="42.7"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/bancrofts-school"></td>
+          <td><a href="/schools/redbridge/bancrofts-school">Bancroft's School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>866</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Barley Lane Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="65.0"
+            data-url="https://londonschool.directory/schools/redbridge/barley-lane-primary-school"></td>
+          <td><a href="/schools/redbridge/barley-lane-primary-school">Barley Lane Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>840</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Beacon Business Innovation Hub"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/beacon-business-innovation-hub"></td>
+          <td><a href="/schools/redbridge/beacon-business-innovation-hub">Beacon Business Innovation Hub</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>35</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Beal High School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="53.9"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/beal-high-school"></td>
+          <td><a href="/schools/redbridge/beal-high-school">Beal High School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>2615</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Beehive Preparatory School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/beehive-preparatory-school"></td>
+          <td><a href="/schools/redbridge/beehive-preparatory-school">Beehive Preparatory School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>44</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Caterham High School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="40.5"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/caterham-high-school"></td>
+          <td><a href="/schools/redbridge/caterham-high-school">Caterham High School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>953</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Chadwell Heath Academy"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="53.9"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/chadwell-heath-academy"></td>
+          <td><a href="/schools/redbridge/chadwell-heath-academy">Chadwell Heath Academy</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1229</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Chadwell Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="73.0"
+            data-url="https://londonschool.directory/schools/redbridge/chadwell-primary-school"></td>
+          <td><a href="/schools/redbridge/chadwell-primary-school">Chadwell Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>675</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Christchurch Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="76.0"
+            data-url="https://londonschool.directory/schools/redbridge/christchurch-primary-school"></td>
+          <td><a href="/schools/redbridge/christchurch-primary-school">Christchurch Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1084</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Churchfields Infants' School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/churchfields-infants-school"></td>
+          <td><a href="/schools/redbridge/churchfields-infants-school">Churchfields Infants' School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>429</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Churchfields Junior School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="92.0"
+            data-url="https://londonschool.directory/schools/redbridge/churchfields-junior-school"></td>
+          <td><a href="/schools/redbridge/churchfields-junior-school">Churchfields Junior School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>477</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Cleveland Road Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="87.0"
+            data-url="https://londonschool.directory/schools/redbridge/cleveland-road-primary-school"></td>
+          <td><a href="/schools/redbridge/cleveland-road-primary-school">Cleveland Road Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>899</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Clore Tikva School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="73.0"
+            data-url="https://londonschool.directory/schools/redbridge/clore-tikva-school"></td>
+          <td><a href="/schools/redbridge/clore-tikva-school">Clore Tikva School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>294</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Coppice Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="61.0"
+            data-url="https://londonschool.directory/schools/redbridge/coppice-primary-school"></td>
+          <td><a href="/schools/redbridge/coppice-primary-school">Coppice Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>432</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Cranbrook Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="77.0"
+            data-url="https://londonschool.directory/schools/redbridge/cranbrook-primary-school"></td>
+          <td><a href="/schools/redbridge/cranbrook-primary-school">Cranbrook Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>786</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Downshall Primary School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="70.0"
+            data-url="https://londonschool.directory/schools/redbridge/downshall-primary-school"></td>
+          <td><a href="/schools/redbridge/downshall-primary-school">Downshall Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>501</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Early Years Assessment Service and Centre Co Manford Primary School"
+            data-ofsted="Not yet rated"
+            data-phase="N/A"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/early-years-assessment-service-and-centre-co-manford-primary-school"></td>
+          <td><a href="/schools/redbridge/early-years-assessment-service-and-centre-co-manford-primary-school">Early Years Assessment Service and Centre Co Manford Primary School</a></td>
+          <td>N/A</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>N/A</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Eastcourt Independent School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/eastcourt-independent-school"></td>
+          <td><a href="/schools/redbridge/eastcourt-independent-school">Eastcourt Independent School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>107</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Endeavour House School"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/endeavour-house-school"></td>
+          <td><a href="/schools/redbridge/endeavour-house-school">Endeavour House School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>16</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Fairlop Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="82.0"
+            data-url="https://londonschool.directory/schools/redbridge/fairlop-primary-school"></td>
+          <td><a href="/schools/redbridge/fairlop-primary-school">Fairlop Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>681</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Farnham Green Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="80.0"
+            data-url="https://londonschool.directory/schools/redbridge/farnham-green-primary-school"></td>
+          <td><a href="/schools/redbridge/farnham-green-primary-school">Farnham Green Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>350</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Forest Academy"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="40.7"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/forest-academy"></td>
+          <td><a href="/schools/redbridge/forest-academy">Forest Academy</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>749</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Fullwood Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="80.0"
+            data-url="https://londonschool.directory/schools/redbridge/fullwood-primary-school"></td>
+          <td><a href="/schools/redbridge/fullwood-primary-school">Fullwood Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>458</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Gearies Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="79.0"
+            data-url="https://londonschool.directory/schools/redbridge/gearies-primary-school"></td>
+          <td><a href="/schools/redbridge/gearies-primary-school">Gearies Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>884</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Gilbert Colvin Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="68.0"
+            data-url="https://londonschool.directory/schools/redbridge/gilbert-colvin-primary-school"></td>
+          <td><a href="/schools/redbridge/gilbert-colvin-primary-school">Gilbert Colvin Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>344</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Glade Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="85.0"
+            data-url="https://londonschool.directory/schools/redbridge/glade-primary-school"></td>
+          <td><a href="/schools/redbridge/glade-primary-school">Glade Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>428</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Goodmayes Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="70.0"
+            data-url="https://londonschool.directory/schools/redbridge/goodmayes-primary-school"></td>
+          <td><a href="/schools/redbridge/goodmayes-primary-school">Goodmayes Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>643</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Gordon Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="79.0"
+            data-url="https://londonschool.directory/schools/redbridge/gordon-primary-school"></td>
+          <td><a href="/schools/redbridge/gordon-primary-school">Gordon Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>398</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Grove Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="76.0"
+            data-url="https://londonschool.directory/schools/redbridge/grove-primary-school"></td>
+          <td><a href="/schools/redbridge/grove-primary-school">Grove Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>666</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hatchside School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/hatchside-school"></td>
+          <td><a href="/schools/redbridge/hatchside-school">Hatchside School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>102</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hatton Special School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/hatton-special-school"></td>
+          <td><a href="/schools/redbridge/hatton-special-school">Hatton Special School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>197</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Highlands Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="69.0"
+            data-url="https://londonschool.directory/schools/redbridge/highlands-primary-school"></td>
+          <td><a href="/schools/redbridge/highlands-primary-school">Highlands Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>676</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Ilford County High School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="77.4"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/ilford-county-high-school"></td>
+          <td><a href="/schools/redbridge/ilford-county-high-school">Ilford County High School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1115</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="John Bramston Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="68.0"
+            data-url="https://londonschool.directory/schools/redbridge/john-bramston-primary-school"></td>
+          <td><a href="/schools/redbridge/john-bramston-primary-school">John Bramston Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>438</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="King Solomon High School"
+            data-ofsted="Requires improvement"
+            data-phase="Secondary"
+            data-att8="49.0"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/king-solomon-high-school"></td>
+          <td><a href="/schools/redbridge/king-solomon-high-school">King Solomon High School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
+          <td>636</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Little Heath School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="0.4"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/little-heath-school"></td>
+          <td><a href="/schools/redbridge/little-heath-school">Little Heath School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>264</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Loxford School"
+            data-ofsted="Outstanding"
+            data-phase="All-through"
+            data-att8="54.8"
+            data-ks2="75.0"
+            data-url="https://londonschool.directory/schools/redbridge/loxford-school"></td>
+          <td><a href="/schools/redbridge/loxford-school">Loxford School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>2799</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Manford Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="74.0"
+            data-url="https://londonschool.directory/schools/redbridge/manford-primary-school"></td>
+          <td><a href="/schools/redbridge/manford-primary-school">Manford Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>460</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Mayespark Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="60.0"
+            data-url="https://londonschool.directory/schools/redbridge/mayespark-primary-school"></td>
+          <td><a href="/schools/redbridge/mayespark-primary-school">Mayespark Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>555</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Mayfield School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="46.3"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/mayfield-school"></td>
+          <td><a href="/schools/redbridge/mayfield-school">Mayfield School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1790</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Mossford Green Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="68.0"
+            data-url="https://londonschool.directory/schools/redbridge/mossford-green-primary-school"></td>
+          <td><a href="/schools/redbridge/mossford-green-primary-school">Mossford Green Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>451</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="New Rush Hall School"
+            data-ofsted="Outstanding"
+            data-phase="All-through"
+            data-att8="22.4"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/new-rush-hall-school"></td>
+          <td><a href="/schools/redbridge/new-rush-hall-school">New Rush Hall School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>94</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Newbridge School"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/newbridge-school"></td>
+          <td><a href="/schools/redbridge/newbridge-school">Newbridge School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>198</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Newbury Park Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="65.0"
+            data-url="https://londonschool.directory/schools/redbridge/newbury-park-primary-school"></td>
+          <td><a href="/schools/redbridge/newbury-park-primary-school">Newbury Park Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>752</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Nightingale Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="84.0"
+            data-url="https://londonschool.directory/schools/redbridge/nightingale-primary-school"></td>
+          <td><a href="/schools/redbridge/nightingale-primary-school">Nightingale Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>685</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Oak House School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/oak-house-school"></td>
+          <td><a href="/schools/redbridge/oak-house-school">Oak House School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>0</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Oakdale Infants' School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/oakdale-infants-school"></td>
+          <td><a href="/schools/redbridge/oakdale-infants-school">Oakdale Infants' School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>299</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Oakdale Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="68.0"
+            data-url="https://londonschool.directory/schools/redbridge/oakdale-junior-school"></td>
+          <td><a href="/schools/redbridge/oakdale-junior-school">Oakdale Junior School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>357</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Oaks Park High School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="52.9"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/oaks-park-high-school"></td>
+          <td><a href="/schools/redbridge/oaks-park-high-school">Oaks Park High School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1783</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Our Lady of Lourdes RC Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="94.0"
+            data-url="https://londonschool.directory/schools/redbridge/our-lady-of-lourdes-rc-primary-school"></td>
+          <td><a href="/schools/redbridge/our-lady-of-lourdes-rc-primary-school">Our Lady of Lourdes RC Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>450</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Parkhill Infants' School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/parkhill-infants-school"></td>
+          <td><a href="/schools/redbridge/parkhill-infants-school">Parkhill Infants' School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>381</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Parkhill Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="79.0"
+            data-url="https://londonschool.directory/schools/redbridge/parkhill-junior-school"></td>
+          <td><a href="/schools/redbridge/parkhill-junior-school">Parkhill Junior School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>442</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Ray Lodge Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="70.0"
+            data-url="https://londonschool.directory/schools/redbridge/ray-lodge-primary-school"></td>
+          <td><a href="/schools/redbridge/ray-lodge-primary-school">Ray Lodge Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>674</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Read Academy Education"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8="50.0"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/read-academy-education"></td>
+          <td><a href="/schools/redbridge/read-academy-education">Read Academy Education</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>280</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Redbridge Alternative Provision"
+            data-ofsted="Requires improvement"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/redbridge-alternative-provision"></td>
+          <td><a href="/schools/redbridge/redbridge-alternative-provision">Redbridge Alternative Provision</a></td>
+          <td>All-through</td>
+          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
+          <td>15</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Redbridge Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="73.0"
+            data-url="https://londonschool.directory/schools/redbridge/redbridge-primary-school"></td>
+          <td><a href="/schools/redbridge/redbridge-primary-school">Redbridge Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>808</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Roding Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="53.0"
+            data-url="https://londonschool.directory/schools/redbridge/roding-primary-school"></td>
+          <td><a href="/schools/redbridge/roding-primary-school">Roding Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>438</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="SS Peter and Paul's Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="81.0"
+            data-url="https://londonschool.directory/schools/redbridge/ss-peter-and-pauls-catholic-primary-school"></td>
+          <td><a href="/schools/redbridge/ss-peter-and-pauls-catholic-primary-school">SS Peter and Paul's Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>338</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Seven Kings School"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8="61.7"
+            data-ks2="76.0"
+            data-url="https://londonschool.directory/schools/redbridge/seven-kings-school"></td>
+          <td><a href="/schools/redbridge/seven-kings-school">Seven Kings School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>2189</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Snaresbrook Prep School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/snaresbrook-prep-school"></td>
+          <td><a href="/schools/redbridge/snaresbrook-prep-school">Snaresbrook Prep School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>89</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Snaresbrook Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="86.0"
+            data-url="https://londonschool.directory/schools/redbridge/snaresbrook-primary-school"></td>
+          <td><a href="/schools/redbridge/snaresbrook-primary-school">Snaresbrook Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>461</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="South Park Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="63.0"
+            data-url="https://londonschool.directory/schools/redbridge/south-park-primary-school"></td>
+          <td><a href="/schools/redbridge/south-park-primary-school">South Park Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>592</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Aidan's Catholic Primary Academy"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="66.0"
+            data-url="https://londonschool.directory/schools/redbridge/st-aidans-catholic-primary-academy"></td>
+          <td><a href="/schools/redbridge/st-aidans-catholic-primary-academy">St Aidan's Catholic Primary Academy</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>213</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Antony's Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="72.0"
+            data-url="https://londonschool.directory/schools/redbridge/st-antonys-catholic-primary-school"></td>
+          <td><a href="/schools/redbridge/st-antonys-catholic-primary-school">St Antony's Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>438</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Aubyn's School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/st-aubyns-school"></td>
+          <td><a href="/schools/redbridge/st-aubyns-school">St Aubyn's School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>438</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Augustine's Catholic Primary School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="53.0"
+            data-url="https://londonschool.directory/schools/redbridge/st-augustines-catholic-primary-school"></td>
+          <td><a href="/schools/redbridge/st-augustines-catholic-primary-school">St Augustine's Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>406</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Bede's Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="83.0"
+            data-url="https://londonschool.directory/schools/redbridge/st-bedes-catholic-primary-school"></td>
+          <td><a href="/schools/redbridge/st-bedes-catholic-primary-school">St Bede's Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>426</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Stradbroke"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/stradbroke"></td>
+          <td><a href="/schools/redbridge/stradbroke">Stradbroke</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Constance Bridgeman Centre"
+            data-ofsted="Requires improvement"
+            data-phase="Secondary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/the-constance-bridgeman-centre"></td>
+          <td><a href="/schools/redbridge/the-constance-bridgeman-centre">The Constance Bridgeman Centre</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
+          <td>21</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Palmer Catholic Academy"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="54.8"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/the-palmer-catholic-academy"></td>
+          <td><a href="/schools/redbridge/the-palmer-catholic-academy">The Palmer Catholic Academy</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1132</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Ursuline Academy Ilford"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="57.4"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/the-ursuline-academy-ilford"></td>
+          <td><a href="/schools/redbridge/the-ursuline-academy-ilford">The Ursuline Academy Ilford</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>743</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Trinity Catholic High School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="57.0"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/trinity-catholic-high-school"></td>
+          <td><a href="/schools/redbridge/trinity-catholic-high-school">Trinity Catholic High School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1603</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Uphall Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="58.0"
+            data-url="https://londonschool.directory/schools/redbridge/uphall-primary-school"></td>
+          <td><a href="/schools/redbridge/uphall-primary-school">Uphall Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>865</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Valentines High School"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="57.1"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/valentines-high-school"></td>
+          <td><a href="/schools/redbridge/valentines-high-school">Valentines High School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>1357</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Wanstead Church School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="96.0"
+            data-url="https://londonschool.directory/schools/redbridge/wanstead-church-school"></td>
+          <td><a href="/schools/redbridge/wanstead-church-school">Wanstead Church School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>197</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Wanstead High School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="56.4"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/wanstead-high-school"></td>
+          <td><a href="/schools/redbridge/wanstead-high-school">Wanstead High School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1434</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Wells Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="89.0"
+            data-url="https://londonschool.directory/schools/redbridge/wells-primary-school"></td>
+          <td><a href="/schools/redbridge/wells-primary-school">Wells Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>341</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="William Torbitt Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="74.0"
+            data-url="https://londonschool.directory/schools/redbridge/william-torbitt-primary-school"></td>
+          <td><a href="/schools/redbridge/william-torbitt-primary-school">William Torbitt Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>491</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Winston Way Academy"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="42.0"
+            data-url="https://londonschool.directory/schools/redbridge/winston-way-academy"></td>
+          <td><a href="/schools/redbridge/winston-way-academy">Winston Way Academy</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>616</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Wohl Ilford Jewish Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="78.0"
+            data-url="https://londonschool.directory/schools/redbridge/wohl-ilford-jewish-primary-school"></td>
+          <td><a href="/schools/redbridge/wohl-ilford-jewish-primary-school">Wohl Ilford Jewish Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>245</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Woodbridge High School"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="51.1"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/woodbridge-high-school"></td>
+          <td><a href="/schools/redbridge/woodbridge-high-school">Woodbridge High School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>1980</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Woodford County High School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="79.0"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/woodford-county-high-school"></td>
+          <td><a href="/schools/redbridge/woodford-county-high-school">Woodford County High School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1237</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Woodford Green Preparatory School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/redbridge/woodford-green-preparatory-school"></td>
+          <td><a href="/schools/redbridge/woodford-green-preparatory-school">Woodford Green Preparatory School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>366</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Woodlands Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="59.0"
+            data-url="https://londonschool.directory/schools/redbridge/woodlands-primary-school"></td>
+          <td><a href="/schools/redbridge/woodlands-primary-school">Woodlands Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>558</td>
+        </tr></tbody>
+  </table>
+</div>
+<footer><a href="/">London Schools Explorer</a> &mdash; helping families find the right school in London.<p style="margin-top:10px">Browse by type: <a href="/schools/outstanding">Outstanding</a> &middot; <a href="/schools/good">Good</a> &middot; <a href="/schools/grammar">Grammar</a> &middot; <a href="/schools/selective">Selective</a> &middot; <a href="/schools/faith">Faith</a> &middot; <a href="/schools/primary">Primary</a> &middot; <a href="/schools/secondary">Secondary</a> &middot; <a href="/schools/sixth-form">Sixth form</a> &middot; <a href="/schools/independent">Private &amp; independent</a></p></footer>
+<script defer src="/_vercel/insights/script.js"></script>
 <script>
-  (function() {
-    var points = [[51.549826, 0.087531, "/schools/redbridge/the-constance-bridgeman-centre/", "The Constance Bridgeman Centre"], [51.608706, 0.10245, "/schools/redbridge/manford-primary-school/", "Manford Primary School"], [51.554476, 0.075323, "/schools/redbridge/cleveland-road-primary-school/", "Cleveland Road Primary School"], [51.599815, 0.080538, "/schools/redbridge/fairlop-primary-school/", "Fairlop Primary School"], [51.595156, 0.068933, "/schools/redbridge/gilbert-colvin-primary-school/", "Gilbert Colvin Primary School"], [51.593909, 0.055449, "/schools/redbridge/glade-primary-school/", "Glade Primary School"], [51.563485, 0.115181, "/schools/redbridge/goodmayes-primary-school/", "Goodmayes Primary School"], [51.555978, 0.087481, "/schools/redbridge/gordon-primary-school/", "Gordon Primary School"], [51.591448, 0.079766, "/schools/redbridge/mossford-green-primary-school/", "Mossford Green Primary School"], [51.575792, 0.084261, "/schools/redbridge/newbury-park-primary-school/", "Newbury Park Primary School"], [51.547977, 0.072157, "/schools/redbridge/uphall-primary-school/", "Uphall Primary School"], [51.578515, 0.09902, "/schools/redbridge/william-torbitt-primary-school/", "William Torbitt Primary School"], [51.564393, 0.037005, "/schools/redbridge/aldersbrook-primary-school/", "Aldersbrook Primary School"], [51.603913, 0.055193, "/schools/redbridge/roding-primary-school/", "Roding Primary School"], [51.616093, 0.027012, "/schools/redbridge/wells-primary-school/", "Wells Primary School"], [51.586056, 0.022932, "/schools/redbridge/snaresbrook-primary-school/", "Snaresbrook Primary School"], [51.584469, 0.078263, "/schools/redbridge/fullwood-primary-school/", "Fullwood Primary School"], [51.549172, 0.083895, "/schools/redbridge/woodlands-primary-school/", "Woodlands Primary School"], [51.578712, 0.120549, "/schools/redbridge/grove-primary-school/", "Grove Primary School"], [51.568738, 0.121095, "/schools/redbridge/chadwell-primary-school/", "Chadwell Primary School"], [51.612297, 0.114286, "/schools/redbridge/coppice-primary-school/", "Coppice Primary School"], [51.605585, 0.109483, "/schools/redbridge/john-bramston-primary-school/", "John Bramston Primary School"], [51.585181, 0.032998, "/schools/redbridge/nightingale-primary-school/", "Nightingale Primary School"], [51.569694, 0.113982, "/schools/redbridge/barley-lane-primary-school/", "Barley Lane Primary School"], [51.578564, 0.023538, "/schools/redbridge/wanstead-church-school/", "Wanstead Church School"], [51.580447, 0.073807, "/schools/redbridge/st-augustines-catholic-primary-school/", "St Augustine's Catholic Primary School"], [51.616125, 0.024139, "/schools/redbridge/st-antonys-catholic-primary-school/", "St Antony's Catholic Primary School"], [51.576863, 0.126828, "/schools/redbridge/st-bedes-catholic-primary-school/", "St Bede's Catholic Primary School"], [51.593988, 0.08762, "/schools/redbridge/wohl-ilford-jewish-primary-school/", "Wohl Ilford Jewish Primary School"], [51.59338, 0.061994, "/schools/redbridge/caterham-high-school/", "Caterham High School"], [51.59191, 0.077015, "/schools/redbridge/ilford-county-high-school/", "Ilford County High School"], [51.575655, 0.035762, "/schools/redbridge/wanstead-high-school/", "Wanstead High School"], [51.60762, 0.018763, "/schools/redbridge/woodford-county-high-school/", "Woodford County High School"], [51.600968, 0.033226, "/schools/redbridge/woodbridge-high-school/", "Woodbridge High School"], [51.568515, 0.085919, "/schools/redbridge/seven-kings-school/", "Seven Kings School"], [51.574267, 0.066801, "/schools/redbridge/valentines-high-school/", "Valentines High School"], [51.564728, 0.122583, "/schools/redbridge/mayfield-school/", "Mayfield School"], [51.616663, 0.0211, "/schools/redbridge/trinity-catholic-high-school/", "Trinity Catholic High School"], [51.593988, 0.08762, "/schools/redbridge/king-solomon-high-school/", "King Solomon High School"], [51.602988, 0.016724, "/schools/redbridge/st-aubyns-school/", "St Aubyn's School"], [51.608164, 0.025301, "/schools/redbridge/woodford-green-preparatory-school/", "Woodford Green Preparatory School"], [51.581339, 0.057898, "/schools/redbridge/beehive-preparatory-school/", "Beehive Preparatory School"], [51.567511, 0.109379, "/schools/redbridge/eastcourt-independent-school/", "Eastcourt Independent School"], [51.591633, 0.022876, "/schools/redbridge/snaresbrook-prep-school/", "Snaresbrook Prep School"], [51.615639, 0.025735, "/schools/redbridge/avon-house-preparatory-school/", "Avon House Preparatory School"], [51.619678, 0.02668, "/schools/redbridge/bancrofts-school/", "Bancroft's School"], [51.584152, 0.118594, "/schools/redbridge/little-heath-school/", "Little Heath School"], [51.600649, 0.084735, "/schools/redbridge/new-rush-hall-school/", "New Rush Hall School"], [51.589107, 0.045141, "/schools/redbridge/hatton-special-school/", "Hatton Special School"], [51.562697, 0.065569, "/schools/redbridge/apex-primary-school/", "Apex Primary School"], [51.580627, 0.051299, "/schools/redbridge/redbridge-primary-school/", "Redbridge Primary School"], [51.56752, 0.056711, "/schools/redbridge/highlands-primary-school/", "Highlands Primary School"], [51.557022, 0.108057, "/schools/redbridge/mayespark-primary-school/", "Mayespark Primary School"], [51.571669, 0.056523, "/schools/redbridge/cranbrook-primary-school/", "Cranbrook Primary School"], [51.594274, 0.080111, "/schools/redbridge/clore-tikva-school/", "Clore Tikva School"], [51.56469, 0.076481, "/schools/redbridge/christchurch-primary-school/", "Christchurch Primary School"], [51.557851, 0.097939, "/schools/redbridge/south-park-primary-school/", "South Park Primary School"], [51.619678, 0.02668, "/schools/redbridge/bancrofts-preparatory-school/", "Bancroft's Preparatory School"], [51.608706, 0.10245, "/schools/redbridge/early-years-assessment-service-and-centre-co-manford-primary-school/", "Early Years Assessment Service and Centre Co Manford Primary School"], [51.578468, 0.091599, "/schools/redbridge/oaks-park-high-school/", "Oaks Park High School"], [51.592625, 0.032579, "/schools/redbridge/oakdale-junior-school/", "Oakdale Junior School"], [51.592971, 0.031324, "/schools/redbridge/oakdale-infants-school/", "Oakdale Infants' School"], [51.579662, 0.069918, "/schools/redbridge/gearies-primary-school/", "Gearies Primary School"], [51.598288, 0.027027, "/schools/redbridge/churchfields-junior-school/", "Churchfields Junior School"], [51.598288, 0.027027, "/schools/redbridge/churchfields-infants-school/", "Churchfields Infants' School"], [51.588495, 0.063635, "/schools/redbridge/parkhill-infants-school/", "Parkhill Infants' School"], [51.588495, 0.063635, "/schools/redbridge/parkhill-junior-school/", "Parkhill Junior School"], [51.592673, 0.086737, "/schools/redbridge/redbridge-alternative-provision/", "Redbridge Alternative Provision"], [51.590923, 0.059024, "/schools/redbridge/stradbroke/", "Stradbroke"], [51.571805, 0.118092, "/schools/redbridge/chadwell-heath-academy/", "Chadwell Heath Academy"], [51.570433, 0.095329, "/schools/redbridge/aldborough-primary-school/", "Aldborough Primary School"], [51.5653, 0.092207, "/schools/redbridge/the-palmer-catholic-academy/", "The Palmer Catholic Academy"], [51.562644, 0.070111, "/schools/redbridge/the-ursuline-academy-ilford/", "The Ursuline Academy Ilford"], [51.609887, 0.117265, "/schools/redbridge/forest-academy/", "Forest Academy"], [51.561804, 0.0916, "/schools/redbridge/ark-isaac-newton-academy/", "Ark Isaac Newton Academy"], [51.563121, 0.066497, "/schools/redbridge/read-academy-education/", "Read Academy Education"], [51.566731, 0.090657, "/schools/redbridge/st-aidans-catholic-primary-academy/", "St Aidan's Catholic Primary Academy"], [51.549826, 0.087531, "/schools/redbridge/loxford-school/", "Loxford School"], [51.585936, 0.051624, "/schools/redbridge/beal-high-school/", "Beal High School"], [51.585936, 0.051624, "/schools/redbridge/beacon-business-innovation-hub/", "Beacon Business Innovation Hub"], [51.563218, 0.116063, "/schools/redbridge/al-noor-voluntary-aided-muslim-primary-school/", "Al-Noor Voluntary Aided Muslim Primary School"], [51.587362, 0.088067, "/schools/redbridge/avanti-court-primary-school/", "Avanti Court Primary School"], [51.580885, 0.11824, "/schools/redbridge/atam-academy/", "Atam Academy"], [51.557026, 0.094309, "/schools/redbridge/oak-house-school/", "Oak House School"], [51.55937, 0.081317, "/schools/redbridge/winston-way-academy/", "Winston Way Academy"], [51.575678, 0.119254, "/schools/redbridge/newbridge-school/", "Newbridge School"], [51.57218, 0.108253, "/schools/redbridge/farnham-green-primary-school/", "Farnham Green Primary School"], [51.60707, 0.043796, "/schools/redbridge/ray-lodge-primary-school/", "Ray Lodge Primary School"], [51.574659, 0.02055, "/schools/redbridge/our-lady-of-lourdes-rc-primary-school/", "Our Lady of Lourdes RC Primary School"], [51.558133, 0.08719, "/schools/redbridge/ss-peter-and-pauls-catholic-primary-school/", "SS Peter and Paul's Catholic Primary School"], [51.558578, 0.109067, "/schools/redbridge/endeavour-house-school/", "Endeavour House School"], [51.579683, 0.10007, "/schools/redbridge/hatchside-school/", "Hatchside School"], [51.570586, 0.096346, "/schools/redbridge/downshall-primary-school/", "Downshall Primary School"], [51.566124, 0.066027, "/schools/redbridge/apex-secondary-school-for-girls/", "Apex Secondary School for Girls"], [51.566124, 0.066027, "/schools/redbridge/apex-secondary-school-for-boys/", "Apex Secondary School for Boys"]];
-    if (!points.length) return;
-    var lats = points.map(function(p) { return p[0]; });
-    var lngs = points.map(function(p) { return p[1]; });
-    var avgLat = lats.reduce(function(a,b) { return a+b; }, 0) / lats.length;
-    var avgLng = lngs.reduce(function(a,b) { return a+b; }, 0) / lngs.length;
-    var map = L.map('map', { scrollWheelZoom: false }).setView([avgLat, avgLng], 12);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 18,
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-    points.forEach(function(p) {
-      L.circleMarker([p[0], p[1]], {
-        radius: 5, color: '#0b2545', fillColor: '#0b6efd', fillOpacity: 0.8, weight: 1
-      }).addTo(map).bindPopup('<a href="' + p[2] + '">' + p[3] + '</a>');
+(function(){
+  var borough="Redbridge", boroughUrl="https://londonschool.directory/schools/redbridge";
+  var outstanding=13, total=95;
+
+  // Borough-level share
+  window.shareBoroughWhatsApp=function(){
+    var t='🏙️ *Schools in '+borough+', London*\n'+
+        '📊 '+total+' schools · '+outstanding+' Outstanding\n\n'+
+        '🔗 '+boroughUrl;
+    window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank');
+  };
+  window.shareBoroughEmail=function(){
+    var s='Schools in '+borough+' — London Schools Explorer';
+    var b='Schools in '+borough+', London\n'+
+        total+' schools, '+outstanding+' rated Outstanding by Ofsted\n\n'+
+        'Browse them here: '+boroughUrl;
+    window.location.href='mailto:?subject='+encodeURIComponent(s)+'&body='+encodeURIComponent(b);
+  };
+
+  // Shortlist comparison share
+  function getSelected(){
+    return Array.from(document.querySelectorAll('.sch-sel:checked')).map(function(cb){
+      return {name:cb.dataset.name,ofsted:cb.dataset.ofsted,phase:cb.dataset.phase,
+               att8:cb.dataset.att8,ks2:cb.dataset.ks2,url:cb.dataset.url};
     });
-  })();
+  }
+  function updateBar(){
+    var sel=getSelected();
+    var bar=document.getElementById('cmp-bar');
+    document.getElementById('cmp-count').textContent=sel.length+' school'+(sel.length===1?'':' s')+' selected';
+    bar.style.display=sel.length>0?'flex':'none';
+  }
+  document.querySelectorAll('.sch-sel').forEach(function(cb){ cb.onchange=updateBar; });
+
+  function buildCompareText(sel,markdown){
+    var lines=['📋 *My '+borough+' school shortlist*',''];
+    sel.forEach(function(s,i){
+      lines.push((i+1)+'. '+(markdown?'*':'')+s.name+(markdown?'*':''));
+      lines.push('   ⭐ Ofsted: '+s.ofsted+(s.phase?' · '+s.phase:''));
+      if(s.att8)lines.push('   📊 Attainment 8: '+s.att8);
+      if(s.ks2)lines.push('   📝 KS2 expected: '+s.ks2+'%');
+      lines.push('   🔗 '+s.url);
+      lines.push('');
+    });
+    lines.push('via London Schools Explorer — '+boroughUrl);
+    return lines.join('\n');
+  }
+  window.shareCompareWhatsApp=function(){
+    var sel=getSelected();
+    if(!sel.length)return;
+    window.open('https://wa.me/?text='+encodeURIComponent(buildCompareText(sel,true)),'_blank');
+  };
+  window.shareCompareEmail=function(){
+    var sel=getSelected();
+    if(!sel.length)return;
+    var subj='My '+borough+' school shortlist — London Schools Explorer';
+    window.location.href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(buildCompareText(sel,false));
+  };
+  window.clearSelection=function(){
+    document.querySelectorAll('.sch-sel:checked').forEach(function(cb){cb.checked=false;});
+    updateBar();
+  };
+})();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/sw.js').catch(function () {});
+  });
+}
 </script>
 </body>
 </html>

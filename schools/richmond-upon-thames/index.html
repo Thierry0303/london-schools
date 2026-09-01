@@ -1,499 +1,1248 @@
-<!doctype html>
-<html lang="en-GB">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Schools in Richmond upon Thames, London — Ofsted, Performance & Admissions</title>
-<meta name="description" content="All 84 schools in Richmond upon Thames, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
-<link rel="canonical" href="https://londonschool.directory/schools/richmond-upon-thames/">
-<meta property="og:title" content="Schools in Richmond upon Thames, London — Ofsted, Performance & Admissions">
-<meta property="og:description" content="All 84 schools in Richmond upon Thames, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://londonschool.directory/schools/richmond-upon-thames/">
-<meta property="og:site_name" content="London School Directory">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#0b2545">
-<meta name="robots" content="index,follow,max-image-preview:large">
-<link rel="preconnect" href="https://unpkg.com">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<style>
-  :root {
-    --ink: #0b2545;
-    --ink-2: #1e3a5f;
-    --muted: #5b6b85;
-    --line: #e3e8ef;
-    --bg: #ffffff;
-    --bg-2: #f6f8fb;
-    --accent: #0b6efd;
-    --good: #137333;
-    --warn: #a85b00;
-    --bad: #b3261e;
-    --radius: 10px;
-  }
-  * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    color: var(--ink);
-    background: var(--bg);
-    line-height: 1.55;
-    -webkit-font-smoothing: antialiased;
-  }
-  a { color: var(--accent); text-decoration: none; }
-  a:hover { text-decoration: underline; }
-  header.site {
-    border-bottom: 1px solid var(--line);
-    background: var(--bg);
-    position: sticky; top: 0; z-index: 50;
-  }
-  header.site .inner {
-    max-width: 1100px; margin: 0 auto; padding: 14px 20px;
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  header.site a.brand { color: var(--ink); font-weight: 700; letter-spacing: -0.01em; }
-  header.site nav a { margin-left: 18px; color: var(--ink-2); font-size: 14px; }
-  main { max-width: 1100px; margin: 0 auto; padding: 28px 20px 80px; }
-  .crumbs { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
-  .crumbs a { color: var(--muted); }
-  h1 { font-size: 32px; line-height: 1.2; margin: 0 0 8px; letter-spacing: -0.02em; }
-  .lede { color: var(--ink-2); font-size: 17px; max-width: 720px; }
-  .stamp { font-size: 12px; color: var(--muted); margin-top: 8px; }
-  .stamp .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--good); vertical-align: middle; margin-right: 6px; }
-  .grid-stats {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 12px; margin: 24px 0 8px;
-  }
-  .stat {
-    background: var(--bg-2); border: 1px solid var(--line);
-    border-radius: var(--radius); padding: 14px 16px;
-  }
-  .stat .v { font-size: 24px; font-weight: 700; color: var(--ink); }
-  .stat .l { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
-  section { margin-top: 36px; }
-  h2 { font-size: 22px; margin: 0 0 12px; letter-spacing: -0.01em; }
-  .twocol { display: grid; grid-template-columns: 1.4fr 1fr; gap: 28px; }
-  @media (max-width: 820px) { .twocol { grid-template-columns: 1fr; } }
-  table.schools { width: 100%; border-collapse: collapse; font-size: 14px; }
-  table.schools th, table.schools td {
-    text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line);
-  }
-  table.schools th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); font-weight: 600; }
-  .rating { font-weight: 600; }
-  .rating.Outstanding { color: var(--good); }
-  .rating.Good { color: var(--ink-2); }
-  .rating.RequiresImprovement, .rating.Requires { color: var(--warn); }
-  .rating.Inadequate { color: var(--bad); }
-  #map { height: 380px; border-radius: var(--radius); border: 1px solid var(--line); }
-  .pills { display: flex; flex-wrap: wrap; gap: 6px; }
-  .pill { background: var(--bg-2); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; font-size: 12px; color: var(--ink-2); }
-  details.faq { border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 8px; background: var(--bg); }
-  details.faq summary { cursor: pointer; font-weight: 600; color: var(--ink); }
-  details.faq[open] { background: var(--bg-2); }
-  footer { border-top: 1px solid var(--line); padding: 28px 20px; color: var(--muted); font-size: 13px; }
-  footer .inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 24px; flex-wrap: wrap; }
-  .sources { font-size: 13px; color: var(--muted); }
-  .sources a { color: var(--muted); text-decoration: underline; }
-  .cta {
-    display: inline-block; background: var(--ink); color: #fff; padding: 10px 14px;
-    border-radius: var(--radius); font-size: 14px; font-weight: 600;
-  }
-  .cta:hover { background: var(--ink-2); text-decoration: none; }
-</style>
-<script type="application/ld+json">
-[
-  {
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Schools in Richmond upon Thames, London | Ofsted Ratings &amp; Results | London Schools Explorer</title>
+  <meta name="description" content="84 schools in Richmond upon Thames, London. 23 Outstanding, 40 Good-rated by Ofsted. Compare admissions oversubscription, exam results and crime data. Free.">
+  <script type="application/ld+json">{
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "name": "Top schools in Richmond upon Thames, London",
-    "itemListOrder": "http://schema.org/ItemListOrderDescending",
-    "numberOfItems": 14,
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "url": "https://londonschool.directory/schools/richmond-upon-thames/deer-park-school/",
-        "name": "Deer Park School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "url": "https://londonschool.directory/schools/richmond-upon-thames/barnes-primary-school/",
-        "name": "Barnes Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "url": "https://londonschool.directory/schools/richmond-upon-thames/st-richard-reynolds-catholic-primary-school/",
-        "name": "St Richard Reynolds Catholic Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 4,
-        "url": "https://londonschool.directory/schools/richmond-upon-thames/chase-bridge-primary-school/",
-        "name": "Chase Bridge Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 5,
-        "url": "https://londonschool.directory/schools/richmond-upon-thames/st-marys-church-of-england-primary-school/",
-        "name": "St Mary's Church of England Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 6,
-        "url": "https://londonschool.directory/schools/richmond-upon-thames/thomson-house-school/",
-        "name": "Thomson House School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 7,
-        "url": "https://londonschool.directory/schools/richmond-upon-thames/collis-primary-school/",
-        "name": "Collis Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 8,
-        "url": "https://londonschool.directory/schools/richmond-upon-thames/orleans-park-school/",
-        "name": "Orleans Park School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 9,
-        "url": "https://londonschool.directory/schools/richmond-upon-thames/grey-court-school/",
-        "name": "Grey Court School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 10,
-        "url": "https://londonschool.directory/schools/richmond-upon-thames/turing-house-school/",
-        "name": "Turing House School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 11,
-        "url": "https://londonschool.directory/schools/richmond-upon-thames/st-richard-reynolds-catholic-high-school/",
-        "name": "St Richard Reynolds Catholic High School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 12,
-        "url": "https://londonschool.directory/schools/richmond-upon-thames/clarendon-school/",
-        "name": "Clarendon School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 13,
-        "url": "https://londonschool.directory/schools/richmond-upon-thames/the-german-school/",
-        "name": "The German School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 14,
-        "url": "https://londonschool.directory/schools/richmond-upon-thames/the-swedish-school/",
-        "name": "The Swedish School"
-      }
-    ]
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How many schools are there in Richmond upon Thames?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Richmond upon Thames has 84 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 64 are primary, 27 are secondary, and the remainder are special, all-through, or post-16."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What proportion of Richmond upon Thames schools are Outstanding?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "As of the latest Ofsted Management Information release, 23 schools in Richmond upon Thames (27.4%) are rated Outstanding, and 75.0% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "When do I apply for a Reception or Year 7 place in Richmond upon Thames?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Richmond upon Thames's applications are coordinated by the local authority through the eAdmissions system. See our full Reception timeline guide."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How does the school appeals process work in Richmond upon Thames?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "If you are refused your preferred school place, you have a statutory right of appeal. Richmond upon Thames appeals are typically heard in May (Reception) and June\u2013July (secondary). See our appeals tracker for Richmond upon Thames-level success rates by year."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How can I tell which Richmond upon Thames schools are over-subscribed?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release."
-        }
-      }
-    ]
-  },
-  {
+    "name": "Schools in Richmond upon Thames, London",
+    "description": "84 schools in Richmond upon Thames, London rated by Ofsted",
+    "numberOfItems": 84,
+    "url": "https://londonschool.directory/schools/richmond-upon-thames"
+  }</script>
+  <script type="application/ld+json">{
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": "https://londonschool.directory/"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Boroughs",
-        "item": "https://londonschool.directory/schools/"
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "name": "Richmond upon Thames",
-        "item": "https://londonschool.directory/schools/richmond-upon-thames/"
-      }
+      {"@type": "ListItem", "position": 1, "name": "London Schools Explorer", "item": "https://londonschool.directory/"},
+      {"@type": "ListItem", "position": 2, "name": "Schools in Richmond upon Thames", "item": "https://londonschool.directory/schools/richmond-upon-thames"}
     ]
-  }
-]
-</script>
+  }</script>
+  <link rel="canonical" href="https://londonschool.directory/schools/richmond-upon-thames">
+  <meta property="og:title" content="Schools in Richmond upon Thames | London Schools Explorer">
+  <meta property="og:description" content="84 schools in Richmond upon Thames. 23 Outstanding-rated. Compare Ofsted ratings, exam results and admissions.">
+  <meta property="og:url" content="https://londonschool.directory/schools/richmond-upon-thames">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, sans-serif; color: #1a1a1a; background: #f8f9fa; line-height: 1.6; }
+    a { color: #1565C0; }
+    .topbar { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 12px 20px; }
+    .topbar a { text-decoration: none; font-weight: 600; color: #1a1a1a; font-size: 15px; }
+    .topbar span { color: #888; margin: 0 8px; }
+    .container { max-width: 900px; margin: 0 auto; padding: 32px 20px; }
+    h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+    .intro { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; font-size: 15px; color: #333; line-height: 1.7; }
+    .stats-row { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+    .stat-box { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 14px 18px; flex: 1; min-width: 120px; }
+    .stat-num { font-size: 24px; font-weight: 700; color: #1a1a1a; line-height: 1; }
+    .stat-lbl { font-size: 12px; color: #888; margin-top: 4px; }
+    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #e0e0e0; }
+    th { background: #f5f5f5; padding: 12px 16px; text-align: left; font-size: 13px; color: #555; font-weight: 600; border-bottom: 1px solid #e0e0e0; }
+    td { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fafafa; }
+    .back { display: inline-block; margin-bottom: 20px; font-size: 14px; color: #555; text-decoration: none; }
+    .back:hover { color: #111; }
+    footer { text-align: center; padding: 32px 20px; font-size: 13px; color: #888; }
+    @media (max-width: 600px) {
+      .container { padding: 16px 12px; }
+      h1 { font-size: 22px; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .intro { padding: 14px 16px; font-size: 14px; }
+      table { font-size: 13px; }
+      th, td { padding: 10px 10px; overflow-wrap: anywhere; word-break: break-word; }
+      th:nth-child(5), td:nth-child(5) { display: none; }
+      .topbar { padding: 10px 12px; font-size: 13px; }
+    }
+    @media (max-width: 600px) { .stats-row { flex-direction: column; } }
+  </style>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 </head>
 <body>
-<header class="site">
-  <div class="inner">
-    <a class="brand" href="/">London School Directory</a>
-    <nav>
-      <a href="/">Search</a>
-      <a href="/appeals.html">Appeals</a>
-      <a href="/methodology.html">Methodology</a>
-      <a href="/about.html">About</a>
-    </nav>
+<div class="topbar">
+  <div style="max-width:900px;margin:0 auto">
+    <a href="/">London Schools Explorer</a>
+    <span>/</span>
+    Richmond upon Thames
   </div>
-</header>
-<main>
-  <div class="crumbs">
-    <a href="/">Home</a> &rsaquo; <a href="/schools/">Boroughs</a> &rsaquo; Richmond upon Thames
+</div>
+<div class="container">
+  <a class="back" href="/">&#8592; All boroughs</a>
+  <h1>Schools in Richmond upon Thames</h1>
+
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-num">84</div><div class="stat-lbl">Total schools</div></div>
+    <div class="stat-box"><div class="stat-num">23</div><div class="stat-lbl">Outstanding</div></div>
+    <div class="stat-box"><div class="stat-num">40</div><div class="stat-lbl">Good</div></div>
+    <div class="stat-box"><div class="stat-num">4</div><div class="stat-lbl">School phases</div></div>
   </div>
 
-  <h1>Schools in Richmond upon Thames, London</h1>
-  <p class="lede">Richmond upon Thames has one of the highest proportions of Outstanding-rated schools in London, particularly in primary phase. The borough covers Richmond, Twickenham, Teddington, Whitton and Hampton. Reception catchment radii are tight across most of the borough.</p>
-  <p class="stamp"><span class="dot"></span>Data last verified 1 September 2026. Sources: Ofsted, DfE GIAS, DfE Performance Tables, Metropolitan Police, MHCLG IMD. See <a href="/sources.html">all sources</a>.</p>
+  <div class="intro">Richmond upon Thames is consistently rated as one of the best boroughs in London for education and quality of life. The borough has an exceptionally high proportion of Outstanding-rated schools and benefits from low crime, extensive green space and strong community networks. Schools in Richmond, Twickenham and Ham are highly sought after and catchments can be very tight.</div>
 
-  <section>
-    <div class="grid-stats">
-      <div class="stat"><div class="v">84</div><div class="l">Schools in Richmond upon Thames</div></div>
-      <div class="stat"><div class="v">27.4%</div><div class="l">Outstanding Ofsted</div></div>
-      <div class="stat"><div class="v">75.0%</div><div class="l">Good or Outstanding</div></div>
-      <div class="stat"><div class="v">64</div><div class="l">Primary schools</div></div>
-      <div class="stat"><div class="v">27</div><div class="l">Secondary schools</div></div>
-      <div class="stat"><div class="v">11%</div><div class="l">Secondary appeal success (2024)</div></div>
-    </div>
-  </section>
+  
+<div style="display:flex;gap:16px;flex-wrap:wrap;margin:20px 0;">
 
-  <section>
-    <div class="twocol">
-      <div>
-        <h2>Top primary schools in Richmond upon Thames</h2>
-        <p class="sources">Ranked by Ofsted rating, then by latest KS2 performance. See <a href="/methodology.html">methodology</a>.</p>
-        <table class="schools">
-          <thead>
-            <tr><th>School</th><th>Ofsted</th><th>KS2 %</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><a href="/schools/richmond-upon-thames/deer-park-school/">Deer Park School</a></td><td class="rating Outstanding">Outstanding</td><td>97.0</td></tr>
-            <tr><td><a href="/schools/richmond-upon-thames/barnes-primary-school/">Barnes Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>96.0</td></tr>
-            <tr><td><a href="/schools/richmond-upon-thames/st-richard-reynolds-catholic-primary-school/">St Richard Reynolds Catholic Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>90.0</td></tr>
-            <tr><td><a href="/schools/richmond-upon-thames/chase-bridge-primary-school/">Chase Bridge Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>90.0</td></tr>
-            <tr><td><a href="/schools/richmond-upon-thames/st-marys-church-of-england-primary-school/">St Mary's Church of England Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>89.0</td></tr>
-            <tr><td><a href="/schools/richmond-upon-thames/thomson-house-school/">Thomson House School</a></td><td class="rating Outstanding">Outstanding</td><td>88.0</td></tr>
-            <tr><td><a href="/schools/richmond-upon-thames/collis-primary-school/">Collis Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>85.0</td></tr>
-          </tbody>
-        </table>
-
-        <h2 style="margin-top:28px">Top secondary schools in Richmond upon Thames</h2>
-        <p class="sources">Ranked by Ofsted rating, then by latest KS4 Attainment 8.</p>
-        <table class="schools">
-          <thead>
-            <tr><th>School</th><th>Ofsted</th><th>Att 8</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><a href="/schools/richmond-upon-thames/orleans-park-school/">Orleans Park School</a></td><td class="rating Outstanding">Outstanding</td><td>64.2</td></tr>
-            <tr><td><a href="/schools/richmond-upon-thames/grey-court-school/">Grey Court School</a></td><td class="rating Outstanding">Outstanding</td><td>62.6</td></tr>
-            <tr><td><a href="/schools/richmond-upon-thames/turing-house-school/">Turing House School</a></td><td class="rating Outstanding">Outstanding</td><td>59.4</td></tr>
-            <tr><td><a href="/schools/richmond-upon-thames/st-richard-reynolds-catholic-high-school/">St Richard Reynolds Catholic High School</a></td><td class="rating Outstanding">Outstanding</td><td>58.7</td></tr>
-            <tr><td><a href="/schools/richmond-upon-thames/clarendon-school/">Clarendon School</a></td><td class="rating Outstanding">Outstanding</td><td>3.2</td></tr>
-            <tr><td><a href="/schools/richmond-upon-thames/the-german-school/">The German School</a></td><td class="rating Outstanding">Outstanding</td><td>—</td></tr>
-            <tr><td><a href="/schools/richmond-upon-thames/the-swedish-school/">The Swedish School</a></td><td class="rating Outstanding">Outstanding</td><td>—</td></tr>
-          </tbody>
-        </table>
-
-        <p style="margin-top:14px"><a class="cta" href="#all-schools">Jump to all 84 schools in Richmond upon Thames</a></p>
-      </div>
-      <div>
-        <h2>Map</h2>
-        <div id="map" aria-label="Map of schools in Richmond upon Thames"></div>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <h2>What the data says about Richmond upon Thames</h2>
-    <p><strong>75.0%</strong> of Richmond upon Thames schools are currently rated Good or Outstanding by Ofsted, compared with a London average of roughly 90% for primary and 80% for secondary. The average number of applications per place across Richmond upon Thames is <strong>1.26</strong>, a useful indicator of how competitive local admissions are. The average number of recorded crime incidents within 500 metres of a school in Richmond upon Thames over the most recent reporting month is <strong>170.12</strong>, drawn from the Metropolitan Police open data API. The mean IMD (Index of Multiple Deprivation) decile of Richmond upon Thames's schools is <strong>7.95</strong> — 1 is most deprived, 10 is least deprived. All metrics on this page are recomputed from source data on the 15th of every month. See our <a href='/methodology.html'>methodology</a> for definitions and limitations.</p>
-  </section>
-
-  <section id="all-schools">
-    <h2>All schools in Richmond upon Thames</h2>
-    <p class="sources">Every school in Richmond upon Thames, listed alphabetically. Click any school for the full record.</p>
-    <table class="schools">
-      <thead>
-        <tr><th>School</th><th>Phase</th><th>Ofsted</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><a href="/schools/richmond-upon-thames/archdeacon-cambridges-church-of-england-primary-school/">Archdeacon Cambridge's Church of England Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/barnes-primary-school/">Barnes Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/bishop-perrin-church-of-england-primary-school/">Bishop Perrin Church of England Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/broomfield-house-school/">Broomfield House School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/buckingham-primary-school/">Buckingham Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/capella-house-school/">Capella House School</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/carlisle-infant-school/">Carlisle Infant School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/chase-bridge-primary-school/">Chase Bridge Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/christs-church-of-england-comprehensive-secondary-school/">Christ's Church of England Comprehensive Secondary School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/clarendon-school/">Clarendon School</a></td><td>All-through</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/collis-primary-school/">Collis Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/darell-primary-and-nursery-school/">Darell Primary and Nursery School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/deer-park-school/">Deer Park School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/east-sheen-primary-school/">East Sheen Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/grey-court-school/">Grey Court School</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/hampton-court-house/">Hampton Court House</a></td><td>All-through</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/hampton-high/">Hampton High</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/hampton-hill-junior-school/">Hampton Hill Junior School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/hampton-infant-school-and-nursery/">Hampton Infant School and Nursery</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/hampton-junior-school/">Hampton Junior School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/hampton-school/">Hampton School</a></td><td>All-through</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/hampton-wick-infant-and-nursery-school/">Hampton Wick Infant and Nursery School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/heathfield-infant-school/">Heathfield Infant School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/heathfield-junior-school/">Heathfield Junior School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/holy-trinity-church-of-england-primary-school/">Holy Trinity Church of England Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/jack-and-jill-school/">Jack and Jill School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/kew-college/">Kew College</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/kew-green-preparatory-school/">Kew Green Preparatory School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/kew-riverside-primary-school/">Kew Riverside Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/kings-house-school/">King's House School</a></td><td>All-through</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/lady-eleanor-holles-school/">Lady Eleanor Holles School</a></td><td>All-through</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/lift-richmond-park/">Lift Richmond Park</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/lowther-primary-school/">Lowther Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/marshgate-primary-school/">Marshgate Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/meadlands-primary-school/">Meadlands Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/nelson-primary-school/">Nelson Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/newland-house-school/">Newland House School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/orleans-park-school/">Orleans Park School</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/orleans-primary-school/">Orleans Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/radnor-house/">Radnor House</a></td><td>Secondary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/radnor-house-prep-school/">Radnor House Prep School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/sacred-heart-catholic-primary-school/">Sacred Heart Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/seva-education-twickenham/">Seva Education Twickenham</a></td><td>All-through</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/sheen-mount-primary-school/">Sheen Mount Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/st-catherines-school/">St Catherine's School</a></td><td>All-through</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/st-edmunds-catholic-primary-school/">St Edmund's Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/st-elizabeths-catholic-primary-school/">St Elizabeth's Catholic Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/st-jamess-catholic-primary-school/">St James's Catholic Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/st-john-the-baptist-church-of-england-junior-school/">St John the Baptist Church of England Junior School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/st-mary-magdalens-catholic-primary-school/">St Mary Magdalen's Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/st-marys-and-st-peters-church-of-england-primary-school/">St Mary's and St Peter's Church of England Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/st-marys-church-of-england-primary-school/">St Mary's Church of England Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/st-marys-hampton-church-of-england-primary/">St Mary's Hampton Church of England Primary</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/st-osmunds-catholic-primary-school/">St Osmund's Catholic Primary School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/st-pauls-school/">St Paul's School</a></td><td>All-through</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/st-richard-reynolds-catholic-high-school/">St Richard Reynolds Catholic High School</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/st-richard-reynolds-catholic-primary-school/">St Richard Reynolds Catholic Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/st-richards-church-of-england-primary-school/">St Richard's Church of England Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/st-stephens-c-e-primary-school/">St Stephen's C E Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/stanley-primary-school/">Stanley Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/strathmore-school/">Strathmore School</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/teddington-school/">Teddington School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/the-german-school/">The German School</a></td><td>All-through</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/the-harrodian-school/">The Harrodian School</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/the-kings-church-of-england-primary-school/">The King's Church of England Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/the-mall-school/">The Mall School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/the-old-vicarage-school/">The Old Vicarage School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/the-richmond-upon-thames-school/">The Richmond upon Thames School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/the-royal-ballet-school/">The Royal Ballet School</a></td><td>Secondary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/the-russell-primary-school/">The Russell Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/the-swedish-school/">The Swedish School</a></td><td>All-through</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/the-vineyard-school/">The Vineyard School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/thomass-college/">Thomas's College</a></td><td>Secondary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/thomson-house-school/">Thomson House School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/tower-house-school/">Tower House School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/trafalgar-infant-school/">Trafalgar Infant School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/trafalgar-junior-school/">Trafalgar Junior School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/turing-house-school/">Turing House School</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/twickenham-preparatory-school/">Twickenham Preparatory School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/twickenham-primary-academy/">Twickenham Primary Academy</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/twickenham-school/">Twickenham School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/unicorn-school/">Unicorn School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/waldegrave-school/">Waldegrave School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/richmond-upon-thames/windham-nursery-school/">Windham Nursery School</a></td><td>Nursery</td><td class="rating Good">Good</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <section>
-    <h2>Frequently asked</h2>
-    <details class="faq"><summary>How many schools are there in Richmond upon Thames?</summary><p>Richmond upon Thames has 84 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 64 are primary, 27 are secondary, and the remainder are special, all-through, or post-16.</p></details>
-<details class="faq"><summary>What proportion of Richmond upon Thames schools are Outstanding?</summary><p>As of the latest Ofsted Management Information release, 23 schools in Richmond upon Thames (27.4%) are rated Outstanding, and 75.0% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication.</p></details>
-<details class="faq"><summary>When do I apply for a Reception or Year 7 place in Richmond upon Thames?</summary><p>Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Richmond upon Thames's applications are coordinated by the local authority through the eAdmissions system. See our <a href='/guides/london-reception-application-timeline/'>full Reception timeline guide</a>.</p></details>
-<details class="faq"><summary>How does the school appeals process work in Richmond upon Thames?</summary><p>If you are refused your preferred school place, you have a statutory right of appeal. Richmond upon Thames appeals are typically heard in May (Reception) and June–July (secondary). See our <a href='/appeals.html'>appeals tracker</a> for Richmond upon Thames-level success rates by year.</p></details>
-<details class="faq"><summary>How can I tell which Richmond upon Thames schools are over-subscribed?</summary><p>Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release.</p></details>
-  </section>
-
-  <section>
-    <h2>Sources</h2>
-    <p class="sources">
-      School list and phase from <a href="https://get-information-schools.service.gov.uk/" rel="nofollow">DfE Get Information About Schools</a> (refreshed monthly).
-      Ofsted ratings from <a href="https://www.gov.uk/government/statistical-data-sets/monthly-management-information-ofsteds-school-inspections-outcomes" rel="nofollow">Ofsted Management Information</a> (refreshed monthly).
-      Performance data from <a href="https://explore-education-statistics.service.gov.uk/" rel="nofollow">DfE Explore Education Statistics</a>.
-      Crime data within 500m from the <a href="https://data.police.uk/" rel="nofollow">Metropolitan Police open data API</a>.
-      Deprivation deciles from <a href="https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019" rel="nofollow">MHCLG English Indices of Deprivation 2019</a>.
-      Read our full <a href="/methodology.html">methodology</a> for how each metric is calculated.
-    </p>
-  </section>
-</main>
-<footer>
-  <div class="inner">
-    <div>&copy; London School Directory. Independent. Free to use.</div>
-    <div><a href="/about.html">About</a> &middot; <a href="/methodology.html">Methodology</a> &middot; <a href="/sources.html">Sources</a> &middot; <a href="/appeals.html">Appeals</a></div>
-    <div>Browse by type: <a href="/schools/outstanding">Outstanding</a> &middot; <a href="/schools/good">Good</a> &middot; <a href="/schools/grammar">Grammar</a> &middot; <a href="/schools/selective">Selective</a> &middot; <a href="/schools/faith">Faith</a> &middot; <a href="/schools/primary">Primary</a> &middot; <a href="/schools/secondary">Secondary</a> &middot; <a href="/schools/sixth-form">Sixth form</a> &middot; <a href="/schools/independent">Private &amp; independent</a></div>
+<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fdf4ff 0%,#ede9fe 100%);
+     border:1px solid #d8b4fe;border-radius:12px;padding:14px 20px;">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+    <span style="font-size:22px;">🎓</span>
+    <strong style="font-size:15px;color:#5b21b6;">11+ &amp; 13+ Exam Prep</strong>
   </div>
-</footer>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
+    PiAcademy resources for grammar school entrance, SATs &amp; GCSE.
+    Use code <strong>THIERR25</strong> for 25% off.
+  </p>
+  <a href="https://piacademy.co.uk/?aff=28"
+     target="_blank" rel="noopener sponsored"
+     style="display:inline-block;padding:9px 18px;background:#7e22ce;color:#fff;
+            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
+    Get 25% OFF →
+  </a>
+  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
+</div>
+<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%);
+     border:1px solid #fcd34d;border-radius:12px;padding:14px 20px;">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+    <span style="font-size:22px;">📚</span>
+    <strong style="font-size:15px;color:#92400e;">Children's Books</strong>
+  </div>
+  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
+    Great books at low prices. At checkout, choose your school — Scholastic donates
+    <strong>20p for every £1 spent</strong> back to the school in free books.
+  </p>
+  <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&ued=https%3A%2F%2Fwww.scholastic.co.uk%2Fteachers"
+     target="_blank" rel="noopener sponsored"
+     style="display:inline-block;padding:9px 18px;background:#d97706;color:#fff;
+            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
+    Shop at Scholastic →
+  </a>
+  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
+</div>
+<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fff8f0 0%,#fff3e0 100%);
+     border:1px solid #fed7aa;border-radius:12px;padding:14px 20px;">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+    <span style="font-size:22px;">🛒</span>
+    <strong style="font-size:15px;color:#92400e;">School Supplies</strong>
+  </div>
+  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
+    Stationery, bags, PE kit, lunchboxes and more — fast delivery from Amazon.
+  </p>
+  <a href="https://www.amazon.co.uk/s?k=school+supplies+stationery&tag=londonparents-21"
+     target="_blank" rel="noopener sponsored"
+     style="display:inline-block;padding:9px 18px;background:#FF9900;color:#111;
+            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
+    Shop on Amazon →
+  </a>
+  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
+</div>
+</div>
+
+  <!-- Borough share buttons -->
+  <div style="display:flex;gap:10px;margin:16px 0 8px;flex-wrap:wrap;align-items:center;">
+    <span style="font-size:13px;color:#555;font-weight:600;">Share Richmond upon Thames schools:</span>
+    <button onclick="shareBoroughWhatsApp()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 WhatsApp</button>
+    <button onclick="shareBoroughEmail()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#1565C0;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Email</button>
+    <span style="font-size:12px;color:#999;margin-left:4px;">Or tick schools below to share a shortlist</span>
+  </div>
+
+  <!-- Sticky compare bar (appears when schools are ticked) -->
+  <div id="cmp-bar" style="display:none;position:sticky;top:0;z-index:100;background:#1A1A2E;color:#fff;padding:12px 16px;border-radius:10px;margin-bottom:12px;display:none;align-items:center;gap:10px;flex-wrap:wrap;">
+    <span id="cmp-count" style="font-weight:700;font-size:14px;">0 schools selected</span>
+    <button onclick="shareCompareWhatsApp()" style="padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 Share via WhatsApp</button>
+    <button onclick="shareCompareEmail()" style="padding:8px 16px;background:#fff;color:#1A1A2E;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Share via Email</button>
+    <button onclick="clearSelection()" style="padding:8px 12px;background:transparent;color:#aaa;border:1px solid #555;border-radius:8px;font-size:12px;cursor:pointer;">✕ Clear</button>
+  </div>
+
+  <table>
+    <thead><tr><th style="width:36px"></th><th>School</th><th>Phase</th><th>Ofsted</th><th>Pupils</th></tr></thead>
+    <tbody><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Archdeacon Cambridge's Church of England Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="84.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/archdeacon-cambridges-church-of-england-primary-school"></td>
+          <td><a href="/schools/richmond-upon-thames/archdeacon-cambridges-church-of-england-primary-school">Archdeacon Cambridge's Church of England Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>440</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Barnes Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="96.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/barnes-primary-school"></td>
+          <td><a href="/schools/richmond-upon-thames/barnes-primary-school">Barnes Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>470</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Bishop Perrin Church of England Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="83.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/bishop-perrin-church-of-england-primary-school"></td>
+          <td><a href="/schools/richmond-upon-thames/bishop-perrin-church-of-england-primary-school">Bishop Perrin Church of England Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>204</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Broomfield House School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/broomfield-house-school"></td>
+          <td><a href="/schools/richmond-upon-thames/broomfield-house-school">Broomfield House School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>160</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Buckingham Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="59.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/buckingham-primary-school"></td>
+          <td><a href="/schools/richmond-upon-thames/buckingham-primary-school">Buckingham Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>377</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Capella House School"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8="6.9"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/capella-house-school"></td>
+          <td><a href="/schools/richmond-upon-thames/capella-house-school">Capella House School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>78</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Carlisle Infant School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/carlisle-infant-school"></td>
+          <td><a href="/schools/richmond-upon-thames/carlisle-infant-school">Carlisle Infant School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>212</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Chase Bridge Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="90.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/chase-bridge-primary-school"></td>
+          <td><a href="/schools/richmond-upon-thames/chase-bridge-primary-school">Chase Bridge Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>656</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Christ's Church of England Comprehensive Secondary School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="54.9"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/christs-church-of-england-comprehensive-secondary-school"></td>
+          <td><a href="/schools/richmond-upon-thames/christs-church-of-england-comprehensive-secondary-school">Christ's Church of England Comprehensive Secondary School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1050</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Clarendon School"
+            data-ofsted="Outstanding"
+            data-phase="All-through"
+            data-att8="3.2"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/clarendon-school"></td>
+          <td><a href="/schools/richmond-upon-thames/clarendon-school">Clarendon School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>164</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Collis Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="85.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/collis-primary-school"></td>
+          <td><a href="/schools/richmond-upon-thames/collis-primary-school">Collis Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>704</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Darell Primary and Nursery School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="69.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/darell-primary-and-nursery-school"></td>
+          <td><a href="/schools/richmond-upon-thames/darell-primary-and-nursery-school">Darell Primary and Nursery School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>192</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Deer Park School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="97.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/deer-park-school"></td>
+          <td><a href="/schools/richmond-upon-thames/deer-park-school">Deer Park School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>417</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="East Sheen Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="84.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/east-sheen-primary-school"></td>
+          <td><a href="/schools/richmond-upon-thames/east-sheen-primary-school">East Sheen Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>593</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Grey Court School"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="62.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/grey-court-school"></td>
+          <td><a href="/schools/richmond-upon-thames/grey-court-school">Grey Court School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>1650</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hampton Court House"
+            data-ofsted="Not yet rated"
+            data-phase="All-through"
+            data-att8="48.1"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/hampton-court-house"></td>
+          <td><a href="/schools/richmond-upon-thames/hampton-court-house">Hampton Court House</a></td>
+          <td>All-through</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>346</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hampton High"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="43.4"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/hampton-high"></td>
+          <td><a href="/schools/richmond-upon-thames/hampton-high">Hampton High</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>847</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hampton Hill Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="70.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/hampton-hill-junior-school"></td>
+          <td><a href="/schools/richmond-upon-thames/hampton-hill-junior-school">Hampton Hill Junior School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>306</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hampton Infant School and Nursery"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/hampton-infant-school-and-nursery"></td>
+          <td><a href="/schools/richmond-upon-thames/hampton-infant-school-and-nursery">Hampton Infant School and Nursery</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>372</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hampton Junior School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="85.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/hampton-junior-school"></td>
+          <td><a href="/schools/richmond-upon-thames/hampton-junior-school">Hampton Junior School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>474</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hampton School"
+            data-ofsted="Not yet rated"
+            data-phase="All-through"
+            data-att8="20.7"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/hampton-school"></td>
+          <td><a href="/schools/richmond-upon-thames/hampton-school">Hampton School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>1578</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hampton Wick Infant and Nursery School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/hampton-wick-infant-and-nursery-school"></td>
+          <td><a href="/schools/richmond-upon-thames/hampton-wick-infant-and-nursery-school">Hampton Wick Infant and Nursery School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>165</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Heathfield Infant School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/heathfield-infant-school"></td>
+          <td><a href="/schools/richmond-upon-thames/heathfield-infant-school">Heathfield Infant School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>286</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Heathfield Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="67.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/heathfield-junior-school"></td>
+          <td><a href="/schools/richmond-upon-thames/heathfield-junior-school">Heathfield Junior School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>370</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Holy Trinity Church of England Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="81.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/holy-trinity-church-of-england-primary-school"></td>
+          <td><a href="/schools/richmond-upon-thames/holy-trinity-church-of-england-primary-school">Holy Trinity Church of England Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>309</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Jack and Jill School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/jack-and-jill-school"></td>
+          <td><a href="/schools/richmond-upon-thames/jack-and-jill-school">Jack and Jill School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>166</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Kew College"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/kew-college"></td>
+          <td><a href="/schools/richmond-upon-thames/kew-college">Kew College</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>262</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Kew Green Preparatory School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/kew-green-preparatory-school"></td>
+          <td><a href="/schools/richmond-upon-thames/kew-green-preparatory-school">Kew Green Preparatory School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>196</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Kew Riverside Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="73.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/kew-riverside-primary-school"></td>
+          <td><a href="/schools/richmond-upon-thames/kew-riverside-primary-school">Kew Riverside Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>84</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="King's House School"
+            data-ofsted="Not yet rated"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/kings-house-school"></td>
+          <td><a href="/schools/richmond-upon-thames/kings-house-school">King's House School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>418</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Lady Eleanor Holles School"
+            data-ofsted="Not yet rated"
+            data-phase="All-through"
+            data-att8="39.5"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/lady-eleanor-holles-school"></td>
+          <td><a href="/schools/richmond-upon-thames/lady-eleanor-holles-school">Lady Eleanor Holles School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>969</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Lift Richmond Park"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="55.7"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/lift-richmond-park"></td>
+          <td><a href="/schools/richmond-upon-thames/lift-richmond-park">Lift Richmond Park</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1046</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Lowther Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="79.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/lowther-primary-school"></td>
+          <td><a href="/schools/richmond-upon-thames/lowther-primary-school">Lowther Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>244</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Marshgate Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="92.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/marshgate-primary-school"></td>
+          <td><a href="/schools/richmond-upon-thames/marshgate-primary-school">Marshgate Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>389</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Meadlands Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="88.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/meadlands-primary-school"></td>
+          <td><a href="/schools/richmond-upon-thames/meadlands-primary-school">Meadlands Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>221</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Nelson Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="61.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/nelson-primary-school"></td>
+          <td><a href="/schools/richmond-upon-thames/nelson-primary-school">Nelson Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>227</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Newland House School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/newland-house-school"></td>
+          <td><a href="/schools/richmond-upon-thames/newland-house-school">Newland House School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>392</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Orleans Park School"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="64.2"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/orleans-park-school"></td>
+          <td><a href="/schools/richmond-upon-thames/orleans-park-school">Orleans Park School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>1403</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Orleans Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="75.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/orleans-primary-school"></td>
+          <td><a href="/schools/richmond-upon-thames/orleans-primary-school">Orleans Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>429</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Radnor House"
+            data-ofsted="Not yet rated"
+            data-phase="Secondary"
+            data-att8="53.9"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/radnor-house"></td>
+          <td><a href="/schools/richmond-upon-thames/radnor-house">Radnor House</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>471</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Radnor House Prep School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/radnor-house-prep-school"></td>
+          <td><a href="/schools/richmond-upon-thames/radnor-house-prep-school">Radnor House Prep School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>77</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Sacred Heart Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="68.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/sacred-heart-catholic-primary-school"></td>
+          <td><a href="/schools/richmond-upon-thames/sacred-heart-catholic-primary-school">Sacred Heart Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>160</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Seva Education Twickenham"
+            data-ofsted="Not yet rated"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/seva-education-twickenham"></td>
+          <td><a href="/schools/richmond-upon-thames/seva-education-twickenham">Seva Education Twickenham</a></td>
+          <td>All-through</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>21</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Sheen Mount Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="90.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/sheen-mount-primary-school"></td>
+          <td><a href="/schools/richmond-upon-thames/sheen-mount-primary-school">Sheen Mount Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>598</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Catherine's School"
+            data-ofsted="Not yet rated"
+            data-phase="All-through"
+            data-att8="54.9"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/st-catherines-school"></td>
+          <td><a href="/schools/richmond-upon-thames/st-catherines-school">St Catherine's School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>381</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Edmund's Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="83.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/st-edmunds-catholic-primary-school"></td>
+          <td><a href="/schools/richmond-upon-thames/st-edmunds-catholic-primary-school">St Edmund's Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>442</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Elizabeth's Catholic Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/st-elizabeths-catholic-primary-school"></td>
+          <td><a href="/schools/richmond-upon-thames/st-elizabeths-catholic-primary-school">St Elizabeth's Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>212</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St James's Catholic Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="85.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/st-jamess-catholic-primary-school"></td>
+          <td><a href="/schools/richmond-upon-thames/st-jamess-catholic-primary-school">St James's Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>669</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St John the Baptist Church of England Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="80.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/st-john-the-baptist-church-of-england-junior-school"></td>
+          <td><a href="/schools/richmond-upon-thames/st-john-the-baptist-church-of-england-junior-school">St John the Baptist Church of England Junior School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>212</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Mary Magdalen's Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="84.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/st-mary-magdalens-catholic-primary-school"></td>
+          <td><a href="/schools/richmond-upon-thames/st-mary-magdalens-catholic-primary-school">St Mary Magdalen's Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>152</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Mary's Church of England Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="89.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/st-marys-church-of-england-primary-school"></td>
+          <td><a href="/schools/richmond-upon-thames/st-marys-church-of-england-primary-school">St Mary's Church of England Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>619</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Mary's Hampton Church of England Primary"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="60.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/st-marys-hampton-church-of-england-primary"></td>
+          <td><a href="/schools/richmond-upon-thames/st-marys-hampton-church-of-england-primary">St Mary's Hampton Church of England Primary</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>161</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Mary's and St Peter's Church of England Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="83.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/st-marys-and-st-peters-church-of-england-primary-school"></td>
+          <td><a href="/schools/richmond-upon-thames/st-marys-and-st-peters-church-of-england-primary-school">St Mary's and St Peter's Church of England Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>621</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Osmund's Catholic Primary School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/st-osmunds-catholic-primary-school"></td>
+          <td><a href="/schools/richmond-upon-thames/st-osmunds-catholic-primary-school">St Osmund's Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>167</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Paul's School"
+            data-ofsted="Not yet rated"
+            data-phase="All-through"
+            data-att8="33.4"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/st-pauls-school"></td>
+          <td><a href="/schools/richmond-upon-thames/st-pauls-school">St Paul's School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>1504</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Richard Reynolds Catholic High School"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="58.7"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/st-richard-reynolds-catholic-high-school"></td>
+          <td><a href="/schools/richmond-upon-thames/st-richard-reynolds-catholic-high-school">St Richard Reynolds Catholic High School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>1175</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Richard Reynolds Catholic Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="90.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/st-richard-reynolds-catholic-primary-school"></td>
+          <td><a href="/schools/richmond-upon-thames/st-richard-reynolds-catholic-primary-school">St Richard Reynolds Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>210</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Richard's Church of England Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="57.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/st-richards-church-of-england-primary-school"></td>
+          <td><a href="/schools/richmond-upon-thames/st-richards-church-of-england-primary-school">St Richard's Church of England Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>153</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Stephen's C E Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="84.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/st-stephens-c-e-primary-school"></td>
+          <td><a href="/schools/richmond-upon-thames/st-stephens-c-e-primary-school">St Stephen's C E Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>417</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Stanley Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="73.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/stanley-primary-school"></td>
+          <td><a href="/schools/richmond-upon-thames/stanley-primary-school">Stanley Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>385</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Strathmore School"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/strathmore-school"></td>
+          <td><a href="/schools/richmond-upon-thames/strathmore-school">Strathmore School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>108</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Teddington School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="55.7"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/teddington-school"></td>
+          <td><a href="/schools/richmond-upon-thames/teddington-school">Teddington School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1405</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The German School"
+            data-ofsted="Outstanding"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/the-german-school"></td>
+          <td><a href="/schools/richmond-upon-thames/the-german-school">The German School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>859</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Harrodian School"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8="75.2"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/the-harrodian-school"></td>
+          <td><a href="/schools/richmond-upon-thames/the-harrodian-school">The Harrodian School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1034</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The King's Church of England Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="88.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/the-kings-church-of-england-primary-school"></td>
+          <td><a href="/schools/richmond-upon-thames/the-kings-church-of-england-primary-school">The King's Church of England Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>397</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Mall School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/the-mall-school"></td>
+          <td><a href="/schools/richmond-upon-thames/the-mall-school">The Mall School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>218</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Old Vicarage School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/the-old-vicarage-school"></td>
+          <td><a href="/schools/richmond-upon-thames/the-old-vicarage-school">The Old Vicarage School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>227</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Richmond upon Thames School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="47.0"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/the-richmond-upon-thames-school"></td>
+          <td><a href="/schools/richmond-upon-thames/the-richmond-upon-thames-school">The Richmond upon Thames School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>760</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Royal Ballet School"
+            data-ofsted="Not yet rated"
+            data-phase="Secondary"
+            data-att8="34.8"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/the-royal-ballet-school"></td>
+          <td><a href="/schools/richmond-upon-thames/the-royal-ballet-school">The Royal Ballet School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>227</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Russell Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="77.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/the-russell-primary-school"></td>
+          <td><a href="/schools/richmond-upon-thames/the-russell-primary-school">The Russell Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>207</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Swedish School"
+            data-ofsted="Outstanding"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/the-swedish-school"></td>
+          <td><a href="/schools/richmond-upon-thames/the-swedish-school">The Swedish School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>216</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Vineyard School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="76.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/the-vineyard-school"></td>
+          <td><a href="/schools/richmond-upon-thames/the-vineyard-school">The Vineyard School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>516</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Thomas's College"
+            data-ofsted="Not yet rated"
+            data-phase="Secondary"
+            data-att8="69.9"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/thomass-college"></td>
+          <td><a href="/schools/richmond-upon-thames/thomass-college">Thomas's College</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>304</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Thomson House School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="88.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/thomson-house-school"></td>
+          <td><a href="/schools/richmond-upon-thames/thomson-house-school">Thomson House School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>366</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Tower House School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/tower-house-school"></td>
+          <td><a href="/schools/richmond-upon-thames/tower-house-school">Tower House School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>181</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Trafalgar Infant School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/trafalgar-infant-school"></td>
+          <td><a href="/schools/richmond-upon-thames/trafalgar-infant-school">Trafalgar Infant School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>133</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Trafalgar Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="76.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/trafalgar-junior-school"></td>
+          <td><a href="/schools/richmond-upon-thames/trafalgar-junior-school">Trafalgar Junior School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>274</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Turing House School"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="59.4"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/turing-house-school"></td>
+          <td><a href="/schools/richmond-upon-thames/turing-house-school">Turing House School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>1047</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Twickenham Preparatory School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/twickenham-preparatory-school"></td>
+          <td><a href="/schools/richmond-upon-thames/twickenham-preparatory-school">Twickenham Preparatory School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>233</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Twickenham Primary Academy"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="65.0"
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/twickenham-primary-academy"></td>
+          <td><a href="/schools/richmond-upon-thames/twickenham-primary-academy">Twickenham Primary Academy</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>380</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Twickenham School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="48.7"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/twickenham-school"></td>
+          <td><a href="/schools/richmond-upon-thames/twickenham-school">Twickenham School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>774</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Unicorn School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/unicorn-school"></td>
+          <td><a href="/schools/richmond-upon-thames/unicorn-school">Unicorn School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>136</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Waldegrave School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="64.8"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/waldegrave-school"></td>
+          <td><a href="/schools/richmond-upon-thames/waldegrave-school">Waldegrave School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1470</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Windham Nursery School"
+            data-ofsted="Good"
+            data-phase="Nursery"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/richmond-upon-thames/windham-nursery-school"></td>
+          <td><a href="/schools/richmond-upon-thames/windham-nursery-school">Windham Nursery School</a></td>
+          <td>Nursery</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>83</td>
+        </tr></tbody>
+  </table>
+</div>
+<footer><a href="/">London Schools Explorer</a> &mdash; helping families find the right school in London.<p style="margin-top:10px">Browse by type: <a href="/schools/outstanding">Outstanding</a> &middot; <a href="/schools/good">Good</a> &middot; <a href="/schools/grammar">Grammar</a> &middot; <a href="/schools/selective">Selective</a> &middot; <a href="/schools/faith">Faith</a> &middot; <a href="/schools/primary">Primary</a> &middot; <a href="/schools/secondary">Secondary</a> &middot; <a href="/schools/sixth-form">Sixth form</a> &middot; <a href="/schools/independent">Private &amp; independent</a></p></footer>
+<script defer src="/_vercel/insights/script.js"></script>
 <script>
-  (function() {
-    var points = [[51.468956, -0.289669, "/schools/richmond-upon-thames/windham-nursery-school/", "Windham Nursery School"], [51.42305, -0.363359, "/schools/richmond-upon-thames/carlisle-infant-school/", "Carlisle Infant School"], [51.468548, -0.283925, "/schools/richmond-upon-thames/darell-primary-and-nursery-school/", "Darell Primary and Nursery School"], [51.464956, -0.254388, "/schools/richmond-upon-thames/east-sheen-primary-school/", "East Sheen Primary School"], [51.427761, -0.360731, "/schools/richmond-upon-thames/hampton-hill-junior-school/", "Hampton Hill Junior School"], [51.41653, -0.373026, "/schools/richmond-upon-thames/hampton-junior-school/", "Hampton Junior School"], [51.419421, -0.375296, "/schools/richmond-upon-thames/hampton-infant-school-and-nursery/", "Hampton Infant School and Nursery"], [51.418316, -0.311149, "/schools/richmond-upon-thames/hampton-wick-infant-and-nursery-school/", "Hampton Wick Infant and Nursery School"], [51.447394, -0.368648, "/schools/richmond-upon-thames/heathfield-junior-school/", "Heathfield Junior School"], [51.447394, -0.368648, "/schools/richmond-upon-thames/heathfield-infant-school/", "Heathfield Infant School"], [51.483469, -0.239697, "/schools/richmond-upon-thames/lowther-primary-school/", "Lowther Primary School"], [51.433262, -0.314942, "/schools/richmond-upon-thames/meadlands-primary-school/", "Meadlands Primary School"], [51.453006, -0.320346, "/schools/richmond-upon-thames/orleans-primary-school/", "Orleans Primary School"], [51.445059, -0.303643, "/schools/richmond-upon-thames/the-russell-primary-school/", "The Russell Primary School"], [51.461097, -0.275596, "/schools/richmond-upon-thames/sheen-mount-primary-school/", "Sheen Mount Primary School"], [51.433711, -0.344548, "/schools/richmond-upon-thames/stanley-primary-school/", "Stanley Primary School"], [51.442526, -0.348518, "/schools/richmond-upon-thames/trafalgar-junior-school/", "Trafalgar Junior School"], [51.442337, -0.349172, "/schools/richmond-upon-thames/trafalgar-infant-school/", "Trafalgar Infant School"], [51.469444, -0.250185, "/schools/richmond-upon-thames/barnes-primary-school/", "Barnes Primary School"], [51.422162, -0.32598, "/schools/richmond-upon-thames/collis-primary-school/", "Collis Primary School"], [51.427885, -0.377384, "/schools/richmond-upon-thames/buckingham-primary-school/", "Buckingham Primary School"], [51.454701, -0.345329, "/schools/richmond-upon-thames/chase-bridge-primary-school/", "Chase Bridge Primary School"], [51.454291, -0.298464, "/schools/richmond-upon-thames/the-vineyard-school/", "The Vineyard School"], [51.436955, -0.319727, "/schools/richmond-upon-thames/st-richards-church-of-england-primary-school/", "St Richard's Church of England Primary School"], [51.463405, -0.285802, "/schools/richmond-upon-thames/holy-trinity-church-of-england-primary-school/", "Holy Trinity Church of England Primary School"], [51.468592, -0.261204, "/schools/richmond-upon-thames/st-mary-magdalens-catholic-primary-school/", "St Mary Magdalen's Catholic Primary School"], [51.415908, -0.309987, "/schools/richmond-upon-thames/st-john-the-baptist-church-of-england-junior-school/", "St John the Baptist Church of England Junior School"], [51.45279, -0.360295, "/schools/richmond-upon-thames/st-edmunds-catholic-primary-school/", "St Edmund's Catholic Primary School"], [51.437063, -0.347578, "/schools/richmond-upon-thames/st-jamess-catholic-primary-school/", "St James's Catholic Primary School"], [51.449599, -0.327308, "/schools/richmond-upon-thames/st-marys-church-of-england-primary-school/", "St Mary's Church of England Primary School"], [51.456074, -0.322969, "/schools/richmond-upon-thames/st-stephens-c-e-primary-school/", "St Stephen's C E Primary School"], [51.4211, -0.320913, "/schools/richmond-upon-thames/sacred-heart-catholic-primary-school/", "Sacred Heart Catholic Primary School"], [51.429562, -0.339822, "/schools/richmond-upon-thames/st-marys-and-st-peters-church-of-england-primary-school/", "St Mary's and St Peter's Church of England Primary School"], [51.448563, -0.366102, "/schools/richmond-upon-thames/bishop-perrin-church-of-england-primary-school/", "Bishop Perrin Church of England Primary School"], [51.443826, -0.340614, "/schools/richmond-upon-thames/archdeacon-cambridges-church-of-england-primary-school/", "Archdeacon Cambridge's Church of England Primary School"], [51.480207, -0.286037, "/schools/richmond-upon-thames/the-kings-church-of-england-primary-school/", "The King's Church of England Primary School"], [51.458755, -0.288179, "/schools/richmond-upon-thames/christs-church-of-england-comprehensive-secondary-school/", "Christ's Church of England Comprehensive Secondary School"], [51.459333, -0.292677, "/schools/richmond-upon-thames/kings-house-school/", "King's House School"], [51.427592, -0.368605, "/schools/richmond-upon-thames/lady-eleanor-holles-school/", "Lady Eleanor Holles School"], [51.437214, -0.349357, "/schools/richmond-upon-thames/the-mall-school/", "The Mall School"], [51.433613, -0.333158, "/schools/richmond-upon-thames/newland-house-school/", "Newland House School"], [51.456783, -0.302891, "/schools/richmond-upon-thames/the-old-vicarage-school/", "The Old Vicarage School"], [51.443207, -0.330621, "/schools/richmond-upon-thames/st-catherines-school/", "St Catherine's School"], [51.462571, -0.26817, "/schools/richmond-upon-thames/tower-house-school/", "Tower House School"], [51.478853, -0.28819, "/schools/richmond-upon-thames/broomfield-house-school/", "Broomfield House School"], [51.424716, -0.370664, "/schools/richmond-upon-thames/jack-and-jill-school/", "Jack and Jill School"], [51.480408, -0.285021, "/schools/richmond-upon-thames/kew-college/", "Kew College"], [51.487697, -0.237417, "/schools/richmond-upon-thames/st-pauls-school/", "St Paul's School"], [51.413935, -0.362332, "/schools/richmond-upon-thames/twickenham-preparatory-school/", "Twickenham Preparatory School"], [51.475454, -0.291241, "/schools/richmond-upon-thames/unicorn-school/", "Unicorn School"], [51.445059, -0.303643, "/schools/richmond-upon-thames/the-german-school/", "The German School"], [51.428645, -0.371214, "/schools/richmond-upon-thames/hampton-school/", "Hampton School"], [51.513208, -0.123166, "/schools/richmond-upon-thames/the-royal-ballet-school/", "The Royal Ballet School"], [51.486396, -0.237049, "/schools/richmond-upon-thames/the-swedish-school/", "The Swedish School"], [51.480612, -0.247123, "/schools/richmond-upon-thames/the-harrodian-school/", "The Harrodian School"], [51.474099, -0.276719, "/schools/richmond-upon-thames/kew-riverside-primary-school/", "Kew Riverside Primary School"], [51.407564, -0.340892, "/schools/richmond-upon-thames/hampton-court-house/", "Hampton Court House"], [51.46141, -0.290225, "/schools/richmond-upon-thames/marshgate-primary-school/", "Marshgate Primary School"], [51.485833, -0.290133, "/schools/richmond-upon-thames/kew-green-preparatory-school/", "Kew Green Preparatory School"], [51.463153, -0.25771, "/schools/richmond-upon-thames/lift-richmond-park/", "Lift Richmond Park"], [51.439519, -0.331792, "/schools/richmond-upon-thames/radnor-house/", "Radnor House"], [51.423227, -0.312435, "/schools/richmond-upon-thames/teddington-school/", "Teddington School"], [51.439431, -0.350975, "/schools/richmond-upon-thames/waldegrave-school/", "Waldegrave School"], [51.450991, -0.319067, "/schools/richmond-upon-thames/orleans-park-school/", "Orleans Park School"], [51.438914, -0.312144, "/schools/richmond-upon-thames/grey-court-school/", "Grey Court School"], [51.41506, -0.37594, "/schools/richmond-upon-thames/st-marys-hampton-church-of-england-primary/", "St Mary's Hampton Church of England Primary"], [51.468812, -0.266364, "/schools/richmond-upon-thames/thomson-house-school/", "Thomson House School"], [51.449711, -0.367112, "/schools/richmond-upon-thames/turing-house-school/", "Turing House School"], [51.456121, -0.30994, "/schools/richmond-upon-thames/deer-park-school/", "Deer Park School"], [51.44518, -0.33973, "/schools/richmond-upon-thames/twickenham-primary-academy/", "Twickenham Primary Academy"], [51.452148, -0.340269, "/schools/richmond-upon-thames/the-richmond-upon-thames-school/", "The Richmond upon Thames School"], [51.452148, -0.340269, "/schools/richmond-upon-thames/clarendon-school/", "Clarendon School"], [51.447968, -0.335268, "/schools/richmond-upon-thames/strathmore-school/", "Strathmore School"], [51.429025, -0.373992, "/schools/richmond-upon-thames/hampton-high/", "Hampton High"], [51.444306, -0.363218, "/schools/richmond-upon-thames/twickenham-school/", "Twickenham School"], [51.453141, -0.359707, "/schools/richmond-upon-thames/nelson-primary-school/", "Nelson Primary School"], [51.452148, -0.340269, "/schools/richmond-upon-thames/capella-house-school/", "Capella House School"], [51.447912, -0.335155, "/schools/richmond-upon-thames/st-richard-reynolds-catholic-high-school/", "St Richard Reynolds Catholic High School"], [51.447912, -0.335155, "/schools/richmond-upon-thames/st-richard-reynolds-catholic-primary-school/", "St Richard Reynolds Catholic Primary School"], [51.453544, -0.294721, "/schools/richmond-upon-thames/thomass-college/", "Thomas's College"], [51.465678, -0.301727, "/schools/richmond-upon-thames/radnor-house-prep-school/", "Radnor House Prep School"], [51.456653, -0.290201, "/schools/richmond-upon-thames/st-elizabeths-catholic-primary-school/", "St Elizabeth's Catholic Primary School"], [51.474272, -0.245306, "/schools/richmond-upon-thames/st-osmunds-catholic-primary-school/", "St Osmund's Catholic Primary School"], [51.434001, -0.335187, "/schools/richmond-upon-thames/seva-education-twickenham/", "Seva Education Twickenham"]];
-    if (!points.length) return;
-    var lats = points.map(function(p) { return p[0]; });
-    var lngs = points.map(function(p) { return p[1]; });
-    var avgLat = lats.reduce(function(a,b) { return a+b; }, 0) / lats.length;
-    var avgLng = lngs.reduce(function(a,b) { return a+b; }, 0) / lngs.length;
-    var map = L.map('map', { scrollWheelZoom: false }).setView([avgLat, avgLng], 12);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 18,
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-    points.forEach(function(p) {
-      L.circleMarker([p[0], p[1]], {
-        radius: 5, color: '#0b2545', fillColor: '#0b6efd', fillOpacity: 0.8, weight: 1
-      }).addTo(map).bindPopup('<a href="' + p[2] + '">' + p[3] + '</a>');
+(function(){
+  var borough="Richmond upon Thames", boroughUrl="https://londonschool.directory/schools/richmond-upon-thames";
+  var outstanding=23, total=84;
+
+  // Borough-level share
+  window.shareBoroughWhatsApp=function(){
+    var t='🏙️ *Schools in '+borough+', London*\n'+
+        '📊 '+total+' schools · '+outstanding+' Outstanding\n\n'+
+        '🔗 '+boroughUrl;
+    window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank');
+  };
+  window.shareBoroughEmail=function(){
+    var s='Schools in '+borough+' — London Schools Explorer';
+    var b='Schools in '+borough+', London\n'+
+        total+' schools, '+outstanding+' rated Outstanding by Ofsted\n\n'+
+        'Browse them here: '+boroughUrl;
+    window.location.href='mailto:?subject='+encodeURIComponent(s)+'&body='+encodeURIComponent(b);
+  };
+
+  // Shortlist comparison share
+  function getSelected(){
+    return Array.from(document.querySelectorAll('.sch-sel:checked')).map(function(cb){
+      return {name:cb.dataset.name,ofsted:cb.dataset.ofsted,phase:cb.dataset.phase,
+               att8:cb.dataset.att8,ks2:cb.dataset.ks2,url:cb.dataset.url};
     });
-  })();
+  }
+  function updateBar(){
+    var sel=getSelected();
+    var bar=document.getElementById('cmp-bar');
+    document.getElementById('cmp-count').textContent=sel.length+' school'+(sel.length===1?'':' s')+' selected';
+    bar.style.display=sel.length>0?'flex':'none';
+  }
+  document.querySelectorAll('.sch-sel').forEach(function(cb){ cb.onchange=updateBar; });
+
+  function buildCompareText(sel,markdown){
+    var lines=['📋 *My '+borough+' school shortlist*',''];
+    sel.forEach(function(s,i){
+      lines.push((i+1)+'. '+(markdown?'*':'')+s.name+(markdown?'*':''));
+      lines.push('   ⭐ Ofsted: '+s.ofsted+(s.phase?' · '+s.phase:''));
+      if(s.att8)lines.push('   📊 Attainment 8: '+s.att8);
+      if(s.ks2)lines.push('   📝 KS2 expected: '+s.ks2+'%');
+      lines.push('   🔗 '+s.url);
+      lines.push('');
+    });
+    lines.push('via London Schools Explorer — '+boroughUrl);
+    return lines.join('\n');
+  }
+  window.shareCompareWhatsApp=function(){
+    var sel=getSelected();
+    if(!sel.length)return;
+    window.open('https://wa.me/?text='+encodeURIComponent(buildCompareText(sel,true)),'_blank');
+  };
+  window.shareCompareEmail=function(){
+    var sel=getSelected();
+    if(!sel.length)return;
+    var subj='My '+borough+' school shortlist — London Schools Explorer';
+    window.location.href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(buildCompareText(sel,false));
+  };
+  window.clearSelection=function(){
+    document.querySelectorAll('.sch-sel:checked').forEach(function(cb){cb.checked=false;});
+    updateBar();
+  };
+})();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/sw.js').catch(function () {});
+  });
+}
 </script>
 </body>
 </html>

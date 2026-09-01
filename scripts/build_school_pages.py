@@ -558,6 +558,39 @@ def build_school_page(school):
     else:
         report_btn = f"<a class='btn btn-gold' href='{ofsted_url}' target='_blank' rel='noopener'>View Ofsted report</a>" if ofsted_url else ""
 
+    # Above-the-fold sponsored banner — a slim hook at the top of the page, since the
+    # detailed affiliate cards further down sit below the fold and get few impressions.
+    # 11+ prep is relevant to mainstream primary/secondary; nursery & special schools
+    # get the books banner instead.
+    if not is_special and phase_lc != "nursery":
+        top_promo = """
+  <a href="https://piacademy.co.uk/?aff=28" target="_blank" rel="noopener sponsored"
+     style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+            margin:0 0 20px;padding:12px 20px;border-radius:12px;text-decoration:none;
+            background:linear-gradient(100deg,#7e22ce 0%,#9333ea 100%);color:#fff;
+            box-shadow:0 4px 14px rgba(126,34,206,0.28);">
+    <span style="display:flex;align-items:center;gap:12px;font-size:15px;font-weight:600;">
+      <span style="font-size:22px;">🎓</span>
+      <span>Preparing for the 11+ or entrance exams? <strong>25% off</strong> PiAcademy with code <strong>THIERR25</strong></span>
+    </span>
+    <span style="padding:9px 18px;background:#fff;color:#6b21a8;border-radius:8px;font-weight:700;font-size:14px;white-space:nowrap;">Get 25% OFF →</span>
+  </a>
+  <p style="font-size:11px;color:#aaa;margin:-14px 0 20px;">Sponsored — helps keep this site free.</p>"""
+    else:
+        top_promo = """
+  <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&ued=https%3A%2F%2Fwww.scholastic.co.uk%2Fteachers" target="_blank" rel="noopener sponsored"
+     style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+            margin:0 0 20px;padding:12px 20px;border-radius:12px;text-decoration:none;
+            background:linear-gradient(100deg,#b45309 0%,#d97706 100%);color:#fff;
+            box-shadow:0 4px 14px rgba(217,119,6,0.28);">
+    <span style="display:flex;align-items:center;gap:12px;font-size:15px;font-weight:600;">
+      <span style="font-size:22px;">📚</span>
+      <span>Great children's books at low prices — <strong>Scholastic</strong> donates 20p per £1 back to your school</span>
+    </span>
+    <span style="padding:9px 18px;background:#fff;color:#92400e;border-radius:8px;font-weight:700;font-size:14px;white-space:nowrap;">Shop books →</span>
+  </a>
+  <p style="font-size:11px;color:#aaa;margin:-14px 0 20px;">Sponsored — helps keep this site free.</p>"""
+
     html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -630,7 +663,9 @@ def build_school_page(school):
     .card h2 + .rule {{ height: 2px; width: 34px; background: var(--gold); border-radius: 2px; margin: 8px 0 14px; }}
 
     table {{ width: 100%; border-collapse: collapse; font-size: 14px; }}
-    td {{ padding: 10px 0; border-bottom: 1px solid #F0EEE8; vertical-align: top; }}
+    td {{ padding: 10px 0; border-bottom: 1px solid #F0EEE8; vertical-align: top;
+         overflow-wrap: anywhere; word-break: break-word; }}
+    td a {{ overflow-wrap: anywhere; word-break: break-word; }}
     td:first-child {{ color: var(--muted); width: 46%; }}
     td:last-child {{ color: var(--ink); }}
     tr:last-child td {{ border-bottom: none; }}
@@ -723,7 +758,7 @@ def build_school_page(school):
 </script>
 
 <div class="container">
-
+{top_promo}
   <div class="grid">
     <div class="stat"><div class="stat-label">Pupils</div><div class="stat-value">{pupils}</div></div>
     <div class="stat"><div class="stat-label">Capacity</div><div class="stat-value">{capacity}</div></div>
@@ -1106,7 +1141,8 @@ for borough, borough_schools in by_borough.items():
       .stats-row {{ grid-template-columns: 1fr 1fr; }}
       .intro {{ padding: 14px 16px; font-size: 14px; }}
       table {{ font-size: 13px; }}
-      th, td {{ padding: 10px 10px; }}
+      th, td {{ padding: 10px 10px; overflow-wrap: anywhere; word-break: break-word; }}
+      th:nth-child(5), td:nth-child(5) {{ display: none; }}
       .topbar {{ padding: 10px 12px; font-size: 13px; }}
     }}
     @media (max-width: 600px) {{ .stats-row {{ flex-direction: column; }} }}
@@ -1322,7 +1358,7 @@ def build_type_page(slug, title, meta_desc, intro, filter_fn, prominent_pi=False
       h1 {{ font-size: 22px; }}
       .intro {{ padding: 14px 16px; font-size: 14px; }}
       table {{ font-size: 12px; }}
-      th, td {{ padding: 8px 8px; }}
+      th, td {{ padding: 8px 8px; overflow-wrap: anywhere; word-break: break-word; }}
       th:nth-child(3), td:nth-child(3),
       th:nth-child(5), td:nth-child(5) {{ display: none; }}
       .topbar {{ padding: 10px 12px; font-size: 13px; }}

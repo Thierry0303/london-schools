@@ -1,482 +1,1044 @@
-<!doctype html>
-<html lang="en-GB">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Schools in Barking and Dagenham, London — Ofsted, Performance & Admissions</title>
-<meta name="description" content="All 67 schools in Barking and Dagenham, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
-<link rel="canonical" href="https://londonschool.directory/schools/barking-and-dagenham/">
-<meta property="og:title" content="Schools in Barking and Dagenham, London — Ofsted, Performance & Admissions">
-<meta property="og:description" content="All 67 schools in Barking and Dagenham, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://londonschool.directory/schools/barking-and-dagenham/">
-<meta property="og:site_name" content="London School Directory">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#0b2545">
-<meta name="robots" content="index,follow,max-image-preview:large">
-<link rel="preconnect" href="https://unpkg.com">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<style>
-  :root {
-    --ink: #0b2545;
-    --ink-2: #1e3a5f;
-    --muted: #5b6b85;
-    --line: #e3e8ef;
-    --bg: #ffffff;
-    --bg-2: #f6f8fb;
-    --accent: #0b6efd;
-    --good: #137333;
-    --warn: #a85b00;
-    --bad: #b3261e;
-    --radius: 10px;
-  }
-  * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    color: var(--ink);
-    background: var(--bg);
-    line-height: 1.55;
-    -webkit-font-smoothing: antialiased;
-  }
-  a { color: var(--accent); text-decoration: none; }
-  a:hover { text-decoration: underline; }
-  header.site {
-    border-bottom: 1px solid var(--line);
-    background: var(--bg);
-    position: sticky; top: 0; z-index: 50;
-  }
-  header.site .inner {
-    max-width: 1100px; margin: 0 auto; padding: 14px 20px;
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  header.site a.brand { color: var(--ink); font-weight: 700; letter-spacing: -0.01em; }
-  header.site nav a { margin-left: 18px; color: var(--ink-2); font-size: 14px; }
-  main { max-width: 1100px; margin: 0 auto; padding: 28px 20px 80px; }
-  .crumbs { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
-  .crumbs a { color: var(--muted); }
-  h1 { font-size: 32px; line-height: 1.2; margin: 0 0 8px; letter-spacing: -0.02em; }
-  .lede { color: var(--ink-2); font-size: 17px; max-width: 720px; }
-  .stamp { font-size: 12px; color: var(--muted); margin-top: 8px; }
-  .stamp .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--good); vertical-align: middle; margin-right: 6px; }
-  .grid-stats {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 12px; margin: 24px 0 8px;
-  }
-  .stat {
-    background: var(--bg-2); border: 1px solid var(--line);
-    border-radius: var(--radius); padding: 14px 16px;
-  }
-  .stat .v { font-size: 24px; font-weight: 700; color: var(--ink); }
-  .stat .l { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
-  section { margin-top: 36px; }
-  h2 { font-size: 22px; margin: 0 0 12px; letter-spacing: -0.01em; }
-  .twocol { display: grid; grid-template-columns: 1.4fr 1fr; gap: 28px; }
-  @media (max-width: 820px) { .twocol { grid-template-columns: 1fr; } }
-  table.schools { width: 100%; border-collapse: collapse; font-size: 14px; }
-  table.schools th, table.schools td {
-    text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line);
-  }
-  table.schools th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); font-weight: 600; }
-  .rating { font-weight: 600; }
-  .rating.Outstanding { color: var(--good); }
-  .rating.Good { color: var(--ink-2); }
-  .rating.RequiresImprovement, .rating.Requires { color: var(--warn); }
-  .rating.Inadequate { color: var(--bad); }
-  #map { height: 380px; border-radius: var(--radius); border: 1px solid var(--line); }
-  .pills { display: flex; flex-wrap: wrap; gap: 6px; }
-  .pill { background: var(--bg-2); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; font-size: 12px; color: var(--ink-2); }
-  details.faq { border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 8px; background: var(--bg); }
-  details.faq summary { cursor: pointer; font-weight: 600; color: var(--ink); }
-  details.faq[open] { background: var(--bg-2); }
-  footer { border-top: 1px solid var(--line); padding: 28px 20px; color: var(--muted); font-size: 13px; }
-  footer .inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 24px; flex-wrap: wrap; }
-  .sources { font-size: 13px; color: var(--muted); }
-  .sources a { color: var(--muted); text-decoration: underline; }
-  .cta {
-    display: inline-block; background: var(--ink); color: #fff; padding: 10px 14px;
-    border-radius: var(--radius); font-size: 14px; font-weight: 600;
-  }
-  .cta:hover { background: var(--ink-2); text-decoration: none; }
-</style>
-<script type="application/ld+json">
-[
-  {
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Schools in Barking and Dagenham, London | Ofsted Ratings &amp; Results | London Schools Explorer</title>
+  <meta name="description" content="67 schools in Barking and Dagenham, London. 11 Outstanding, 51 Good-rated by Ofsted. Compare admissions oversubscription, exam results and crime data. Free.">
+  <script type="application/ld+json">{
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "name": "Top schools in Barking and Dagenham, London",
-    "itemListOrder": "http://schema.org/ItemListOrderDescending",
-    "numberOfItems": 14,
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "url": "https://londonschool.directory/schools/barking-and-dagenham/warren-junior-school/",
-        "name": "Warren Junior School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "url": "https://londonschool.directory/schools/barking-and-dagenham/rush-green-primary-school/",
-        "name": "Rush Green Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "url": "https://londonschool.directory/schools/barking-and-dagenham/goresbrook-school/",
-        "name": "Goresbrook School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 4,
-        "url": "https://londonschool.directory/schools/barking-and-dagenham/trinity-school/",
-        "name": "Trinity School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 5,
-        "url": "https://londonschool.directory/schools/barking-and-dagenham/northstar-new-school/",
-        "name": "Northstar New School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 6,
-        "url": "https://londonschool.directory/schools/barking-and-dagenham/the-st-teresa-catholic-primary-school/",
-        "name": "The St Teresa Catholic Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 7,
-        "url": "https://londonschool.directory/schools/barking-and-dagenham/henry-green-primary-school/",
-        "name": "Henry Green Primary School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 8,
-        "url": "https://londonschool.directory/schools/barking-and-dagenham/riverside-school/",
-        "name": "Riverside School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 9,
-        "url": "https://londonschool.directory/schools/barking-and-dagenham/all-saints-catholic-school-and-technology-college/",
-        "name": "All Saints Catholic School and Technology College"
-      },
-      {
-        "@type": "ListItem",
-        "position": 10,
-        "url": "https://londonschool.directory/schools/barking-and-dagenham/goresbrook-school/",
-        "name": "Goresbrook School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 11,
-        "url": "https://londonschool.directory/schools/barking-and-dagenham/the-warren-school/",
-        "name": "The Warren School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 12,
-        "url": "https://londonschool.directory/schools/barking-and-dagenham/barking-abbey-school-a-specialist-sports-and-humanities-college/",
-        "name": "Barking Abbey School, A Specialist Sports and Humanities College"
-      },
-      {
-        "@type": "ListItem",
-        "position": 13,
-        "url": "https://londonschool.directory/schools/barking-and-dagenham/jo-richardson-community-school/",
-        "name": "Jo Richardson Community School"
-      },
-      {
-        "@type": "ListItem",
-        "position": 14,
-        "url": "https://londonschool.directory/schools/barking-and-dagenham/trinity-school/",
-        "name": "Trinity School"
-      }
-    ]
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How many schools are there in Barking and Dagenham?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Barking and Dagenham has 67 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 53 are primary, 23 are secondary, and the remainder are special, all-through, or post-16."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What proportion of Barking and Dagenham schools are Outstanding?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "As of the latest Ofsted Management Information release, 11 schools in Barking and Dagenham (16.4%) are rated Outstanding, and 92.5% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "When do I apply for a Reception or Year 7 place in Barking and Dagenham?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Barking and Dagenham's applications are coordinated by the local authority through the eAdmissions system. See our full Reception timeline guide."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How does the school appeals process work in Barking and Dagenham?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "If you are refused your preferred school place, you have a statutory right of appeal. Barking and Dagenham appeals are typically heard in May (Reception) and June\u2013July (secondary). See our appeals tracker for Barking and Dagenham-level success rates by year."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How can I tell which Barking and Dagenham schools are over-subscribed?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release."
-        }
-      }
-    ]
-  },
-  {
+    "name": "Schools in Barking and Dagenham, London",
+    "description": "67 schools in Barking and Dagenham, London rated by Ofsted",
+    "numberOfItems": 67,
+    "url": "https://londonschool.directory/schools/barking-and-dagenham"
+  }</script>
+  <script type="application/ld+json">{
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": "https://londonschool.directory/"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Boroughs",
-        "item": "https://londonschool.directory/schools/"
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "name": "Barking and Dagenham",
-        "item": "https://londonschool.directory/schools/barking-and-dagenham/"
-      }
+      {"@type": "ListItem", "position": 1, "name": "London Schools Explorer", "item": "https://londonschool.directory/"},
+      {"@type": "ListItem", "position": 2, "name": "Schools in Barking and Dagenham", "item": "https://londonschool.directory/schools/barking-and-dagenham"}
     ]
-  }
-]
-</script>
+  }</script>
+  <link rel="canonical" href="https://londonschool.directory/schools/barking-and-dagenham">
+  <meta property="og:title" content="Schools in Barking and Dagenham | London Schools Explorer">
+  <meta property="og:description" content="67 schools in Barking and Dagenham. 11 Outstanding-rated. Compare Ofsted ratings, exam results and admissions.">
+  <meta property="og:url" content="https://londonschool.directory/schools/barking-and-dagenham">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, sans-serif; color: #1a1a1a; background: #f8f9fa; line-height: 1.6; }
+    a { color: #1565C0; }
+    .topbar { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 12px 20px; }
+    .topbar a { text-decoration: none; font-weight: 600; color: #1a1a1a; font-size: 15px; }
+    .topbar span { color: #888; margin: 0 8px; }
+    .container { max-width: 900px; margin: 0 auto; padding: 32px 20px; }
+    h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+    .intro { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; font-size: 15px; color: #333; line-height: 1.7; }
+    .stats-row { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+    .stat-box { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 14px 18px; flex: 1; min-width: 120px; }
+    .stat-num { font-size: 24px; font-weight: 700; color: #1a1a1a; line-height: 1; }
+    .stat-lbl { font-size: 12px; color: #888; margin-top: 4px; }
+    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #e0e0e0; }
+    th { background: #f5f5f5; padding: 12px 16px; text-align: left; font-size: 13px; color: #555; font-weight: 600; border-bottom: 1px solid #e0e0e0; }
+    td { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fafafa; }
+    .back { display: inline-block; margin-bottom: 20px; font-size: 14px; color: #555; text-decoration: none; }
+    .back:hover { color: #111; }
+    footer { text-align: center; padding: 32px 20px; font-size: 13px; color: #888; }
+    @media (max-width: 600px) {
+      .container { padding: 16px 12px; }
+      h1 { font-size: 22px; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .intro { padding: 14px 16px; font-size: 14px; }
+      table { font-size: 13px; }
+      th, td { padding: 10px 10px; overflow-wrap: anywhere; word-break: break-word; }
+      th:nth-child(5), td:nth-child(5) { display: none; }
+      .topbar { padding: 10px 12px; font-size: 13px; }
+    }
+    @media (max-width: 600px) { .stats-row { flex-direction: column; } }
+  </style>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 </head>
 <body>
-<header class="site">
-  <div class="inner">
-    <a class="brand" href="/">London School Directory</a>
-    <nav>
-      <a href="/">Search</a>
-      <a href="/appeals.html">Appeals</a>
-      <a href="/methodology.html">Methodology</a>
-      <a href="/about.html">About</a>
-    </nav>
+<div class="topbar">
+  <div style="max-width:900px;margin:0 auto">
+    <a href="/">London Schools Explorer</a>
+    <span>/</span>
+    Barking and Dagenham
   </div>
-</header>
-<main>
-  <div class="crumbs">
-    <a href="/">Home</a> &rsaquo; <a href="/schools/">Boroughs</a> &rsaquo; Barking and Dagenham
+</div>
+<div class="container">
+  <a class="back" href="/">&#8592; All boroughs</a>
+  <h1>Schools in Barking and Dagenham</h1>
+
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-num">67</div><div class="stat-lbl">Total schools</div></div>
+    <div class="stat-box"><div class="stat-num">11</div><div class="stat-lbl">Outstanding</div></div>
+    <div class="stat-box"><div class="stat-num">51</div><div class="stat-lbl">Good</div></div>
+    <div class="stat-box"><div class="stat-num">3</div><div class="stat-lbl">School phases</div></div>
   </div>
 
-  <h1>Schools in Barking and Dagenham, London</h1>
-  <p class="lede">Barking and Dagenham schools serve a fast-growing east London population. The borough has invested heavily in new primary and secondary provision in the last decade. Reception applications are particularly competitive in the Barking riverside and Dagenham Heathway areas.</p>
-  <p class="stamp"><span class="dot"></span>Data last verified 1 September 2026. Sources: Ofsted, DfE GIAS, DfE Performance Tables, Metropolitan Police, MHCLG IMD. See <a href="/sources.html">all sources</a>.</p>
+  <div class="intro">Barking and Dagenham is one of East London's most affordable boroughs and has seen significant investment in its schools. The borough has a strong mix of primary and secondary provision, with several schools rated Outstanding by Ofsted. It borders Essex and offers good transport links into central London via the District and Overground lines.</div>
 
-  <section>
-    <div class="grid-stats">
-      <div class="stat"><div class="v">67</div><div class="l">Schools in Barking and Dagenham</div></div>
-      <div class="stat"><div class="v">16.4%</div><div class="l">Outstanding Ofsted</div></div>
-      <div class="stat"><div class="v">92.5%</div><div class="l">Good or Outstanding</div></div>
-      <div class="stat"><div class="v">53</div><div class="l">Primary schools</div></div>
-      <div class="stat"><div class="v">23</div><div class="l">Secondary schools</div></div>
-      <div class="stat"><div class="v">14%</div><div class="l">Secondary appeal success (2024)</div></div>
-    </div>
-  </section>
+  
+<div style="display:flex;gap:16px;flex-wrap:wrap;margin:20px 0;">
 
-  <section>
-    <div class="twocol">
-      <div>
-        <h2>Top primary schools in Barking and Dagenham</h2>
-        <p class="sources">Ranked by Ofsted rating, then by latest KS2 performance. See <a href="/methodology.html">methodology</a>.</p>
-        <table class="schools">
-          <thead>
-            <tr><th>School</th><th>Ofsted</th><th>KS2 %</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><a href="/schools/barking-and-dagenham/warren-junior-school/">Warren Junior School</a></td><td class="rating Outstanding">Outstanding</td><td>87.0</td></tr>
-            <tr><td><a href="/schools/barking-and-dagenham/rush-green-primary-school/">Rush Green Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>75.0</td></tr>
-            <tr><td><a href="/schools/barking-and-dagenham/goresbrook-school/">Goresbrook School</a></td><td class="rating Outstanding">Outstanding</td><td>56.0</td></tr>
-            <tr><td><a href="/schools/barking-and-dagenham/trinity-school/">Trinity School</a></td><td class="rating Outstanding">Outstanding</td><td>0.0</td></tr>
-            <tr><td><a href="/schools/barking-and-dagenham/northstar-new-school/">Northstar New School</a></td><td class="rating Outstanding">Outstanding</td><td>—</td></tr>
-            <tr><td><a href="/schools/barking-and-dagenham/the-st-teresa-catholic-primary-school/">The St Teresa Catholic Primary School</a></td><td class="rating Good">Good</td><td>95.0</td></tr>
-            <tr><td><a href="/schools/barking-and-dagenham/henry-green-primary-school/">Henry Green Primary School</a></td><td class="rating Good">Good</td><td>89.0</td></tr>
-          </tbody>
-        </table>
-
-        <h2 style="margin-top:28px">Top secondary schools in Barking and Dagenham</h2>
-        <p class="sources">Ranked by Ofsted rating, then by latest KS4 Attainment 8.</p>
-        <table class="schools">
-          <thead>
-            <tr><th>School</th><th>Ofsted</th><th>Att 8</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><a href="/schools/barking-and-dagenham/riverside-school/">Riverside School</a></td><td class="rating Outstanding">Outstanding</td><td>55.5</td></tr>
-            <tr><td><a href="/schools/barking-and-dagenham/all-saints-catholic-school-and-technology-college/">All Saints Catholic School and Technology College</a></td><td class="rating Outstanding">Outstanding</td><td>54.0</td></tr>
-            <tr><td><a href="/schools/barking-and-dagenham/goresbrook-school/">Goresbrook School</a></td><td class="rating Outstanding">Outstanding</td><td>53.4</td></tr>
-            <tr><td><a href="/schools/barking-and-dagenham/the-warren-school/">The Warren School</a></td><td class="rating Outstanding">Outstanding</td><td>51.4</td></tr>
-            <tr><td><a href="/schools/barking-and-dagenham/barking-abbey-school-a-specialist-sports-and-humanities-college/">Barking Abbey School, A Specialist Sports and Humanities College</a></td><td class="rating Outstanding">Outstanding</td><td>49.6</td></tr>
-            <tr><td><a href="/schools/barking-and-dagenham/jo-richardson-community-school/">Jo Richardson Community School</a></td><td class="rating Outstanding">Outstanding</td><td>48.6</td></tr>
-            <tr><td><a href="/schools/barking-and-dagenham/trinity-school/">Trinity School</a></td><td class="rating Outstanding">Outstanding</td><td>—</td></tr>
-          </tbody>
-        </table>
-
-        <p style="margin-top:14px"><a class="cta" href="#all-schools">Jump to all 67 schools in Barking and Dagenham</a></p>
-      </div>
-      <div>
-        <h2>Map</h2>
-        <div id="map" aria-label="Map of schools in Barking and Dagenham"></div>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <h2>What the data says about Barking and Dagenham</h2>
-    <p><strong>92.5%</strong> of Barking and Dagenham schools are currently rated Good or Outstanding by Ofsted, compared with a London average of roughly 90% for primary and 80% for secondary. The average number of applications per place across Barking and Dagenham is <strong>1.09</strong>, a useful indicator of how competitive local admissions are. The average number of recorded crime incidents within 500 metres of a school in Barking and Dagenham over the most recent reporting month is <strong>153.27</strong>, drawn from the Metropolitan Police open data API. The mean IMD (Index of Multiple Deprivation) decile of Barking and Dagenham's schools is <strong>3.0</strong> — 1 is most deprived, 10 is least deprived. All metrics on this page are recomputed from source data on the 15th of every month. See our <a href='/methodology.html'>methodology</a> for definitions and limitations.</p>
-  </section>
-
-  <section id="all-schools">
-    <h2>All schools in Barking and Dagenham</h2>
-    <p class="sources">Every school in Barking and Dagenham, listed alphabetically. Click any school for the full record.</p>
-    <table class="schools">
-      <thead>
-        <tr><th>School</th><th>Phase</th><th>Ofsted</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><a href="/schools/barking-and-dagenham/al-madina-school-for-girls/">Al Madina School for Girls</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/all-saints-catholic-school-and-technology-college/">All Saints Catholic School and Technology College</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/barking-abbey-school-a-specialist-sports-and-humanities-college/">Barking Abbey School, A Specialist Sports and Humanities College</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/beam-primary-school/">Beam Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/becontree-primary-school/">Becontree Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/brook-sixth-form-and-academy/">Brook Sixth Form and Academy</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/dagenham-park-cofe-school/">Dagenham Park CofE School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/dorothy-barley-infants-school/">Dorothy Barley Infants' School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/dorothy-barley-junior-academy/">Dorothy Barley Junior Academy</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/eastbrook-school/">Eastbrook School</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/eastbury-community-school/">Eastbury Community School</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/eastbury-primary-school/">Eastbury Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/five-elms-primary-school/">Five Elms Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/furze-infant-school/">Furze Infant School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/gascoigne-primary-school/">Gascoigne Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/george-carey-church-of-england-primary-school/">George Carey Church of England Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/godwin-primary-school/">Godwin Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/goresbrook-school/">Goresbrook School</a></td><td>All-through</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/grafton-primary-school/">Grafton Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/greatfields-primary-school/">Greatfields Primary School</a></td><td>Primary</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/greatfields-school/">Greatfields School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/henry-green-primary-school/">Henry Green Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/hopewell-school/">Hopewell School</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/hunters-hall-primary-school/">Hunters Hall Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/jo-richardson-community-school/">Jo Richardson Community School</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/john-perry-primary-school/">John Perry Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/manor-junior-school/">Manor Junior School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/manor-primary-school/">Manor Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/marsh-green-primary-school/">Marsh Green Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/mayesbrook-park-school/">Mayesbrook Park School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/monteagle-primary-school/">Monteagle Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/northbury-primary-school/">Northbury Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/northstar-new-school/">Northstar New School</a></td><td>All-through</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/northstar-nurture-school/">Northstar Nurture School</a></td><td>All-through</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/oxlow-bridge-school/">Oxlow Bridge School</a></td><td>All-through</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/parsloes-primary-school/">Parsloes Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/pathways-school/">Pathways School</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/richard-alibon-primary-school-with-arp-for-cognitive-and-learning-difficulties-sen-base/">Richard Alibon Primary School with ARP for Cognitive and Learning Difficulties : SEN Base</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/ripple-primary-school/">Ripple Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/riverside-bridge-school/">Riverside Bridge School</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/riverside-primary-school/">Riverside Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/riverside-school/">Riverside School</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/robert-clack-school/">Robert Clack School</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/roding-primary-school/">Roding Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/rose-lane-primary-school/">Rose Lane Primary School</a></td><td>Primary</td><td class="rating Requiresimprovement">Requires improvement</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/rush-green-primary-school/">Rush Green Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/senarp-vibe-independent-school/">SENARP Vibe Independent School</a></td><td>All-through</td><td class="rating ">—</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/southwood-primary-school/">Southwood Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/st-josephs-catholic-primary-school/">St Joseph's Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/st-josephs-catholic-primary-school/">St Joseph's Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/st-margarets-cofe-primary-school/">St Margarets CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/st-peters-catholic-primary-school/">St Peter's Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/st-vincents-catholic-primary-school/">St Vincent's Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/thames-view-infants/">Thames View Infants</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/thames-view-junior-school/">Thames View Junior School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/the-james-cambell-primary-school/">The James Cambell Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/the-leys-primary-school/">The Leys Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/the-st-teresa-catholic-primary-school/">The St Teresa Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/the-sydney-russell-school/">The Sydney Russell School</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/the-warren-school/">The Warren School</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/thomas-arnold-primary-school-rowdowns-road/">Thomas Arnold Primary School, Rowdowns Road</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/trinity-school/">Trinity School</a></td><td>All-through</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/valence-primary-school/">Valence Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/village-infants-school/">Village Infants' School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/warren-junior-school/">Warren Junior School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/william-bellamy-primary-school/">William Bellamy Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-        <tr><td><a href="/schools/barking-and-dagenham/william-ford-cofe-junior-school/">William Ford CofE Junior School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-  <section>
-    <h2>Frequently asked</h2>
-    <details class="faq"><summary>How many schools are there in Barking and Dagenham?</summary><p>Barking and Dagenham has 67 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 53 are primary, 23 are secondary, and the remainder are special, all-through, or post-16.</p></details>
-<details class="faq"><summary>What proportion of Barking and Dagenham schools are Outstanding?</summary><p>As of the latest Ofsted Management Information release, 11 schools in Barking and Dagenham (16.4%) are rated Outstanding, and 92.5% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication.</p></details>
-<details class="faq"><summary>When do I apply for a Reception or Year 7 place in Barking and Dagenham?</summary><p>Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Barking and Dagenham's applications are coordinated by the local authority through the eAdmissions system. See our <a href='/guides/london-reception-application-timeline/'>full Reception timeline guide</a>.</p></details>
-<details class="faq"><summary>How does the school appeals process work in Barking and Dagenham?</summary><p>If you are refused your preferred school place, you have a statutory right of appeal. Barking and Dagenham appeals are typically heard in May (Reception) and June–July (secondary). See our <a href='/appeals.html'>appeals tracker</a> for Barking and Dagenham-level success rates by year.</p></details>
-<details class="faq"><summary>How can I tell which Barking and Dagenham schools are over-subscribed?</summary><p>Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release.</p></details>
-  </section>
-
-  <section>
-    <h2>Sources</h2>
-    <p class="sources">
-      School list and phase from <a href="https://get-information-schools.service.gov.uk/" rel="nofollow">DfE Get Information About Schools</a> (refreshed monthly).
-      Ofsted ratings from <a href="https://www.gov.uk/government/statistical-data-sets/monthly-management-information-ofsteds-school-inspections-outcomes" rel="nofollow">Ofsted Management Information</a> (refreshed monthly).
-      Performance data from <a href="https://explore-education-statistics.service.gov.uk/" rel="nofollow">DfE Explore Education Statistics</a>.
-      Crime data within 500m from the <a href="https://data.police.uk/" rel="nofollow">Metropolitan Police open data API</a>.
-      Deprivation deciles from <a href="https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019" rel="nofollow">MHCLG English Indices of Deprivation 2019</a>.
-      Read our full <a href="/methodology.html">methodology</a> for how each metric is calculated.
-    </p>
-  </section>
-</main>
-<footer>
-  <div class="inner">
-    <div>&copy; London School Directory. Independent. Free to use.</div>
-    <div><a href="/about.html">About</a> &middot; <a href="/methodology.html">Methodology</a> &middot; <a href="/sources.html">Sources</a> &middot; <a href="/appeals.html">Appeals</a></div>
-    <div>Browse by type: <a href="/schools/outstanding">Outstanding</a> &middot; <a href="/schools/good">Good</a> &middot; <a href="/schools/grammar">Grammar</a> &middot; <a href="/schools/selective">Selective</a> &middot; <a href="/schools/faith">Faith</a> &middot; <a href="/schools/primary">Primary</a> &middot; <a href="/schools/secondary">Secondary</a> &middot; <a href="/schools/sixth-form">Sixth form</a> &middot; <a href="/schools/independent">Private &amp; independent</a></div>
+<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fdf4ff 0%,#ede9fe 100%);
+     border:1px solid #d8b4fe;border-radius:12px;padding:14px 20px;">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+    <span style="font-size:22px;">🎓</span>
+    <strong style="font-size:15px;color:#5b21b6;">11+ &amp; 13+ Exam Prep</strong>
   </div>
-</footer>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
+    PiAcademy resources for grammar school entrance, SATs &amp; GCSE.
+    Use code <strong>THIERR25</strong> for 25% off.
+  </p>
+  <a href="https://piacademy.co.uk/?aff=28"
+     target="_blank" rel="noopener sponsored"
+     style="display:inline-block;padding:9px 18px;background:#7e22ce;color:#fff;
+            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
+    Get 25% OFF →
+  </a>
+  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
+</div>
+<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%);
+     border:1px solid #fcd34d;border-radius:12px;padding:14px 20px;">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+    <span style="font-size:22px;">📚</span>
+    <strong style="font-size:15px;color:#92400e;">Children's Books</strong>
+  </div>
+  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
+    Great books at low prices. At checkout, choose your school — Scholastic donates
+    <strong>20p for every £1 spent</strong> back to the school in free books.
+  </p>
+  <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&ued=https%3A%2F%2Fwww.scholastic.co.uk%2Fteachers"
+     target="_blank" rel="noopener sponsored"
+     style="display:inline-block;padding:9px 18px;background:#d97706;color:#fff;
+            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
+    Shop at Scholastic →
+  </a>
+  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
+</div>
+<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fff8f0 0%,#fff3e0 100%);
+     border:1px solid #fed7aa;border-radius:12px;padding:14px 20px;">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+    <span style="font-size:22px;">🛒</span>
+    <strong style="font-size:15px;color:#92400e;">School Supplies</strong>
+  </div>
+  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
+    Stationery, bags, PE kit, lunchboxes and more — fast delivery from Amazon.
+  </p>
+  <a href="https://www.amazon.co.uk/s?k=school+supplies+stationery&tag=londonparents-21"
+     target="_blank" rel="noopener sponsored"
+     style="display:inline-block;padding:9px 18px;background:#FF9900;color:#111;
+            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
+    Shop on Amazon →
+  </a>
+  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
+</div>
+</div>
+
+  <!-- Borough share buttons -->
+  <div style="display:flex;gap:10px;margin:16px 0 8px;flex-wrap:wrap;align-items:center;">
+    <span style="font-size:13px;color:#555;font-weight:600;">Share Barking and Dagenham schools:</span>
+    <button onclick="shareBoroughWhatsApp()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 WhatsApp</button>
+    <button onclick="shareBoroughEmail()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#1565C0;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Email</button>
+    <span style="font-size:12px;color:#999;margin-left:4px;">Or tick schools below to share a shortlist</span>
+  </div>
+
+  <!-- Sticky compare bar (appears when schools are ticked) -->
+  <div id="cmp-bar" style="display:none;position:sticky;top:0;z-index:100;background:#1A1A2E;color:#fff;padding:12px 16px;border-radius:10px;margin-bottom:12px;display:none;align-items:center;gap:10px;flex-wrap:wrap;">
+    <span id="cmp-count" style="font-weight:700;font-size:14px;">0 schools selected</span>
+    <button onclick="shareCompareWhatsApp()" style="padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 Share via WhatsApp</button>
+    <button onclick="shareCompareEmail()" style="padding:8px 16px;background:#fff;color:#1A1A2E;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Share via Email</button>
+    <button onclick="clearSelection()" style="padding:8px 12px;background:transparent;color:#aaa;border:1px solid #555;border-radius:8px;font-size:12px;cursor:pointer;">✕ Clear</button>
+  </div>
+
+  <table>
+    <thead><tr><th style="width:36px"></th><th>School</th><th>Phase</th><th>Ofsted</th><th>Pupils</th></tr></thead>
+    <tbody><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Al Madina School for Girls"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="62.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/al-madina-school-for-girls"></td>
+          <td><a href="/schools/barking-and-dagenham/al-madina-school-for-girls">Al Madina School for Girls</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>87</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="All Saints Catholic School and Technology College"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="54.0"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/all-saints-catholic-school-and-technology-college"></td>
+          <td><a href="/schools/barking-and-dagenham/all-saints-catholic-school-and-technology-college">All Saints Catholic School and Technology College</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>1345</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Barking Abbey School, A Specialist Sports and Humanities College"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="49.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/barking-abbey-school-a-specialist-sports-and-humanities-college"></td>
+          <td><a href="/schools/barking-and-dagenham/barking-abbey-school-a-specialist-sports-and-humanities-college">Barking Abbey School, A Specialist Sports and Humanities College</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>2418</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Beam Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="72.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/beam-primary-school"></td>
+          <td><a href="/schools/barking-and-dagenham/beam-primary-school">Beam Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>559</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Becontree Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="51.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/becontree-primary-school"></td>
+          <td><a href="/schools/barking-and-dagenham/becontree-primary-school">Becontree Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>458</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Brook Sixth Form and Academy"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="45.1"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/brook-sixth-form-and-academy"></td>
+          <td><a href="/schools/barking-and-dagenham/brook-sixth-form-and-academy">Brook Sixth Form and Academy</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>273</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Dagenham Park CofE School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="43.1"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/dagenham-park-cofe-school"></td>
+          <td><a href="/schools/barking-and-dagenham/dagenham-park-cofe-school">Dagenham Park CofE School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1414</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Dorothy Barley Infants' School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/dorothy-barley-infants-school"></td>
+          <td><a href="/schools/barking-and-dagenham/dorothy-barley-infants-school">Dorothy Barley Infants' School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>223</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Dorothy Barley Junior Academy"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="61.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/dorothy-barley-junior-academy"></td>
+          <td><a href="/schools/barking-and-dagenham/dorothy-barley-junior-academy">Dorothy Barley Junior Academy</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>294</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Eastbrook School"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8="36.3"
+            data-ks2="56.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/eastbrook-school"></td>
+          <td><a href="/schools/barking-and-dagenham/eastbrook-school">Eastbrook School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1320</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Eastbury Community School"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8="45.1"
+            data-ks2="61.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/eastbury-community-school"></td>
+          <td><a href="/schools/barking-and-dagenham/eastbury-community-school">Eastbury Community School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>2039</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Eastbury Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="48.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/eastbury-primary-school"></td>
+          <td><a href="/schools/barking-and-dagenham/eastbury-primary-school">Eastbury Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>777</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Five Elms Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="69.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/five-elms-primary-school"></td>
+          <td><a href="/schools/barking-and-dagenham/five-elms-primary-school">Five Elms Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>460</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Furze Infant School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/furze-infant-school"></td>
+          <td><a href="/schools/barking-and-dagenham/furze-infant-school">Furze Infant School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>452</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Gascoigne Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="66.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/gascoigne-primary-school"></td>
+          <td><a href="/schools/barking-and-dagenham/gascoigne-primary-school">Gascoigne Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1115</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="George Carey Church of England Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="74.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/george-carey-church-of-england-primary-school"></td>
+          <td><a href="/schools/barking-and-dagenham/george-carey-church-of-england-primary-school">George Carey Church of England Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>619</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Godwin Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="65.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/godwin-primary-school"></td>
+          <td><a href="/schools/barking-and-dagenham/godwin-primary-school">Godwin Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>422</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Goresbrook School"
+            data-ofsted="Outstanding"
+            data-phase="All-through"
+            data-att8="53.4"
+            data-ks2="56.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/goresbrook-school"></td>
+          <td><a href="/schools/barking-and-dagenham/goresbrook-school">Goresbrook School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>1089</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Grafton Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="71.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/grafton-primary-school"></td>
+          <td><a href="/schools/barking-and-dagenham/grafton-primary-school">Grafton Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>892</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Greatfields Primary School"
+            data-ofsted="Not yet rated"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/greatfields-primary-school"></td>
+          <td><a href="/schools/barking-and-dagenham/greatfields-primary-school">Greatfields Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>50</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Greatfields School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8="45.3"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/greatfields-school"></td>
+          <td><a href="/schools/barking-and-dagenham/greatfields-school">Greatfields School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1248</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Henry Green Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="89.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/henry-green-primary-school"></td>
+          <td><a href="/schools/barking-and-dagenham/henry-green-primary-school">Henry Green Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>460</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hopewell School"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8="8.2"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/hopewell-school"></td>
+          <td><a href="/schools/barking-and-dagenham/hopewell-school">Hopewell School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>54</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Hunters Hall Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="75.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/hunters-hall-primary-school"></td>
+          <td><a href="/schools/barking-and-dagenham/hunters-hall-primary-school">Hunters Hall Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>600</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Jo Richardson Community School"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="48.6"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/jo-richardson-community-school"></td>
+          <td><a href="/schools/barking-and-dagenham/jo-richardson-community-school">Jo Richardson Community School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>1696</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="John Perry Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="66.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/john-perry-primary-school"></td>
+          <td><a href="/schools/barking-and-dagenham/john-perry-primary-school">John Perry Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>626</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Manor Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="66.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/manor-junior-school"></td>
+          <td><a href="/schools/barking-and-dagenham/manor-junior-school">Manor Junior School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>590</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Manor Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="67.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/manor-primary-school"></td>
+          <td><a href="/schools/barking-and-dagenham/manor-primary-school">Manor Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>1135</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Marsh Green Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="70.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/marsh-green-primary-school"></td>
+          <td><a href="/schools/barking-and-dagenham/marsh-green-primary-school">Marsh Green Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>367</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Mayesbrook Park School"
+            data-ofsted="Good"
+            data-phase="Secondary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/mayesbrook-park-school"></td>
+          <td><a href="/schools/barking-and-dagenham/mayesbrook-park-school">Mayesbrook Park School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>84</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Monteagle Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="83.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/monteagle-primary-school"></td>
+          <td><a href="/schools/barking-and-dagenham/monteagle-primary-school">Monteagle Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>630</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Northbury Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="55.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/northbury-primary-school"></td>
+          <td><a href="/schools/barking-and-dagenham/northbury-primary-school">Northbury Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>832</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Northstar New School"
+            data-ofsted="Outstanding"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/northstar-new-school"></td>
+          <td><a href="/schools/barking-and-dagenham/northstar-new-school">Northstar New School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>21</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Northstar Nurture School"
+            data-ofsted="Not yet rated"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/northstar-nurture-school"></td>
+          <td><a href="/schools/barking-and-dagenham/northstar-nurture-school">Northstar Nurture School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>2</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Oxlow Bridge School"
+            data-ofsted="Not yet rated"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/oxlow-bridge-school"></td>
+          <td><a href="/schools/barking-and-dagenham/oxlow-bridge-school">Oxlow Bridge School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>18</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Parsloes Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="73.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/parsloes-primary-school"></td>
+          <td><a href="/schools/barking-and-dagenham/parsloes-primary-school">Parsloes Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>412</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Pathways School"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8="5.7"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/pathways-school"></td>
+          <td><a href="/schools/barking-and-dagenham/pathways-school">Pathways School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>83</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Richard Alibon Primary School with ARP for Cognitive and Learning Difficulties : SEN Base"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="75.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/richard-alibon-primary-school-with-arp-for-cognitive-and-learning-difficulties-sen-base"></td>
+          <td><a href="/schools/barking-and-dagenham/richard-alibon-primary-school-with-arp-for-cognitive-and-learning-difficulties-sen-base">Richard Alibon Primary School with ARP for Cognitive and Learning Difficulties : SEN Base</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>576</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Ripple Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="61.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/ripple-primary-school"></td>
+          <td><a href="/schools/barking-and-dagenham/ripple-primary-school">Ripple Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>856</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Riverside Bridge School"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/riverside-bridge-school"></td>
+          <td><a href="/schools/barking-and-dagenham/riverside-bridge-school">Riverside Bridge School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>291</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Riverside Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="82.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/riverside-primary-school"></td>
+          <td><a href="/schools/barking-and-dagenham/riverside-primary-school">Riverside Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>433</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Riverside School"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="55.5"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/riverside-school"></td>
+          <td><a href="/schools/barking-and-dagenham/riverside-school">Riverside School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>1550</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Robert Clack School"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8="50.5"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/robert-clack-school"></td>
+          <td><a href="/schools/barking-and-dagenham/robert-clack-school">Robert Clack School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>3231</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Roding Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="55.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/roding-primary-school"></td>
+          <td><a href="/schools/barking-and-dagenham/roding-primary-school">Roding Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>892</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Rose Lane Primary School"
+            data-ofsted="Requires improvement"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="56.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/rose-lane-primary-school"></td>
+          <td><a href="/schools/barking-and-dagenham/rose-lane-primary-school">Rose Lane Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
+          <td>582</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Rush Green Primary School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="75.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/rush-green-primary-school"></td>
+          <td><a href="/schools/barking-and-dagenham/rush-green-primary-school">Rush Green Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>840</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="SENARP Vibe Independent School"
+            data-ofsted="Not yet rated"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/senarp-vibe-independent-school"></td>
+          <td><a href="/schools/barking-and-dagenham/senarp-vibe-independent-school">SENARP Vibe Independent School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
+          <td>N/A</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Southwood Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="72.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/southwood-primary-school"></td>
+          <td><a href="/schools/barking-and-dagenham/southwood-primary-school">Southwood Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>593</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Joseph's Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="83.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/st-josephs-catholic-primary-school"></td>
+          <td><a href="/schools/barking-and-dagenham/st-josephs-catholic-primary-school">St Joseph's Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>242</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Joseph's Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="43.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/st-josephs-catholic-primary-school"></td>
+          <td><a href="/schools/barking-and-dagenham/st-josephs-catholic-primary-school">St Joseph's Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>277</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Margarets CofE Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="88.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/st-margarets-cofe-primary-school"></td>
+          <td><a href="/schools/barking-and-dagenham/st-margarets-cofe-primary-school">St Margarets CofE Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>393</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Peter's Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="73.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/st-peters-catholic-primary-school"></td>
+          <td><a href="/schools/barking-and-dagenham/st-peters-catholic-primary-school">St Peter's Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>387</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="St Vincent's Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="77.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/st-vincents-catholic-primary-school"></td>
+          <td><a href="/schools/barking-and-dagenham/st-vincents-catholic-primary-school">St Vincent's Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>216</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Thames View Infants"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/thames-view-infants"></td>
+          <td><a href="/schools/barking-and-dagenham/thames-view-infants">Thames View Infants</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>403</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Thames View Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="71.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/thames-view-junior-school"></td>
+          <td><a href="/schools/barking-and-dagenham/thames-view-junior-school">Thames View Junior School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>390</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The James Cambell Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="62.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/the-james-cambell-primary-school"></td>
+          <td><a href="/schools/barking-and-dagenham/the-james-cambell-primary-school">The James Cambell Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>602</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Leys Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="73.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/the-leys-primary-school"></td>
+          <td><a href="/schools/barking-and-dagenham/the-leys-primary-school">The Leys Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>377</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The St Teresa Catholic Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="95.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/the-st-teresa-catholic-primary-school"></td>
+          <td><a href="/schools/barking-and-dagenham/the-st-teresa-catholic-primary-school">The St Teresa Catholic Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>230</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Sydney Russell School"
+            data-ofsted="Good"
+            data-phase="All-through"
+            data-att8="51.5"
+            data-ks2="73.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/the-sydney-russell-school"></td>
+          <td><a href="/schools/barking-and-dagenham/the-sydney-russell-school">The Sydney Russell School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>2568</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="The Warren School"
+            data-ofsted="Outstanding"
+            data-phase="Secondary"
+            data-att8="51.4"
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/the-warren-school"></td>
+          <td><a href="/schools/barking-and-dagenham/the-warren-school">The Warren School</a></td>
+          <td>Secondary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>1392</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Thomas Arnold Primary School, Rowdowns Road"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="66.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/thomas-arnold-primary-school-rowdowns-road"></td>
+          <td><a href="/schools/barking-and-dagenham/thomas-arnold-primary-school-rowdowns-road">Thomas Arnold Primary School, Rowdowns Road</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>454</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Trinity School"
+            data-ofsted="Outstanding"
+            data-phase="All-through"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/trinity-school"></td>
+          <td><a href="/schools/barking-and-dagenham/trinity-school">Trinity School</a></td>
+          <td>All-through</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>312</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Valence Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="57.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/valence-primary-school"></td>
+          <td><a href="/schools/barking-and-dagenham/valence-primary-school">Valence Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>848</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Village Infants' School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2=""
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/village-infants-school"></td>
+          <td><a href="/schools/barking-and-dagenham/village-infants-school">Village Infants' School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>296</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="Warren Junior School"
+            data-ofsted="Outstanding"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="87.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/warren-junior-school"></td>
+          <td><a href="/schools/barking-and-dagenham/warren-junior-school">Warren Junior School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
+          <td>546</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="William Bellamy Primary School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="59.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/william-bellamy-primary-school"></td>
+          <td><a href="/schools/barking-and-dagenham/william-bellamy-primary-school">William Bellamy Primary School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>795</td>
+        </tr><tr>
+          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
+            data-name="William Ford CofE Junior School"
+            data-ofsted="Good"
+            data-phase="Primary"
+            data-att8=""
+            data-ks2="66.0"
+            data-url="https://londonschool.directory/schools/barking-and-dagenham/william-ford-cofe-junior-school"></td>
+          <td><a href="/schools/barking-and-dagenham/william-ford-cofe-junior-school">William Ford CofE Junior School</a></td>
+          <td>Primary</td>
+          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
+          <td>319</td>
+        </tr></tbody>
+  </table>
+</div>
+<footer><a href="/">London Schools Explorer</a> &mdash; helping families find the right school in London.<p style="margin-top:10px">Browse by type: <a href="/schools/outstanding">Outstanding</a> &middot; <a href="/schools/good">Good</a> &middot; <a href="/schools/grammar">Grammar</a> &middot; <a href="/schools/selective">Selective</a> &middot; <a href="/schools/faith">Faith</a> &middot; <a href="/schools/primary">Primary</a> &middot; <a href="/schools/secondary">Secondary</a> &middot; <a href="/schools/sixth-form">Sixth form</a> &middot; <a href="/schools/independent">Private &amp; independent</a></p></footer>
+<script defer src="/_vercel/insights/script.js"></script>
 <script>
-  (function() {
-    var points = [[51.546362, 0.117257, "/schools/barking-and-dagenham/dorothy-barley-infants-school/", "Dorothy Barley Infants' School"], [51.543668, 0.102522, "/schools/barking-and-dagenham/manor-junior-school/", "Manor Junior School"], [51.550286, 0.111583, "/schools/barking-and-dagenham/manor-primary-school/", "Manor Primary School"], [51.536668, 0.07548, "/schools/barking-and-dagenham/northbury-primary-school/", "Northbury Primary School"], [51.536257, 0.090025, "/schools/barking-and-dagenham/ripple-primary-school/", "Ripple Primary School"], [51.528437, 0.164162, "/schools/barking-and-dagenham/beam-primary-school/", "Beam Primary School"], [51.571431, 0.140732, "/schools/barking-and-dagenham/furze-infant-school/", "Furze Infant School"], [51.558381, 0.139311, "/schools/barking-and-dagenham/grafton-primary-school/", "Grafton Primary School"], [51.531464, 0.151646, "/schools/barking-and-dagenham/marsh-green-primary-school/", "Marsh Green Primary School"], [51.535962, 0.168687, "/schools/barking-and-dagenham/the-leys-primary-school/", "The Leys Primary School"], [51.5751, 0.142694, "/schools/barking-and-dagenham/warren-junior-school/", "Warren Junior School"], [51.536927, 0.145054, "/schools/barking-and-dagenham/thomas-arnold-primary-school-rowdowns-road/", "Thomas Arnold Primary School, Rowdowns Road"], [51.558221, 0.132278, "/schools/barking-and-dagenham/valence-primary-school/", "Valence Primary School"], [51.538544, 0.152528, "/schools/barking-and-dagenham/village-infants-school/", "Village Infants' School"], [51.585413, 0.135903, "/schools/barking-and-dagenham/rose-lane-primary-school/", "Rose Lane Primary School"], [51.559499, 0.154873, "/schools/barking-and-dagenham/william-bellamy-primary-school/", "William Bellamy Primary School"], [51.542837, 0.144986, "/schools/barking-and-dagenham/parsloes-primary-school/", "Parsloes Primary School"], [51.555096, 0.145389, "/schools/barking-and-dagenham/five-elms-primary-school/", "Five Elms Primary School"], [51.561848, 0.127657, "/schools/barking-and-dagenham/henry-green-primary-school/", "Henry Green Primary School"], [51.542757, 0.119195, "/schools/barking-and-dagenham/roding-primary-school/", "Roding Primary School"], [51.555827, 0.117999, "/schools/barking-and-dagenham/becontree-primary-school/", "Becontree Primary School"], [51.541425, 0.171383, "/schools/barking-and-dagenham/john-perry-primary-school/", "John Perry Primary School"], [51.538544, 0.152528, "/schools/barking-and-dagenham/william-ford-cofe-junior-school/", "William Ford CofE Junior School"], [51.531894, 0.144414, "/schools/barking-and-dagenham/st-peters-catholic-primary-school/", "St Peter's Catholic Primary School"], [51.543668, 0.102522, "/schools/barking-and-dagenham/barking-abbey-school-a-specialist-sports-and-humanities-college/", "Barking Abbey School, A Specialist Sports and Humanities College"], [51.55033, 0.163975, "/schools/barking-and-dagenham/eastbrook-school/", "Eastbrook School"], [51.542523, 0.090153, "/schools/barking-and-dagenham/eastbury-community-school/", "Eastbury Community School"], [51.56269, 0.153985, "/schools/barking-and-dagenham/robert-clack-school/", "Robert Clack School"], [51.562829, 0.151337, "/schools/barking-and-dagenham/all-saints-catholic-school-and-technology-college/", "All Saints Catholic School and Technology College"], [51.534946, 0.114463, "/schools/barking-and-dagenham/monteagle-primary-school/", "Monteagle Primary School"], [51.547513, 0.150874, "/schools/barking-and-dagenham/richard-alibon-primary-school-with-arp-for-cognitive-and-learning-difficulties-sen-base/", "Richard Alibon Primary School with ARP for Cognitive and Learning Difficulties : SEN Base"], [51.537899, 0.139606, "/schools/barking-and-dagenham/godwin-primary-school/", "Godwin Primary School"], [51.552456, 0.147602, "/schools/barking-and-dagenham/trinity-school/", "Trinity School"], [51.532549, 0.081074, "/schools/barking-and-dagenham/gascoigne-primary-school/", "Gascoigne Primary School"], [51.5473, 0.1561, "/schools/barking-and-dagenham/hunters-hall-primary-school/", "Hunters Hall Primary School"], [51.551536, 0.133956, "/schools/barking-and-dagenham/southwood-primary-school/", "Southwood Primary School"], [51.538011, 0.130958, "/schools/barking-and-dagenham/mayesbrook-park-school/", "Mayesbrook Park School"], [51.533335, 0.126486, "/schools/barking-and-dagenham/jo-richardson-community-school/", "Jo Richardson Community School"], [51.533105, 0.136699, "/schools/barking-and-dagenham/hopewell-school/", "Hopewell School"], [51.535285, 0.154206, "/schools/barking-and-dagenham/dagenham-park-cofe-school/", "Dagenham Park CofE School"], [51.520668, 0.108843, "/schools/barking-and-dagenham/george-carey-church-of-england-primary-school/", "George Carey Church of England Primary School"], [51.543911, 0.07578, "/schools/barking-and-dagenham/al-madina-school-for-girls/", "Al Madina School for Girls"], [51.527942, 0.103888, "/schools/barking-and-dagenham/thames-view-infants/", "Thames View Infants"], [51.521665, 0.118418, "/schools/barking-and-dagenham/riverside-school/", "Riverside School"], [51.547437, 0.11497, "/schools/barking-and-dagenham/dorothy-barley-junior-academy/", "Dorothy Barley Junior Academy"], [51.532856, 0.132563, "/schools/barking-and-dagenham/goresbrook-school/", "Goresbrook School"], [51.578193, 0.141742, "/schools/barking-and-dagenham/the-warren-school/", "The Warren School"], [51.527537, 0.102904, "/schools/barking-and-dagenham/thames-view-junior-school/", "Thames View Junior School"], [51.548747, 0.132527, "/schools/barking-and-dagenham/the-sydney-russell-school/", "The Sydney Russell School"], [51.521665, 0.118418, "/schools/barking-and-dagenham/riverside-primary-school/", "Riverside Primary School"], [51.521665, 0.118418, "/schools/barking-and-dagenham/riverside-bridge-school/", "Riverside Bridge School"], [51.53219, 0.077496, "/schools/barking-and-dagenham/northstar-new-school/", "Northstar New School"], [51.536355, 0.101133, "/schools/barking-and-dagenham/eastbury-primary-school/", "Eastbury Primary School"], [51.53335, 0.084052, "/schools/barking-and-dagenham/greatfields-school/", "Greatfields School"], [51.531634, 0.083988, "/schools/barking-and-dagenham/greatfields-primary-school/", "Greatfields Primary School"], [51.535573, 0.075848, "/schools/barking-and-dagenham/st-margarets-cofe-primary-school/", "St Margarets CofE Primary School"], [51.536596, 0.130128, "/schools/barking-and-dagenham/the-james-cambell-primary-school/", "The James Cambell Primary School"], [51.530276, 0.151259, "/schools/barking-and-dagenham/pathways-school/", "Pathways School"], [51.5344, 0.077107, "/schools/barking-and-dagenham/st-josephs-catholic-primary-school/", "St Joseph's Catholic Primary School"], [51.55237, 0.143934, "/schools/barking-and-dagenham/st-josephs-catholic-primary-school/", "St Joseph's Catholic Primary School"], [51.550677, 0.124266, "/schools/barking-and-dagenham/the-st-teresa-catholic-primary-school/", "The St Teresa Catholic Primary School"], [51.559906, 0.122647, "/schools/barking-and-dagenham/st-vincents-catholic-primary-school/", "St Vincent's Catholic Primary School"], [51.546451, 0.170945, "/schools/barking-and-dagenham/brook-sixth-form-and-academy/", "Brook Sixth Form and Academy"], [51.548082, 0.155632, "/schools/barking-and-dagenham/oxlow-bridge-school/", "Oxlow Bridge School"], [51.536596, 0.130128, "/schools/barking-and-dagenham/northstar-nurture-school/", "Northstar Nurture School"], [51.557321, 0.120882, "/schools/barking-and-dagenham/senarp-vibe-independent-school/", "SENARP Vibe Independent School"]];
-    if (!points.length) return;
-    var lats = points.map(function(p) { return p[0]; });
-    var lngs = points.map(function(p) { return p[1]; });
-    var avgLat = lats.reduce(function(a,b) { return a+b; }, 0) / lats.length;
-    var avgLng = lngs.reduce(function(a,b) { return a+b; }, 0) / lngs.length;
-    var map = L.map('map', { scrollWheelZoom: false }).setView([avgLat, avgLng], 12);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 18,
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-    points.forEach(function(p) {
-      L.circleMarker([p[0], p[1]], {
-        radius: 5, color: '#0b2545', fillColor: '#0b6efd', fillOpacity: 0.8, weight: 1
-      }).addTo(map).bindPopup('<a href="' + p[2] + '">' + p[3] + '</a>');
+(function(){
+  var borough="Barking and Dagenham", boroughUrl="https://londonschool.directory/schools/barking-and-dagenham";
+  var outstanding=11, total=67;
+
+  // Borough-level share
+  window.shareBoroughWhatsApp=function(){
+    var t='🏙️ *Schools in '+borough+', London*\n'+
+        '📊 '+total+' schools · '+outstanding+' Outstanding\n\n'+
+        '🔗 '+boroughUrl;
+    window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank');
+  };
+  window.shareBoroughEmail=function(){
+    var s='Schools in '+borough+' — London Schools Explorer';
+    var b='Schools in '+borough+', London\n'+
+        total+' schools, '+outstanding+' rated Outstanding by Ofsted\n\n'+
+        'Browse them here: '+boroughUrl;
+    window.location.href='mailto:?subject='+encodeURIComponent(s)+'&body='+encodeURIComponent(b);
+  };
+
+  // Shortlist comparison share
+  function getSelected(){
+    return Array.from(document.querySelectorAll('.sch-sel:checked')).map(function(cb){
+      return {name:cb.dataset.name,ofsted:cb.dataset.ofsted,phase:cb.dataset.phase,
+               att8:cb.dataset.att8,ks2:cb.dataset.ks2,url:cb.dataset.url};
     });
-  })();
+  }
+  function updateBar(){
+    var sel=getSelected();
+    var bar=document.getElementById('cmp-bar');
+    document.getElementById('cmp-count').textContent=sel.length+' school'+(sel.length===1?'':' s')+' selected';
+    bar.style.display=sel.length>0?'flex':'none';
+  }
+  document.querySelectorAll('.sch-sel').forEach(function(cb){ cb.onchange=updateBar; });
+
+  function buildCompareText(sel,markdown){
+    var lines=['📋 *My '+borough+' school shortlist*',''];
+    sel.forEach(function(s,i){
+      lines.push((i+1)+'. '+(markdown?'*':'')+s.name+(markdown?'*':''));
+      lines.push('   ⭐ Ofsted: '+s.ofsted+(s.phase?' · '+s.phase:''));
+      if(s.att8)lines.push('   📊 Attainment 8: '+s.att8);
+      if(s.ks2)lines.push('   📝 KS2 expected: '+s.ks2+'%');
+      lines.push('   🔗 '+s.url);
+      lines.push('');
+    });
+    lines.push('via London Schools Explorer — '+boroughUrl);
+    return lines.join('\n');
+  }
+  window.shareCompareWhatsApp=function(){
+    var sel=getSelected();
+    if(!sel.length)return;
+    window.open('https://wa.me/?text='+encodeURIComponent(buildCompareText(sel,true)),'_blank');
+  };
+  window.shareCompareEmail=function(){
+    var sel=getSelected();
+    if(!sel.length)return;
+    var subj='My '+borough+' school shortlist — London Schools Explorer';
+    window.location.href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(buildCompareText(sel,false));
+  };
+  window.clearSelection=function(){
+    document.querySelectorAll('.sch-sel:checked').forEach(function(cb){cb.checked=false;});
+    updateBar();
+  };
+})();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/sw.js').catch(function () {});
+  });
+}
 </script>
 </body>
 </html>

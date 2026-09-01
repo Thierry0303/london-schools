@@ -1,1692 +1,536 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en-GB">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Schools in Southwark, London | Ofsted Ratings &amp; Results | London Schools Explorer</title>
-  <meta name="description" content="121 schools in Southwark, London. 29 Outstanding, 74 Good-rated by Ofsted. Compare admissions oversubscription, exam results and crime data. Free.">
-  <script type="application/ld+json">{
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Schools in Southwark, London — Ofsted, Performance & Admissions</title>
+<meta name="description" content="All 121 schools in Southwark, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
+<link rel="canonical" href="https://londonschool.directory/schools/southwark/">
+<meta property="og:title" content="Schools in Southwark, London — Ofsted, Performance & Admissions">
+<meta property="og:description" content="All 121 schools in Southwark, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://londonschool.directory/schools/southwark/">
+<meta property="og:site_name" content="London School Directory">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0b2545">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="preconnect" href="https://unpkg.com">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+  :root {
+    --ink: #0b2545;
+    --ink-2: #1e3a5f;
+    --muted: #5b6b85;
+    --line: #e3e8ef;
+    --bg: #ffffff;
+    --bg-2: #f6f8fb;
+    --accent: #0b6efd;
+    --good: #137333;
+    --warn: #a85b00;
+    --bad: #b3261e;
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  header.site {
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+    position: sticky; top: 0; z-index: 50;
+  }
+  header.site .inner {
+    max-width: 1100px; margin: 0 auto; padding: 14px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  header.site a.brand { color: var(--ink); font-weight: 700; letter-spacing: -0.01em; }
+  header.site nav a { margin-left: 18px; color: var(--ink-2); font-size: 14px; }
+  main { max-width: 1100px; margin: 0 auto; padding: 28px 20px 80px; }
+  .crumbs { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+  .crumbs a { color: var(--muted); }
+  h1 { font-size: 32px; line-height: 1.2; margin: 0 0 8px; letter-spacing: -0.02em; }
+  .lede { color: var(--ink-2); font-size: 17px; max-width: 720px; }
+  .stamp { font-size: 12px; color: var(--muted); margin-top: 8px; }
+  .stamp .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--good); vertical-align: middle; margin-right: 6px; }
+  .grid-stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px; margin: 24px 0 8px;
+  }
+  .stat {
+    background: var(--bg-2); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 14px 16px;
+  }
+  .stat .v { font-size: 24px; font-weight: 700; color: var(--ink); }
+  .stat .l { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  section { margin-top: 36px; }
+  h2 { font-size: 22px; margin: 0 0 12px; letter-spacing: -0.01em; }
+  .twocol { display: grid; grid-template-columns: 1.4fr 1fr; gap: 28px; }
+  @media (max-width: 820px) { .twocol { grid-template-columns: 1fr; } }
+  table.schools { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table.schools th, table.schools td {
+    text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line);
+  }
+  table.schools th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); font-weight: 600; }
+  .rating { font-weight: 600; }
+  .rating.Outstanding { color: var(--good); }
+  .rating.Good { color: var(--ink-2); }
+  .rating.RequiresImprovement, .rating.Requires { color: var(--warn); }
+  .rating.Inadequate { color: var(--bad); }
+  #map { height: 380px; border-radius: var(--radius); border: 1px solid var(--line); }
+  .pills { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pill { background: var(--bg-2); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; font-size: 12px; color: var(--ink-2); }
+  details.faq { border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 8px; background: var(--bg); }
+  details.faq summary { cursor: pointer; font-weight: 600; color: var(--ink); }
+  details.faq[open] { background: var(--bg-2); }
+  footer { border-top: 1px solid var(--line); padding: 28px 20px; color: var(--muted); font-size: 13px; }
+  footer .inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 24px; flex-wrap: wrap; }
+  .sources { font-size: 13px; color: var(--muted); }
+  .sources a { color: var(--muted); text-decoration: underline; }
+  .cta {
+    display: inline-block; background: var(--ink); color: #fff; padding: 10px 14px;
+    border-radius: var(--radius); font-size: 14px; font-weight: 600;
+  }
+  .cta:hover { background: var(--ink-2); text-decoration: none; }
+</style>
+<script type="application/ld+json">
+[
+  {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "name": "Schools in Southwark, London",
-    "description": "121 schools in Southwark, London rated by Ofsted",
-    "numberOfItems": 121,
-    "url": "https://londonschool.directory/schools/southwark"
-  }</script>
-  <script type="application/ld+json">{
+    "name": "Top schools in Southwark, London",
+    "itemListOrder": "http://schema.org/ItemListOrderDescending",
+    "numberOfItems": 14,
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "url": "https://londonschool.directory/schools/southwark/boutcher-church-of-england-primary-school/",
+        "name": "Boutcher Church of England Primary School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "url": "https://londonschool.directory/schools/southwark/the-cathedral-school-of-st-saviour-and-st-mary-overie/",
+        "name": "The Cathedral School of St Saviour and St Mary Overie"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "url": "https://londonschool.directory/schools/southwark/charles-dickens-primary-school/",
+        "name": "Charles Dickens Primary School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "url": "https://londonschool.directory/schools/southwark/angel-oak-academy/",
+        "name": "Angel Oak Academy"
+      },
+      {
+        "@type": "ListItem",
+        "position": 5,
+        "url": "https://londonschool.directory/schools/southwark/st-johns-roman-catholic-primary-school/",
+        "name": "St John's Roman Catholic Primary School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 6,
+        "url": "https://londonschool.directory/schools/southwark/redriff-primary-city-of-london-academy/",
+        "name": "Redriff Primary, City of London Academy"
+      },
+      {
+        "@type": "ListItem",
+        "position": 7,
+        "url": "https://londonschool.directory/schools/southwark/phoenix-primary-school/",
+        "name": "Phoenix Primary School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 8,
+        "url": "https://londonschool.directory/schools/southwark/the-charter-school-north-dulwich/",
+        "name": "The Charter School North Dulwich"
+      },
+      {
+        "@type": "ListItem",
+        "position": 9,
+        "url": "https://londonschool.directory/schools/southwark/kingsdale-foundation-school/",
+        "name": "Kingsdale Foundation School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 10,
+        "url": "https://londonschool.directory/schools/southwark/sacred-heart-catholic-school/",
+        "name": "Sacred Heart Catholic School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 11,
+        "url": "https://londonschool.directory/schools/southwark/st-michaels-catholic-college/",
+        "name": "St Michael's Catholic College"
+      },
+      {
+        "@type": "ListItem",
+        "position": 12,
+        "url": "https://londonschool.directory/schools/southwark/harris-boys-academy-east-dulwich/",
+        "name": "Harris Boys' Academy East Dulwich"
+      },
+      {
+        "@type": "ListItem",
+        "position": 13,
+        "url": "https://londonschool.directory/schools/southwark/harris-girls-academy-east-dulwich/",
+        "name": "Harris Girls' Academy East Dulwich"
+      },
+      {
+        "@type": "ListItem",
+        "position": 14,
+        "url": "https://londonschool.directory/schools/southwark/harris-academy-bermondsey/",
+        "name": "Harris Academy Bermondsey"
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How many schools are there in Southwark?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Southwark has 121 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 78 are primary, 39 are secondary, and the remainder are special, all-through, or post-16."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What proportion of Southwark schools are Outstanding?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "As of the latest Ofsted Management Information release, 29 schools in Southwark (24.0%) are rated Outstanding, and 85.1% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "When do I apply for a Reception or Year 7 place in Southwark?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Southwark's applications are coordinated by the local authority through the eAdmissions system. See our full Reception timeline guide."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does the school appeals process work in Southwark?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "If you are refused your preferred school place, you have a statutory right of appeal. Southwark appeals are typically heard in May (Reception) and June\u2013July (secondary). See our appeals tracker for Southwark-level success rates by year."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How can I tell which Southwark schools are over-subscribed?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release."
+        }
+      }
+    ]
+  },
+  {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      {"@type": "ListItem", "position": 1, "name": "London Schools Explorer", "item": "https://londonschool.directory/"},
-      {"@type": "ListItem", "position": 2, "name": "Schools in Southwark", "item": "https://londonschool.directory/schools/southwark"}
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://londonschool.directory/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Boroughs",
+        "item": "https://londonschool.directory/schools/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Southwark",
+        "item": "https://londonschool.directory/schools/southwark/"
+      }
     ]
-  }</script>
-  <link rel="canonical" href="https://londonschool.directory/schools/southwark">
-  <meta property="og:title" content="Schools in Southwark | London Schools Explorer">
-  <meta property="og:description" content="121 schools in Southwark. 29 Outstanding-rated. Compare Ofsted ratings, exam results and admissions.">
-  <meta property="og:url" content="https://londonschool.directory/schools/southwark">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, -apple-system, sans-serif; color: #1a1a1a; background: #f8f9fa; line-height: 1.6; }
-    a { color: #1565C0; }
-    .topbar { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 12px 20px; }
-    .topbar a { text-decoration: none; font-weight: 600; color: #1a1a1a; font-size: 15px; }
-    .topbar span { color: #888; margin: 0 8px; }
-    .container { max-width: 900px; margin: 0 auto; padding: 32px 20px; }
-    h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
-    .intro { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; font-size: 15px; color: #333; line-height: 1.7; }
-    .stats-row { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
-    .stat-box { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 14px 18px; flex: 1; min-width: 120px; }
-    .stat-num { font-size: 24px; font-weight: 700; color: #1a1a1a; line-height: 1; }
-    .stat-lbl { font-size: 12px; color: #888; margin-top: 4px; }
-    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #e0e0e0; }
-    th { background: #f5f5f5; padding: 12px 16px; text-align: left; font-size: 13px; color: #555; font-weight: 600; border-bottom: 1px solid #e0e0e0; }
-    td { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
-    tr:last-child td { border-bottom: none; }
-    tr:hover td { background: #fafafa; }
-    .back { display: inline-block; margin-bottom: 20px; font-size: 14px; color: #555; text-decoration: none; }
-    .back:hover { color: #111; }
-    footer { text-align: center; padding: 32px 20px; font-size: 13px; color: #888; }
-    @media (max-width: 600px) {
-      .container { padding: 16px 12px; }
-      h1 { font-size: 22px; }
-      .stats-row { grid-template-columns: 1fr 1fr; }
-      .intro { padding: 14px 16px; font-size: 14px; }
-      table { font-size: 13px; }
-      th, td { padding: 10px 10px; overflow-wrap: anywhere; word-break: break-word; }
-      th:nth-child(5), td:nth-child(5) { display: none; }
-      .topbar { padding: 10px 12px; font-size: 13px; }
-    }
-    @media (max-width: 600px) { .stats-row { flex-direction: column; } }
-  </style>
-  <link rel="manifest" href="/manifest.webmanifest">
-  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  }
+]
+</script>
 </head>
 <body>
-<div class="topbar">
-  <div style="max-width:900px;margin:0 auto">
-    <a href="/">London Schools Explorer</a>
-    <span>/</span>
-    Southwark
+<header class="site">
+  <div class="inner">
+    <a class="brand" href="/">London School Directory</a>
+    <nav>
+      <a href="/">Search</a>
+      <a href="/appeals.html">Appeals</a>
+      <a href="/methodology.html">Methodology</a>
+      <a href="/about.html">About</a>
+    </nav>
   </div>
-</div>
-<div class="container">
-  <a class="back" href="/">&#8592; All boroughs</a>
-  <h1>Schools in Southwark</h1>
-
-  <div class="stats-row">
-    <div class="stat-box"><div class="stat-num">121</div><div class="stat-lbl">Total schools</div></div>
-    <div class="stat-box"><div class="stat-num">29</div><div class="stat-lbl">Outstanding</div></div>
-    <div class="stat-box"><div class="stat-num">74</div><div class="stat-lbl">Good</div></div>
-    <div class="stat-box"><div class="stat-num">5</div><div class="stat-lbl">School phases</div></div>
+</header>
+<main>
+  <div class="crumbs">
+    <a href="/">Home</a> &rsaquo; <a href="/schools/">Boroughs</a> &rsaquo; Southwark
   </div>
 
-  <div class="intro">Southwark is an inner-south London borough with a rapidly improving school landscape. The borough spans from London Bridge and Bermondsey through to Peckham, Dulwich and Forest Hill. Dulwich in particular is home to several prestigious independent schools. State secondaries such as Notre Dame RC Girls' School and Harris Academy Peckham are well regarded.</div>
+  <h1>Schools in Southwark, London</h1>
+  <p class="lede">Southwark's schools stretch from Bermondsey and Borough up through Camberwell, Peckham and Dulwich. The borough has a mix of community, faith and academy schools, with some of the most competitive admissions arrangements in south-east London. Many parents apply across the Southwark/Lambeth boundary, so understanding catchment is essential.</p>
+  <p class="stamp"><span class="dot"></span>Data last verified 1 September 2026. Sources: Ofsted, DfE GIAS, DfE Performance Tables, Metropolitan Police, MHCLG IMD. See <a href="/sources.html">all sources</a>.</p>
 
-  
-<div style="display:flex;gap:16px;flex-wrap:wrap;margin:20px 0;">
+  <section>
+    <div class="grid-stats">
+      <div class="stat"><div class="v">121</div><div class="l">Schools in Southwark</div></div>
+      <div class="stat"><div class="v">24.0%</div><div class="l">Outstanding Ofsted</div></div>
+      <div class="stat"><div class="v">85.1%</div><div class="l">Good or Outstanding</div></div>
+      <div class="stat"><div class="v">78</div><div class="l">Primary schools</div></div>
+      <div class="stat"><div class="v">39</div><div class="l">Secondary schools</div></div>
+      <div class="stat"><div class="v">21%</div><div class="l">Secondary appeal success (2024)</div></div>
+    </div>
+  </section>
 
-<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fdf4ff 0%,#ede9fe 100%);
-     border:1px solid #d8b4fe;border-radius:12px;padding:14px 20px;">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-    <span style="font-size:22px;">🎓</span>
-    <strong style="font-size:15px;color:#5b21b6;">11+ &amp; 13+ Exam Prep</strong>
-  </div>
-  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
-    PiAcademy resources for grammar school entrance, SATs &amp; GCSE.
-    Use code <strong>THIERR25</strong> for 25% off.
-  </p>
-  <a href="https://piacademy.co.uk/?aff=28"
-     target="_blank" rel="noopener sponsored"
-     style="display:inline-block;padding:9px 18px;background:#7e22ce;color:#fff;
-            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
-    Get 25% OFF →
-  </a>
-  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
-</div>
-<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%);
-     border:1px solid #fcd34d;border-radius:12px;padding:14px 20px;">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-    <span style="font-size:22px;">📚</span>
-    <strong style="font-size:15px;color:#92400e;">Children's Books</strong>
-  </div>
-  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
-    Great books at low prices. At checkout, choose your school — Scholastic donates
-    <strong>20p for every £1 spent</strong> back to the school in free books.
-  </p>
-  <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&ued=https%3A%2F%2Fwww.scholastic.co.uk%2Fteachers"
-     target="_blank" rel="noopener sponsored"
-     style="display:inline-block;padding:9px 18px;background:#d97706;color:#fff;
-            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
-    Shop at Scholastic →
-  </a>
-  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
-</div>
-<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fff8f0 0%,#fff3e0 100%);
-     border:1px solid #fed7aa;border-radius:12px;padding:14px 20px;">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-    <span style="font-size:22px;">🛒</span>
-    <strong style="font-size:15px;color:#92400e;">School Supplies</strong>
-  </div>
-  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
-    Stationery, bags, PE kit, lunchboxes and more — fast delivery from Amazon.
-  </p>
-  <a href="https://www.amazon.co.uk/s?k=school+supplies+stationery&tag=londonparents-21"
-     target="_blank" rel="noopener sponsored"
-     style="display:inline-block;padding:9px 18px;background:#FF9900;color:#111;
-            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
-    Shop on Amazon →
-  </a>
-  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
-</div>
-</div>
+  <section>
+    <div class="twocol">
+      <div>
+        <h2>Top primary schools in Southwark</h2>
+        <p class="sources">Ranked by Ofsted rating, then by latest KS2 performance. See <a href="/methodology.html">methodology</a>.</p>
+        <table class="schools">
+          <thead>
+            <tr><th>School</th><th>Ofsted</th><th>KS2 %</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><a href="/schools/southwark/boutcher-church-of-england-primary-school/">Boutcher Church of England Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>100.0</td></tr>
+            <tr><td><a href="/schools/southwark/the-cathedral-school-of-st-saviour-and-st-mary-overie/">The Cathedral School of St Saviour and St Mary Overie</a></td><td class="rating Outstanding">Outstanding</td><td>96.0</td></tr>
+            <tr><td><a href="/schools/southwark/charles-dickens-primary-school/">Charles Dickens Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>94.0</td></tr>
+            <tr><td><a href="/schools/southwark/angel-oak-academy/">Angel Oak Academy</a></td><td class="rating Outstanding">Outstanding</td><td>85.0</td></tr>
+            <tr><td><a href="/schools/southwark/st-johns-roman-catholic-primary-school/">St John's Roman Catholic Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>83.0</td></tr>
+            <tr><td><a href="/schools/southwark/redriff-primary-city-of-london-academy/">Redriff Primary, City of London Academy</a></td><td class="rating Outstanding">Outstanding</td><td>83.0</td></tr>
+            <tr><td><a href="/schools/southwark/phoenix-primary-school/">Phoenix Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>83.0</td></tr>
+          </tbody>
+        </table>
 
-  <!-- Borough share buttons -->
-  <div style="display:flex;gap:10px;margin:16px 0 8px;flex-wrap:wrap;align-items:center;">
-    <span style="font-size:13px;color:#555;font-weight:600;">Share Southwark schools:</span>
-    <button onclick="shareBoroughWhatsApp()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 WhatsApp</button>
-    <button onclick="shareBoroughEmail()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#1565C0;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Email</button>
-    <span style="font-size:12px;color:#999;margin-left:4px;">Or tick schools below to share a shortlist</span>
-  </div>
+        <h2 style="margin-top:28px">Top secondary schools in Southwark</h2>
+        <p class="sources">Ranked by Ofsted rating, then by latest KS4 Attainment 8.</p>
+        <table class="schools">
+          <thead>
+            <tr><th>School</th><th>Ofsted</th><th>Att 8</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><a href="/schools/southwark/the-charter-school-north-dulwich/">The Charter School North Dulwich</a></td><td class="rating Outstanding">Outstanding</td><td>62.3</td></tr>
+            <tr><td><a href="/schools/southwark/kingsdale-foundation-school/">Kingsdale Foundation School</a></td><td class="rating Outstanding">Outstanding</td><td>59.5</td></tr>
+            <tr><td><a href="/schools/southwark/sacred-heart-catholic-school/">Sacred Heart Catholic School</a></td><td class="rating Outstanding">Outstanding</td><td>58.5</td></tr>
+            <tr><td><a href="/schools/southwark/st-michaels-catholic-college/">St Michael's Catholic College</a></td><td class="rating Outstanding">Outstanding</td><td>58.0</td></tr>
+            <tr><td><a href="/schools/southwark/harris-boys-academy-east-dulwich/">Harris Boys' Academy East Dulwich</a></td><td class="rating Outstanding">Outstanding</td><td>53.6</td></tr>
+            <tr><td><a href="/schools/southwark/harris-girls-academy-east-dulwich/">Harris Girls' Academy East Dulwich</a></td><td class="rating Outstanding">Outstanding</td><td>53.5</td></tr>
+            <tr><td><a href="/schools/southwark/harris-academy-bermondsey/">Harris Academy Bermondsey</a></td><td class="rating Outstanding">Outstanding</td><td>51.8</td></tr>
+          </tbody>
+        </table>
 
-  <!-- Sticky compare bar (appears when schools are ticked) -->
-  <div id="cmp-bar" style="display:none;position:sticky;top:0;z-index:100;background:#1A1A2E;color:#fff;padding:12px 16px;border-radius:10px;margin-bottom:12px;display:none;align-items:center;gap:10px;flex-wrap:wrap;">
-    <span id="cmp-count" style="font-weight:700;font-size:14px;">0 schools selected</span>
-    <button onclick="shareCompareWhatsApp()" style="padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 Share via WhatsApp</button>
-    <button onclick="shareCompareEmail()" style="padding:8px 16px;background:#fff;color:#1A1A2E;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Share via Email</button>
-    <button onclick="clearSelection()" style="padding:8px 12px;background:transparent;color:#aaa;border:1px solid #555;border-radius:8px;font-size:12px;cursor:pointer;">✕ Clear</button>
-  </div>
+        <p style="margin-top:14px"><a class="cta" href="#all-schools">Jump to all 121 schools in Southwark</a></p>
+      </div>
+      <div>
+        <h2>Map</h2>
+        <div id="map" aria-label="Map of schools in Southwark"></div>
+      </div>
+    </div>
+  </section>
 
-  <table>
-    <thead><tr><th style="width:36px"></th><th>School</th><th>Phase</th><th>Ofsted</th><th>Pupils</th></tr></thead>
-    <tbody><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Albion Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="78.0"
-            data-url="https://londonschool.directory/schools/southwark/albion-primary-school"></td>
-          <td><a href="/schools/southwark/albion-primary-school">Albion Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>401</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Alfred Salter Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="70.0"
-            data-url="https://londonschool.directory/schools/southwark/alfred-salter-primary-school"></td>
-          <td><a href="/schools/southwark/alfred-salter-primary-school">Alfred Salter Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>403</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Alleyn's School"
-            data-ofsted="Not yet rated"
-            data-phase="All-through"
-            data-att8="65.1"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/alleyns-school"></td>
-          <td><a href="/schools/southwark/alleyns-school">Alleyn's School</a></td>
-          <td>All-through</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>1453</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Angel Oak Academy"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="85.0"
-            data-url="https://londonschool.directory/schools/southwark/angel-oak-academy"></td>
-          <td><a href="/schools/southwark/angel-oak-academy">Angel Oak Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>388</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Arco Academy"
-            data-ofsted="Not yet rated"
-            data-phase="Secondary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/arco-academy"></td>
-          <td><a href="/schools/southwark/arco-academy">Arco Academy</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>17</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Ark All Saints Academy"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="44.8"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/ark-all-saints-academy"></td>
-          <td><a href="/schools/southwark/ark-all-saints-academy">Ark All Saints Academy</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>568</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Ark Globe Academy"
-            data-ofsted="Good"
-            data-phase="All-through"
-            data-att8="47.8"
-            data-ks2="64.0"
-            data-url="https://londonschool.directory/schools/southwark/ark-globe-academy"></td>
-          <td><a href="/schools/southwark/ark-globe-academy">Ark Globe Academy</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1272</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Ark Walworth Academy"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="44.1"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/ark-walworth-academy"></td>
-          <td><a href="/schools/southwark/ark-walworth-academy">Ark Walworth Academy</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>973</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Bacon's College"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="48.2"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/bacons-college"></td>
-          <td><a href="/schools/southwark/bacons-college">Bacon's College</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1025</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Bellenden Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="86.0"
-            data-url="https://londonschool.directory/schools/southwark/bellenden-primary-school"></td>
-          <td><a href="/schools/southwark/bellenden-primary-school">Bellenden Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>221</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Beormund Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="17.0"
-            data-url="https://londonschool.directory/schools/southwark/beormund-primary-school"></td>
-          <td><a href="/schools/southwark/beormund-primary-school">Beormund Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>37</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Bessemer Grange Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="71.0"
-            data-url="https://londonschool.directory/schools/southwark/bessemer-grange-primary-school"></td>
-          <td><a href="/schools/southwark/bessemer-grange-primary-school">Bessemer Grange Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>515</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Bird In Bush School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="42.0"
-            data-url="https://londonschool.directory/schools/southwark/bird-in-bush-school"></td>
-          <td><a href="/schools/southwark/bird-in-bush-school">Bird In Bush School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>381</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Boutcher Church of England Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="100.0"
-            data-url="https://londonschool.directory/schools/southwark/boutcher-church-of-england-primary-school"></td>
-          <td><a href="/schools/southwark/boutcher-church-of-england-primary-school">Boutcher Church of England Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>201</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Brunswick Park Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="76.0"
-            data-url="https://londonschool.directory/schools/southwark/brunswick-park-primary-school"></td>
-          <td><a href="/schools/southwark/brunswick-park-primary-school">Brunswick Park Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>415</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Camberwell College of Arts"
-            data-ofsted="Not yet rated"
-            data-phase="Sixth form"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/camberwell-college-of-arts"></td>
-          <td><a href="/schools/southwark/camberwell-college-of-arts">Camberwell College of Arts</a></td>
-          <td>Sixth form</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Cavendish School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="1.9"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/cavendish-school"></td>
-          <td><a href="/schools/southwark/cavendish-school">Cavendish School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>41</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Charles Dickens Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="94.0"
-            data-url="https://londonschool.directory/schools/southwark/charles-dickens-primary-school"></td>
-          <td><a href="/schools/southwark/charles-dickens-primary-school">Charles Dickens Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>494</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Cherry Garden School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/cherry-garden-school"></td>
-          <td><a href="/schools/southwark/cherry-garden-school">Cherry Garden School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>112</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="City of London Academy (Southwark)"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="51.1"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/city-of-london-academy-southwark"></td>
-          <td><a href="/schools/southwark/city-of-london-academy-southwark">City of London Academy (Southwark)</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1589</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Crampton Primary"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="62.0"
-            data-url="https://londonschool.directory/schools/southwark/crampton-primary"></td>
-          <td><a href="/schools/southwark/crampton-primary">Crampton Primary</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>201</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Crawford Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="52.0"
-            data-url="https://londonschool.directory/schools/southwark/crawford-primary-school"></td>
-          <td><a href="/schools/southwark/crawford-primary-school">Crawford Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>285</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Dulwich College"
-            data-ofsted="Not yet rated"
-            data-phase="All-through"
-            data-att8="16.0"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/dulwich-college"></td>
-          <td><a href="/schools/southwark/dulwich-college">Dulwich College</a></td>
-          <td>All-through</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>1923</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Dulwich Hamlet Junior School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="83.0"
-            data-url="https://londonschool.directory/schools/southwark/dulwich-hamlet-junior-school"></td>
-          <td><a href="/schools/southwark/dulwich-hamlet-junior-school">Dulwich Hamlet Junior School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>374</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Dulwich Prep & Senior"
-            data-ofsted="Not yet rated"
-            data-phase="All-through"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/dulwich-prep-senior"></td>
-          <td><a href="/schools/southwark/dulwich-prep-senior">Dulwich Prep & Senior</a></td>
-          <td>All-through</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>808</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Dulwich Village Church of England Infants' School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/dulwich-village-church-of-england-infants-school"></td>
-          <td><a href="/schools/southwark/dulwich-village-church-of-england-infants-school">Dulwich Village Church of England Infants' School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>265</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Dulwich Wood Nursery School"
-            data-ofsted="Good"
-            data-phase="Nursery"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/dulwich-wood-nursery-school"></td>
-          <td><a href="/schools/southwark/dulwich-wood-nursery-school">Dulwich Wood Nursery School</a></td>
-          <td>Nursery</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>81</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Dulwich Wood Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="73.0"
-            data-url="https://londonschool.directory/schools/southwark/dulwich-wood-primary-school"></td>
-          <td><a href="/schools/southwark/dulwich-wood-primary-school">Dulwich Wood Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>417</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Elevated Futures Education"
-            data-ofsted="Not yet rated"
-            data-phase="Secondary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/elevated-futures-education"></td>
-          <td><a href="/schools/southwark/elevated-futures-education">Elevated Futures Education</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="English Martyrs' Roman Catholic Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="77.0"
-            data-url="https://londonschool.directory/schools/southwark/english-martyrs-roman-catholic-primary-school"></td>
-          <td><a href="/schools/southwark/english-martyrs-roman-catholic-primary-school">English Martyrs' Roman Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>299</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Evelina Hospital School"
-            data-ofsted="Outstanding"
-            data-phase="All-through"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/evelina-hospital-school"></td>
-          <td><a href="/schools/southwark/evelina-hospital-school">Evelina Hospital School</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>117</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Friars Primary Foundation School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="67.0"
-            data-url="https://londonschool.directory/schools/southwark/friars-primary-foundation-school"></td>
-          <td><a href="/schools/southwark/friars-primary-foundation-school">Friars Primary Foundation School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>194</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Galleywall Primary, City of London Academy"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="95.0"
-            data-url="https://londonschool.directory/schools/southwark/galleywall-primary-city-of-london-academy"></td>
-          <td><a href="/schools/southwark/galleywall-primary-city-of-london-academy">Galleywall Primary, City of London Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>345</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Goodrich Community Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="78.0"
-            data-url="https://londonschool.directory/schools/southwark/goodrich-community-primary-school"></td>
-          <td><a href="/schools/southwark/goodrich-community-primary-school">Goodrich Community Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>421</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Goose Green Primary and Nursery School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="69.0"
-            data-url="https://londonschool.directory/schools/southwark/goose-green-primary-and-nursery-school"></td>
-          <td><a href="/schools/southwark/goose-green-primary-and-nursery-school">Goose Green Primary and Nursery School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>210</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Grange Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="47.0"
-            data-url="https://londonschool.directory/schools/southwark/grange-primary-school"></td>
-          <td><a href="/schools/southwark/grange-primary-school">Grange Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>275</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Grove Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="66.0"
-            data-url="https://londonschool.directory/schools/southwark/grove-primary-school"></td>
-          <td><a href="/schools/southwark/grove-primary-school">Grove Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>205</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Haberdashers' Borough Academy"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="47.8"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/haberdashers-borough-academy"></td>
-          <td><a href="/schools/southwark/haberdashers-borough-academy">Haberdashers' Borough Academy</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>983</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Harris Academy Bermondsey"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="51.8"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/harris-academy-bermondsey"></td>
-          <td><a href="/schools/southwark/harris-academy-bermondsey">Harris Academy Bermondsey</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>781</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Harris Academy Peckham"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="41.4"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/harris-academy-peckham"></td>
-          <td><a href="/schools/southwark/harris-academy-peckham">Harris Academy Peckham</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>458</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Harris Boys' Academy East Dulwich"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="53.6"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/harris-boys-academy-east-dulwich"></td>
-          <td><a href="/schools/southwark/harris-boys-academy-east-dulwich">Harris Boys' Academy East Dulwich</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>912</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Harris Girls' Academy East Dulwich"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="53.5"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/harris-girls-academy-east-dulwich"></td>
-          <td><a href="/schools/southwark/harris-girls-academy-east-dulwich">Harris Girls' Academy East Dulwich</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>809</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Harris Primary Academy East Dulwich"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="82.0"
-            data-url="https://londonschool.directory/schools/southwark/harris-primary-academy-east-dulwich"></td>
-          <td><a href="/schools/southwark/harris-primary-academy-east-dulwich">Harris Primary Academy East Dulwich</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>346</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Harris Primary Academy Peckham Park"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="81.0"
-            data-url="https://londonschool.directory/schools/southwark/harris-primary-academy-peckham-park"></td>
-          <td><a href="/schools/southwark/harris-primary-academy-peckham-park">Harris Primary Academy Peckham Park</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>242</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Haymerle School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/haymerle-school"></td>
-          <td><a href="/schools/southwark/haymerle-school">Haymerle School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>77</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Heber Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="82.0"
-            data-url="https://londonschool.directory/schools/southwark/heber-primary-school"></td>
-          <td><a href="/schools/southwark/heber-primary-school">Heber Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>447</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Herne Hill School"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/herne-hill-school"></td>
-          <td><a href="/schools/southwark/herne-hill-school">Herne Hill School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>304</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Highshore School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/highshore-school"></td>
-          <td><a href="/schools/southwark/highshore-school">Highshore School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>163</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Hollydale Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="54.0"
-            data-url="https://londonschool.directory/schools/southwark/hollydale-primary-school"></td>
-          <td><a href="/schools/southwark/hollydale-primary-school">Hollydale Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>155</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Ilderton Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="65.0"
-            data-url="https://londonschool.directory/schools/southwark/ilderton-primary-school"></td>
-          <td><a href="/schools/southwark/ilderton-primary-school">Ilderton Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>157</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Imperial Oak School"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/imperial-oak-school"></td>
-          <td><a href="/schools/southwark/imperial-oak-school">Imperial Oak School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>21</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Ivydale Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="91.0"
-            data-url="https://londonschool.directory/schools/southwark/ivydale-primary-school"></td>
-          <td><a href="/schools/southwark/ivydale-primary-school">Ivydale Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>463</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="James Allen's Girls' School"
-            data-ofsted="Not yet rated"
-            data-phase="All-through"
-            data-att8="66.6"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/james-allens-girls-school"></td>
-          <td><a href="/schools/southwark/james-allens-girls-school">James Allen's Girls' School</a></td>
-          <td>All-through</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>1223</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="John Donne Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="71.0"
-            data-url="https://londonschool.directory/schools/southwark/john-donne-primary-school"></td>
-          <td><a href="/schools/southwark/john-donne-primary-school">John Donne Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>405</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="John Keats Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="47.0"
-            data-url="https://londonschool.directory/schools/southwark/john-keats-primary-school"></td>
-          <td><a href="/schools/southwark/john-keats-primary-school">John Keats Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>362</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="John Ruskin Primary School and Language Classes"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="72.0"
-            data-url="https://londonschool.directory/schools/southwark/john-ruskin-primary-school-and-language-classes"></td>
-          <td><a href="/schools/southwark/john-ruskin-primary-school-and-language-classes">John Ruskin Primary School and Language Classes</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>452</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Judith Kerr Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="86.0"
-            data-url="https://londonschool.directory/schools/southwark/judith-kerr-primary-school"></td>
-          <td><a href="/schools/southwark/judith-kerr-primary-school">Judith Kerr Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>409</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Keyworth Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="70.0"
-            data-url="https://londonschool.directory/schools/southwark/keyworth-primary-school"></td>
-          <td><a href="/schools/southwark/keyworth-primary-school">Keyworth Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>313</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Kingsdale Foundation School"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="59.5"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/kingsdale-foundation-school"></td>
-          <td><a href="/schools/southwark/kingsdale-foundation-school">Kingsdale Foundation School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>2550</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Kintore Way Nursery School and Children's Centre"
-            data-ofsted="Outstanding"
-            data-phase="Nursery"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/kintore-way-nursery-school-and-childrens-centre"></td>
-          <td><a href="/schools/southwark/kintore-way-nursery-school-and-childrens-centre">Kintore Way Nursery School and Children's Centre</a></td>
-          <td>Nursery</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>99</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Lift Newlands"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="24.2"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/lift-newlands"></td>
-          <td><a href="/schools/southwark/lift-newlands">Lift Newlands</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>79</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="London Christian School"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/london-christian-school"></td>
-          <td><a href="/schools/southwark/london-christian-school">London Christian School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>114</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="London College of Printing & Distributive Trades"
-            data-ofsted="Not yet rated"
-            data-phase="Sixth form"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/london-college-of-printing-distributive-trades"></td>
-          <td><a href="/schools/southwark/london-college-of-printing-distributive-trades">London College of Printing & Distributive Trades</a></td>
-          <td>Sixth form</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Lyndhurst Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="83.0"
-            data-url="https://londonschool.directory/schools/southwark/lyndhurst-primary-school"></td>
-          <td><a href="/schools/southwark/lyndhurst-primary-school">Lyndhurst Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>495</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Maudsley and Bethlem Hospital School"
-            data-ofsted="Outstanding"
-            data-phase="All-through"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/maudsley-and-bethlem-hospital-school"></td>
-          <td><a href="/schools/southwark/maudsley-and-bethlem-hospital-school">Maudsley and Bethlem Hospital School</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>1</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Michael Faraday School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="67.0"
-            data-url="https://londonschool.directory/schools/southwark/michael-faraday-school"></td>
-          <td><a href="/schools/southwark/michael-faraday-school">Michael Faraday School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>429</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Nell Gwynn Nursery School"
-            data-ofsted="Good"
-            data-phase="Nursery"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/nell-gwynn-nursery-school"></td>
-          <td><a href="/schools/southwark/nell-gwynn-nursery-school">Nell Gwynn Nursery School</a></td>
-          <td>Nursery</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>91</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Notre Dame Catholic Girls' School"
-            data-ofsted="Requires improvement"
-            data-phase="Secondary"
-            data-att8="44.8"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/notre-dame-catholic-girls-school"></td>
-          <td><a href="/schools/southwark/notre-dame-catholic-girls-school">Notre Dame Catholic Girls' School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
-          <td>354</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Oliver Goldsmith Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="54.0"
-            data-url="https://londonschool.directory/schools/southwark/oliver-goldsmith-primary-school"></td>
-          <td><a href="/schools/southwark/oliver-goldsmith-primary-school">Oliver Goldsmith Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>358</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Peter Hills with St Mary's and St Paul's CofE Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="75.0"
-            data-url="https://londonschool.directory/schools/southwark/peter-hills-with-st-marys-and-st-pauls-cofe-primary-school"></td>
-          <td><a href="/schools/southwark/peter-hills-with-st-marys-and-st-pauls-cofe-primary-school">Peter Hills with St Mary's and St Paul's CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>84</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Phoenix Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="83.0"
-            data-url="https://londonschool.directory/schools/southwark/phoenix-primary-school"></td>
-          <td><a href="/schools/southwark/phoenix-primary-school">Phoenix Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>480</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="PhoenixPlace"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="9.8"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/phoenixplace"></td>
-          <td><a href="/schools/southwark/phoenixplace">PhoenixPlace</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>30</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Pilgrims' Way Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="47.0"
-            data-url="https://londonschool.directory/schools/southwark/pilgrims-way-primary-school"></td>
-          <td><a href="/schools/southwark/pilgrims-way-primary-school">Pilgrims' Way Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>171</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Redriff Primary, City of London Academy"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="83.0"
-            data-url="https://londonschool.directory/schools/southwark/redriff-primary-city-of-london-academy"></td>
-          <td><a href="/schools/southwark/redriff-primary-city-of-london-academy">Redriff Primary, City of London Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>456</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Riverside Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="100.0"
-            data-url="https://londonschool.directory/schools/southwark/riverside-primary-school"></td>
-          <td><a href="/schools/southwark/riverside-primary-school">Riverside Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>219</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Robert Browning Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="46.0"
-            data-url="https://londonschool.directory/schools/southwark/robert-browning-primary-school"></td>
-          <td><a href="/schools/southwark/robert-browning-primary-school">Robert Browning Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>185</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Rotherhithe Primary School"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="85.0"
-            data-url="https://londonschool.directory/schools/southwark/rotherhithe-primary-school"></td>
-          <td><a href="/schools/southwark/rotherhithe-primary-school">Rotherhithe Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>339</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Rye Oak Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="70.0"
-            data-url="https://londonschool.directory/schools/southwark/rye-oak-primary-school"></td>
-          <td><a href="/schools/southwark/rye-oak-primary-school">Rye Oak Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>265</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Sacred Heart Catholic School"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="58.5"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/sacred-heart-catholic-school"></td>
-          <td><a href="/schools/southwark/sacred-heart-catholic-school">Sacred Heart Catholic School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>950</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Saint Joseph's Catholic Primary School, the Borough"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="59.0"
-            data-url="https://londonschool.directory/schools/southwark/saint-josephs-catholic-primary-school-the-borough"></td>
-          <td><a href="/schools/southwark/saint-josephs-catholic-primary-school-the-borough">Saint Joseph's Catholic Primary School, the Borough</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>175</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Snowsfields Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="92.0"
-            data-url="https://londonschool.directory/schools/southwark/snowsfields-primary-school"></td>
-          <td><a href="/schools/southwark/snowsfields-primary-school">Snowsfields Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>180</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="South Bank University Academy"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="42.1"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/south-bank-university-academy"></td>
-          <td><a href="/schools/southwark/south-bank-university-academy">South Bank University Academy</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>405</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Southwark Inclusive Learning Service (Sils)"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/southwark-inclusive-learning-service-sils"></td>
-          <td><a href="/schools/southwark/southwark-inclusive-learning-service-sils">Southwark Inclusive Learning Service (Sils)</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>40</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Southwark Park Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="63.0"
-            data-url="https://londonschool.directory/schools/southwark/southwark-park-primary-school"></td>
-          <td><a href="/schools/southwark/southwark-park-primary-school">Southwark Park Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>386</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Spa School Camberwell"
-            data-ofsted="Good"
-            data-phase="All-through"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/spa-school-camberwell"></td>
-          <td><a href="/schools/southwark/spa-school-camberwell">Spa School Camberwell</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>114</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Spa School, Bermondsey"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/spa-school-bermondsey"></td>
-          <td><a href="/schools/southwark/spa-school-bermondsey">Spa School, Bermondsey</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>122</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Anthony's Catholic Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="76.0"
-            data-url="https://londonschool.directory/schools/southwark/st-anthonys-catholic-primary-school"></td>
-          <td><a href="/schools/southwark/st-anthonys-catholic-primary-school">St Anthony's Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>414</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Francis RC Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="63.0"
-            data-url="https://londonschool.directory/schools/southwark/st-francis-rc-primary-school"></td>
-          <td><a href="/schools/southwark/st-francis-rc-primary-school">St Francis RC Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>253</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St George's Cathedral Catholic Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/st-georges-cathedral-catholic-primary-school"></td>
-          <td><a href="/schools/southwark/st-georges-cathedral-catholic-primary-school">St George's Cathedral Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>167</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St George's Church of England Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="30.0"
-            data-url="https://londonschool.directory/schools/southwark/st-georges-church-of-england-primary-school"></td>
-          <td><a href="/schools/southwark/st-georges-church-of-england-primary-school">St George's Church of England Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>136</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St James the Great Roman Catholic Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="69.0"
-            data-url="https://londonschool.directory/schools/southwark/st-james-the-great-roman-catholic-primary-school"></td>
-          <td><a href="/schools/southwark/st-james-the-great-roman-catholic-primary-school">St James the Great Roman Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>228</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St James' Church of England Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="73.0"
-            data-url="https://londonschool.directory/schools/southwark/st-james-church-of-england-primary-school"></td>
-          <td><a href="/schools/southwark/st-james-church-of-england-primary-school">St James' Church of England Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>403</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St John's Roman Catholic Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="83.0"
-            data-url="https://londonschool.directory/schools/southwark/st-johns-roman-catholic-primary-school"></td>
-          <td><a href="/schools/southwark/st-johns-roman-catholic-primary-school">St John's Roman Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>240</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St John's and St Clement's Church of England Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="71.0"
-            data-url="https://londonschool.directory/schools/southwark/st-johns-and-st-clements-church-of-england-primary-school"></td>
-          <td><a href="/schools/southwark/st-johns-and-st-clements-church-of-england-primary-school">St John's and St Clement's Church of England Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>400</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St John's and St Clement's Primary School Co Hearing Impaired Unit"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/st-johns-and-st-clements-primary-school-co-hearing-impaired-unit"></td>
-          <td><a href="/schools/southwark/st-johns-and-st-clements-primary-school-co-hearing-impaired-unit">St John's and St Clement's Primary School Co Hearing Impaired Unit</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Joseph's Catholic Infants School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/st-josephs-catholic-infants-school"></td>
-          <td><a href="/schools/southwark/st-josephs-catholic-infants-school">St Joseph's Catholic Infants School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>147</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Joseph's Catholic Junior School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="69.0"
-            data-url="https://londonschool.directory/schools/southwark/st-josephs-catholic-junior-school"></td>
-          <td><a href="/schools/southwark/st-josephs-catholic-junior-school">St Joseph's Catholic Junior School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>209</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Joseph's Catholic Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="62.0"
-            data-url="https://londonschool.directory/schools/southwark/st-josephs-catholic-primary-school"></td>
-          <td><a href="/schools/southwark/st-josephs-catholic-primary-school">St Joseph's Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>258</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Joseph's Catholic Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/st-josephs-catholic-primary-school"></td>
-          <td><a href="/schools/southwark/st-josephs-catholic-primary-school">St Joseph's Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>213</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Jude's Church of England Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="63.0"
-            data-url="https://londonschool.directory/schools/southwark/st-judes-church-of-england-primary-school"></td>
-          <td><a href="/schools/southwark/st-judes-church-of-england-primary-school">St Jude's Church of England Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>65</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Michael's Catholic College"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="58.0"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/st-michaels-catholic-college"></td>
-          <td><a href="/schools/southwark/st-michaels-catholic-college">St Michael's Catholic College</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>948</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Paul's Church of England Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="64.0"
-            data-url="https://londonschool.directory/schools/southwark/st-pauls-church-of-england-primary-school"></td>
-          <td><a href="/schools/southwark/st-pauls-church-of-england-primary-school">St Paul's Church of England Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>207</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Peter's Church of England Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="80.0"
-            data-url="https://londonschool.directory/schools/southwark/st-peters-church-of-england-primary-school"></td>
-          <td><a href="/schools/southwark/st-peters-church-of-england-primary-school">St Peter's Church of England Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>134</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Saviour's and St Olave's Church of England School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="55.5"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/st-saviours-and-st-olaves-church-of-england-school"></td>
-          <td><a href="/schools/southwark/st-saviours-and-st-olaves-church-of-england-school">St Saviour's and St Olave's Church of England School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>620</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Surrey Square Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="67.0"
-            data-url="https://londonschool.directory/schools/southwark/surrey-square-primary-school"></td>
-          <td><a href="/schools/southwark/surrey-square-primary-school">Surrey Square Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>444</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="THE BRIDGE SPECIAL EDUCATION NEEDS SCHOOL"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/the-bridge-special-education-needs-school"></td>
-          <td><a href="/schools/southwark/the-bridge-special-education-needs-school">THE BRIDGE SPECIAL EDUCATION NEEDS SCHOOL</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>30</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Autism Project - CareTrade"
-            data-ofsted="Not yet rated"
-            data-phase="Sixth form"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/the-autism-project-caretrade"></td>
-          <td><a href="/schools/southwark/the-autism-project-caretrade">The Autism Project - CareTrade</a></td>
-          <td>Sixth form</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Belham Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="70.0"
-            data-url="https://londonschool.directory/schools/southwark/the-belham-primary-school"></td>
-          <td><a href="/schools/southwark/the-belham-primary-school">The Belham Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>385</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Cathedral School of St Saviour and St Mary Overie"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="96.0"
-            data-url="https://londonschool.directory/schools/southwark/the-cathedral-school-of-st-saviour-and-st-mary-overie"></td>
-          <td><a href="/schools/southwark/the-cathedral-school-of-st-saviour-and-st-mary-overie">The Cathedral School of St Saviour and St Mary Overie</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>217</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Charter School Bermondsey"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="44.4"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/the-charter-school-bermondsey"></td>
-          <td><a href="/schools/southwark/the-charter-school-bermondsey">The Charter School Bermondsey</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>497</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Charter School East Dulwich"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="54.9"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/the-charter-school-east-dulwich"></td>
-          <td><a href="/schools/southwark/the-charter-school-east-dulwich">The Charter School East Dulwich</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1389</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Charter School North Dulwich"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="62.3"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/the-charter-school-north-dulwich"></td>
-          <td><a href="/schools/southwark/the-charter-school-north-dulwich">The Charter School North Dulwich</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>1393</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Grove Nursery School"
-            data-ofsted="Good"
-            data-phase="Nursery"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/the-grove-nursery-school"></td>
-          <td><a href="/schools/southwark/the-grove-nursery-school">The Grove Nursery School</a></td>
-          <td>Nursery</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>79</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Hospital and Home Tuition Sick Children's Service"
-            data-ofsted="Not yet rated"
-            data-phase="All-through"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/the-hospital-and-home-tuition-sick-childrens-service"></td>
-          <td><a href="/schools/southwark/the-hospital-and-home-tuition-sick-childrens-service">The Hospital and Home Tuition Sick Children's Service</a></td>
-          <td>All-through</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Park College"
-            data-ofsted="Not yet rated"
-            data-phase="Sixth form"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/the-park-college"></td>
-          <td><a href="/schools/southwark/the-park-college">The Park College</a></td>
-          <td>Sixth form</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The St Thomas the Apostle College"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="63.7"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/the-st-thomas-the-apostle-college"></td>
-          <td><a href="/schools/southwark/the-st-thomas-the-apostle-college">The St Thomas the Apostle College</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1140</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Villa"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/the-villa"></td>
-          <td><a href="/schools/southwark/the-villa">The Villa</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>180</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Tower Bridge Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="60.0"
-            data-url="https://londonschool.directory/schools/southwark/tower-bridge-primary-school"></td>
-          <td><a href="/schools/southwark/tower-bridge-primary-school">Tower Bridge Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>190</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Treasure House (London) CIC"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="8.4"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/treasure-house-london-cic"></td>
-          <td><a href="/schools/southwark/treasure-house-london-cic">Treasure House (London) CIC</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>14</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Tuke School"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/southwark/tuke-school"></td>
-          <td><a href="/schools/southwark/tuke-school">Tuke School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>102</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Victory Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="74.0"
-            data-url="https://londonschool.directory/schools/southwark/victory-primary-school"></td>
-          <td><a href="/schools/southwark/victory-primary-school">Victory Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>112</td>
-        </tr></tbody>
-  </table>
-</div>
-<footer><a href="/">London Schools Explorer</a> &mdash; helping families find the right school in London.<p style="margin-top:10px">Browse by type: <a href="/schools/outstanding">Outstanding</a> &middot; <a href="/schools/good">Good</a> &middot; <a href="/schools/grammar">Grammar</a> &middot; <a href="/schools/selective">Selective</a> &middot; <a href="/schools/faith">Faith</a> &middot; <a href="/schools/primary">Primary</a> &middot; <a href="/schools/secondary">Secondary</a> &middot; <a href="/schools/sixth-form">Sixth form</a> &middot; <a href="/schools/independent">Private &amp; independent</a></p></footer>
-<script defer src="/_vercel/insights/script.js"></script>
+  <section>
+    <h2>What the data says about Southwark</h2>
+    <p><strong>85.1%</strong> of Southwark schools are currently rated Good or Outstanding by Ofsted, compared with a London average of roughly 90% for primary and 80% for secondary. The average number of applications per place across Southwark is <strong>1.26</strong>, a useful indicator of how competitive local admissions are. The average number of recorded crime incidents within 500 metres of a school in Southwark over the most recent reporting month is <strong>256.57</strong>, drawn from the Metropolitan Police open data API. The mean IMD (Index of Multiple Deprivation) decile of Southwark's schools is <strong>4.38</strong> — 1 is most deprived, 10 is least deprived. All metrics on this page are recomputed from source data on the 15th of every month. See our <a href='/methodology.html'>methodology</a> for definitions and limitations.</p>
+  </section>
+
+  <section id="all-schools">
+    <h2>All schools in Southwark</h2>
+    <p class="sources">Every school in Southwark, listed alphabetically. Click any school for the full record.</p>
+    <table class="schools">
+      <thead>
+        <tr><th>School</th><th>Phase</th><th>Ofsted</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><a href="/schools/southwark/albion-primary-school/">Albion Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/alfred-salter-primary-school/">Alfred Salter Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/alleyns-school/">Alleyn's School</a></td><td>All-through</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/southwark/angel-oak-academy/">Angel Oak Academy</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/southwark/arco-academy/">Arco Academy</a></td><td>Secondary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/southwark/ark-all-saints-academy/">Ark All Saints Academy</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/ark-globe-academy/">Ark Globe Academy</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/ark-walworth-academy/">Ark Walworth Academy</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/bacons-college/">Bacon's College</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/bellenden-primary-school/">Bellenden Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/beormund-primary-school/">Beormund Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/southwark/bessemer-grange-primary-school/">Bessemer Grange Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/bird-in-bush-school/">Bird In Bush School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/boutcher-church-of-england-primary-school/">Boutcher Church of England Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/southwark/brunswick-park-primary-school/">Brunswick Park Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/camberwell-college-of-arts/">Camberwell College of Arts</a></td><td>Sixth form</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/southwark/cavendish-school/">Cavendish School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/charles-dickens-primary-school/">Charles Dickens Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/southwark/cherry-garden-school/">Cherry Garden School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/city-of-london-academy-southwark/">City of London Academy (Southwark)</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/crampton-primary/">Crampton Primary</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/southwark/crawford-primary-school/">Crawford Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/dulwich-college/">Dulwich College</a></td><td>All-through</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/southwark/dulwich-hamlet-junior-school/">Dulwich Hamlet Junior School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/southwark/dulwich-prep-senior/">Dulwich Prep & Senior</a></td><td>All-through</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/southwark/dulwich-village-church-of-england-infants-school/">Dulwich Village Church of England Infants' School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/southwark/dulwich-wood-nursery-school/">Dulwich Wood Nursery School</a></td><td>Nursery</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/dulwich-wood-primary-school/">Dulwich Wood Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/elevated-futures-education/">Elevated Futures Education</a></td><td>Secondary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/southwark/english-martyrs-roman-catholic-primary-school/">English Martyrs' Roman Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/evelina-hospital-school/">Evelina Hospital School</a></td><td>All-through</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/southwark/friars-primary-foundation-school/">Friars Primary Foundation School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/galleywall-primary-city-of-london-academy/">Galleywall Primary, City of London Academy</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/goodrich-community-primary-school/">Goodrich Community Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/goose-green-primary-and-nursery-school/">Goose Green Primary and Nursery School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/grange-primary-school/">Grange Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/grove-primary-school/">Grove Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/haberdashers-borough-academy/">Haberdashers' Borough Academy</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/harris-academy-bermondsey/">Harris Academy Bermondsey</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/southwark/harris-academy-peckham/">Harris Academy Peckham</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/southwark/harris-boys-academy-east-dulwich/">Harris Boys' Academy East Dulwich</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/southwark/harris-girls-academy-east-dulwich/">Harris Girls' Academy East Dulwich</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/southwark/harris-primary-academy-east-dulwich/">Harris Primary Academy East Dulwich</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/southwark/harris-primary-academy-peckham-park/">Harris Primary Academy Peckham Park</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/haymerle-school/">Haymerle School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/heber-primary-school/">Heber Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/herne-hill-school/">Herne Hill School</a></td><td>Primary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/southwark/highshore-school/">Highshore School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/hollydale-primary-school/">Hollydale Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/ilderton-primary-school/">Ilderton Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/southwark/imperial-oak-school/">Imperial Oak School</a></td><td>Primary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/southwark/ivydale-primary-school/">Ivydale Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/james-allens-girls-school/">James Allen's Girls' School</a></td><td>All-through</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/southwark/john-donne-primary-school/">John Donne Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/john-keats-primary-school/">John Keats Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/john-ruskin-primary-school-and-language-classes/">John Ruskin Primary School and Language Classes</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/southwark/judith-kerr-primary-school/">Judith Kerr Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/keyworth-primary-school/">Keyworth Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/kingsdale-foundation-school/">Kingsdale Foundation School</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/southwark/kintore-way-nursery-school-and-childrens-centre/">Kintore Way Nursery School and Children's Centre</a></td><td>Nursery</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/southwark/lift-newlands/">Lift Newlands</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/london-christian-school/">London Christian School</a></td><td>Primary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/southwark/london-college-of-printing-distributive-trades/">London College of Printing & Distributive Trades</a></td><td>Sixth form</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/southwark/lyndhurst-primary-school/">Lyndhurst Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/maudsley-and-bethlem-hospital-school/">Maudsley and Bethlem Hospital School</a></td><td>All-through</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/southwark/michael-faraday-school/">Michael Faraday School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/nell-gwynn-nursery-school/">Nell Gwynn Nursery School</a></td><td>Nursery</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/notre-dame-catholic-girls-school/">Notre Dame Catholic Girls' School</a></td><td>Secondary</td><td class="rating Requiresimprovement">Requires improvement</td></tr>
+        <tr><td><a href="/schools/southwark/oliver-goldsmith-primary-school/">Oliver Goldsmith Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/peter-hills-with-st-marys-and-st-pauls-cofe-primary-school/">Peter Hills with St Mary's and St Paul's CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/phoenix-primary-school/">Phoenix Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/southwark/phoenixplace/">PhoenixPlace</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/pilgrims-way-primary-school/">Pilgrims' Way Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/redriff-primary-city-of-london-academy/">Redriff Primary, City of London Academy</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/southwark/riverside-primary-school/">Riverside Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/robert-browning-primary-school/">Robert Browning Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/rotherhithe-primary-school/">Rotherhithe Primary School</a></td><td>Primary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/southwark/rye-oak-primary-school/">Rye Oak Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/sacred-heart-catholic-school/">Sacred Heart Catholic School</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/southwark/saint-josephs-catholic-primary-school-the-borough/">Saint Joseph's Catholic Primary School, the Borough</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/snowsfields-primary-school/">Snowsfields Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/south-bank-university-academy/">South Bank University Academy</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/southwark-inclusive-learning-service-sils/">Southwark Inclusive Learning Service (Sils)</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/southwark-park-primary-school/">Southwark Park Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/spa-school-camberwell/">Spa School Camberwell</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/spa-school-bermondsey/">Spa School, Bermondsey</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/st-anthonys-catholic-primary-school/">St Anthony's Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/st-francis-rc-primary-school/">St Francis RC Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/st-georges-cathedral-catholic-primary-school/">St George's Cathedral Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/st-georges-church-of-england-primary-school/">St George's Church of England Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/st-james-the-great-roman-catholic-primary-school/">St James the Great Roman Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/st-james-church-of-england-primary-school/">St James' Church of England Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/st-johns-and-st-clements-church-of-england-primary-school/">St John's and St Clement's Church of England Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/southwark/st-johns-and-st-clements-primary-school-co-hearing-impaired-unit/">St John's and St Clement's Primary School Co Hearing Impaired Unit</a></td><td>—</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/southwark/st-johns-roman-catholic-primary-school/">St John's Roman Catholic Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/southwark/st-josephs-catholic-infants-school/">St Joseph's Catholic Infants School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/st-josephs-catholic-junior-school/">St Joseph's Catholic Junior School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/st-josephs-catholic-primary-school/">St Joseph's Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/st-josephs-catholic-primary-school/">St Joseph's Catholic Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/southwark/st-judes-church-of-england-primary-school/">St Jude's Church of England Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/st-michaels-catholic-college/">St Michael's Catholic College</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/southwark/st-pauls-church-of-england-primary-school/">St Paul's Church of England Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/st-peters-church-of-england-primary-school/">St Peter's Church of England Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/st-saviours-and-st-olaves-church-of-england-school/">St Saviour's and St Olave's Church of England School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/surrey-square-primary-school/">Surrey Square Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/southwark/the-autism-project---caretrade/">The Autism Project - CareTrade</a></td><td>Sixth form</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/southwark/the-belham-primary-school/">The Belham Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/the-bridge-special-education-needs-school/">THE BRIDGE SPECIAL EDUCATION NEEDS SCHOOL</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/the-cathedral-school-of-st-saviour-and-st-mary-overie/">The Cathedral School of St Saviour and St Mary Overie</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/southwark/the-charter-school-bermondsey/">The Charter School Bermondsey</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/the-charter-school-east-dulwich/">The Charter School East Dulwich</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/the-charter-school-north-dulwich/">The Charter School North Dulwich</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/southwark/the-grove-nursery-school/">The Grove Nursery School</a></td><td>Nursery</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/the-hospital-and-home-tuition-sick-childrens-service/">The Hospital and Home Tuition Sick Children's Service</a></td><td>All-through</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/southwark/the-park-college/">The Park College</a></td><td>Sixth form</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/southwark/the-st-thomas-the-apostle-college/">The St Thomas the Apostle College</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/the-villa/">The Villa</a></td><td>Primary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/southwark/tower-bridge-primary-school/">Tower Bridge Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/treasure-house-london-cic/">Treasure House (London) CIC</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/southwark/tuke-school/">Tuke School</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/southwark/victory-primary-school/">Victory Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Frequently asked</h2>
+    <details class="faq"><summary>How many schools are there in Southwark?</summary><p>Southwark has 121 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 78 are primary, 39 are secondary, and the remainder are special, all-through, or post-16.</p></details>
+<details class="faq"><summary>What proportion of Southwark schools are Outstanding?</summary><p>As of the latest Ofsted Management Information release, 29 schools in Southwark (24.0%) are rated Outstanding, and 85.1% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication.</p></details>
+<details class="faq"><summary>When do I apply for a Reception or Year 7 place in Southwark?</summary><p>Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Southwark's applications are coordinated by the local authority through the eAdmissions system. See our <a href='/guides/london-reception-application-timeline/'>full Reception timeline guide</a>.</p></details>
+<details class="faq"><summary>How does the school appeals process work in Southwark?</summary><p>If you are refused your preferred school place, you have a statutory right of appeal. Southwark appeals are typically heard in May (Reception) and June–July (secondary). See our <a href='/appeals.html'>appeals tracker</a> for Southwark-level success rates by year.</p></details>
+<details class="faq"><summary>How can I tell which Southwark schools are over-subscribed?</summary><p>Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release.</p></details>
+  </section>
+
+  <section>
+    <h2>Sources</h2>
+    <p class="sources">
+      School list and phase from <a href="https://get-information-schools.service.gov.uk/" rel="nofollow">DfE Get Information About Schools</a> (refreshed monthly).
+      Ofsted ratings from <a href="https://www.gov.uk/government/statistical-data-sets/monthly-management-information-ofsteds-school-inspections-outcomes" rel="nofollow">Ofsted Management Information</a> (refreshed monthly).
+      Performance data from <a href="https://explore-education-statistics.service.gov.uk/" rel="nofollow">DfE Explore Education Statistics</a>.
+      Crime data within 500m from the <a href="https://data.police.uk/" rel="nofollow">Metropolitan Police open data API</a>.
+      Deprivation deciles from <a href="https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019" rel="nofollow">MHCLG English Indices of Deprivation 2019</a>.
+      Read our full <a href="/methodology.html">methodology</a> for how each metric is calculated.
+    </p>
+  </section>
+</main>
+<footer>
+  <div class="inner">
+    <div>&copy; London School Directory. Independent. Free to use.</div>
+    <div><a href="/about.html">About</a> &middot; <a href="/methodology.html">Methodology</a> &middot; <a href="/sources.html">Sources</a> &middot; <a href="/appeals.html">Appeals</a></div>
+    <div>Browse by type: <a href="/schools/outstanding">Outstanding</a> &middot; <a href="/schools/good">Good</a> &middot; <a href="/schools/grammar">Grammar</a> &middot; <a href="/schools/selective">Selective</a> &middot; <a href="/schools/faith">Faith</a> &middot; <a href="/schools/primary">Primary</a> &middot; <a href="/schools/secondary">Secondary</a> &middot; <a href="/schools/sixth-form">Sixth form</a> &middot; <a href="/schools/independent">Private &amp; independent</a></div>
+  </div>
+</footer>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-(function(){
-  var borough="Southwark", boroughUrl="https://londonschool.directory/schools/southwark";
-  var outstanding=29, total=121;
-
-  // Borough-level share
-  window.shareBoroughWhatsApp=function(){
-    var t='🏙️ *Schools in '+borough+', London*\n'+
-        '📊 '+total+' schools · '+outstanding+' Outstanding\n\n'+
-        '🔗 '+boroughUrl;
-    window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank');
-  };
-  window.shareBoroughEmail=function(){
-    var s='Schools in '+borough+' — London Schools Explorer';
-    var b='Schools in '+borough+', London\n'+
-        total+' schools, '+outstanding+' rated Outstanding by Ofsted\n\n'+
-        'Browse them here: '+boroughUrl;
-    window.location.href='mailto:?subject='+encodeURIComponent(s)+'&body='+encodeURIComponent(b);
-  };
-
-  // Shortlist comparison share
-  function getSelected(){
-    return Array.from(document.querySelectorAll('.sch-sel:checked')).map(function(cb){
-      return {name:cb.dataset.name,ofsted:cb.dataset.ofsted,phase:cb.dataset.phase,
-               att8:cb.dataset.att8,ks2:cb.dataset.ks2,url:cb.dataset.url};
+  (function() {
+    var points = [[51.494378, -0.076053, "/schools/southwark/kintore-way-nursery-school-and-childrens-centre/", "Kintore Way Nursery School and Children's Centre"], [51.430327, -0.079666, "/schools/southwark/dulwich-wood-nursery-school/", "Dulwich Wood Nursery School"], [51.475956, -0.063724, "/schools/southwark/nell-gwynn-nursery-school/", "Nell Gwynn Nursery School"], [51.480389, -0.082864, "/schools/southwark/the-grove-nursery-school/", "The Grove Nursery School"], [51.500073, -0.051708, "/schools/southwark/albion-primary-school/", "Albion Primary School"], [51.464593, -0.067272, "/schools/southwark/bellenden-primary-school/", "Bellenden Primary School"], [51.480429, -0.063405, "/schools/southwark/bird-in-bush-school/", "Bird In Bush School"], [51.489972, -0.1009, "/schools/southwark/crampton-primary/", "Crampton Primary"], [51.471565, -0.094854, "/schools/southwark/crawford-primary-school/", "Crawford Primary School"], [51.450846, -0.068543, "/schools/southwark/goodrich-community-primary-school/", "Goodrich Community Primary School"], [51.49549, -0.081884, "/schools/southwark/grange-primary-school/", "Grange Primary School"], [51.453259, -0.073594, "/schools/southwark/heber-primary-school/", "Heber Primary School"], [51.467307, -0.052486, "/schools/southwark/hollydale-primary-school/", "Hollydale Primary School"], [51.485167, -0.053554, "/schools/southwark/ilderton-primary-school/", "Ilderton Primary School"], [51.460644, -0.046594, "/schools/southwark/ivydale-primary-school/", "Ivydale Primary School"], [51.482136, -0.099022, "/schools/southwark/john-ruskin-primary-school-and-language-classes/", "John Ruskin Primary School and Language Classes"], [51.485832, -0.105105, "/schools/southwark/keyworth-primary-school/", "Keyworth Primary School"], [51.434245, -0.083875, "/schools/southwark/dulwich-wood-primary-school/", "Dulwich Wood Primary School"], [51.484886, -0.088393, "/schools/southwark/michael-faraday-school/", "Michael Faraday School"], [51.499133, -0.063865, "/schools/southwark/riverside-primary-school/", "Riverside Primary School"], [51.489418, -0.093317, "/schools/southwark/robert-browning-primary-school/", "Robert Browning Primary School"], [51.501511, -0.08385, "/schools/southwark/snowsfields-primary-school/", "Snowsfields Primary School"], [51.494627, -0.058928, "/schools/southwark/southwark-park-primary-school/", "Southwark Park Primary School"], [51.501593, -0.077291, "/schools/southwark/tower-bridge-primary-school/", "Tower Bridge Primary School"], [51.492934, -0.09281, "/schools/southwark/victory-primary-school/", "Victory Primary School"], [51.486124, -0.067355, "/schools/southwark/phoenix-primary-school/", "Phoenix Primary School"], [51.480485, -0.055914, "/schools/southwark/pilgrims-way-primary-school/", "Pilgrims' Way Primary School"], [51.499605, -0.043544, "/schools/southwark/alfred-salter-primary-school/", "Alfred Salter Primary School"], [51.474002, -0.081087, "/schools/southwark/oliver-goldsmith-primary-school/", "Oliver Goldsmith Primary School"], [51.494378, -0.076053, "/schools/southwark/boutcher-church-of-england-primary-school/", "Boutcher Church of England Primary School"], [51.452764, -0.086784, "/schools/southwark/dulwich-village-church-of-england-infants-school/", "Dulwich Village Church of England Infants' School"], [51.49064, -0.088297, "/schools/southwark/english-martyrs-roman-catholic-primary-school/", "English Martyrs' Roman Catholic Primary School"], [51.474356, -0.07308, "/schools/southwark/st-james-the-great-roman-catholic-primary-school/", "St James the Great Roman Catholic Primary School"], [51.480341, -0.06626, "/schools/southwark/st-francis-rc-primary-school/", "St Francis RC Primary School"], [51.478956, -0.082636, "/schools/southwark/st-georges-church-of-england-primary-school/", "St George's Church of England Primary School"], [51.49772, -0.067657, "/schools/southwark/st-james-church-of-england-primary-school/", "St James' Church of England Primary School"], [51.463094, -0.071769, "/schools/southwark/st-johns-and-st-clements-church-of-england-primary-school/", "St John's and St Clement's Church of England Primary School"], [51.502752, -0.093179, "/schools/southwark/saint-josephs-catholic-primary-school-the-borough/", "Saint Joseph's Catholic Primary School, the Borough"], [51.496832, -0.105268, "/schools/southwark/st-judes-church-of-england-primary-school/", "St Jude's Church of England Primary School"], [51.506196, -0.042455, "/schools/southwark/peter-hills-with-st-marys-and-st-pauls-cofe-primary-school/", "Peter Hills with St Mary's and St Paul's CofE Primary School"], [51.486171, -0.09328, "/schools/southwark/st-peters-church-of-england-primary-school/", "St Peter's Church of England Primary School"], [51.502909, -0.094022, "/schools/southwark/the-cathedral-school-of-st-saviour-and-st-mary-overie/", "The Cathedral School of St Saviour and St Mary Overie"], [51.500299, -0.041483, "/schools/southwark/st-johns-roman-catholic-primary-school/", "St John's Roman Catholic Primary School"], [51.494666, -0.087566, "/schools/southwark/st-saviours-and-st-olaves-church-of-england-school/", "St Saviour's and St Olave's Church of England School"], [51.479503, -0.099693, "/schools/southwark/st-josephs-catholic-junior-school/", "St Joseph's Catholic Junior School"], [51.479503, -0.099693, "/schools/southwark/st-josephs-catholic-infants-school/", "St Joseph's Catholic Infants School"], [51.500991, -0.102733, "/schools/southwark/friars-primary-foundation-school/", "Friars Primary Foundation School"], [51.471233, -0.056581, "/schools/southwark/the-st-thomas-the-apostle-college/", "The St Thomas the Apostle College"], [51.439842, -0.084591, "/schools/southwark/dulwich-college/", "Dulwich College"], [51.434204, -0.0852, "/schools/southwark/dulwich-prep-senior/", "Dulwich Prep & Senior"], [51.455424, -0.085522, "/schools/southwark/james-allens-girls-school/", "James Allen's Girls' School"], [51.454856, -0.082177, "/schools/southwark/alleyns-school/", "Alleyn's School"], [51.455605, -0.098325, "/schools/southwark/herne-hill-school/", "Herne Hill School"], [51.478144, -0.101305, "/schools/southwark/highshore-school/", "Highshore School"], [51.49796, -0.11888, "/schools/southwark/evelina-hospital-school/", "Evelina Hospital School"], [51.48048, -0.069207, "/schools/southwark/haymerle-school/", "Haymerle School"], [51.50075, -0.08845, "/schools/southwark/beormund-primary-school/", "Beormund Primary School"], [51.480502, -0.077156, "/schools/southwark/tuke-school/", "Tuke School"], [51.471848, -0.072566, "/schools/southwark/cherry-garden-school/", "Cherry Garden School"], [51.458744, -0.086779, "/schools/southwark/bessemer-grange-primary-school/", "Bessemer Grange Primary School"], [51.49155, -0.051294, "/schools/southwark/cavendish-school/", "Cavendish School"], [51.493259, -0.0709, "/schools/southwark/harris-academy-bermondsey/", "Harris Academy Bermondsey"], [51.47758, -0.090398, "/schools/southwark/brunswick-park-primary-school/", "Brunswick Park Primary School"], [51.457501, -0.054947, "/schools/southwark/harris-girls-academy-east-dulwich/", "Harris Girls' Academy East Dulwich"], [51.463094, -0.071769, "/schools/southwark/st-johns-and-st-clements-primary-school-co-hearing-impaired-unit/", "St John's and St Clement's Primary School Co Hearing Impaired Unit"], [51.47404, -0.080667, "/schools/southwark/camberwell-college-of-arts/", "Camberwell College of Arts"], [51.494915, -0.101818, "/schools/southwark/london-college-of-printing-distributive-trades/", "London College of Printing & Distributive Trades"], [51.468078, -0.09389, "/schools/southwark/the-hospital-and-home-tuition-sick-childrens-service/", "The Hospital and Home Tuition Sick Children's Service"], [51.469954, -0.076059, "/schools/southwark/the-villa/", "The Villa"], [51.489227, -0.064674, "/schools/southwark/city-of-london-academy-southwark/", "City of London Academy (Southwark)"], [51.472938, -0.073788, "/schools/southwark/harris-academy-peckham/", "Harris Academy Peckham"], [51.464157, -0.064252, "/schools/southwark/rye-oak-primary-school/", "Rye Oak Primary School"], [51.481355, -0.074844, "/schools/southwark/southwark-inclusive-learning-service-sils/", "Southwark Inclusive Learning Service (Sils)"], [51.487096, -0.079457, "/schools/southwark/ark-walworth-academy/", "Ark Walworth Academy"], [51.500478, -0.091631, "/schools/southwark/london-christian-school/", "London Christian School"], [51.495599, -0.090192, "/schools/southwark/ark-globe-academy/", "Ark Globe Academy"], [51.456613, -0.065421, "/schools/southwark/harris-boys-academy-east-dulwich/", "Harris Boys' Academy East Dulwich"], [51.456411, -0.089266, "/schools/southwark/the-charter-school-north-dulwich/", "The Charter School North Dulwich"], [51.432231, -0.084952, "/schools/southwark/kingsdale-foundation-school/", "Kingsdale Foundation School"], [51.451627, -0.087062, "/schools/southwark/dulwich-hamlet-junior-school/", "Dulwich Hamlet Junior School"], [51.476214, -0.065744, "/schools/southwark/harris-primary-academy-peckham-park/", "Harris Primary Academy Peckham Park"], [51.501926, -0.036629, "/schools/southwark/redriff-primary-city-of-london-academy/", "Redriff Primary, City of London Academy"], [51.476289, -0.098919, "/schools/southwark/sacred-heart-catholic-school/", "Sacred Heart Catholic School"], [51.496107, -0.062553, "/schools/southwark/the-charter-school-bermondsey/", "The Charter School Bermondsey"], [51.478035, -0.099567, "/schools/southwark/ark-all-saints-academy/", "Ark All Saints Academy"], [51.452732, -0.093061, "/schools/southwark/judith-kerr-primary-school/", "Judith Kerr Primary School"], [51.458607, -0.050092, "/schools/southwark/lift-newlands/", "Lift Newlands"], [51.487912, -0.089246, "/schools/southwark/south-bank-university-academy/", "South Bank University Academy"], [51.472589, -0.060814, "/schools/southwark/john-donne-primary-school/", "John Donne Primary School"], [51.454919, -0.076705, "/schools/southwark/harris-primary-academy-east-dulwich/", "Harris Primary Academy East Dulwich"], [51.482375, -0.063107, "/schools/southwark/treasure-house-london-cic/", "Treasure House (London) CIC"], [51.479921, -0.078419, "/schools/southwark/angel-oak-academy/", "Angel Oak Academy"], [51.476351, -0.09608, "/schools/southwark/phoenixplace/", "PhoenixPlace"], [51.465545, -0.074272, "/schools/southwark/the-belham-primary-school/", "The Belham Primary School"], [51.459235, -0.080511, "/schools/southwark/the-charter-school-east-dulwich/", "The Charter School East Dulwich"], [51.490027, -0.059771, "/schools/southwark/galleywall-primary-city-of-london-academy/", "Galleywall Primary, City of London Academy"], [51.490799, -0.0964, "/schools/southwark/the-autism-project---caretrade/", "The Autism Project - CareTrade"], [51.478334, -0.084764, "/schools/southwark/spa-school-camberwell/", "Spa School Camberwell"], [51.461472, -0.077034, "/schools/southwark/goose-green-primary-and-nursery-school/", "Goose Green Primary and Nursery School"], [51.502362, -0.042273, "/schools/southwark/bacons-college/", "Bacon's College"], [51.48569, -0.06396, "/schools/southwark/john-keats-primary-school/", "John Keats Primary School"], [51.488745, -0.082974, "/schools/southwark/surrey-square-primary-school/", "Surrey Square Primary School"], [51.489931, -0.06862, "/schools/southwark/spa-school-bermondsey/", "Spa School, Bermondsey"], [51.486337, -0.099121, "/schools/southwark/st-pauls-church-of-england-primary-school/", "St Paul's Church of England Primary School"], [51.502893, -0.096876, "/schools/southwark/haberdashers-borough-academy/", "Haberdashers' Borough Academy"], [51.474358, -0.090763, "/schools/southwark/arco-academy/", "Arco Academy"], [51.394961, -0.09466, "/schools/southwark/the-bridge-special-education-needs-school/", "THE BRIDGE SPECIAL EDUCATION NEEDS SCHOOL"], [51.501285, -0.096439, "/schools/southwark/charles-dickens-primary-school/", "Charles Dickens Primary School"], [51.485482, -0.106834, "/schools/southwark/the-park-college/", "The Park College"], [51.469523, -0.087106, "/schools/southwark/lyndhurst-primary-school/", "Lyndhurst Primary School"], [51.498952, -0.069276, "/schools/southwark/st-josephs-catholic-primary-school/", "St Joseph's Catholic Primary School"], [51.496981, -0.106112, "/schools/southwark/notre-dame-catholic-girls-school/", "Notre Dame Catholic Girls' School"], [51.465398, -0.082858, "/schools/southwark/grove-primary-school/", "Grove Primary School"], [51.492146, -0.049813, "/schools/southwark/rotherhithe-primary-school/", "Rotherhithe Primary School"], [51.493818, -0.093523, "/schools/southwark/imperial-oak-school/", "Imperial Oak School"], [51.449708, -0.072074, "/schools/southwark/st-anthonys-catholic-primary-school/", "St Anthony's Catholic Primary School"], [51.499713, -0.067457, "/schools/southwark/st-michaels-catholic-college/", "St Michael's Catholic College"], [51.495009, -0.05325, "/schools/southwark/st-josephs-catholic-primary-school/", "St Joseph's Catholic Primary School"], [51.497775, -0.106843, "/schools/southwark/st-georges-cathedral-catholic-primary-school/", "St George's Cathedral Catholic Primary School"], [51.468767, -0.091443, "/schools/southwark/maudsley-and-bethlem-hospital-school/", "Maudsley and Bethlem Hospital School"], [51.498027, -0.103504, "/schools/southwark/elevated-futures-education/", "Elevated Futures Education"]];
+    if (!points.length) return;
+    var lats = points.map(function(p) { return p[0]; });
+    var lngs = points.map(function(p) { return p[1]; });
+    var avgLat = lats.reduce(function(a,b) { return a+b; }, 0) / lats.length;
+    var avgLng = lngs.reduce(function(a,b) { return a+b; }, 0) / lngs.length;
+    var map = L.map('map', { scrollWheelZoom: false }).setView([avgLat, avgLng], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+    points.forEach(function(p) {
+      L.circleMarker([p[0], p[1]], {
+        radius: 5, color: '#0b2545', fillColor: '#0b6efd', fillOpacity: 0.8, weight: 1
+      }).addTo(map).bindPopup('<a href="' + p[2] + '">' + p[3] + '</a>');
     });
-  }
-  function updateBar(){
-    var sel=getSelected();
-    var bar=document.getElementById('cmp-bar');
-    document.getElementById('cmp-count').textContent=sel.length+' school'+(sel.length===1?'':' s')+' selected';
-    bar.style.display=sel.length>0?'flex':'none';
-  }
-  document.querySelectorAll('.sch-sel').forEach(function(cb){ cb.onchange=updateBar; });
-
-  function buildCompareText(sel,markdown){
-    var lines=['📋 *My '+borough+' school shortlist*',''];
-    sel.forEach(function(s,i){
-      lines.push((i+1)+'. '+(markdown?'*':'')+s.name+(markdown?'*':''));
-      lines.push('   ⭐ Ofsted: '+s.ofsted+(s.phase?' · '+s.phase:''));
-      if(s.att8)lines.push('   📊 Attainment 8: '+s.att8);
-      if(s.ks2)lines.push('   📝 KS2 expected: '+s.ks2+'%');
-      lines.push('   🔗 '+s.url);
-      lines.push('');
-    });
-    lines.push('via London Schools Explorer — '+boroughUrl);
-    return lines.join('\n');
-  }
-  window.shareCompareWhatsApp=function(){
-    var sel=getSelected();
-    if(!sel.length)return;
-    window.open('https://wa.me/?text='+encodeURIComponent(buildCompareText(sel,true)),'_blank');
-  };
-  window.shareCompareEmail=function(){
-    var sel=getSelected();
-    if(!sel.length)return;
-    var subj='My '+borough+' school shortlist — London Schools Explorer';
-    window.location.href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(buildCompareText(sel,false));
-  };
-  window.clearSelection=function(){
-    document.querySelectorAll('.sch-sel:checked').forEach(function(cb){cb.checked=false;});
-    updateBar();
-  };
-})();
-</script>
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function () {
-    navigator.serviceWorker.register('/sw.js').catch(function () {});
-  });
-}
+  })();
 </script>
 </body>
 </html>

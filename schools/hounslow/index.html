@@ -1,1308 +1,504 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en-GB">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Schools in Hounslow, London | Ofsted Ratings &amp; Results | London Schools Explorer</title>
-  <meta name="description" content="89 schools in Hounslow, London. 13 Outstanding, 66 Good-rated by Ofsted. Compare admissions oversubscription, exam results and crime data. Free.">
-  <script type="application/ld+json">{
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Schools in Hounslow, London — Ofsted, Performance & Admissions</title>
+<meta name="description" content="All 89 schools in Hounslow, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
+<link rel="canonical" href="https://londonschool.directory/schools/hounslow/">
+<meta property="og:title" content="Schools in Hounslow, London — Ofsted, Performance & Admissions">
+<meta property="og:description" content="All 89 schools in Hounslow, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://londonschool.directory/schools/hounslow/">
+<meta property="og:site_name" content="London School Directory">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0b2545">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="preconnect" href="https://unpkg.com">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+  :root {
+    --ink: #0b2545;
+    --ink-2: #1e3a5f;
+    --muted: #5b6b85;
+    --line: #e3e8ef;
+    --bg: #ffffff;
+    --bg-2: #f6f8fb;
+    --accent: #0b6efd;
+    --good: #137333;
+    --warn: #a85b00;
+    --bad: #b3261e;
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  header.site {
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+    position: sticky; top: 0; z-index: 50;
+  }
+  header.site .inner {
+    max-width: 1100px; margin: 0 auto; padding: 14px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  header.site a.brand { color: var(--ink); font-weight: 700; letter-spacing: -0.01em; }
+  header.site nav a { margin-left: 18px; color: var(--ink-2); font-size: 14px; }
+  main { max-width: 1100px; margin: 0 auto; padding: 28px 20px 80px; }
+  .crumbs { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+  .crumbs a { color: var(--muted); }
+  h1 { font-size: 32px; line-height: 1.2; margin: 0 0 8px; letter-spacing: -0.02em; }
+  .lede { color: var(--ink-2); font-size: 17px; max-width: 720px; }
+  .stamp { font-size: 12px; color: var(--muted); margin-top: 8px; }
+  .stamp .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--good); vertical-align: middle; margin-right: 6px; }
+  .grid-stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px; margin: 24px 0 8px;
+  }
+  .stat {
+    background: var(--bg-2); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 14px 16px;
+  }
+  .stat .v { font-size: 24px; font-weight: 700; color: var(--ink); }
+  .stat .l { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  section { margin-top: 36px; }
+  h2 { font-size: 22px; margin: 0 0 12px; letter-spacing: -0.01em; }
+  .twocol { display: grid; grid-template-columns: 1.4fr 1fr; gap: 28px; }
+  @media (max-width: 820px) { .twocol { grid-template-columns: 1fr; } }
+  table.schools { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table.schools th, table.schools td {
+    text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line);
+  }
+  table.schools th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); font-weight: 600; }
+  .rating { font-weight: 600; }
+  .rating.Outstanding { color: var(--good); }
+  .rating.Good { color: var(--ink-2); }
+  .rating.RequiresImprovement, .rating.Requires { color: var(--warn); }
+  .rating.Inadequate { color: var(--bad); }
+  #map { height: 380px; border-radius: var(--radius); border: 1px solid var(--line); }
+  .pills { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pill { background: var(--bg-2); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; font-size: 12px; color: var(--ink-2); }
+  details.faq { border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 8px; background: var(--bg); }
+  details.faq summary { cursor: pointer; font-weight: 600; color: var(--ink); }
+  details.faq[open] { background: var(--bg-2); }
+  footer { border-top: 1px solid var(--line); padding: 28px 20px; color: var(--muted); font-size: 13px; }
+  footer .inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 24px; flex-wrap: wrap; }
+  .sources { font-size: 13px; color: var(--muted); }
+  .sources a { color: var(--muted); text-decoration: underline; }
+  .cta {
+    display: inline-block; background: var(--ink); color: #fff; padding: 10px 14px;
+    border-radius: var(--radius); font-size: 14px; font-weight: 600;
+  }
+  .cta:hover { background: var(--ink-2); text-decoration: none; }
+</style>
+<script type="application/ld+json">
+[
+  {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "name": "Schools in Hounslow, London",
-    "description": "89 schools in Hounslow, London rated by Ofsted",
-    "numberOfItems": 89,
-    "url": "https://londonschool.directory/schools/hounslow"
-  }</script>
-  <script type="application/ld+json">{
+    "name": "Top schools in Hounslow, London",
+    "itemListOrder": "http://schema.org/ItemListOrderDescending",
+    "numberOfItems": 14,
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "url": "https://londonschool.directory/schools/hounslow/st-michael-and-st-martin-catholic-primary-school/",
+        "name": "St Michael and St Martin Catholic Primary School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "url": "https://londonschool.directory/schools/hounslow/grove-park-primary-school/",
+        "name": "Grove Park Primary School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "url": "https://londonschool.directory/schools/hounslow/nishkam-school-west-london/",
+        "name": "Nishkam School West London"
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "url": "https://londonschool.directory/schools/hounslow/reach-academy-feltham/",
+        "name": "Reach Academy Feltham"
+      },
+      {
+        "@type": "ListItem",
+        "position": 5,
+        "url": "https://londonschool.directory/schools/hounslow/oak-hill-academy-west-london/",
+        "name": "Oak Hill Academy West London"
+      },
+      {
+        "@type": "ListItem",
+        "position": 6,
+        "url": "https://londonschool.directory/schools/hounslow/lionel-primary-school/",
+        "name": "Lionel Primary School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 7,
+        "url": "https://londonschool.directory/schools/hounslow/our-lady-and-st-johns-catholic-primary-school/",
+        "name": "Our Lady and St John's Catholic Primary School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 8,
+        "url": "https://londonschool.directory/schools/hounslow/gunnersbury-catholic-school/",
+        "name": "Gunnersbury Catholic School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 9,
+        "url": "https://londonschool.directory/schools/hounslow/st-marks-catholic-school/",
+        "name": "St Mark's Catholic School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 10,
+        "url": "https://londonschool.directory/schools/hounslow/nishkam-school-west-london/",
+        "name": "Nishkam School West London"
+      },
+      {
+        "@type": "ListItem",
+        "position": 11,
+        "url": "https://londonschool.directory/schools/hounslow/lampton-academy/",
+        "name": "Lampton Academy"
+      },
+      {
+        "@type": "ListItem",
+        "position": 12,
+        "url": "https://londonschool.directory/schools/hounslow/the-heathland-school/",
+        "name": "The Heathland School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 13,
+        "url": "https://londonschool.directory/schools/hounslow/reach-academy-feltham/",
+        "name": "Reach Academy Feltham"
+      },
+      {
+        "@type": "ListItem",
+        "position": 14,
+        "url": "https://londonschool.directory/schools/hounslow/rivers-academy-west-london/",
+        "name": "Rivers Academy West London"
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How many schools are there in Hounslow?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Hounslow has 89 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 64 are primary, 32 are secondary, and the remainder are special, all-through, or post-16."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What proportion of Hounslow schools are Outstanding?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "As of the latest Ofsted Management Information release, 13 schools in Hounslow (14.6%) are rated Outstanding, and 88.8% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "When do I apply for a Reception or Year 7 place in Hounslow?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Hounslow's applications are coordinated by the local authority through the eAdmissions system. See our full Reception timeline guide."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does the school appeals process work in Hounslow?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "If you are refused your preferred school place, you have a statutory right of appeal. Hounslow appeals are typically heard in May (Reception) and June\u2013July (secondary). See our appeals tracker for Hounslow-level success rates by year."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How can I tell which Hounslow schools are over-subscribed?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release."
+        }
+      }
+    ]
+  },
+  {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      {"@type": "ListItem", "position": 1, "name": "London Schools Explorer", "item": "https://londonschool.directory/"},
-      {"@type": "ListItem", "position": 2, "name": "Schools in Hounslow", "item": "https://londonschool.directory/schools/hounslow"}
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://londonschool.directory/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Boroughs",
+        "item": "https://londonschool.directory/schools/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Hounslow",
+        "item": "https://londonschool.directory/schools/hounslow/"
+      }
     ]
-  }</script>
-  <link rel="canonical" href="https://londonschool.directory/schools/hounslow">
-  <meta property="og:title" content="Schools in Hounslow | London Schools Explorer">
-  <meta property="og:description" content="89 schools in Hounslow. 13 Outstanding-rated. Compare Ofsted ratings, exam results and admissions.">
-  <meta property="og:url" content="https://londonschool.directory/schools/hounslow">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, -apple-system, sans-serif; color: #1a1a1a; background: #f8f9fa; line-height: 1.6; }
-    a { color: #1565C0; }
-    .topbar { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 12px 20px; }
-    .topbar a { text-decoration: none; font-weight: 600; color: #1a1a1a; font-size: 15px; }
-    .topbar span { color: #888; margin: 0 8px; }
-    .container { max-width: 900px; margin: 0 auto; padding: 32px 20px; }
-    h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
-    .intro { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; font-size: 15px; color: #333; line-height: 1.7; }
-    .stats-row { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
-    .stat-box { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 14px 18px; flex: 1; min-width: 120px; }
-    .stat-num { font-size: 24px; font-weight: 700; color: #1a1a1a; line-height: 1; }
-    .stat-lbl { font-size: 12px; color: #888; margin-top: 4px; }
-    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #e0e0e0; }
-    th { background: #f5f5f5; padding: 12px 16px; text-align: left; font-size: 13px; color: #555; font-weight: 600; border-bottom: 1px solid #e0e0e0; }
-    td { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
-    tr:last-child td { border-bottom: none; }
-    tr:hover td { background: #fafafa; }
-    .back { display: inline-block; margin-bottom: 20px; font-size: 14px; color: #555; text-decoration: none; }
-    .back:hover { color: #111; }
-    footer { text-align: center; padding: 32px 20px; font-size: 13px; color: #888; }
-    @media (max-width: 600px) {
-      .container { padding: 16px 12px; }
-      h1 { font-size: 22px; }
-      .stats-row { grid-template-columns: 1fr 1fr; }
-      .intro { padding: 14px 16px; font-size: 14px; }
-      table { font-size: 13px; }
-      th, td { padding: 10px 10px; overflow-wrap: anywhere; word-break: break-word; }
-      th:nth-child(5), td:nth-child(5) { display: none; }
-      .topbar { padding: 10px 12px; font-size: 13px; }
-    }
-    @media (max-width: 600px) { .stats-row { flex-direction: column; } }
-  </style>
-  <link rel="manifest" href="/manifest.webmanifest">
-  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  }
+]
+</script>
 </head>
 <body>
-<div class="topbar">
-  <div style="max-width:900px;margin:0 auto">
-    <a href="/">London Schools Explorer</a>
-    <span>/</span>
-    Hounslow
+<header class="site">
+  <div class="inner">
+    <a class="brand" href="/">London School Directory</a>
+    <nav>
+      <a href="/">Search</a>
+      <a href="/appeals.html">Appeals</a>
+      <a href="/methodology.html">Methodology</a>
+      <a href="/about.html">About</a>
+    </nav>
   </div>
-</div>
-<div class="container">
-  <a class="back" href="/">&#8592; All boroughs</a>
-  <h1>Schools in Hounslow</h1>
-
-  <div class="stats-row">
-    <div class="stat-box"><div class="stat-num">89</div><div class="stat-lbl">Total schools</div></div>
-    <div class="stat-box"><div class="stat-num">13</div><div class="stat-lbl">Outstanding</div></div>
-    <div class="stat-box"><div class="stat-num">66</div><div class="stat-lbl">Good</div></div>
-    <div class="stat-box"><div class="stat-num">4</div><div class="stat-lbl">School phases</div></div>
+</header>
+<main>
+  <div class="crumbs">
+    <a href="/">Home</a> &rsaquo; <a href="/schools/">Boroughs</a> &rsaquo; Hounslow
   </div>
 
-  <div class="intro">Hounslow is a diverse west London borough with a strong primary school sector and improving secondary provision. The borough spans from Chiswick in the east – with some of west London's most sought-after schools – to Feltham and Hanworth in the west. Many schools serve large South Asian and Eastern European communities.</div>
+  <h1>Schools in Hounslow, London</h1>
+  <p class="lede">Hounslow's schools serve Chiswick, Brentford, Isleworth, Hounslow town, Feltham and Heston. The borough mixes some of west London's most oversubscribed primaries with a wide range of secondaries. Travel times across the borough can be longer than in inner London, so catchment distances matter.</p>
+  <p class="stamp"><span class="dot"></span>Data last verified 1 September 2026. Sources: Ofsted, DfE GIAS, DfE Performance Tables, Metropolitan Police, MHCLG IMD. See <a href="/sources.html">all sources</a>.</p>
 
-  
-<div style="display:flex;gap:16px;flex-wrap:wrap;margin:20px 0;">
+  <section>
+    <div class="grid-stats">
+      <div class="stat"><div class="v">89</div><div class="l">Schools in Hounslow</div></div>
+      <div class="stat"><div class="v">14.6%</div><div class="l">Outstanding Ofsted</div></div>
+      <div class="stat"><div class="v">88.8%</div><div class="l">Good or Outstanding</div></div>
+      <div class="stat"><div class="v">64</div><div class="l">Primary schools</div></div>
+      <div class="stat"><div class="v">32</div><div class="l">Secondary schools</div></div>
+      <div class="stat"><div class="v">13%</div><div class="l">Secondary appeal success (2024)</div></div>
+    </div>
+  </section>
 
-<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fdf4ff 0%,#ede9fe 100%);
-     border:1px solid #d8b4fe;border-radius:12px;padding:14px 20px;">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-    <span style="font-size:22px;">🎓</span>
-    <strong style="font-size:15px;color:#5b21b6;">11+ &amp; 13+ Exam Prep</strong>
-  </div>
-  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
-    PiAcademy resources for grammar school entrance, SATs &amp; GCSE.
-    Use code <strong>THIERR25</strong> for 25% off.
-  </p>
-  <a href="https://piacademy.co.uk/?aff=28"
-     target="_blank" rel="noopener sponsored"
-     style="display:inline-block;padding:9px 18px;background:#7e22ce;color:#fff;
-            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
-    Get 25% OFF →
-  </a>
-  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
-</div>
-<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%);
-     border:1px solid #fcd34d;border-radius:12px;padding:14px 20px;">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-    <span style="font-size:22px;">📚</span>
-    <strong style="font-size:15px;color:#92400e;">Children's Books</strong>
-  </div>
-  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
-    Great books at low prices. At checkout, choose your school — Scholastic donates
-    <strong>20p for every £1 spent</strong> back to the school in free books.
-  </p>
-  <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&ued=https%3A%2F%2Fwww.scholastic.co.uk%2Fteachers"
-     target="_blank" rel="noopener sponsored"
-     style="display:inline-block;padding:9px 18px;background:#d97706;color:#fff;
-            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
-    Shop at Scholastic →
-  </a>
-  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
-</div>
-<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fff8f0 0%,#fff3e0 100%);
-     border:1px solid #fed7aa;border-radius:12px;padding:14px 20px;">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-    <span style="font-size:22px;">🛒</span>
-    <strong style="font-size:15px;color:#92400e;">School Supplies</strong>
-  </div>
-  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
-    Stationery, bags, PE kit, lunchboxes and more — fast delivery from Amazon.
-  </p>
-  <a href="https://www.amazon.co.uk/s?k=school+supplies+stationery&tag=londonparents-21"
-     target="_blank" rel="noopener sponsored"
-     style="display:inline-block;padding:9px 18px;background:#FF9900;color:#111;
-            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
-    Shop on Amazon →
-  </a>
-  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
-</div>
-</div>
+  <section>
+    <div class="twocol">
+      <div>
+        <h2>Top primary schools in Hounslow</h2>
+        <p class="sources">Ranked by Ofsted rating, then by latest KS2 performance. See <a href="/methodology.html">methodology</a>.</p>
+        <table class="schools">
+          <thead>
+            <tr><th>School</th><th>Ofsted</th><th>KS2 %</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><a href="/schools/hounslow/st-michael-and-st-martin-catholic-primary-school/">St Michael and St Martin Catholic Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>96.0</td></tr>
+            <tr><td><a href="/schools/hounslow/grove-park-primary-school/">Grove Park Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>95.0</td></tr>
+            <tr><td><a href="/schools/hounslow/nishkam-school-west-london/">Nishkam School West London</a></td><td class="rating Outstanding">Outstanding</td><td>87.0</td></tr>
+            <tr><td><a href="/schools/hounslow/reach-academy-feltham/">Reach Academy Feltham</a></td><td class="rating Outstanding">Outstanding</td><td>85.0</td></tr>
+            <tr><td><a href="/schools/hounslow/oak-hill-academy-west-london/">Oak Hill Academy West London</a></td><td class="rating Outstanding">Outstanding</td><td>74.0</td></tr>
+            <tr><td><a href="/schools/hounslow/lionel-primary-school/">Lionel Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>61.0</td></tr>
+            <tr><td><a href="/schools/hounslow/our-lady-and-st-johns-catholic-primary-school/">Our Lady and St John's Catholic Primary School</a></td><td class="rating Good">Good</td><td>90.0</td></tr>
+          </tbody>
+        </table>
 
-  <!-- Borough share buttons -->
-  <div style="display:flex;gap:10px;margin:16px 0 8px;flex-wrap:wrap;align-items:center;">
-    <span style="font-size:13px;color:#555;font-weight:600;">Share Hounslow schools:</span>
-    <button onclick="shareBoroughWhatsApp()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 WhatsApp</button>
-    <button onclick="shareBoroughEmail()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#1565C0;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Email</button>
-    <span style="font-size:12px;color:#999;margin-left:4px;">Or tick schools below to share a shortlist</span>
-  </div>
+        <h2 style="margin-top:28px">Top secondary schools in Hounslow</h2>
+        <p class="sources">Ranked by Ofsted rating, then by latest KS4 Attainment 8.</p>
+        <table class="schools">
+          <thead>
+            <tr><th>School</th><th>Ofsted</th><th>Att 8</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><a href="/schools/hounslow/gunnersbury-catholic-school/">Gunnersbury Catholic School</a></td><td class="rating Outstanding">Outstanding</td><td>64.6</td></tr>
+            <tr><td><a href="/schools/hounslow/st-marks-catholic-school/">St Mark's Catholic School</a></td><td class="rating Outstanding">Outstanding</td><td>62.3</td></tr>
+            <tr><td><a href="/schools/hounslow/nishkam-school-west-london/">Nishkam School West London</a></td><td class="rating Outstanding">Outstanding</td><td>60.1</td></tr>
+            <tr><td><a href="/schools/hounslow/lampton-academy/">Lampton Academy</a></td><td class="rating Outstanding">Outstanding</td><td>53.2</td></tr>
+            <tr><td><a href="/schools/hounslow/the-heathland-school/">The Heathland School</a></td><td class="rating Outstanding">Outstanding</td><td>51.2</td></tr>
+            <tr><td><a href="/schools/hounslow/reach-academy-feltham/">Reach Academy Feltham</a></td><td class="rating Outstanding">Outstanding</td><td>50.5</td></tr>
+            <tr><td><a href="/schools/hounslow/rivers-academy-west-london/">Rivers Academy West London</a></td><td class="rating Outstanding">Outstanding</td><td>48.1</td></tr>
+          </tbody>
+        </table>
 
-  <!-- Sticky compare bar (appears when schools are ticked) -->
-  <div id="cmp-bar" style="display:none;position:sticky;top:0;z-index:100;background:#1A1A2E;color:#fff;padding:12px 16px;border-radius:10px;margin-bottom:12px;display:none;align-items:center;gap:10px;flex-wrap:wrap;">
-    <span id="cmp-count" style="font-weight:700;font-size:14px;">0 schools selected</span>
-    <button onclick="shareCompareWhatsApp()" style="padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 Share via WhatsApp</button>
-    <button onclick="shareCompareEmail()" style="padding:8px 16px;background:#fff;color:#1A1A2E;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Share via Email</button>
-    <button onclick="clearSelection()" style="padding:8px 12px;background:transparent;color:#aaa;border:1px solid #555;border-radius:8px;font-size:12px;cursor:pointer;">✕ Clear</button>
-  </div>
+        <p style="margin-top:14px"><a class="cta" href="#all-schools">Jump to all 89 schools in Hounslow</a></p>
+      </div>
+      <div>
+        <h2>Map</h2>
+        <div id="map" aria-label="Map of schools in Hounslow"></div>
+      </div>
+    </div>
+  </section>
 
-  <table>
-    <thead><tr><th style="width:36px"></th><th>School</th><th>Phase</th><th>Ofsted</th><th>Pupils</th></tr></thead>
-    <tbody><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Alexandra Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="76.0"
-            data-url="https://londonschool.directory/schools/hounslow/alexandra-primary-school"></td>
-          <td><a href="/schools/hounslow/alexandra-primary-school">Alexandra Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>652</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="ArtsEd Day School & Sixth Form"
-            data-ofsted="Not yet rated"
-            data-phase="Secondary"
-            data-att8="51.9"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/artsed-day-school-sixth-form"></td>
-          <td><a href="/schools/hounslow/artsed-day-school-sixth-form">ArtsEd Day School & Sixth Form</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>265</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Beavers Community Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="35.0"
-            data-url="https://londonschool.directory/schools/hounslow/beavers-community-primary-school"></td>
-          <td><a href="/schools/hounslow/beavers-community-primary-school">Beavers Community Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>594</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Bedfont Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="52.0"
-            data-url="https://londonschool.directory/schools/hounslow/bedfont-primary-school"></td>
-          <td><a href="/schools/hounslow/bedfont-primary-school">Bedfont Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>538</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Belmont Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="81.0"
-            data-url="https://londonschool.directory/schools/hounslow/belmont-primary-school"></td>
-          <td><a href="/schools/hounslow/belmont-primary-school">Belmont Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>444</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Berkeley Academy"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="69.0"
-            data-url="https://londonschool.directory/schools/hounslow/berkeley-academy"></td>
-          <td><a href="/schools/hounslow/berkeley-academy">Berkeley Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>466</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Bolder Academy"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="50.6"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/bolder-academy"></td>
-          <td><a href="/schools/hounslow/bolder-academy">Bolder Academy</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>909</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Brentford School for Girls"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="47.0"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/brentford-school-for-girls"></td>
-          <td><a href="/schools/hounslow/brentford-school-for-girls">Brentford School for Girls</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>763</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Cardinal Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/cardinal-primary-school"></td>
-          <td><a href="/schools/hounslow/cardinal-primary-school">Cardinal Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>576</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Cavendish Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="70.0"
-            data-url="https://londonschool.directory/schools/hounslow/cavendish-primary-school"></td>
-          <td><a href="/schools/hounslow/cavendish-primary-school">Cavendish Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>197</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Chatsworth Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="66.0"
-            data-url="https://londonschool.directory/schools/hounslow/chatsworth-primary-school"></td>
-          <td><a href="/schools/hounslow/chatsworth-primary-school">Chatsworth Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>594</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Chiswick School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="53.7"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/chiswick-school"></td>
-          <td><a href="/schools/hounslow/chiswick-school">Chiswick School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1618</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Crane Park Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="71.0"
-            data-url="https://londonschool.directory/schools/hounslow/crane-park-primary-school"></td>
-          <td><a href="/schools/hounslow/crane-park-primary-school">Crane Park Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>444</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Cranford Community College"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="51.7"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/cranford-community-college"></td>
-          <td><a href="/schools/hounslow/cranford-community-college">Cranford Community College</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1567</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Cranford Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="69.0"
-            data-url="https://londonschool.directory/schools/hounslow/cranford-primary-school"></td>
-          <td><a href="/schools/hounslow/cranford-primary-school">Cranford Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>642</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Eagle Park Independent School"
-            data-ofsted="Good"
-            data-phase="All-through"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/eagle-park-independent-school"></td>
-          <td><a href="/schools/hounslow/eagle-park-independent-school">Eagle Park Independent School</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>50</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Eden Park Academy"
-            data-ofsted="Good"
-            data-phase="All-through"
-            data-att8="19.8"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/eden-park-academy"></td>
-          <td><a href="/schools/hounslow/eden-park-academy">Eden Park Academy</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>30</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Edison Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="79.0"
-            data-url="https://londonschool.directory/schools/hounslow/edison-primary-school"></td>
-          <td><a href="/schools/hounslow/edison-primary-school">Edison Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>366</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Edward Pauling Primary School"
-            data-ofsted="Requires improvement"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="55.0"
-            data-url="https://londonschool.directory/schools/hounslow/edward-pauling-primary-school"></td>
-          <td><a href="/schools/hounslow/edward-pauling-primary-school">Edward Pauling Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
-          <td>352</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Fairholme Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="56.0"
-            data-url="https://londonschool.directory/schools/hounslow/fairholme-primary-school"></td>
-          <td><a href="/schools/hounslow/fairholme-primary-school">Fairholme Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>409</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Feltham Hill Infant and Nursery School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/feltham-hill-infant-and-nursery-school"></td>
-          <td><a href="/schools/hounslow/feltham-hill-infant-and-nursery-school">Feltham Hill Infant and Nursery School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>413</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Great Oaks Charitable Trust T/A Great Oaks College"
-            data-ofsted="Not yet rated"
-            data-phase="Sixth form"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/great-oaks-charitable-trust-t-a-great-oaks-college"></td>
-          <td><a href="/schools/hounslow/great-oaks-charitable-trust-t-a-great-oaks-college">Great Oaks Charitable Trust T/A Great Oaks College</a></td>
-          <td>Sixth form</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Green Dragon Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="80.0"
-            data-url="https://londonschool.directory/schools/hounslow/green-dragon-primary-school"></td>
-          <td><a href="/schools/hounslow/green-dragon-primary-school">Green Dragon Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>385</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Grove Park Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="95.0"
-            data-url="https://londonschool.directory/schools/hounslow/grove-park-primary-school"></td>
-          <td><a href="/schools/hounslow/grove-park-primary-school">Grove Park Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>428</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Grove Road Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="74.0"
-            data-url="https://londonschool.directory/schools/hounslow/grove-road-primary-school"></td>
-          <td><a href="/schools/hounslow/grove-road-primary-school">Grove Road Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>233</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Gumley House RC Convent School, FCJ"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="57.9"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/gumley-house-rc-convent-school-fcj"></td>
-          <td><a href="/schools/hounslow/gumley-house-rc-convent-school-fcj">Gumley House RC Convent School, FCJ</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1013</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Gunnersbury Catholic School"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="64.6"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/gunnersbury-catholic-school"></td>
-          <td><a href="/schools/hounslow/gunnersbury-catholic-school">Gunnersbury Catholic School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>1248</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Heathfield House School"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/heathfield-house-school"></td>
-          <td><a href="/schools/hounslow/heathfield-house-school">Heathfield House School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>159</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Heston Community School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="48.1"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/heston-community-school"></td>
-          <td><a href="/schools/hounslow/heston-community-school">Heston Community School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1311</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Heston Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="76.0"
-            data-url="https://londonschool.directory/schools/hounslow/heston-primary-school"></td>
-          <td><a href="/schools/hounslow/heston-primary-school">Heston Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>392</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Hounslow Heath School"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="66.0"
-            data-url="https://londonschool.directory/schools/hounslow/hounslow-heath-school"></td>
-          <td><a href="/schools/hounslow/hounslow-heath-school">Hounslow Heath School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>1178</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Hounslow Town Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="65.0"
-            data-url="https://londonschool.directory/schools/hounslow/hounslow-town-primary-school"></td>
-          <td><a href="/schools/hounslow/hounslow-town-primary-school">Hounslow Town Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1077</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="International School of London"
-            data-ofsted="Good"
-            data-phase="All-through"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/international-school-of-london"></td>
-          <td><a href="/schools/hounslow/international-school-of-london">International School of London</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>298</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Isleworth Town Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="73.0"
-            data-url="https://londonschool.directory/schools/hounslow/isleworth-town-primary-school"></td>
-          <td><a href="/schools/hounslow/isleworth-town-primary-school">Isleworth Town Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>727</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Isleworth and Syon School for Boys"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="45.5"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/isleworth-and-syon-school-for-boys"></td>
-          <td><a href="/schools/hounslow/isleworth-and-syon-school-for-boys">Isleworth and Syon School for Boys</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>951</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Ivybridge Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="77.0"
-            data-url="https://londonschool.directory/schools/hounslow/ivybridge-primary-school"></td>
-          <td><a href="/schools/hounslow/ivybridge-primary-school">Ivybridge Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>136</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Kew House"
-            data-ofsted="Not yet rated"
-            data-phase="Secondary"
-            data-att8="66.3"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/kew-house"></td>
-          <td><a href="/schools/hounslow/kew-house">Kew House</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>467</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Lampton Academy"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="53.2"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/lampton-academy"></td>
-          <td><a href="/schools/hounslow/lampton-academy">Lampton Academy</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>1528</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Lift Kingsley"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="46.2"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/lift-kingsley"></td>
-          <td><a href="/schools/hounslow/lift-kingsley">Lift Kingsley</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>971</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Lindon Bennett School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/lindon-bennett-school"></td>
-          <td><a href="/schools/hounslow/lindon-bennett-school">Lindon Bennett School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>182</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Lionel Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="61.0"
-            data-url="https://londonschool.directory/schools/hounslow/lionel-primary-school"></td>
-          <td><a href="/schools/hounslow/lionel-primary-school">Lionel Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>611</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Logic Studio School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="45.4"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/logic-studio-school"></td>
-          <td><a href="/schools/hounslow/logic-studio-school">Logic Studio School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>341</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Marjory Kinnon School"
-            data-ofsted="Good"
-            data-phase="All-through"
-            data-att8="1.4"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/marjory-kinnon-school"></td>
-          <td><a href="/schools/hounslow/marjory-kinnon-school">Marjory Kinnon School</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>306</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Marlborough Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="79.0"
-            data-url="https://londonschool.directory/schools/hounslow/marlborough-primary-school"></td>
-          <td><a href="/schools/hounslow/marlborough-primary-school">Marlborough Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>514</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Nishkam School West London"
-            data-ofsted="Outstanding"
-            data-phase="All-through"
-            data-att8="60.1"
-            data-ks2="87.0"
-            data-url="https://londonschool.directory/schools/hounslow/nishkam-school-west-london"></td>
-          <td><a href="/schools/hounslow/nishkam-school-west-london">Nishkam School West London</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>1491</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Norwood Green Infant and Nursery School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/norwood-green-infant-and-nursery-school"></td>
-          <td><a href="/schools/hounslow/norwood-green-infant-and-nursery-school">Norwood Green Infant and Nursery School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>256</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Norwood Green Junior School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="59.0"
-            data-url="https://londonschool.directory/schools/hounslow/norwood-green-junior-school"></td>
-          <td><a href="/schools/hounslow/norwood-green-junior-school">Norwood Green Junior School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>310</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Oak Hill Academy West London"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="74.0"
-            data-url="https://londonschool.directory/schools/hounslow/oak-hill-academy-west-london"></td>
-          <td><a href="/schools/hounslow/oak-hill-academy-west-london">Oak Hill Academy West London</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>473</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Oaklands School"
-            data-ofsted="Good"
-            data-phase="All-through"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/oaklands-school"></td>
-          <td><a href="/schools/hounslow/oaklands-school">Oaklands School</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>296</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Orchard House School"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/orchard-house-school"></td>
-          <td><a href="/schools/hounslow/orchard-house-school">Orchard House School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>331</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Oriel Academy West London"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="71.0"
-            data-url="https://londonschool.directory/schools/hounslow/oriel-academy-west-london"></td>
-          <td><a href="/schools/hounslow/oriel-academy-west-london">Oriel Academy West London</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>333</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Our Lady and St John's Catholic Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="90.0"
-            data-url="https://londonschool.directory/schools/hounslow/our-lady-and-st-johns-catholic-primary-school"></td>
-          <td><a href="/schools/hounslow/our-lady-and-st-johns-catholic-primary-school">Our Lady and St John's Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>221</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Reach Academy Feltham"
-            data-ofsted="Outstanding"
-            data-phase="All-through"
-            data-att8="50.5"
-            data-ks2="85.0"
-            data-url="https://londonschool.directory/schools/hounslow/reach-academy-feltham"></td>
-          <td><a href="/schools/hounslow/reach-academy-feltham">Reach Academy Feltham</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>979</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Reach Academy Hanworth Park"
-            data-ofsted="Not yet rated"
-            data-phase="All-through"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/reach-academy-hanworth-park"></td>
-          <td><a href="/schools/hounslow/reach-academy-hanworth-park">Reach Academy Hanworth Park</a></td>
-          <td>All-through</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>326</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Rivers Academy West London"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="48.1"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/rivers-academy-west-london"></td>
-          <td><a href="/schools/hounslow/rivers-academy-west-london">Rivers Academy West London</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>1058</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Southville Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="68.0"
-            data-url="https://londonschool.directory/schools/hounslow/southville-primary-school"></td>
-          <td><a href="/schools/hounslow/southville-primary-school">Southville Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>623</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Space Studio West London"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="32.7"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/space-studio-west-london"></td>
-          <td><a href="/schools/hounslow/space-studio-west-london">Space Studio West London</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>148</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Sparrow Farm Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="68.0"
-            data-url="https://londonschool.directory/schools/hounslow/sparrow-farm-primary-school"></td>
-          <td><a href="/schools/hounslow/sparrow-farm-primary-school">Sparrow Farm Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>456</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Spring Grove Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="73.0"
-            data-url="https://londonschool.directory/schools/hounslow/spring-grove-primary-school"></td>
-          <td><a href="/schools/hounslow/spring-grove-primary-school">Spring Grove Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>239</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Springwell School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="63.0"
-            data-url="https://londonschool.directory/schools/hounslow/springwell-school"></td>
-          <td><a href="/schools/hounslow/springwell-school">Springwell School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>470</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Springwest Academy"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="40.6"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/springwest-academy"></td>
-          <td><a href="/schools/hounslow/springwest-academy">Springwest Academy</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>942</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Lawrence Catholic Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="78.0"
-            data-url="https://londonschool.directory/schools/hounslow/st-lawrence-catholic-primary-school"></td>
-          <td><a href="/schools/hounslow/st-lawrence-catholic-primary-school">St Lawrence Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>471</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Mark's Catholic School"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="62.3"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/st-marks-catholic-school"></td>
-          <td><a href="/schools/hounslow/st-marks-catholic-school">St Mark's Catholic School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>1214</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Mary's Catholic Primary School ,Chiswick"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="81.0"
-            data-url="https://londonschool.directory/schools/hounslow/st-marys-catholic-primary-school-chiswick"></td>
-          <td><a href="/schools/hounslow/st-marys-catholic-primary-school-chiswick">St Mary's Catholic Primary School ,Chiswick</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>195</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Mary's Catholic Primary School, Isleworth"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="73.0"
-            data-url="https://londonschool.directory/schools/hounslow/st-marys-catholic-primary-school-isleworth"></td>
-          <td><a href="/schools/hounslow/st-marys-catholic-primary-school-isleworth">St Mary's Catholic Primary School, Isleworth</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>399</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Michael and St Martin Catholic Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="96.0"
-            data-url="https://londonschool.directory/schools/hounslow/st-michael-and-st-martin-catholic-primary-school"></td>
-          <td><a href="/schools/hounslow/st-michael-and-st-martin-catholic-primary-school">St Michael and St Martin Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>475</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Paul's CofE Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="74.0"
-            data-url="https://londonschool.directory/schools/hounslow/st-pauls-cofe-primary-school"></td>
-          <td><a href="/schools/hounslow/st-pauls-cofe-primary-school">St Paul's CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>246</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Richard's Church of England Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="57.0"
-            data-url="https://londonschool.directory/schools/hounslow/st-richards-church-of-england-primary-school"></td>
-          <td><a href="/schools/hounslow/st-richards-church-of-england-primary-school">St Richard's Church of England Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>207</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Strand-on-the-Green Infant and Nursery School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/strand-on-the-green-infant-and-nursery-school"></td>
-          <td><a href="/schools/hounslow/strand-on-the-green-infant-and-nursery-school">Strand-on-the-Green Infant and Nursery School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>323</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Strand-on-the-Green Junior School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="83.0"
-            data-url="https://londonschool.directory/schools/hounslow/strand-on-the-green-junior-school"></td>
-          <td><a href="/schools/hounslow/strand-on-the-green-junior-school">Strand-on-the-Green Junior School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>364</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Suffah Primary School"
-            data-ofsted="Requires improvement"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/suffah-primary-school"></td>
-          <td><a href="/schools/hounslow/suffah-primary-school">Suffah Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
-          <td>92</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Tarbiyyah Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/tarbiyyah-primary-school"></td>
-          <td><a href="/schools/hounslow/tarbiyyah-primary-school">Tarbiyyah Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>170</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Tarbiyyah Secondary School for Boys"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/tarbiyyah-secondary-school-for-boys"></td>
-          <td><a href="/schools/hounslow/tarbiyyah-secondary-school-for-boys">Tarbiyyah Secondary School for Boys</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>69</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Blue School CofE Primary"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="78.0"
-            data-url="https://londonschool.directory/schools/hounslow/the-blue-school-cofe-primary"></td>
-          <td><a href="/schools/hounslow/the-blue-school-cofe-primary">The Blue School CofE Primary</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>431</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Cedars Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/the-cedars-primary-school"></td>
-          <td><a href="/schools/hounslow/the-cedars-primary-school">The Cedars Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>68</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Green School for Boys"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="52.0"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/the-green-school-for-boys"></td>
-          <td><a href="/schools/hounslow/the-green-school-for-boys">The Green School for Boys</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>721</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Green School for Girls"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="56.9"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/the-green-school-for-girls"></td>
-          <td><a href="/schools/hounslow/the-green-school-for-girls">The Green School for Girls</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>872</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Heathland School"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="51.2"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/the-heathland-school"></td>
-          <td><a href="/schools/hounslow/the-heathland-school">The Heathland School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>1759</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Orchard Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="48.0"
-            data-url="https://londonschool.directory/schools/hounslow/the-orchard-primary-school"></td>
-          <td><a href="/schools/hounslow/the-orchard-primary-school">The Orchard Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>624</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Rise Free School"
-            data-ofsted="Good"
-            data-phase="All-through"
-            data-att8="14.6"
-            data-ks2="13.0"
-            data-url="https://londonschool.directory/schools/hounslow/the-rise-free-school"></td>
-          <td><a href="/schools/hounslow/the-rise-free-school">The Rise Free School</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>154</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Rosary Catholic Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="79.0"
-            data-url="https://londonschool.directory/schools/hounslow/the-rosary-catholic-primary-school"></td>
-          <td><a href="/schools/hounslow/the-rosary-catholic-primary-school">The Rosary Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>363</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Smallberry Green Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="63.0"
-            data-url="https://londonschool.directory/schools/hounslow/the-smallberry-green-primary-school"></td>
-          <td><a href="/schools/hounslow/the-smallberry-green-primary-school">The Smallberry Green Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>407</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The St Michael Steiner School"
-            data-ofsted="Not yet rated"
-            data-phase="All-through"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/the-st-michael-steiner-school"></td>
-          <td><a href="/schools/hounslow/the-st-michael-steiner-school">The St Michael Steiner School</a></td>
-          <td>All-through</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>125</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The William Hogarth Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="90.0"
-            data-url="https://londonschool.directory/schools/hounslow/the-william-hogarth-primary-school"></td>
-          <td><a href="/schools/hounslow/the-william-hogarth-primary-school">The William Hogarth Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>153</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Woodbridge Park Education Service"
-            data-ofsted="Good"
-            data-phase="All-through"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/the-woodbridge-park-education-service"></td>
-          <td><a href="/schools/hounslow/the-woodbridge-park-education-service">The Woodbridge Park Education Service</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>127</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Unique Academy"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/hounslow/unique-academy"></td>
-          <td><a href="/schools/hounslow/unique-academy">Unique Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>90</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Wellington Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="76.0"
-            data-url="https://londonschool.directory/schools/hounslow/wellington-primary-school"></td>
-          <td><a href="/schools/hounslow/wellington-primary-school">Wellington Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>693</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Westbrook Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="79.0"
-            data-url="https://londonschool.directory/schools/hounslow/westbrook-primary-school"></td>
-          <td><a href="/schools/hounslow/westbrook-primary-school">Westbrook Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>510</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Worple Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="56.0"
-            data-url="https://londonschool.directory/schools/hounslow/worple-primary-school"></td>
-          <td><a href="/schools/hounslow/worple-primary-school">Worple Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>189</td>
-        </tr></tbody>
-  </table>
-</div>
-<footer><a href="/">London Schools Explorer</a> &mdash; helping families find the right school in London.<p style="margin-top:10px">Browse by type: <a href="/schools/outstanding">Outstanding</a> &middot; <a href="/schools/good">Good</a> &middot; <a href="/schools/grammar">Grammar</a> &middot; <a href="/schools/selective">Selective</a> &middot; <a href="/schools/faith">Faith</a> &middot; <a href="/schools/primary">Primary</a> &middot; <a href="/schools/secondary">Secondary</a> &middot; <a href="/schools/sixth-form">Sixth form</a> &middot; <a href="/schools/independent">Private &amp; independent</a></p></footer>
-<script defer src="/_vercel/insights/script.js"></script>
+  <section>
+    <h2>What the data says about Hounslow</h2>
+    <p><strong>88.8%</strong> of Hounslow schools are currently rated Good or Outstanding by Ofsted, compared with a London average of roughly 90% for primary and 80% for secondary. The average number of applications per place across Hounslow is <strong>1.24</strong>, a useful indicator of how competitive local admissions are. The average number of recorded crime incidents within 500 metres of a school in Hounslow over the most recent reporting month is <strong>114.76</strong>, drawn from the Metropolitan Police open data API. The mean IMD (Index of Multiple Deprivation) decile of Hounslow's schools is <strong>4.11</strong> — 1 is most deprived, 10 is least deprived. All metrics on this page are recomputed from source data on the 15th of every month. See our <a href='/methodology.html'>methodology</a> for definitions and limitations.</p>
+  </section>
+
+  <section id="all-schools">
+    <h2>All schools in Hounslow</h2>
+    <p class="sources">Every school in Hounslow, listed alphabetically. Click any school for the full record.</p>
+    <table class="schools">
+      <thead>
+        <tr><th>School</th><th>Phase</th><th>Ofsted</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><a href="/schools/hounslow/alexandra-primary-school/">Alexandra Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/artsed-day-school-sixth-form/">ArtsEd Day School & Sixth Form</a></td><td>Secondary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/hounslow/beavers-community-primary-school/">Beavers Community Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/bedfont-primary-school/">Bedfont Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/belmont-primary-school/">Belmont Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/berkeley-academy/">Berkeley Academy</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/bolder-academy/">Bolder Academy</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/brentford-school-for-girls/">Brentford School for Girls</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/cardinal-primary-school/">Cardinal Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/cavendish-primary-school/">Cavendish Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/chatsworth-primary-school/">Chatsworth Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/chiswick-school/">Chiswick School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/crane-park-primary-school/">Crane Park Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/cranford-community-college/">Cranford Community College</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/cranford-primary-school/">Cranford Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/eagle-park-independent-school/">Eagle Park Independent School</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/eden-park-academy/">Eden Park Academy</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/edison-primary-school/">Edison Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/edward-pauling-primary-school/">Edward Pauling Primary School</a></td><td>Primary</td><td class="rating Requiresimprovement">Requires improvement</td></tr>
+        <tr><td><a href="/schools/hounslow/fairholme-primary-school/">Fairholme Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/feltham-hill-infant-and-nursery-school/">Feltham Hill Infant and Nursery School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/hounslow/great-oaks-charitable-trust-ta-great-oaks-college/">Great Oaks Charitable Trust T/A Great Oaks College</a></td><td>Sixth form</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/hounslow/green-dragon-primary-school/">Green Dragon Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/grove-park-primary-school/">Grove Park Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/hounslow/grove-road-primary-school/">Grove Road Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/gumley-house-rc-convent-school-fcj/">Gumley House RC Convent School, FCJ</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/gunnersbury-catholic-school/">Gunnersbury Catholic School</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/hounslow/heathfield-house-school/">Heathfield House School</a></td><td>Primary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/hounslow/heston-community-school/">Heston Community School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/heston-primary-school/">Heston Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/hounslow-heath-school/">Hounslow Heath School</a></td><td>Primary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/hounslow/hounslow-town-primary-school/">Hounslow Town Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/international-school-of-london/">International School of London</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/isleworth-and-syon-school-for-boys/">Isleworth and Syon School for Boys</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/isleworth-town-primary-school/">Isleworth Town Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/ivybridge-primary-school/">Ivybridge Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/kew-house/">Kew House</a></td><td>Secondary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/hounslow/lampton-academy/">Lampton Academy</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/hounslow/lift-kingsley/">Lift Kingsley</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/lindon-bennett-school/">Lindon Bennett School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/lionel-primary-school/">Lionel Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/hounslow/logic-studio-school/">Logic Studio School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/marjory-kinnon-school/">Marjory Kinnon School</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/marlborough-primary-school/">Marlborough Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/nishkam-school-west-london/">Nishkam School West London</a></td><td>All-through</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/hounslow/norwood-green-infant-and-nursery-school/">Norwood Green Infant and Nursery School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/hounslow/norwood-green-junior-school/">Norwood Green Junior School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/oak-hill-academy-west-london/">Oak Hill Academy West London</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/hounslow/oaklands-school/">Oaklands School</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/orchard-house-school/">Orchard House School</a></td><td>Primary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/hounslow/oriel-academy-west-london/">Oriel Academy West London</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/our-lady-and-st-johns-catholic-primary-school/">Our Lady and St John's Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/reach-academy-feltham/">Reach Academy Feltham</a></td><td>All-through</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/hounslow/reach-academy-hanworth-park/">Reach Academy Hanworth Park</a></td><td>All-through</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/hounslow/rivers-academy-west-london/">Rivers Academy West London</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/hounslow/southville-primary-school/">Southville Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/space-studio-west-london/">Space Studio West London</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/sparrow-farm-primary-school/">Sparrow Farm Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/spring-grove-primary-school/">Spring Grove Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/springwell-school/">Springwell School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/springwest-academy/">Springwest Academy</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/st-lawrence-catholic-primary-school/">St Lawrence Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/st-marks-catholic-school/">St Mark's Catholic School</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/hounslow/st-marys-catholic-primary-school-chiswick/">St Mary's Catholic Primary School ,Chiswick</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/st-marys-catholic-primary-school-isleworth/">St Mary's Catholic Primary School, Isleworth</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/st-michael-and-st-martin-catholic-primary-school/">St Michael and St Martin Catholic Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/hounslow/st-pauls-cofe-primary-school/">St Paul's CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/st-richards-church-of-england-primary-school/">St Richard's Church of England Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/strand-on-the-green-infant-and-nursery-school/">Strand-on-the-Green Infant and Nursery School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/strand-on-the-green-junior-school/">Strand-on-the-Green Junior School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/suffah-primary-school/">Suffah Primary School</a></td><td>Primary</td><td class="rating Requiresimprovement">Requires improvement</td></tr>
+        <tr><td><a href="/schools/hounslow/tarbiyyah-primary-school/">Tarbiyyah Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/tarbiyyah-secondary-school-for-boys/">Tarbiyyah Secondary School for Boys</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/the-blue-school-cofe-primary/">The Blue School CofE Primary</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/the-cedars-primary-school/">The Cedars Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/the-green-school-for-boys/">The Green School for Boys</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/the-green-school-for-girls/">The Green School for Girls</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/the-heathland-school/">The Heathland School</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/hounslow/the-orchard-primary-school/">The Orchard Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/the-rise-free-school/">The Rise Free School</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/the-rosary-catholic-primary-school/">The Rosary Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/the-smallberry-green-primary-school/">The Smallberry Green Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/the-st-michael-steiner-school/">The St Michael Steiner School</a></td><td>All-through</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/hounslow/the-william-hogarth-primary-school/">The William Hogarth Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/the-woodbridge-park-education-service/">The Woodbridge Park Education Service</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/unique-academy/">Unique Academy</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/wellington-primary-school/">Wellington Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/westbrook-primary-school/">Westbrook Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/hounslow/worple-primary-school/">Worple Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Frequently asked</h2>
+    <details class="faq"><summary>How many schools are there in Hounslow?</summary><p>Hounslow has 89 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 64 are primary, 32 are secondary, and the remainder are special, all-through, or post-16.</p></details>
+<details class="faq"><summary>What proportion of Hounslow schools are Outstanding?</summary><p>As of the latest Ofsted Management Information release, 13 schools in Hounslow (14.6%) are rated Outstanding, and 88.8% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication.</p></details>
+<details class="faq"><summary>When do I apply for a Reception or Year 7 place in Hounslow?</summary><p>Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Hounslow's applications are coordinated by the local authority through the eAdmissions system. See our <a href='/guides/london-reception-application-timeline/'>full Reception timeline guide</a>.</p></details>
+<details class="faq"><summary>How does the school appeals process work in Hounslow?</summary><p>If you are refused your preferred school place, you have a statutory right of appeal. Hounslow appeals are typically heard in May (Reception) and June–July (secondary). See our <a href='/appeals.html'>appeals tracker</a> for Hounslow-level success rates by year.</p></details>
+<details class="faq"><summary>How can I tell which Hounslow schools are over-subscribed?</summary><p>Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release.</p></details>
+  </section>
+
+  <section>
+    <h2>Sources</h2>
+    <p class="sources">
+      School list and phase from <a href="https://get-information-schools.service.gov.uk/" rel="nofollow">DfE Get Information About Schools</a> (refreshed monthly).
+      Ofsted ratings from <a href="https://www.gov.uk/government/statistical-data-sets/monthly-management-information-ofsteds-school-inspections-outcomes" rel="nofollow">Ofsted Management Information</a> (refreshed monthly).
+      Performance data from <a href="https://explore-education-statistics.service.gov.uk/" rel="nofollow">DfE Explore Education Statistics</a>.
+      Crime data within 500m from the <a href="https://data.police.uk/" rel="nofollow">Metropolitan Police open data API</a>.
+      Deprivation deciles from <a href="https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019" rel="nofollow">MHCLG English Indices of Deprivation 2019</a>.
+      Read our full <a href="/methodology.html">methodology</a> for how each metric is calculated.
+    </p>
+  </section>
+</main>
+<footer>
+  <div class="inner">
+    <div>&copy; London School Directory. Independent. Free to use.</div>
+    <div><a href="/about.html">About</a> &middot; <a href="/methodology.html">Methodology</a> &middot; <a href="/sources.html">Sources</a> &middot; <a href="/appeals.html">Appeals</a></div>
+    <div>Browse by type: <a href="/schools/outstanding">Outstanding</a> &middot; <a href="/schools/good">Good</a> &middot; <a href="/schools/grammar">Grammar</a> &middot; <a href="/schools/selective">Selective</a> &middot; <a href="/schools/faith">Faith</a> &middot; <a href="/schools/primary">Primary</a> &middot; <a href="/schools/secondary">Secondary</a> &middot; <a href="/schools/sixth-form">Sixth form</a> &middot; <a href="/schools/independent">Private &amp; independent</a></div>
+  </div>
+</footer>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-(function(){
-  var borough="Hounslow", boroughUrl="https://londonschool.directory/schools/hounslow";
-  var outstanding=13, total=89;
-
-  // Borough-level share
-  window.shareBoroughWhatsApp=function(){
-    var t='🏙️ *Schools in '+borough+', London*\n'+
-        '📊 '+total+' schools · '+outstanding+' Outstanding\n\n'+
-        '🔗 '+boroughUrl;
-    window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank');
-  };
-  window.shareBoroughEmail=function(){
-    var s='Schools in '+borough+' — London Schools Explorer';
-    var b='Schools in '+borough+', London\n'+
-        total+' schools, '+outstanding+' rated Outstanding by Ofsted\n\n'+
-        'Browse them here: '+boroughUrl;
-    window.location.href='mailto:?subject='+encodeURIComponent(s)+'&body='+encodeURIComponent(b);
-  };
-
-  // Shortlist comparison share
-  function getSelected(){
-    return Array.from(document.querySelectorAll('.sch-sel:checked')).map(function(cb){
-      return {name:cb.dataset.name,ofsted:cb.dataset.ofsted,phase:cb.dataset.phase,
-               att8:cb.dataset.att8,ks2:cb.dataset.ks2,url:cb.dataset.url};
+  (function() {
+    var points = [[51.496869, -0.281018, "/schools/hounslow/eden-park-academy/", "Eden Park Academy"], [51.492916, -0.263606, "/schools/hounslow/belmont-primary-school/", "Belmont Primary School"], [51.446569, -0.406712, "/schools/hounslow/cardinal-primary-school/", "Cardinal Primary School"], [51.482203, -0.256092, "/schools/hounslow/cavendish-primary-school/", "Cavendish Primary School"], [51.439306, -0.423583, "/schools/hounslow/feltham-hill-infant-and-nursery-school/", "Feltham Hill Infant and Nursery School"], [51.484743, -0.27217, "/schools/hounslow/grove-park-primary-school/", "Grove Park Primary School"], [51.46926, -0.356206, "/schools/hounslow/hounslow-town-primary-school/", "Hounslow Town Primary School"], [51.47225, -0.32851, "/schools/hounslow/isleworth-town-primary-school/", "Isleworth Town Primary School"], [51.495021, -0.297381, "/schools/hounslow/lionel-primary-school/", "Lionel Primary School"], [51.478955, -0.327674, "/schools/hounslow/marlborough-primary-school/", "Marlborough Primary School"], [51.493234, -0.378767, "/schools/hounslow/norwood-green-infant-and-nursery-school/", "Norwood Green Infant and Nursery School"], [51.472946, -0.347779, "/schools/hounslow/spring-grove-primary-school/", "Spring Grove Primary School"], [51.48734, -0.281218, "/schools/hounslow/strand-on-the-green-junior-school/", "Strand-on-the-Green Junior School"], [51.48734, -0.281218, "/schools/hounslow/strand-on-the-green-infant-and-nursery-school/", "Strand-on-the-Green Infant and Nursery School"], [51.472149, -0.378319, "/schools/hounslow/wellington-primary-school/", "Wellington Primary School"], [51.465707, -0.32561, "/schools/hounslow/worple-primary-school/", "Worple Primary School"], [51.456316, -0.333626, "/schools/hounslow/ivybridge-primary-school/", "Ivybridge Primary School"], [51.443734, -0.426553, "/schools/hounslow/edward-pauling-primary-school/", "Edward Pauling Primary School"], [51.475648, -0.327839, "/schools/hounslow/the-smallberry-green-primary-school/", "The Smallberry Green Primary School"], [51.46407, -0.372847, "/schools/hounslow/grove-road-primary-school/", "Grove Road Primary School"], [51.470089, -0.401185, "/schools/hounslow/beavers-community-primary-school/", "Beavers Community Primary School"], [51.46928, -0.324587, "/schools/hounslow/the-blue-school-cofe-primary/", "The Blue School CofE Primary"], [51.484885, -0.305968, "/schools/hounslow/st-pauls-cofe-primary-school/", "St Paul's CofE Primary School"], [51.489956, -0.310908, "/schools/hounslow/our-lady-and-st-johns-catholic-primary-school/", "Our Lady and St John's Catholic Primary School"], [51.445024, -0.408852, "/schools/hounslow/st-lawrence-catholic-primary-school/", "St Lawrence Catholic Primary School"], [51.469278, -0.327539, "/schools/hounslow/st-marys-catholic-primary-school-isleworth/", "St Mary's Catholic Primary School, Isleworth"], [51.488933, -0.258169, "/schools/hounslow/st-marys-catholic-primary-school-chiswick/", "St Mary's Catholic Primary School ,Chiswick"], [51.467061, -0.379119, "/schools/hounslow/st-michael-and-st-martin-catholic-primary-school/", "St Michael and St Martin Catholic Primary School"], [51.457831, -0.376193, "/schools/hounslow/the-heathland-school/", "The Heathland School"], [51.492346, -0.316366, "/schools/hounslow/gunnersbury-catholic-school/", "Gunnersbury Catholic School"], [51.496583, -0.257402, "/schools/hounslow/orchard-house-school/", "Orchard House School"], [51.495763, -0.282904, "/schools/hounslow/international-school-of-london/", "International School of London"], [51.495961, -0.252412, "/schools/hounslow/artsed-day-school-sixth-form/", "ArtsEd Day School & Sixth Form"], [51.457969, -0.43126, "/schools/hounslow/marjory-kinnon-school/", "Marjory Kinnon School"], [51.47866, -0.355782, "/schools/hounslow/oaklands-school/", "Oaklands School"], [51.427771, -0.394563, "/schools/hounslow/lindon-bennett-school/", "Lindon Bennett School"], [51.484275, -0.410123, "/schools/hounslow/the-cedars-primary-school/", "The Cedars Primary School"], [51.477886, -0.334064, "/schools/hounslow/the-woodbridge-park-education-service/", "The Woodbridge Park Education Service"], [51.442037, -0.382422, "/schools/hounslow/crane-park-primary-school/", "Crane Park Primary School"], [51.448806, -0.434668, "/schools/hounslow/fairholme-primary-school/", "Fairholme Primary School"], [51.487605, -0.296952, "/schools/hounslow/green-dragon-primary-school/", "Green Dragon Primary School"], [51.48807, -0.256963, "/schools/hounslow/the-william-hogarth-primary-school/", "The William Hogarth Primary School"], [51.459828, -0.374956, "/schools/hounslow/suffah-primary-school/", "Suffah Primary School"], [51.489585, -0.268774, "/schools/hounslow/heathfield-house-school/", "Heathfield House School"], [51.487475, -0.372706, "/schools/hounslow/the-rosary-catholic-primary-school/", "The Rosary Catholic Primary School"], [51.462169, -0.37457, "/schools/hounslow/the-orchard-primary-school/", "The Orchard Primary School"], [51.457969, -0.43126, "/schools/hounslow/bedfont-primary-school/", "Bedfont Primary School"], [51.464631, -0.355033, "/schools/hounslow/chatsworth-primary-school/", "Chatsworth Primary School"], [51.483922, -0.36939, "/schools/hounslow/heston-primary-school/", "Heston Primary School"], [51.477211, -0.367916, "/schools/hounslow/lampton-academy/", "Lampton Academy"], [51.487616, -0.406506, "/schools/hounslow/cranford-community-college/", "Cranford Community College"], [51.475555, -0.411664, "/schools/hounslow/cranford-primary-school/", "Cranford Primary School"], [51.452919, -0.420855, "/schools/hounslow/rivers-academy-west-london/", "Rivers Academy West London"], [51.485224, -0.37571, "/schools/hounslow/tarbiyyah-primary-school/", "Tarbiyyah Primary School"], [51.442871, -0.401315, "/schools/hounslow/springwest-academy/", "Springwest Academy"], [51.481907, -0.259805, "/schools/hounslow/chiswick-school/", "Chiswick School"], [51.469083, -0.330281, "/schools/hounslow/gumley-house-rc-convent-school-fcj/", "Gumley House RC Convent School, FCJ"], [51.480581, -0.341426, "/schools/hounslow/isleworth-and-syon-school-for-boys/", "Isleworth and Syon School for Boys"], [51.468416, -0.374967, "/schools/hounslow/st-marks-catholic-school/", "St Mark's Catholic School"], [51.443553, -0.411134, "/schools/hounslow/reach-academy-feltham/", "Reach Academy Feltham"], [51.433785, -0.393791, "/schools/hounslow/the-st-michael-steiner-school/", "The St Michael Steiner School"], [51.483922, -0.36939, "/schools/hounslow/heston-community-school/", "Heston Community School"], [51.486098, -0.307162, "/schools/hounslow/brentford-school-for-girls/", "Brentford School for Girls"], [51.470906, -0.358782, "/schools/hounslow/lift-kingsley/", "Lift Kingsley"], [51.48525, -0.337138, "/schools/hounslow/nishkam-school-west-london/", "Nishkam School West London"], [51.493234, -0.378767, "/schools/hounslow/norwood-green-junior-school/", "Norwood Green Junior School"], [51.482052, -0.375261, "/schools/hounslow/westbrook-primary-school/", "Westbrook Primary School"], [51.479114, -0.324918, "/schools/hounslow/the-green-school-for-girls/", "The Green School for Girls"], [51.490113, -0.286357, "/schools/hounslow/kew-house/", "Kew House"], [51.436938, -0.390875, "/schools/hounslow/oriel-academy-west-london/", "Oriel Academy West London"], [51.442871, -0.401315, "/schools/hounslow/the-rise-free-school/", "The Rise Free School"], [51.437835, -0.423187, "/schools/hounslow/oak-hill-academy-west-london/", "Oak Hill Academy West London"], [51.474848, -0.360944, "/schools/hounslow/alexandra-primary-school/", "Alexandra Primary School"], [51.452919, -0.420855, "/schools/hounslow/space-studio-west-london/", "Space Studio West London"], [51.442871, -0.401315, "/schools/hounslow/logic-studio-school/", "Logic Studio School"], [51.480461, -0.381798, "/schools/hounslow/edison-primary-school/", "Edison Primary School"], [51.443553, -0.411134, "/schools/hounslow/reach-academy-hanworth-park/", "Reach Academy Hanworth Park"], [51.484085, -0.388309, "/schools/hounslow/berkeley-academy/", "Berkeley Academy"], [51.477776, -0.323167, "/schools/hounslow/the-green-school-for-boys/", "The Green School for Boys"], [51.450505, -0.421197, "/schools/hounslow/southville-primary-school/", "Southville Primary School"], [51.48856, -0.330262, "/schools/hounslow/bolder-academy/", "Bolder Academy"], [51.428349, -0.388213, "/schools/hounslow/st-richards-church-of-england-primary-school/", "St Richard's Church of England Primary School"], [51.482574, -0.385698, "/schools/hounslow/springwell-school/", "Springwell School"], [51.416209, -0.430605, "/schools/hounslow/great-oaks-charitable-trust-ta-great-oaks-college/", "Great Oaks Charitable Trust T/A Great Oaks College"], [51.453067, -0.399937, "/schools/hounslow/sparrow-farm-primary-school/", "Sparrow Farm Primary School"], [51.481278, -0.413928, "/schools/hounslow/unique-academy/", "Unique Academy"], [51.496869, -0.281018, "/schools/hounslow/eagle-park-independent-school/", "Eagle Park Independent School"], [51.466905, -0.386035, "/schools/hounslow/hounslow-heath-school/", "Hounslow Heath School"], [51.485224, -0.37571, "/schools/hounslow/tarbiyyah-secondary-school-for-boys/", "Tarbiyyah Secondary School for Boys"]];
+    if (!points.length) return;
+    var lats = points.map(function(p) { return p[0]; });
+    var lngs = points.map(function(p) { return p[1]; });
+    var avgLat = lats.reduce(function(a,b) { return a+b; }, 0) / lats.length;
+    var avgLng = lngs.reduce(function(a,b) { return a+b; }, 0) / lngs.length;
+    var map = L.map('map', { scrollWheelZoom: false }).setView([avgLat, avgLng], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+    points.forEach(function(p) {
+      L.circleMarker([p[0], p[1]], {
+        radius: 5, color: '#0b2545', fillColor: '#0b6efd', fillOpacity: 0.8, weight: 1
+      }).addTo(map).bindPopup('<a href="' + p[2] + '">' + p[3] + '</a>');
     });
-  }
-  function updateBar(){
-    var sel=getSelected();
-    var bar=document.getElementById('cmp-bar');
-    document.getElementById('cmp-count').textContent=sel.length+' school'+(sel.length===1?'':' s')+' selected';
-    bar.style.display=sel.length>0?'flex':'none';
-  }
-  document.querySelectorAll('.sch-sel').forEach(function(cb){ cb.onchange=updateBar; });
-
-  function buildCompareText(sel,markdown){
-    var lines=['📋 *My '+borough+' school shortlist*',''];
-    sel.forEach(function(s,i){
-      lines.push((i+1)+'. '+(markdown?'*':'')+s.name+(markdown?'*':''));
-      lines.push('   ⭐ Ofsted: '+s.ofsted+(s.phase?' · '+s.phase:''));
-      if(s.att8)lines.push('   📊 Attainment 8: '+s.att8);
-      if(s.ks2)lines.push('   📝 KS2 expected: '+s.ks2+'%');
-      lines.push('   🔗 '+s.url);
-      lines.push('');
-    });
-    lines.push('via London Schools Explorer — '+boroughUrl);
-    return lines.join('\n');
-  }
-  window.shareCompareWhatsApp=function(){
-    var sel=getSelected();
-    if(!sel.length)return;
-    window.open('https://wa.me/?text='+encodeURIComponent(buildCompareText(sel,true)),'_blank');
-  };
-  window.shareCompareEmail=function(){
-    var sel=getSelected();
-    if(!sel.length)return;
-    var subj='My '+borough+' school shortlist — London Schools Explorer';
-    window.location.href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(buildCompareText(sel,false));
-  };
-  window.clearSelection=function(){
-    document.querySelectorAll('.sch-sel:checked').forEach(function(cb){cb.checked=false;});
-    updateBar();
-  };
-})();
-</script>
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function () {
-    navigator.serviceWorker.register('/sw.js').catch(function () {});
-  });
-}
+  })();
 </script>
 </body>
 </html>

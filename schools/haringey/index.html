@@ -1,1404 +1,512 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en-GB">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Schools in Haringey, London | Ofsted Ratings &amp; Results | London Schools Explorer</title>
-  <meta name="description" content="97 schools in Haringey, London. 29 Outstanding, 52 Good-rated by Ofsted. Compare admissions oversubscription, exam results and crime data. Free.">
-  <script type="application/ld+json">{
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Schools in Haringey, London — Ofsted, Performance & Admissions</title>
+<meta name="description" content="All 97 schools in Haringey, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
+<link rel="canonical" href="https://londonschool.directory/schools/haringey/">
+<meta property="og:title" content="Schools in Haringey, London — Ofsted, Performance & Admissions">
+<meta property="og:description" content="All 97 schools in Haringey, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://londonschool.directory/schools/haringey/">
+<meta property="og:site_name" content="London School Directory">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0b2545">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="preconnect" href="https://unpkg.com">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+  :root {
+    --ink: #0b2545;
+    --ink-2: #1e3a5f;
+    --muted: #5b6b85;
+    --line: #e3e8ef;
+    --bg: #ffffff;
+    --bg-2: #f6f8fb;
+    --accent: #0b6efd;
+    --good: #137333;
+    --warn: #a85b00;
+    --bad: #b3261e;
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  header.site {
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+    position: sticky; top: 0; z-index: 50;
+  }
+  header.site .inner {
+    max-width: 1100px; margin: 0 auto; padding: 14px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  header.site a.brand { color: var(--ink); font-weight: 700; letter-spacing: -0.01em; }
+  header.site nav a { margin-left: 18px; color: var(--ink-2); font-size: 14px; }
+  main { max-width: 1100px; margin: 0 auto; padding: 28px 20px 80px; }
+  .crumbs { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+  .crumbs a { color: var(--muted); }
+  h1 { font-size: 32px; line-height: 1.2; margin: 0 0 8px; letter-spacing: -0.02em; }
+  .lede { color: var(--ink-2); font-size: 17px; max-width: 720px; }
+  .stamp { font-size: 12px; color: var(--muted); margin-top: 8px; }
+  .stamp .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--good); vertical-align: middle; margin-right: 6px; }
+  .grid-stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px; margin: 24px 0 8px;
+  }
+  .stat {
+    background: var(--bg-2); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 14px 16px;
+  }
+  .stat .v { font-size: 24px; font-weight: 700; color: var(--ink); }
+  .stat .l { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  section { margin-top: 36px; }
+  h2 { font-size: 22px; margin: 0 0 12px; letter-spacing: -0.01em; }
+  .twocol { display: grid; grid-template-columns: 1.4fr 1fr; gap: 28px; }
+  @media (max-width: 820px) { .twocol { grid-template-columns: 1fr; } }
+  table.schools { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table.schools th, table.schools td {
+    text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line);
+  }
+  table.schools th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); font-weight: 600; }
+  .rating { font-weight: 600; }
+  .rating.Outstanding { color: var(--good); }
+  .rating.Good { color: var(--ink-2); }
+  .rating.RequiresImprovement, .rating.Requires { color: var(--warn); }
+  .rating.Inadequate { color: var(--bad); }
+  #map { height: 380px; border-radius: var(--radius); border: 1px solid var(--line); }
+  .pills { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pill { background: var(--bg-2); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; font-size: 12px; color: var(--ink-2); }
+  details.faq { border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 8px; background: var(--bg); }
+  details.faq summary { cursor: pointer; font-weight: 600; color: var(--ink); }
+  details.faq[open] { background: var(--bg-2); }
+  footer { border-top: 1px solid var(--line); padding: 28px 20px; color: var(--muted); font-size: 13px; }
+  footer .inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 24px; flex-wrap: wrap; }
+  .sources { font-size: 13px; color: var(--muted); }
+  .sources a { color: var(--muted); text-decoration: underline; }
+  .cta {
+    display: inline-block; background: var(--ink); color: #fff; padding: 10px 14px;
+    border-radius: var(--radius); font-size: 14px; font-weight: 600;
+  }
+  .cta:hover { background: var(--ink-2); text-decoration: none; }
+</style>
+<script type="application/ld+json">
+[
+  {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "name": "Schools in Haringey, London",
-    "description": "97 schools in Haringey, London rated by Ofsted",
-    "numberOfItems": 97,
-    "url": "https://londonschool.directory/schools/haringey"
-  }</script>
-  <script type="application/ld+json">{
+    "name": "Top schools in Haringey, London",
+    "itemListOrder": "http://schema.org/ItemListOrderDescending",
+    "numberOfItems": 14,
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "url": "https://londonschool.directory/schools/haringey/lift-trinity/",
+        "name": "Lift Trinity"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "url": "https://londonschool.directory/schools/haringey/rhodes-avenue-primary-school/",
+        "name": "Rhodes Avenue Primary School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "url": "https://londonschool.directory/schools/haringey/south-harringay-junior-school/",
+        "name": "South Harringay Junior School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "url": "https://londonschool.directory/schools/haringey/coldfall-primary-school/",
+        "name": "Coldfall Primary School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 5,
+        "url": "https://londonschool.directory/schools/haringey/st-michaels-cofe-voluntary-aided-primary-school/",
+        "name": "St Michael's CofE Voluntary Aided Primary School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 6,
+        "url": "https://londonschool.directory/schools/haringey/our-lady-of-muswell-catholic-primary-school/",
+        "name": "Our Lady of Muswell Catholic Primary School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 7,
+        "url": "https://londonschool.directory/schools/haringey/harris-primary-academy-coleraine-park/",
+        "name": "Harris Primary Academy Coleraine Park"
+      },
+      {
+        "@type": "ListItem",
+        "position": 8,
+        "url": "https://londonschool.directory/schools/haringey/alexandra-park-school/",
+        "name": "Alexandra Park School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 9,
+        "url": "https://londonschool.directory/schools/haringey/st-thomas-more-catholic-school/",
+        "name": "St Thomas More Catholic School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 10,
+        "url": "https://londonschool.directory/schools/haringey/harris-academy-tottenham/",
+        "name": "Harris Academy Tottenham"
+      },
+      {
+        "@type": "ListItem",
+        "position": 11,
+        "url": "https://londonschool.directory/schools/haringey/gladesmore-community-school/",
+        "name": "Gladesmore Community School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 12,
+        "url": "https://londonschool.directory/schools/haringey/the-grove/",
+        "name": "The Grove"
+      },
+      {
+        "@type": "ListItem",
+        "position": 13,
+        "url": "https://londonschool.directory/schools/haringey/haringey-learning-partnership/",
+        "name": "Haringey Learning Partnership"
+      },
+      {
+        "@type": "ListItem",
+        "position": 14,
+        "url": "https://londonschool.directory/schools/haringey/treehouse-school/",
+        "name": "TreeHouse School"
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How many schools are there in Haringey?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Haringey has 97 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 65 are primary, 24 are secondary, and the remainder are special, all-through, or post-16."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What proportion of Haringey schools are Outstanding?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "As of the latest Ofsted Management Information release, 29 schools in Haringey (29.9%) are rated Outstanding, and 83.5% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "When do I apply for a Reception or Year 7 place in Haringey?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Haringey's applications are coordinated by the local authority through the eAdmissions system. See our full Reception timeline guide."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does the school appeals process work in Haringey?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "If you are refused your preferred school place, you have a statutory right of appeal. Haringey appeals are typically heard in May (Reception) and June\u2013July (secondary). See our appeals tracker for Haringey-level success rates by year."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How can I tell which Haringey schools are over-subscribed?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release."
+        }
+      }
+    ]
+  },
+  {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      {"@type": "ListItem", "position": 1, "name": "London Schools Explorer", "item": "https://londonschool.directory/"},
-      {"@type": "ListItem", "position": 2, "name": "Schools in Haringey", "item": "https://londonschool.directory/schools/haringey"}
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://londonschool.directory/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Boroughs",
+        "item": "https://londonschool.directory/schools/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Haringey",
+        "item": "https://londonschool.directory/schools/haringey/"
+      }
     ]
-  }</script>
-  <link rel="canonical" href="https://londonschool.directory/schools/haringey">
-  <meta property="og:title" content="Schools in Haringey | London Schools Explorer">
-  <meta property="og:description" content="97 schools in Haringey. 29 Outstanding-rated. Compare Ofsted ratings, exam results and admissions.">
-  <meta property="og:url" content="https://londonschool.directory/schools/haringey">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, -apple-system, sans-serif; color: #1a1a1a; background: #f8f9fa; line-height: 1.6; }
-    a { color: #1565C0; }
-    .topbar { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 12px 20px; }
-    .topbar a { text-decoration: none; font-weight: 600; color: #1a1a1a; font-size: 15px; }
-    .topbar span { color: #888; margin: 0 8px; }
-    .container { max-width: 900px; margin: 0 auto; padding: 32px 20px; }
-    h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
-    .intro { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; font-size: 15px; color: #333; line-height: 1.7; }
-    .stats-row { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
-    .stat-box { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 14px 18px; flex: 1; min-width: 120px; }
-    .stat-num { font-size: 24px; font-weight: 700; color: #1a1a1a; line-height: 1; }
-    .stat-lbl { font-size: 12px; color: #888; margin-top: 4px; }
-    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #e0e0e0; }
-    th { background: #f5f5f5; padding: 12px 16px; text-align: left; font-size: 13px; color: #555; font-weight: 600; border-bottom: 1px solid #e0e0e0; }
-    td { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
-    tr:last-child td { border-bottom: none; }
-    tr:hover td { background: #fafafa; }
-    .back { display: inline-block; margin-bottom: 20px; font-size: 14px; color: #555; text-decoration: none; }
-    .back:hover { color: #111; }
-    footer { text-align: center; padding: 32px 20px; font-size: 13px; color: #888; }
-    @media (max-width: 600px) {
-      .container { padding: 16px 12px; }
-      h1 { font-size: 22px; }
-      .stats-row { grid-template-columns: 1fr 1fr; }
-      .intro { padding: 14px 16px; font-size: 14px; }
-      table { font-size: 13px; }
-      th, td { padding: 10px 10px; overflow-wrap: anywhere; word-break: break-word; }
-      th:nth-child(5), td:nth-child(5) { display: none; }
-      .topbar { padding: 10px 12px; font-size: 13px; }
-    }
-    @media (max-width: 600px) { .stats-row { flex-direction: column; } }
-  </style>
-  <link rel="manifest" href="/manifest.webmanifest">
-  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  }
+]
+</script>
 </head>
 <body>
-<div class="topbar">
-  <div style="max-width:900px;margin:0 auto">
-    <a href="/">London Schools Explorer</a>
-    <span>/</span>
-    Haringey
+<header class="site">
+  <div class="inner">
+    <a class="brand" href="/">London School Directory</a>
+    <nav>
+      <a href="/">Search</a>
+      <a href="/appeals.html">Appeals</a>
+      <a href="/methodology.html">Methodology</a>
+      <a href="/about.html">About</a>
+    </nav>
   </div>
-</div>
-<div class="container">
-  <a class="back" href="/">&#8592; All boroughs</a>
-  <h1>Schools in Haringey</h1>
-
-  <div class="stats-row">
-    <div class="stat-box"><div class="stat-num">97</div><div class="stat-lbl">Total schools</div></div>
-    <div class="stat-box"><div class="stat-num">29</div><div class="stat-lbl">Outstanding</div></div>
-    <div class="stat-box"><div class="stat-num">52</div><div class="stat-lbl">Good</div></div>
-    <div class="stat-box"><div class="stat-num">5</div><div class="stat-lbl">School phases</div></div>
+</header>
+<main>
+  <div class="crumbs">
+    <a href="/">Home</a> &rsaquo; <a href="/schools/">Boroughs</a> &rsaquo; Haringey
   </div>
 
-  <div class="intro">Haringey spans from the affluent Muswell Hill and Crouch End in the west to the more diverse Tottenham and Wood Green in the east, and its school landscape reflects this contrast. The borough has made significant strides in improving school quality and has several Outstanding-rated primaries and secondaries. Alexandra Park School and Fortismere School are among the most popular secondaries.</div>
+  <h1>Schools in Haringey, London</h1>
+  <p class="lede">Haringey schools cover Tottenham, Wood Green, Hornsey, Crouch End and Highgate. The borough mixes some of London's most competitive primary catchments with secondaries that have improved sharply in recent years. Admissions are coordinated by the council with appeals heard each summer.</p>
+  <p class="stamp"><span class="dot"></span>Data last verified 1 September 2026. Sources: Ofsted, DfE GIAS, DfE Performance Tables, Metropolitan Police, MHCLG IMD. See <a href="/sources.html">all sources</a>.</p>
 
-  
-<div style="display:flex;gap:16px;flex-wrap:wrap;margin:20px 0;">
+  <section>
+    <div class="grid-stats">
+      <div class="stat"><div class="v">97</div><div class="l">Schools in Haringey</div></div>
+      <div class="stat"><div class="v">29.9%</div><div class="l">Outstanding Ofsted</div></div>
+      <div class="stat"><div class="v">83.5%</div><div class="l">Good or Outstanding</div></div>
+      <div class="stat"><div class="v">65</div><div class="l">Primary schools</div></div>
+      <div class="stat"><div class="v">24</div><div class="l">Secondary schools</div></div>
+      <div class="stat"><div class="v">18%</div><div class="l">Secondary appeal success (2024)</div></div>
+    </div>
+  </section>
 
-<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fdf4ff 0%,#ede9fe 100%);
-     border:1px solid #d8b4fe;border-radius:12px;padding:14px 20px;">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-    <span style="font-size:22px;">🎓</span>
-    <strong style="font-size:15px;color:#5b21b6;">11+ &amp; 13+ Exam Prep</strong>
-  </div>
-  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
-    PiAcademy resources for grammar school entrance, SATs &amp; GCSE.
-    Use code <strong>THIERR25</strong> for 25% off.
-  </p>
-  <a href="https://piacademy.co.uk/?aff=28"
-     target="_blank" rel="noopener sponsored"
-     style="display:inline-block;padding:9px 18px;background:#7e22ce;color:#fff;
-            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
-    Get 25% OFF →
-  </a>
-  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
-</div>
-<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%);
-     border:1px solid #fcd34d;border-radius:12px;padding:14px 20px;">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-    <span style="font-size:22px;">📚</span>
-    <strong style="font-size:15px;color:#92400e;">Children's Books</strong>
-  </div>
-  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
-    Great books at low prices. At checkout, choose your school — Scholastic donates
-    <strong>20p for every £1 spent</strong> back to the school in free books.
-  </p>
-  <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&ued=https%3A%2F%2Fwww.scholastic.co.uk%2Fteachers"
-     target="_blank" rel="noopener sponsored"
-     style="display:inline-block;padding:9px 18px;background:#d97706;color:#fff;
-            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
-    Shop at Scholastic →
-  </a>
-  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
-</div>
-<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fff8f0 0%,#fff3e0 100%);
-     border:1px solid #fed7aa;border-radius:12px;padding:14px 20px;">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-    <span style="font-size:22px;">🛒</span>
-    <strong style="font-size:15px;color:#92400e;">School Supplies</strong>
-  </div>
-  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
-    Stationery, bags, PE kit, lunchboxes and more — fast delivery from Amazon.
-  </p>
-  <a href="https://www.amazon.co.uk/s?k=school+supplies+stationery&tag=londonparents-21"
-     target="_blank" rel="noopener sponsored"
-     style="display:inline-block;padding:9px 18px;background:#FF9900;color:#111;
-            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
-    Shop on Amazon →
-  </a>
-  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
-</div>
-</div>
+  <section>
+    <div class="twocol">
+      <div>
+        <h2>Top primary schools in Haringey</h2>
+        <p class="sources">Ranked by Ofsted rating, then by latest KS2 performance. See <a href="/methodology.html">methodology</a>.</p>
+        <table class="schools">
+          <thead>
+            <tr><th>School</th><th>Ofsted</th><th>KS2 %</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><a href="/schools/haringey/lift-trinity/">Lift Trinity</a></td><td class="rating Outstanding">Outstanding</td><td>97.0</td></tr>
+            <tr><td><a href="/schools/haringey/rhodes-avenue-primary-school/">Rhodes Avenue Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>92.0</td></tr>
+            <tr><td><a href="/schools/haringey/south-harringay-junior-school/">South Harringay Junior School</a></td><td class="rating Outstanding">Outstanding</td><td>88.0</td></tr>
+            <tr><td><a href="/schools/haringey/coldfall-primary-school/">Coldfall Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>86.0</td></tr>
+            <tr><td><a href="/schools/haringey/st-michaels-cofe-voluntary-aided-primary-school/">St Michael's CofE Voluntary Aided Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>86.0</td></tr>
+            <tr><td><a href="/schools/haringey/our-lady-of-muswell-catholic-primary-school/">Our Lady of Muswell Catholic Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>85.0</td></tr>
+            <tr><td><a href="/schools/haringey/harris-primary-academy-coleraine-park/">Harris Primary Academy Coleraine Park</a></td><td class="rating Outstanding">Outstanding</td><td>82.0</td></tr>
+          </tbody>
+        </table>
 
-  <!-- Borough share buttons -->
-  <div style="display:flex;gap:10px;margin:16px 0 8px;flex-wrap:wrap;align-items:center;">
-    <span style="font-size:13px;color:#555;font-weight:600;">Share Haringey schools:</span>
-    <button onclick="shareBoroughWhatsApp()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 WhatsApp</button>
-    <button onclick="shareBoroughEmail()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#1565C0;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Email</button>
-    <span style="font-size:12px;color:#999;margin-left:4px;">Or tick schools below to share a shortlist</span>
-  </div>
+        <h2 style="margin-top:28px">Top secondary schools in Haringey</h2>
+        <p class="sources">Ranked by Ofsted rating, then by latest KS4 Attainment 8.</p>
+        <table class="schools">
+          <thead>
+            <tr><th>School</th><th>Ofsted</th><th>Att 8</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><a href="/schools/haringey/alexandra-park-school/">Alexandra Park School</a></td><td class="rating Outstanding">Outstanding</td><td>65.1</td></tr>
+            <tr><td><a href="/schools/haringey/st-thomas-more-catholic-school/">St Thomas More Catholic School</a></td><td class="rating Outstanding">Outstanding</td><td>51.6</td></tr>
+            <tr><td><a href="/schools/haringey/harris-academy-tottenham/">Harris Academy Tottenham</a></td><td class="rating Outstanding">Outstanding</td><td>46.5</td></tr>
+            <tr><td><a href="/schools/haringey/gladesmore-community-school/">Gladesmore Community School</a></td><td class="rating Outstanding">Outstanding</td><td>43.2</td></tr>
+            <tr><td><a href="/schools/haringey/the-grove/">The Grove</a></td><td class="rating Outstanding">Outstanding</td><td>0.6</td></tr>
+            <tr><td><a href="/schools/haringey/haringey-learning-partnership/">Haringey Learning Partnership</a></td><td class="rating Outstanding">Outstanding</td><td>—</td></tr>
+            <tr><td><a href="/schools/haringey/treehouse-school/">TreeHouse School</a></td><td class="rating Outstanding">Outstanding</td><td>—</td></tr>
+          </tbody>
+        </table>
 
-  <!-- Sticky compare bar (appears when schools are ticked) -->
-  <div id="cmp-bar" style="display:none;position:sticky;top:0;z-index:100;background:#1A1A2E;color:#fff;padding:12px 16px;border-radius:10px;margin-bottom:12px;display:none;align-items:center;gap:10px;flex-wrap:wrap;">
-    <span id="cmp-count" style="font-weight:700;font-size:14px;">0 schools selected</span>
-    <button onclick="shareCompareWhatsApp()" style="padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 Share via WhatsApp</button>
-    <button onclick="shareCompareEmail()" style="padding:8px 16px;background:#fff;color:#1A1A2E;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Share via Email</button>
-    <button onclick="clearSelection()" style="padding:8px 12px;background:transparent;color:#aaa;border:1px solid #555;border-radius:8px;font-size:12px;cursor:pointer;">✕ Clear</button>
-  </div>
+        <p style="margin-top:14px"><a class="cta" href="#all-schools">Jump to all 97 schools in Haringey</a></p>
+      </div>
+      <div>
+        <h2>Map</h2>
+        <div id="map" aria-label="Map of schools in Haringey"></div>
+      </div>
+    </div>
+  </section>
 
-  <table>
-    <thead><tr><th style="width:36px"></th><th>School</th><th>Phase</th><th>Ofsted</th><th>Pupils</th></tr></thead>
-    <tbody><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Alexandra Park School"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="65.1"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/alexandra-park-school"></td>
-          <td><a href="/schools/haringey/alexandra-park-school">Alexandra Park School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>1888</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Alexandra Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="58.0"
-            data-url="https://londonschool.directory/schools/haringey/alexandra-primary-school"></td>
-          <td><a href="/schools/haringey/alexandra-primary-school">Alexandra Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>416</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Ambitious College"
-            data-ofsted="Not yet rated"
-            data-phase="Sixth form"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/ambitious-college"></td>
-          <td><a href="/schools/haringey/ambitious-college">Ambitious College</a></td>
-          <td>Sixth form</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Area 51 Education Ltd"
-            data-ofsted="Not yet rated"
-            data-phase="Sixth form"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/area-51-education-ltd"></td>
-          <td><a href="/schools/haringey/area-51-education-ltd">Area 51 Education Ltd</a></td>
-          <td>Sixth form</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Assunnah Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/assunnah-primary-school"></td>
-          <td><a href="/schools/haringey/assunnah-primary-school">Assunnah Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>128</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Belmont Infant School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/belmont-infant-school"></td>
-          <td><a href="/schools/haringey/belmont-infant-school">Belmont Infant School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>218</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Belmont Junior School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="69.0"
-            data-url="https://londonschool.directory/schools/haringey/belmont-junior-school"></td>
-          <td><a href="/schools/haringey/belmont-junior-school">Belmont Junior School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>223</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Blanche Nevile School"
-            data-ofsted="Good"
-            data-phase="All-through"
-            data-att8="6.9"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/blanche-nevile-school"></td>
-          <td><a href="/schools/haringey/blanche-nevile-school">Blanche Nevile School</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>97</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Bounds Green Infant School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/bounds-green-infant-school"></td>
-          <td><a href="/schools/haringey/bounds-green-infant-school">Bounds Green Infant School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>321</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Bounds Green Junior School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="72.0"
-            data-url="https://londonschool.directory/schools/haringey/bounds-green-junior-school"></td>
-          <td><a href="/schools/haringey/bounds-green-junior-school">Bounds Green Junior School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>348</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Brook House Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="73.0"
-            data-url="https://londonschool.directory/schools/haringey/brook-house-primary-school"></td>
-          <td><a href="/schools/haringey/brook-house-primary-school">Brook House Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>408</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Bruce Grove Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="54.0"
-            data-url="https://londonschool.directory/schools/haringey/bruce-grove-primary-school"></td>
-          <td><a href="/schools/haringey/bruce-grove-primary-school">Bruce Grove Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>277</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Campsbourne Infant School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/campsbourne-infant-school"></td>
-          <td><a href="/schools/haringey/campsbourne-infant-school">Campsbourne Infant School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>197</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Campsbourne Junior School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="79.0"
-            data-url="https://londonschool.directory/schools/haringey/campsbourne-junior-school"></td>
-          <td><a href="/schools/haringey/campsbourne-junior-school">Campsbourne Junior School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>219</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Channing School"
-            data-ofsted="Not yet rated"
-            data-phase="All-through"
-            data-att8="44.0"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/channing-school"></td>
-          <td><a href="/schools/haringey/channing-school">Channing School</a></td>
-          <td>All-through</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>991</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Chestnuts Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="72.0"
-            data-url="https://londonschool.directory/schools/haringey/chestnuts-primary-school"></td>
-          <td><a href="/schools/haringey/chestnuts-primary-school">Chestnuts Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>442</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Coldfall Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="86.0"
-            data-url="https://londonschool.directory/schools/haringey/coldfall-primary-school"></td>
-          <td><a href="/schools/haringey/coldfall-primary-school">Coldfall Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>684</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Coleridge Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="75.0"
-            data-url="https://londonschool.directory/schools/haringey/coleridge-primary-school"></td>
-          <td><a href="/schools/haringey/coleridge-primary-school">Coleridge Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>882</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Crowland Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="60.0"
-            data-url="https://londonschool.directory/schools/haringey/crowland-primary-school"></td>
-          <td><a href="/schools/haringey/crowland-primary-school">Crowland Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>438</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Duke's Aldridge"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="39.0"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/dukes-aldridge"></td>
-          <td><a href="/schools/haringey/dukes-aldridge">Duke's Aldridge</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>873</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Earlham Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="79.0"
-            data-url="https://londonschool.directory/schools/haringey/earlham-primary-school"></td>
-          <td><a href="/schools/haringey/earlham-primary-school">Earlham Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>366</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Earlsmead Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="45.0"
-            data-url="https://londonschool.directory/schools/haringey/earlsmead-primary-school"></td>
-          <td><a href="/schools/haringey/earlsmead-primary-school">Earlsmead Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>456</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Eden Primary"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="93.0"
-            data-url="https://londonschool.directory/schools/haringey/eden-primary"></td>
-          <td><a href="/schools/haringey/eden-primary">Eden Primary</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>204</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Ferry Lane Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="73.0"
-            data-url="https://londonschool.directory/schools/haringey/ferry-lane-primary-school"></td>
-          <td><a href="/schools/haringey/ferry-lane-primary-school">Ferry Lane Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>177</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Footsteps Trust"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="0.3"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/footsteps-trust"></td>
-          <td><a href="/schools/haringey/footsteps-trust">Footsteps Trust</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>34</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Fortismere School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="60.6"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/fortismere-school"></td>
-          <td><a href="/schools/haringey/fortismere-school">Fortismere School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1746</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Gladesmore Community School"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="43.2"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/gladesmore-community-school"></td>
-          <td><a href="/schools/haringey/gladesmore-community-school">Gladesmore Community School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>1206</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Greek Secondary School of London"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/greek-secondary-school-of-london"></td>
-          <td><a href="/schools/haringey/greek-secondary-school-of-london">Greek Secondary School of London</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>17</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Greig City Academy"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="42.4"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/greig-city-academy"></td>
-          <td><a href="/schools/haringey/greig-city-academy">Greig City Academy</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1137</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Haringey Learning Partnership"
-            data-ofsted="Outstanding"
-            data-phase="All-through"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/haringey-learning-partnership"></td>
-          <td><a href="/schools/haringey/haringey-learning-partnership">Haringey Learning Partnership</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>40</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Haringey Sixth Form College"
-            data-ofsted="Not yet rated"
-            data-phase="Sixth form"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/haringey-sixth-form-college"></td>
-          <td><a href="/schools/haringey/haringey-sixth-form-college">Haringey Sixth Form College</a></td>
-          <td>Sixth form</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>0</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Harris Academy Tottenham"
-            data-ofsted="Outstanding"
-            data-phase="All-through"
-            data-att8="46.5"
-            data-ks2="79.0"
-            data-url="https://londonschool.directory/schools/haringey/harris-academy-tottenham"></td>
-          <td><a href="/schools/haringey/harris-academy-tottenham">Harris Academy Tottenham</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>1307</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Harris Primary Academy Coleraine Park"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="82.0"
-            data-url="https://londonschool.directory/schools/haringey/harris-primary-academy-coleraine-park"></td>
-          <td><a href="/schools/haringey/harris-primary-academy-coleraine-park">Harris Primary Academy Coleraine Park</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>418</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Harris Primary Academy Philip Lane"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="80.0"
-            data-url="https://londonschool.directory/schools/haringey/harris-primary-academy-philip-lane"></td>
-          <td><a href="/schools/haringey/harris-primary-academy-philip-lane">Harris Primary Academy Philip Lane</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>448</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Heartlands High School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="52.1"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/heartlands-high-school"></td>
-          <td><a href="/schools/haringey/heartlands-high-school">Heartlands High School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1145</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Highgate Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="80.0"
-            data-url="https://londonschool.directory/schools/haringey/highgate-primary-school"></td>
-          <td><a href="/schools/haringey/highgate-primary-school">Highgate Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>472</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Highgate School"
-            data-ofsted="Not yet rated"
-            data-phase="All-through"
-            data-att8="41.4"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/highgate-school"></td>
-          <td><a href="/schools/haringey/highgate-school">Highgate School</a></td>
-          <td>All-through</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>1938</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Highgate Wood Secondary School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="53.9"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/highgate-wood-secondary-school"></td>
-          <td><a href="/schools/haringey/highgate-wood-secondary-school">Highgate Wood Secondary School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1524</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Holy Trinity CofE Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="61.0"
-            data-url="https://londonschool.directory/schools/haringey/holy-trinity-cofe-primary-school"></td>
-          <td><a href="/schools/haringey/holy-trinity-cofe-primary-school">Holy Trinity CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>195</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Hornsey School for Girls"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="50.9"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/hornsey-school-for-girls"></td>
-          <td><a href="/schools/haringey/hornsey-school-for-girls">Hornsey School for Girls</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>560</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Hyland House School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/hyland-house-school"></td>
-          <td><a href="/schools/haringey/hyland-house-school">Hyland House School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>53</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Kestrel House School"
-            data-ofsted="Not yet rated"
-            data-phase="All-through"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/kestrel-house-school"></td>
-          <td><a href="/schools/haringey/kestrel-house-school">Kestrel House School</a></td>
-          <td>All-through</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>40</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Lancasterian Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="58.0"
-            data-url="https://londonschool.directory/schools/haringey/lancasterian-primary-school"></td>
-          <td><a href="/schools/haringey/lancasterian-primary-school">Lancasterian Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>410</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Lea Valley Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="41.0"
-            data-url="https://londonschool.directory/schools/haringey/lea-valley-primary-school"></td>
-          <td><a href="/schools/haringey/lea-valley-primary-school">Lea Valley Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>388</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Lift Noel Park"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="94.0"
-            data-url="https://londonschool.directory/schools/haringey/lift-noel-park"></td>
-          <td><a href="/schools/haringey/lift-noel-park">Lift Noel Park</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>617</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Lift Trinity"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="97.0"
-            data-url="https://londonschool.directory/schools/haringey/lift-trinity"></td>
-          <td><a href="/schools/haringey/lift-trinity">Lift Trinity</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>466</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="London Academy of Excellence Tottenham"
-            data-ofsted="Not yet rated"
-            data-phase="Sixth form"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/london-academy-of-excellence-tottenham"></td>
-          <td><a href="/schools/haringey/london-academy-of-excellence-tottenham">London Academy of Excellence Tottenham</a></td>
-          <td>Sixth form</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>832</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Lordship Lane Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="46.0"
-            data-url="https://londonschool.directory/schools/haringey/lordship-lane-primary-school"></td>
-          <td><a href="/schools/haringey/lordship-lane-primary-school">Lordship Lane Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>469</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Mulberry Academy Woodside"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="43.1"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/mulberry-academy-woodside"></td>
-          <td><a href="/schools/haringey/mulberry-academy-woodside">Mulberry Academy Woodside</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1124</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Muswell Hill Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="85.0"
-            data-url="https://londonschool.directory/schools/haringey/muswell-hill-primary-school"></td>
-          <td><a href="/schools/haringey/muswell-hill-primary-school">Muswell Hill Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>419</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Norfolk House School"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/norfolk-house-school"></td>
-          <td><a href="/schools/haringey/norfolk-house-school">Norfolk House School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>214</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="North Harringay Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="58.0"
-            data-url="https://londonschool.directory/schools/haringey/north-harringay-primary-school"></td>
-          <td><a href="/schools/haringey/north-harringay-primary-school">North Harringay Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>400</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Our Lady of Muswell Catholic Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="85.0"
-            data-url="https://londonschool.directory/schools/haringey/our-lady-of-muswell-catholic-primary-school"></td>
-          <td><a href="/schools/haringey/our-lady-of-muswell-catholic-primary-school">Our Lady of Muswell Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>432</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Park View School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="38.9"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/park-view-school"></td>
-          <td><a href="/schools/haringey/park-view-school">Park View School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>987</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Pembury House Nursery School"
-            data-ofsted="Outstanding"
-            data-phase="Nursery"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/pembury-house-nursery-school"></td>
-          <td><a href="/schools/haringey/pembury-house-nursery-school">Pembury House Nursery School</a></td>
-          <td>Nursery</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>133</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Rhodes Avenue Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="92.0"
-            data-url="https://londonschool.directory/schools/haringey/rhodes-avenue-primary-school"></td>
-          <td><a href="/schools/haringey/rhodes-avenue-primary-school">Rhodes Avenue Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>685</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Risley Avenue Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="62.0"
-            data-url="https://londonschool.directory/schools/haringey/risley-avenue-primary-school"></td>
-          <td><a href="/schools/haringey/risley-avenue-primary-school">Risley Avenue Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>427</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Riverside School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/riverside-school"></td>
-          <td><a href="/schools/haringey/riverside-school">Riverside School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>172</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Rokesly Infant & Nursery School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/rokesly-infant-nursery-school"></td>
-          <td><a href="/schools/haringey/rokesly-infant-nursery-school">Rokesly Infant & Nursery School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>205</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Rokesly Junior School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="79.0"
-            data-url="https://londonschool.directory/schools/haringey/rokesly-junior-school"></td>
-          <td><a href="/schools/haringey/rokesly-junior-school">Rokesly Junior School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>270</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Rowland Hill Nursery School"
-            data-ofsted="Outstanding"
-            data-phase="Nursery"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/rowland-hill-nursery-school"></td>
-          <td><a href="/schools/haringey/rowland-hill-nursery-school">Rowland Hill Nursery School</a></td>
-          <td>Nursery</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>128</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="South Grove Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="61.0"
-            data-url="https://londonschool.directory/schools/haringey/south-grove-primary-school"></td>
-          <td><a href="/schools/haringey/south-grove-primary-school">South Grove Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>241</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="South Harringay Infant School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/south-harringay-infant-school"></td>
-          <td><a href="/schools/haringey/south-harringay-infant-school">South Harringay Infant School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>208</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="South Harringay Junior School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="88.0"
-            data-url="https://londonschool.directory/schools/haringey/south-harringay-junior-school"></td>
-          <td><a href="/schools/haringey/south-harringay-junior-school">South Harringay Junior School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>234</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Aidan's Voluntary Controlled Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="54.0"
-            data-url="https://londonschool.directory/schools/haringey/st-aidans-voluntary-controlled-primary-school"></td>
-          <td><a href="/schools/haringey/st-aidans-voluntary-controlled-primary-school">St Aidan's Voluntary Controlled Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>217</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Ann's CE Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="33.0"
-            data-url="https://londonschool.directory/schools/haringey/st-anns-ce-primary-school"></td>
-          <td><a href="/schools/haringey/st-anns-ce-primary-school">St Ann's CE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>197</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Francis De Sales Catholic Infant School"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/st-francis-de-sales-catholic-infant-school"></td>
-          <td><a href="/schools/haringey/st-francis-de-sales-catholic-infant-school">St Francis De Sales Catholic Infant School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Francis De Sales Catholic Junior School"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/st-francis-de-sales-catholic-junior-school"></td>
-          <td><a href="/schools/haringey/st-francis-de-sales-catholic-junior-school">St Francis De Sales Catholic Junior School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Ignatius Catholic Primary School"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/st-ignatius-catholic-primary-school"></td>
-          <td><a href="/schools/haringey/st-ignatius-catholic-primary-school">St Ignatius Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St James Church of England Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="87.0"
-            data-url="https://londonschool.directory/schools/haringey/st-james-church-of-england-primary-school"></td>
-          <td><a href="/schools/haringey/st-james-church-of-england-primary-school">St James Church of England Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>189</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St John Vianney RC Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="78.0"
-            data-url="https://londonschool.directory/schools/haringey/st-john-vianney-rc-primary-school"></td>
-          <td><a href="/schools/haringey/st-john-vianney-rc-primary-school">St John Vianney RC Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>234</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Martin of Porres Catholic Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="93.0"
-            data-url="https://londonschool.directory/schools/haringey/st-martin-of-porres-catholic-primary-school"></td>
-          <td><a href="/schools/haringey/st-martin-of-porres-catholic-primary-school">St Martin of Porres Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>110</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Mary's CofE Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="59.0"
-            data-url="https://londonschool.directory/schools/haringey/st-marys-cofe-primary-school"></td>
-          <td><a href="/schools/haringey/st-marys-cofe-primary-school">St Mary's CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>306</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Mary's Priory Catholic Infant School"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/st-marys-priory-catholic-infant-school"></td>
-          <td><a href="/schools/haringey/st-marys-priory-catholic-infant-school">St Mary's Priory Catholic Infant School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Mary's Priory Catholic Junior School"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/st-marys-priory-catholic-junior-school"></td>
-          <td><a href="/schools/haringey/st-marys-priory-catholic-junior-school">St Mary's Priory Catholic Junior School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Michael's CofE Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="64.0"
-            data-url="https://londonschool.directory/schools/haringey/st-michaels-cofe-primary-school"></td>
-          <td><a href="/schools/haringey/st-michaels-cofe-primary-school">St Michael's CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>156</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Michael's CofE Voluntary Aided Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="86.0"
-            data-url="https://londonschool.directory/schools/haringey/st-michaels-cofe-voluntary-aided-primary-school"></td>
-          <td><a href="/schools/haringey/st-michaels-cofe-voluntary-aided-primary-school">St Michael's CofE Voluntary Aided Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>441</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Paul's Catholic Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="80.0"
-            data-url="https://londonschool.directory/schools/haringey/st-pauls-catholic-primary-school"></td>
-          <td><a href="/schools/haringey/st-pauls-catholic-primary-school">St Paul's Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>165</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Paul's and All Hallows CofE Infant School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/st-pauls-and-all-hallows-cofe-infant-school"></td>
-          <td><a href="/schools/haringey/st-pauls-and-all-hallows-cofe-infant-school">St Paul's and All Hallows CofE Infant School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>91</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Paul's and All Hallows CofE Junior School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="82.0"
-            data-url="https://londonschool.directory/schools/haringey/st-pauls-and-all-hallows-cofe-junior-school"></td>
-          <td><a href="/schools/haringey/st-pauls-and-all-hallows-cofe-junior-school">St Paul's and All Hallows CofE Junior School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>106</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Thomas More Catholic School"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="51.6"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/st-thomas-more-catholic-school"></td>
-          <td><a href="/schools/haringey/st-thomas-more-catholic-school">St Thomas More Catholic School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>1296</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Stroud Green Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="69.0"
-            data-url="https://londonschool.directory/schools/haringey/stroud-green-primary-school"></td>
-          <td><a href="/schools/haringey/stroud-green-primary-school">Stroud Green Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>477</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Tetherdown Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="73.0"
-            data-url="https://londonschool.directory/schools/haringey/tetherdown-primary-school"></td>
-          <td><a href="/schools/haringey/tetherdown-primary-school">Tetherdown Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>394</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Avenue Pre-Preparatory School and Nursery"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/the-avenue-pre-preparatory-school-and-nursery"></td>
-          <td><a href="/schools/haringey/the-avenue-pre-preparatory-school-and-nursery">The Avenue Pre-Preparatory School and Nursery</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>75</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Brook Special Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/the-brook-special-primary-school"></td>
-          <td><a href="/schools/haringey/the-brook-special-primary-school">The Brook Special Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>148</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Devonshire Hill Nursery & Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="55.0"
-            data-url="https://londonschool.directory/schools/haringey/the-devonshire-hill-nursery-primary-school"></td>
-          <td><a href="/schools/haringey/the-devonshire-hill-nursery-primary-school">The Devonshire Hill Nursery & Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>339</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Grove"
-            data-ofsted="Outstanding"
-            data-phase="All-through"
-            data-att8="0.6"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/the-grove"></td>
-          <td><a href="/schools/haringey/the-grove">The Grove</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>158</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Harington Scheme Ltd"
-            data-ofsted="Not yet rated"
-            data-phase="Sixth form"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/the-harington-scheme-ltd"></td>
-          <td><a href="/schools/haringey/the-harington-scheme-ltd">The Harington Scheme Ltd</a></td>
-          <td>Sixth form</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Mulberry Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="56.0"
-            data-url="https://londonschool.directory/schools/haringey/the-mulberry-primary-school"></td>
-          <td><a href="/schools/haringey/the-mulberry-primary-school">The Mulberry Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>494</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Willow Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="69.0"
-            data-url="https://londonschool.directory/schools/haringey/the-willow-primary-school"></td>
-          <td><a href="/schools/haringey/the-willow-primary-school">The Willow Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>472</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="TreeHouse School"
-            data-ofsted="Outstanding"
-            data-phase="All-through"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/treehouse-school"></td>
-          <td><a href="/schools/haringey/treehouse-school">TreeHouse School</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>111</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Unique Children's School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/unique-childrens-school"></td>
-          <td><a href="/schools/haringey/unique-childrens-school">Unique Children's School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>2</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Vale School"
-            data-ofsted="Good"
-            data-phase="All-through"
-            data-att8="5.8"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/vale-school"></td>
-          <td><a href="/schools/haringey/vale-school">Vale School</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>130</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Welbourne Primary School"
-            data-ofsted="Requires improvement"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="69.0"
-            data-url="https://londonschool.directory/schools/haringey/welbourne-primary-school"></td>
-          <td><a href="/schools/haringey/welbourne-primary-school">Welbourne Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
-          <td>415</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="West Green Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="77.0"
-            data-url="https://londonschool.directory/schools/haringey/west-green-primary-school"></td>
-          <td><a href="/schools/haringey/west-green-primary-school">West Green Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>208</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Weston Park Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="75.0"
-            data-url="https://londonschool.directory/schools/haringey/weston-park-primary-school"></td>
-          <td><a href="/schools/haringey/weston-park-primary-school">Weston Park Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>232</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Woodlands Park Nursery School and Childrens Centre"
-            data-ofsted="Outstanding"
-            data-phase="Nursery"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/haringey/woodlands-park-nursery-school-and-childrens-centre"></td>
-          <td><a href="/schools/haringey/woodlands-park-nursery-school-and-childrens-centre">Woodlands Park Nursery School and Childrens Centre</a></td>
-          <td>Nursery</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>154</td>
-        </tr></tbody>
-  </table>
-</div>
-<footer><a href="/">London Schools Explorer</a> &mdash; helping families find the right school in London.<p style="margin-top:10px">Browse by type: <a href="/schools/outstanding">Outstanding</a> &middot; <a href="/schools/good">Good</a> &middot; <a href="/schools/grammar">Grammar</a> &middot; <a href="/schools/selective">Selective</a> &middot; <a href="/schools/faith">Faith</a> &middot; <a href="/schools/primary">Primary</a> &middot; <a href="/schools/secondary">Secondary</a> &middot; <a href="/schools/sixth-form">Sixth form</a> &middot; <a href="/schools/independent">Private &amp; independent</a></p></footer>
-<script defer src="/_vercel/insights/script.js"></script>
+  <section>
+    <h2>What the data says about Haringey</h2>
+    <p><strong>83.5%</strong> of Haringey schools are currently rated Good or Outstanding by Ofsted, compared with a London average of roughly 90% for primary and 80% for secondary. The average number of applications per place across Haringey is <strong>1.27</strong>, a useful indicator of how competitive local admissions are. The average number of recorded crime incidents within 500 metres of a school in Haringey over the most recent reporting month is <strong>240.63</strong>, drawn from the Metropolitan Police open data API. The mean IMD (Index of Multiple Deprivation) decile of Haringey's schools is <strong>3.79</strong> — 1 is most deprived, 10 is least deprived. All metrics on this page are recomputed from source data on the 15th of every month. See our <a href='/methodology.html'>methodology</a> for definitions and limitations.</p>
+  </section>
+
+  <section id="all-schools">
+    <h2>All schools in Haringey</h2>
+    <p class="sources">Every school in Haringey, listed alphabetically. Click any school for the full record.</p>
+    <table class="schools">
+      <thead>
+        <tr><th>School</th><th>Phase</th><th>Ofsted</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><a href="/schools/haringey/alexandra-park-school/">Alexandra Park School</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/haringey/alexandra-primary-school/">Alexandra Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/ambitious-college/">Ambitious College</a></td><td>Sixth form</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/haringey/area-51-education-ltd/">Area 51 Education Ltd</a></td><td>Sixth form</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/haringey/assunnah-primary-school/">Assunnah Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/belmont-infant-school/">Belmont Infant School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/belmont-junior-school/">Belmont Junior School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/blanche-nevile-school/">Blanche Nevile School</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/bounds-green-infant-school/">Bounds Green Infant School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/haringey/bounds-green-junior-school/">Bounds Green Junior School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/brook-house-primary-school/">Brook House Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/haringey/bruce-grove-primary-school/">Bruce Grove Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/campsbourne-infant-school/">Campsbourne Infant School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/campsbourne-junior-school/">Campsbourne Junior School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/channing-school/">Channing School</a></td><td>All-through</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/haringey/chestnuts-primary-school/">Chestnuts Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/coldfall-primary-school/">Coldfall Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/haringey/coleridge-primary-school/">Coleridge Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/haringey/crowland-primary-school/">Crowland Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/dukes-aldridge/">Duke's Aldridge</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/earlham-primary-school/">Earlham Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/earlsmead-primary-school/">Earlsmead Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/eden-primary/">Eden Primary</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/ferry-lane-primary-school/">Ferry Lane Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/footsteps-trust/">Footsteps Trust</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/fortismere-school/">Fortismere School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/gladesmore-community-school/">Gladesmore Community School</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/haringey/greek-secondary-school-of-london/">Greek Secondary School of London</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/greig-city-academy/">Greig City Academy</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/haringey-learning-partnership/">Haringey Learning Partnership</a></td><td>All-through</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/haringey/haringey-sixth-form-college/">Haringey Sixth Form College</a></td><td>Sixth form</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/haringey/harris-academy-tottenham/">Harris Academy Tottenham</a></td><td>All-through</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/haringey/harris-primary-academy-coleraine-park/">Harris Primary Academy Coleraine Park</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/haringey/harris-primary-academy-philip-lane/">Harris Primary Academy Philip Lane</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/haringey/heartlands-high-school/">Heartlands High School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/highgate-primary-school/">Highgate Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/haringey/highgate-school/">Highgate School</a></td><td>All-through</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/haringey/highgate-wood-secondary-school/">Highgate Wood Secondary School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/holy-trinity-cofe-primary-school/">Holy Trinity CofE Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/haringey/hornsey-school-for-girls/">Hornsey School for Girls</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/hyland-house-school/">Hyland House School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/kestrel-house-school/">Kestrel House School</a></td><td>All-through</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/haringey/lancasterian-primary-school/">Lancasterian Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/lea-valley-primary-school/">Lea Valley Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/lift-noel-park/">Lift Noel Park</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/lift-trinity/">Lift Trinity</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/haringey/london-academy-of-excellence-tottenham/">London Academy of Excellence Tottenham</a></td><td>Sixth form</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/haringey/lordship-lane-primary-school/">Lordship Lane Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/mulberry-academy-woodside/">Mulberry Academy Woodside</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/muswell-hill-primary-school/">Muswell Hill Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/norfolk-house-school/">Norfolk House School</a></td><td>Primary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/haringey/north-harringay-primary-school/">North Harringay Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/our-lady-of-muswell-catholic-primary-school/">Our Lady of Muswell Catholic Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/haringey/park-view-school/">Park View School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/pembury-house-nursery-school/">Pembury House Nursery School</a></td><td>Nursery</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/haringey/rhodes-avenue-primary-school/">Rhodes Avenue Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/haringey/risley-avenue-primary-school/">Risley Avenue Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/riverside-school/">Riverside School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/rokesly-infant-nursery-school/">Rokesly Infant & Nursery School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/rokesly-junior-school/">Rokesly Junior School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/rowland-hill-nursery-school/">Rowland Hill Nursery School</a></td><td>Nursery</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/haringey/south-grove-primary-school/">South Grove Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/south-harringay-infant-school/">South Harringay Infant School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/south-harringay-junior-school/">South Harringay Junior School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/haringey/st-aidans-voluntary-controlled-primary-school/">St Aidan's Voluntary Controlled Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/haringey/st-anns-ce-primary-school/">St Ann's CE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/st-francis-de-sales-catholic-infant-school/">St Francis De Sales Catholic Infant School</a></td><td>Primary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/haringey/st-francis-de-sales-catholic-junior-school/">St Francis De Sales Catholic Junior School</a></td><td>Primary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/haringey/st-ignatius-catholic-primary-school/">St Ignatius Catholic Primary School</a></td><td>Primary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/haringey/st-james-church-of-england-primary-school/">St James Church of England Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/st-john-vianney-rc-primary-school/">St John Vianney RC Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/haringey/st-martin-of-porres-catholic-primary-school/">St Martin of Porres Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/st-marys-cofe-primary-school/">St Mary's CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/st-marys-priory-catholic-infant-school/">St Mary's Priory Catholic Infant School</a></td><td>Primary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/haringey/st-marys-priory-catholic-junior-school/">St Mary's Priory Catholic Junior School</a></td><td>Primary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/haringey/st-michaels-cofe-primary-school/">St Michael's CofE Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/haringey/st-michaels-cofe-voluntary-aided-primary-school/">St Michael's CofE Voluntary Aided Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/haringey/st-pauls-and-all-hallows-cofe-infant-school/">St Paul's and All Hallows CofE Infant School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/st-pauls-and-all-hallows-cofe-junior-school/">St Paul's and All Hallows CofE Junior School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/st-pauls-catholic-primary-school/">St Paul's Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/st-thomas-more-catholic-school/">St Thomas More Catholic School</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/haringey/stroud-green-primary-school/">Stroud Green Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/tetherdown-primary-school/">Tetherdown Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/the-avenue-pre-preparatory-school-and-nursery/">The Avenue Pre-Preparatory School and Nursery</a></td><td>Primary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/haringey/the-brook-special-primary-school/">The Brook Special Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/haringey/the-devonshire-hill-nursery-primary-school/">The Devonshire Hill Nursery & Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/the-grove/">The Grove</a></td><td>All-through</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/haringey/the-harington-scheme-ltd/">The Harington Scheme Ltd</a></td><td>Sixth form</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/haringey/the-mulberry-primary-school/">The Mulberry Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/the-willow-primary-school/">The Willow Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/haringey/treehouse-school/">TreeHouse School</a></td><td>All-through</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/haringey/unique-childrens-school/">Unique Children's School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/vale-school/">Vale School</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/welbourne-primary-school/">Welbourne Primary School</a></td><td>Primary</td><td class="rating Requiresimprovement">Requires improvement</td></tr>
+        <tr><td><a href="/schools/haringey/west-green-primary-school/">West Green Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/haringey/weston-park-primary-school/">Weston Park Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/haringey/woodlands-park-nursery-school-and-childrens-centre/">Woodlands Park Nursery School and Childrens Centre</a></td><td>Nursery</td><td class="rating Outstanding">Outstanding</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Frequently asked</h2>
+    <details class="faq"><summary>How many schools are there in Haringey?</summary><p>Haringey has 97 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 65 are primary, 24 are secondary, and the remainder are special, all-through, or post-16.</p></details>
+<details class="faq"><summary>What proportion of Haringey schools are Outstanding?</summary><p>As of the latest Ofsted Management Information release, 29 schools in Haringey (29.9%) are rated Outstanding, and 83.5% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication.</p></details>
+<details class="faq"><summary>When do I apply for a Reception or Year 7 place in Haringey?</summary><p>Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Haringey's applications are coordinated by the local authority through the eAdmissions system. See our <a href='/guides/london-reception-application-timeline/'>full Reception timeline guide</a>.</p></details>
+<details class="faq"><summary>How does the school appeals process work in Haringey?</summary><p>If you are refused your preferred school place, you have a statutory right of appeal. Haringey appeals are typically heard in May (Reception) and June–July (secondary). See our <a href='/appeals.html'>appeals tracker</a> for Haringey-level success rates by year.</p></details>
+<details class="faq"><summary>How can I tell which Haringey schools are over-subscribed?</summary><p>Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release.</p></details>
+  </section>
+
+  <section>
+    <h2>Sources</h2>
+    <p class="sources">
+      School list and phase from <a href="https://get-information-schools.service.gov.uk/" rel="nofollow">DfE Get Information About Schools</a> (refreshed monthly).
+      Ofsted ratings from <a href="https://www.gov.uk/government/statistical-data-sets/monthly-management-information-ofsteds-school-inspections-outcomes" rel="nofollow">Ofsted Management Information</a> (refreshed monthly).
+      Performance data from <a href="https://explore-education-statistics.service.gov.uk/" rel="nofollow">DfE Explore Education Statistics</a>.
+      Crime data within 500m from the <a href="https://data.police.uk/" rel="nofollow">Metropolitan Police open data API</a>.
+      Deprivation deciles from <a href="https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019" rel="nofollow">MHCLG English Indices of Deprivation 2019</a>.
+      Read our full <a href="/methodology.html">methodology</a> for how each metric is calculated.
+    </p>
+  </section>
+</main>
+<footer>
+  <div class="inner">
+    <div>&copy; London School Directory. Independent. Free to use.</div>
+    <div><a href="/about.html">About</a> &middot; <a href="/methodology.html">Methodology</a> &middot; <a href="/sources.html">Sources</a> &middot; <a href="/appeals.html">Appeals</a></div>
+    <div>Browse by type: <a href="/schools/outstanding">Outstanding</a> &middot; <a href="/schools/good">Good</a> &middot; <a href="/schools/grammar">Grammar</a> &middot; <a href="/schools/selective">Selective</a> &middot; <a href="/schools/faith">Faith</a> &middot; <a href="/schools/primary">Primary</a> &middot; <a href="/schools/secondary">Secondary</a> &middot; <a href="/schools/sixth-form">Sixth form</a> &middot; <a href="/schools/independent">Private &amp; independent</a></div>
+  </div>
+</footer>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-(function(){
-  var borough="Haringey", boroughUrl="https://londonschool.directory/schools/haringey";
-  var outstanding=29, total=97;
-
-  // Borough-level share
-  window.shareBoroughWhatsApp=function(){
-    var t='🏙️ *Schools in '+borough+', London*\n'+
-        '📊 '+total+' schools · '+outstanding+' Outstanding\n\n'+
-        '🔗 '+boroughUrl;
-    window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank');
-  };
-  window.shareBoroughEmail=function(){
-    var s='Schools in '+borough+' — London Schools Explorer';
-    var b='Schools in '+borough+', London\n'+
-        total+' schools, '+outstanding+' rated Outstanding by Ofsted\n\n'+
-        'Browse them here: '+boroughUrl;
-    window.location.href='mailto:?subject='+encodeURIComponent(s)+'&body='+encodeURIComponent(b);
-  };
-
-  // Shortlist comparison share
-  function getSelected(){
-    return Array.from(document.querySelectorAll('.sch-sel:checked')).map(function(cb){
-      return {name:cb.dataset.name,ofsted:cb.dataset.ofsted,phase:cb.dataset.phase,
-               att8:cb.dataset.att8,ks2:cb.dataset.ks2,url:cb.dataset.url};
+  (function() {
+    var points = [[51.601005, -0.113787, "/schools/haringey/greek-secondary-school-of-london/", "Greek Secondary School of London"], [51.59848, -0.066416, "/schools/haringey/pembury-house-nursery-school/", "Pembury House Nursery School"], [51.606262, -0.089683, "/schools/haringey/rowland-hill-nursery-school/", "Rowland Hill Nursery School"], [51.582069, -0.096081, "/schools/haringey/woodlands-park-nursery-school-and-childrens-centre/", "Woodlands Park Nursery School and Childrens Centre"], [51.592766, -0.093627, "/schools/haringey/belmont-junior-school/", "Belmont Junior School"], [51.592766, -0.093627, "/schools/haringey/belmont-infant-school/", "Belmont Infant School"], [51.606178, -0.123985, "/schools/haringey/bounds-green-junior-school/", "Bounds Green Junior School"], [51.606178, -0.123985, "/schools/haringey/bounds-green-infant-school/", "Bounds Green Infant School"], [51.590473, -0.122091, "/schools/haringey/campsbourne-junior-school/", "Campsbourne Junior School"], [51.590473, -0.122091, "/schools/haringey/campsbourne-infant-school/", "Campsbourne Infant School"], [51.606221, -0.081626, "/schools/haringey/the-devonshire-hill-nursery-primary-school/", "The Devonshire Hill Nursery & Primary School"], [51.583941, -0.068722, "/schools/haringey/earlsmead-primary-school/", "Earlsmead Primary School"], [51.579854, -0.155018, "/schools/haringey/highgate-primary-school/", "Highgate Primary School"], [51.601572, -0.071786, "/schools/haringey/lancasterian-primary-school/", "Lancasterian Primary School"], [51.597106, -0.153005, "/schools/haringey/coldfall-primary-school/", "Coldfall Primary School"], [51.588279, -0.150389, "/schools/haringey/tetherdown-primary-school/", "Tetherdown Primary School"], [51.583053, -0.119149, "/schools/haringey/rokesly-junior-school/", "Rokesly Junior School"], [51.583053, -0.119149, "/schools/haringey/rokesly-infant-nursery-school/", "Rokesly Infant & Nursery School"], [51.580566, -0.100445, "/schools/haringey/south-harringay-junior-school/", "South Harringay Junior School"], [51.580566, -0.100445, "/schools/haringey/south-harringay-infant-school/", "South Harringay Infant School"], [51.584764, -0.093702, "/schools/haringey/west-green-primary-school/", "West Green Primary School"], [51.576417, -0.12648, "/schools/haringey/coleridge-primary-school/", "Coleridge Primary School"], [51.587826, -0.067099, "/schools/haringey/welbourne-primary-school/", "Welbourne Primary School"], [51.604237, -0.060511, "/schools/haringey/lea-valley-primary-school/", "Lea Valley Primary School"], [51.586745, -0.059364, "/schools/haringey/ferry-lane-primary-school/", "Ferry Lane Primary School"], [51.600756, -0.137016, "/schools/haringey/rhodes-avenue-primary-school/", "Rhodes Avenue Primary School"], [51.580558, -0.066441, "/schools/haringey/crowland-primary-school/", "Crowland Primary School"], [51.580592, -0.11264, "/schools/haringey/weston-park-primary-school/", "Weston Park Primary School"], [51.596068, -0.08217, "/schools/haringey/the-willow-primary-school/", "The Willow Primary School"], [51.575812, -0.110688, "/schools/haringey/st-aidans-voluntary-controlled-primary-school/", "St Aidan's Voluntary Controlled Primary School"], [51.573639, -0.150925, "/schools/haringey/st-michaels-cofe-voluntary-aided-primary-school/", "St Michael's CofE Voluntary Aided Primary School"], [51.587232, -0.148454, "/schools/haringey/st-james-church-of-england-primary-school/", "St James Church of England Primary School"], [51.587721, -0.121468, "/schools/haringey/st-marys-cofe-primary-school/", "St Mary's CofE Primary School"], [51.594426, -0.149591, "/schools/haringey/our-lady-of-muswell-catholic-primary-school/", "Our Lady of Muswell Catholic Primary School"], [51.597051, -0.114499, "/schools/haringey/st-pauls-catholic-primary-school/", "St Paul's Catholic Primary School"], [51.607883, -0.133389, "/schools/haringey/st-martin-of-porres-catholic-primary-school/", "St Martin of Porres Catholic Primary School"], [51.585672, -0.096999, "/schools/haringey/st-john-vianney-rc-primary-school/", "St John Vianney RC Primary School"], [51.581869, -0.114897, "/schools/haringey/hornsey-school-for-girls/", "Hornsey School for Girls"], [51.58203, -0.132831, "/schools/haringey/highgate-wood-secondary-school/", "Highgate Wood Secondary School"], [51.592783, -0.150899, "/schools/haringey/fortismere-school/", "Fortismere School"], [51.580125, -0.065261, "/schools/haringey/gladesmore-community-school/", "Gladesmore Community School"], [51.570458, -0.143132, "/schools/haringey/channing-school/", "Channing School"], [51.572041, -0.149417, "/schools/haringey/highgate-school/", "Highgate School"], [51.595447, -0.143066, "/schools/haringey/norfolk-house-school/", "Norfolk House School"], [51.594208, -0.151173, "/schools/haringey/blanche-nevile-school/", "Blanche Nevile School"], [51.604912, -0.063312, "/schools/haringey/vale-school/", "Vale School"], [51.596068, -0.08217, "/schools/haringey/the-brook-special-primary-school/", "The Brook Special Primary School"], [51.603504, -0.100933, "/schools/haringey/riverside-school/", "Riverside School"], [51.592587, -0.06785, "/schools/haringey/hyland-house-school/", "Hyland House School"], [51.595248, -0.11531, "/schools/haringey/alexandra-primary-school/", "Alexandra Primary School"], [51.567771, -0.107183, "/schools/haringey/stroud-green-primary-school/", "Stroud Green Primary School"], [51.602998, -0.110239, "/schools/haringey/earlham-primary-school/", "Earlham Primary School"], [51.60182, -0.114692, "/schools/haringey/haringey-learning-partnership/", "Haringey Learning Partnership"], [51.598785, -0.094949, "/schools/haringey/lordship-lane-primary-school/", "Lordship Lane Primary School"], [51.593458, -0.072159, "/schools/haringey/bruce-grove-primary-school/", "Bruce Grove Primary School"], [51.586472, -0.08982, "/schools/haringey/park-view-school/", "Park View School"], [51.591019, -0.141096, "/schools/haringey/muswell-hill-primary-school/", "Muswell Hill Primary School"], [51.599143, -0.076669, "/schools/haringey/risley-avenue-primary-school/", "Risley Avenue Primary School"], [51.582884, -0.082652, "/schools/haringey/south-grove-primary-school/", "South Grove Primary School"], [51.587553, -0.117202, "/schools/haringey/greig-city-academy/", "Greig City Academy"], [51.595744, -0.066301, "/schools/haringey/the-mulberry-primary-school/", "The Mulberry Primary School"], [51.58302, -0.091524, "/schools/haringey/chestnuts-primary-school/", "Chestnuts Primary School"], [51.585713, -0.10625, "/schools/haringey/north-harringay-primary-school/", "North Harringay Primary School"], [51.575807, -0.144704, "/schools/haringey/the-avenue-pre-preparatory-school-and-nursery/", "The Avenue Pre-Preparatory School and Nursery"], [51.587232, -0.148454, "/schools/haringey/treehouse-school/", "TreeHouse School"], [51.576083, -0.121905, "/schools/haringey/kestrel-house-school/", "Kestrel House School"], [51.595442, -0.069202, "/schools/haringey/assunnah-primary-school/", "Assunnah Primary School"], [51.595121, -0.152594, "/schools/haringey/eden-primary/", "Eden Primary"], [51.602146, -0.136237, "/schools/haringey/alexandra-park-school/", "Alexandra Park School"], [51.603504, -0.100933, "/schools/haringey/mulberry-academy-woodside/", "Mulberry Academy Woodside"], [51.598425, -0.058174, "/schools/haringey/harris-primary-academy-coleraine-park/", "Harris Primary Academy Coleraine Park"], [51.587646, -0.085729, "/schools/haringey/harris-primary-academy-philip-lane/", "Harris Primary Academy Philip Lane"], [51.596048, -0.101951, "/schools/haringey/lift-noel-park/", "Lift Noel Park"], [51.600389, -0.113466, "/schools/haringey/lift-trinity/", "Lift Trinity"], [51.582408, -0.084895, "/schools/haringey/st-anns-ce-primary-school/", "St Ann's CE Primary School"], [51.599344, -0.112802, "/schools/haringey/st-michaels-cofe-primary-school/", "St Michael's CofE Primary School"], [51.602715, -0.063695, "/schools/haringey/st-pauls-and-all-hallows-cofe-infant-school/", "St Paul's and All Hallows CofE Infant School"], [51.60548, -0.064472, "/schools/haringey/st-pauls-and-all-hallows-cofe-junior-school/", "St Paul's and All Hallows CofE Junior School"], [51.589644, -0.069346, "/schools/haringey/holy-trinity-cofe-primary-school/", "Holy Trinity CofE Primary School"], [51.593763, -0.114722, "/schools/haringey/area-51-education-ltd/", "Area 51 Education Ltd"], [51.604294, -0.107499, "/schools/haringey/st-thomas-more-catholic-school/", "St Thomas More Catholic School"], [51.606797, -0.072937, "/schools/haringey/haringey-sixth-form-college/", "Haringey Sixth Form College"], [51.59764, -0.119269, "/schools/haringey/heartlands-high-school/", "Heartlands High School"], [51.591865, -0.060114, "/schools/haringey/harris-academy-tottenham/", "Harris Academy Tottenham"], [51.607226, -0.068399, "/schools/haringey/brook-house-primary-school/", "Brook House Primary School"], [51.475195, -0.342154, "/schools/haringey/ambitious-college/", "Ambitious College"], [51.604659, -0.100032, "/schools/haringey/footsteps-trust/", "Footsteps Trust"], [51.605745, -0.066367, "/schools/haringey/london-academy-of-excellence-tottenham/", "London Academy of Excellence Tottenham"], [51.604912, -0.063312, "/schools/haringey/dukes-aldridge/", "Duke's Aldridge"], [51.592252, -0.14119, "/schools/haringey/unique-childrens-school/", "Unique Children's School"], [51.590399, -0.095748, "/schools/haringey/the-grove/", "The Grove"], [51.571281, -0.143431, "/schools/haringey/the-harington-scheme-ltd/", "The Harington Scheme Ltd"], [51.602964, -0.068969, "/schools/haringey/st-francis-de-sales-catholic-junior-school/", "St Francis De Sales Catholic Junior School"], [51.602964, -0.068969, "/schools/haringey/st-francis-de-sales-catholic-infant-school/", "St Francis De Sales Catholic Infant School"], [51.576387, -0.07304, "/schools/haringey/st-ignatius-catholic-primary-school/", "St Ignatius Catholic Primary School"], [51.580487, -0.085654, "/schools/haringey/st-marys-priory-catholic-junior-school/", "St Mary's Priory Catholic Junior School"], [51.580487, -0.085654, "/schools/haringey/st-marys-priory-catholic-infant-school/", "St Mary's Priory Catholic Infant School"]];
+    if (!points.length) return;
+    var lats = points.map(function(p) { return p[0]; });
+    var lngs = points.map(function(p) { return p[1]; });
+    var avgLat = lats.reduce(function(a,b) { return a+b; }, 0) / lats.length;
+    var avgLng = lngs.reduce(function(a,b) { return a+b; }, 0) / lngs.length;
+    var map = L.map('map', { scrollWheelZoom: false }).setView([avgLat, avgLng], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+    points.forEach(function(p) {
+      L.circleMarker([p[0], p[1]], {
+        radius: 5, color: '#0b2545', fillColor: '#0b6efd', fillOpacity: 0.8, weight: 1
+      }).addTo(map).bindPopup('<a href="' + p[2] + '">' + p[3] + '</a>');
     });
-  }
-  function updateBar(){
-    var sel=getSelected();
-    var bar=document.getElementById('cmp-bar');
-    document.getElementById('cmp-count').textContent=sel.length+' school'+(sel.length===1?'':' s')+' selected';
-    bar.style.display=sel.length>0?'flex':'none';
-  }
-  document.querySelectorAll('.sch-sel').forEach(function(cb){ cb.onchange=updateBar; });
-
-  function buildCompareText(sel,markdown){
-    var lines=['📋 *My '+borough+' school shortlist*',''];
-    sel.forEach(function(s,i){
-      lines.push((i+1)+'. '+(markdown?'*':'')+s.name+(markdown?'*':''));
-      lines.push('   ⭐ Ofsted: '+s.ofsted+(s.phase?' · '+s.phase:''));
-      if(s.att8)lines.push('   📊 Attainment 8: '+s.att8);
-      if(s.ks2)lines.push('   📝 KS2 expected: '+s.ks2+'%');
-      lines.push('   🔗 '+s.url);
-      lines.push('');
-    });
-    lines.push('via London Schools Explorer — '+boroughUrl);
-    return lines.join('\n');
-  }
-  window.shareCompareWhatsApp=function(){
-    var sel=getSelected();
-    if(!sel.length)return;
-    window.open('https://wa.me/?text='+encodeURIComponent(buildCompareText(sel,true)),'_blank');
-  };
-  window.shareCompareEmail=function(){
-    var sel=getSelected();
-    if(!sel.length)return;
-    var subj='My '+borough+' school shortlist — London Schools Explorer';
-    window.location.href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(buildCompareText(sel,false));
-  };
-  window.clearSelection=function(){
-    document.querySelectorAll('.sch-sel:checked').forEach(function(cb){cb.checked=false;});
-    updateBar();
-  };
-})();
-</script>
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function () {
-    navigator.serviceWorker.register('/sw.js').catch(function () {});
-  });
-}
+  })();
 </script>
 </body>
 </html>

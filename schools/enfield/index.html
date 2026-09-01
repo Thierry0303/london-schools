@@ -1,1524 +1,522 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en-GB">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Schools in Enfield, London | Ofsted Ratings &amp; Results | London Schools Explorer</title>
-  <meta name="description" content="107 schools in Enfield, London. 14 Outstanding, 85 Good-rated by Ofsted. Compare admissions oversubscription, exam results and crime data. Free.">
-  <script type="application/ld+json">{
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Schools in Enfield, London — Ofsted, Performance & Admissions</title>
+<meta name="description" content="All 107 schools in Enfield, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
+<link rel="canonical" href="https://londonschool.directory/schools/enfield/">
+<meta property="og:title" content="Schools in Enfield, London — Ofsted, Performance & Admissions">
+<meta property="og:description" content="All 107 schools in Enfield, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://londonschool.directory/schools/enfield/">
+<meta property="og:site_name" content="London School Directory">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0b2545">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="preconnect" href="https://unpkg.com">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+  :root {
+    --ink: #0b2545;
+    --ink-2: #1e3a5f;
+    --muted: #5b6b85;
+    --line: #e3e8ef;
+    --bg: #ffffff;
+    --bg-2: #f6f8fb;
+    --accent: #0b6efd;
+    --good: #137333;
+    --warn: #a85b00;
+    --bad: #b3261e;
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  header.site {
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+    position: sticky; top: 0; z-index: 50;
+  }
+  header.site .inner {
+    max-width: 1100px; margin: 0 auto; padding: 14px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  header.site a.brand { color: var(--ink); font-weight: 700; letter-spacing: -0.01em; }
+  header.site nav a { margin-left: 18px; color: var(--ink-2); font-size: 14px; }
+  main { max-width: 1100px; margin: 0 auto; padding: 28px 20px 80px; }
+  .crumbs { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+  .crumbs a { color: var(--muted); }
+  h1 { font-size: 32px; line-height: 1.2; margin: 0 0 8px; letter-spacing: -0.02em; }
+  .lede { color: var(--ink-2); font-size: 17px; max-width: 720px; }
+  .stamp { font-size: 12px; color: var(--muted); margin-top: 8px; }
+  .stamp .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--good); vertical-align: middle; margin-right: 6px; }
+  .grid-stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px; margin: 24px 0 8px;
+  }
+  .stat {
+    background: var(--bg-2); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 14px 16px;
+  }
+  .stat .v { font-size: 24px; font-weight: 700; color: var(--ink); }
+  .stat .l { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  section { margin-top: 36px; }
+  h2 { font-size: 22px; margin: 0 0 12px; letter-spacing: -0.01em; }
+  .twocol { display: grid; grid-template-columns: 1.4fr 1fr; gap: 28px; }
+  @media (max-width: 820px) { .twocol { grid-template-columns: 1fr; } }
+  table.schools { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table.schools th, table.schools td {
+    text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line);
+  }
+  table.schools th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); font-weight: 600; }
+  .rating { font-weight: 600; }
+  .rating.Outstanding { color: var(--good); }
+  .rating.Good { color: var(--ink-2); }
+  .rating.RequiresImprovement, .rating.Requires { color: var(--warn); }
+  .rating.Inadequate { color: var(--bad); }
+  #map { height: 380px; border-radius: var(--radius); border: 1px solid var(--line); }
+  .pills { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pill { background: var(--bg-2); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; font-size: 12px; color: var(--ink-2); }
+  details.faq { border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 8px; background: var(--bg); }
+  details.faq summary { cursor: pointer; font-weight: 600; color: var(--ink); }
+  details.faq[open] { background: var(--bg-2); }
+  footer { border-top: 1px solid var(--line); padding: 28px 20px; color: var(--muted); font-size: 13px; }
+  footer .inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 24px; flex-wrap: wrap; }
+  .sources { font-size: 13px; color: var(--muted); }
+  .sources a { color: var(--muted); text-decoration: underline; }
+  .cta {
+    display: inline-block; background: var(--ink); color: #fff; padding: 10px 14px;
+    border-radius: var(--radius); font-size: 14px; font-weight: 600;
+  }
+  .cta:hover { background: var(--ink-2); text-decoration: none; }
+</style>
+<script type="application/ld+json">
+[
+  {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "name": "Schools in Enfield, London",
-    "description": "107 schools in Enfield, London rated by Ofsted",
-    "numberOfItems": 107,
-    "url": "https://londonschool.directory/schools/enfield"
-  }</script>
-  <script type="application/ld+json">{
+    "name": "Top schools in Enfield, London",
+    "itemListOrder": "http://schema.org/ItemListOrderDescending",
+    "numberOfItems": 14,
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "url": "https://londonschool.directory/schools/enfield/wolfson-hillel-primary-school/",
+        "name": "Wolfson Hillel Primary School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "url": "https://londonschool.directory/schools/enfield/the-raglan-junior-school/",
+        "name": "The Raglan Junior School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "url": "https://londonschool.directory/schools/enfield/bowes-primary-school/",
+        "name": "Bowes Primary School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "url": "https://londonschool.directory/schools/enfield/galliard-primary-school/",
+        "name": "Galliard Primary School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 5,
+        "url": "https://londonschool.directory/schools/enfield/delta-primary-school/",
+        "name": "Delta Primary School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 6,
+        "url": "https://londonschool.directory/schools/enfield/highfield-primary-school/",
+        "name": "Highfield Primary School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 7,
+        "url": "https://londonschool.directory/schools/enfield/west-lea-school/",
+        "name": "West Lea School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 8,
+        "url": "https://londonschool.directory/schools/enfield/st-annes-catholic-high-school-for-girls/",
+        "name": "St Anne's Catholic High School for Girls"
+      },
+      {
+        "@type": "ListItem",
+        "position": 9,
+        "url": "https://londonschool.directory/schools/enfield/st-ignatius-college/",
+        "name": "St Ignatius College"
+      },
+      {
+        "@type": "ListItem",
+        "position": 10,
+        "url": "https://londonschool.directory/schools/enfield/highlands-school/",
+        "name": "Highlands School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 11,
+        "url": "https://londonschool.directory/schools/enfield/freshsteps-independent-school/",
+        "name": "Freshsteps Independent school"
+      },
+      {
+        "@type": "ListItem",
+        "position": 12,
+        "url": "https://londonschool.directory/schools/enfield/west-lea-school/",
+        "name": "West Lea School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 13,
+        "url": "https://londonschool.directory/schools/enfield/waverley-school/",
+        "name": "Waverley School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 14,
+        "url": "https://londonschool.directory/schools/enfield/the-latymer-school/",
+        "name": "The Latymer School"
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How many schools are there in Enfield?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Enfield has 107 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 81 are primary, 34 are secondary, and the remainder are special, all-through, or post-16."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What proportion of Enfield schools are Outstanding?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "As of the latest Ofsted Management Information release, 14 schools in Enfield (13.1%) are rated Outstanding, and 92.5% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "When do I apply for a Reception or Year 7 place in Enfield?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Enfield's applications are coordinated by the local authority through the eAdmissions system. See our full Reception timeline guide."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does the school appeals process work in Enfield?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "If you are refused your preferred school place, you have a statutory right of appeal. Enfield appeals are typically heard in May (Reception) and June\u2013July (secondary). See our appeals tracker for Enfield-level success rates by year."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How can I tell which Enfield schools are over-subscribed?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release."
+        }
+      }
+    ]
+  },
+  {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      {"@type": "ListItem", "position": 1, "name": "London Schools Explorer", "item": "https://londonschool.directory/"},
-      {"@type": "ListItem", "position": 2, "name": "Schools in Enfield", "item": "https://londonschool.directory/schools/enfield"}
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://londonschool.directory/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Boroughs",
+        "item": "https://londonschool.directory/schools/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Enfield",
+        "item": "https://londonschool.directory/schools/enfield/"
+      }
     ]
-  }</script>
-  <link rel="canonical" href="https://londonschool.directory/schools/enfield">
-  <meta property="og:title" content="Schools in Enfield | London Schools Explorer">
-  <meta property="og:description" content="107 schools in Enfield. 14 Outstanding-rated. Compare Ofsted ratings, exam results and admissions.">
-  <meta property="og:url" content="https://londonschool.directory/schools/enfield">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, -apple-system, sans-serif; color: #1a1a1a; background: #f8f9fa; line-height: 1.6; }
-    a { color: #1565C0; }
-    .topbar { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 12px 20px; }
-    .topbar a { text-decoration: none; font-weight: 600; color: #1a1a1a; font-size: 15px; }
-    .topbar span { color: #888; margin: 0 8px; }
-    .container { max-width: 900px; margin: 0 auto; padding: 32px 20px; }
-    h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
-    .intro { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; font-size: 15px; color: #333; line-height: 1.7; }
-    .stats-row { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
-    .stat-box { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 14px 18px; flex: 1; min-width: 120px; }
-    .stat-num { font-size: 24px; font-weight: 700; color: #1a1a1a; line-height: 1; }
-    .stat-lbl { font-size: 12px; color: #888; margin-top: 4px; }
-    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #e0e0e0; }
-    th { background: #f5f5f5; padding: 12px 16px; text-align: left; font-size: 13px; color: #555; font-weight: 600; border-bottom: 1px solid #e0e0e0; }
-    td { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
-    tr:last-child td { border-bottom: none; }
-    tr:hover td { background: #fafafa; }
-    .back { display: inline-block; margin-bottom: 20px; font-size: 14px; color: #555; text-decoration: none; }
-    .back:hover { color: #111; }
-    footer { text-align: center; padding: 32px 20px; font-size: 13px; color: #888; }
-    @media (max-width: 600px) {
-      .container { padding: 16px 12px; }
-      h1 { font-size: 22px; }
-      .stats-row { grid-template-columns: 1fr 1fr; }
-      .intro { padding: 14px 16px; font-size: 14px; }
-      table { font-size: 13px; }
-      th, td { padding: 10px 10px; overflow-wrap: anywhere; word-break: break-word; }
-      th:nth-child(5), td:nth-child(5) { display: none; }
-      .topbar { padding: 10px 12px; font-size: 13px; }
-    }
-    @media (max-width: 600px) { .stats-row { flex-direction: column; } }
-  </style>
-  <link rel="manifest" href="/manifest.webmanifest">
-  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  }
+]
+</script>
 </head>
 <body>
-<div class="topbar">
-  <div style="max-width:900px;margin:0 auto">
-    <a href="/">London Schools Explorer</a>
-    <span>/</span>
-    Enfield
+<header class="site">
+  <div class="inner">
+    <a class="brand" href="/">London School Directory</a>
+    <nav>
+      <a href="/">Search</a>
+      <a href="/appeals.html">Appeals</a>
+      <a href="/methodology.html">Methodology</a>
+      <a href="/about.html">About</a>
+    </nav>
   </div>
-</div>
-<div class="container">
-  <a class="back" href="/">&#8592; All boroughs</a>
-  <h1>Schools in Enfield</h1>
-
-  <div class="stats-row">
-    <div class="stat-box"><div class="stat-num">107</div><div class="stat-lbl">Total schools</div></div>
-    <div class="stat-box"><div class="stat-num">14</div><div class="stat-lbl">Outstanding</div></div>
-    <div class="stat-box"><div class="stat-num">85</div><div class="stat-lbl">Good</div></div>
-    <div class="stat-box"><div class="stat-num">3</div><div class="stat-lbl">School phases</div></div>
+</header>
+<main>
+  <div class="crumbs">
+    <a href="/">Home</a> &rsaquo; <a href="/schools/">Boroughs</a> &rsaquo; Enfield
   </div>
 
-  <div class="intro">Enfield is a north London borough bordering Hertfordshire with a wide range of school types including grammar, faith, academy and independent schools. The borough spans leafy suburban areas in the north such as Winchmore Hill and Palmers Green, through to more urban areas in the south. Several schools consistently achieve above national average exam results.</div>
+  <h1>Schools in Enfield, London</h1>
+  <p class="lede">Enfield is the northernmost London borough and has a mix of community, foundation and faith schools. The borough has invested in new secondary provision in recent years, and admission distances are typically larger than in inner London. Reception oversubscription tends to be concentrated around Palmers Green, Winchmore Hill and Southgate.</p>
+  <p class="stamp"><span class="dot"></span>Data last verified 1 September 2026. Sources: Ofsted, DfE GIAS, DfE Performance Tables, Metropolitan Police, MHCLG IMD. See <a href="/sources.html">all sources</a>.</p>
 
-  
-<div style="display:flex;gap:16px;flex-wrap:wrap;margin:20px 0;">
+  <section>
+    <div class="grid-stats">
+      <div class="stat"><div class="v">107</div><div class="l">Schools in Enfield</div></div>
+      <div class="stat"><div class="v">13.1%</div><div class="l">Outstanding Ofsted</div></div>
+      <div class="stat"><div class="v">92.5%</div><div class="l">Good or Outstanding</div></div>
+      <div class="stat"><div class="v">81</div><div class="l">Primary schools</div></div>
+      <div class="stat"><div class="v">34</div><div class="l">Secondary schools</div></div>
+      <div class="stat"><div class="v">17%</div><div class="l">Secondary appeal success (2024)</div></div>
+    </div>
+  </section>
 
-<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fdf4ff 0%,#ede9fe 100%);
-     border:1px solid #d8b4fe;border-radius:12px;padding:14px 20px;">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-    <span style="font-size:22px;">🎓</span>
-    <strong style="font-size:15px;color:#5b21b6;">11+ &amp; 13+ Exam Prep</strong>
-  </div>
-  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
-    PiAcademy resources for grammar school entrance, SATs &amp; GCSE.
-    Use code <strong>THIERR25</strong> for 25% off.
-  </p>
-  <a href="https://piacademy.co.uk/?aff=28"
-     target="_blank" rel="noopener sponsored"
-     style="display:inline-block;padding:9px 18px;background:#7e22ce;color:#fff;
-            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
-    Get 25% OFF →
-  </a>
-  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
-</div>
-<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%);
-     border:1px solid #fcd34d;border-radius:12px;padding:14px 20px;">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-    <span style="font-size:22px;">📚</span>
-    <strong style="font-size:15px;color:#92400e;">Children's Books</strong>
-  </div>
-  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
-    Great books at low prices. At checkout, choose your school — Scholastic donates
-    <strong>20p for every £1 spent</strong> back to the school in free books.
-  </p>
-  <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&ued=https%3A%2F%2Fwww.scholastic.co.uk%2Fteachers"
-     target="_blank" rel="noopener sponsored"
-     style="display:inline-block;padding:9px 18px;background:#d97706;color:#fff;
-            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
-    Shop at Scholastic →
-  </a>
-  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
-</div>
-<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fff8f0 0%,#fff3e0 100%);
-     border:1px solid #fed7aa;border-radius:12px;padding:14px 20px;">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-    <span style="font-size:22px;">🛒</span>
-    <strong style="font-size:15px;color:#92400e;">School Supplies</strong>
-  </div>
-  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
-    Stationery, bags, PE kit, lunchboxes and more — fast delivery from Amazon.
-  </p>
-  <a href="https://www.amazon.co.uk/s?k=school+supplies+stationery&tag=londonparents-21"
-     target="_blank" rel="noopener sponsored"
-     style="display:inline-block;padding:9px 18px;background:#FF9900;color:#111;
-            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
-    Shop on Amazon →
-  </a>
-  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
-</div>
-</div>
+  <section>
+    <div class="twocol">
+      <div>
+        <h2>Top primary schools in Enfield</h2>
+        <p class="sources">Ranked by Ofsted rating, then by latest KS2 performance. See <a href="/methodology.html">methodology</a>.</p>
+        <table class="schools">
+          <thead>
+            <tr><th>School</th><th>Ofsted</th><th>KS2 %</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><a href="/schools/enfield/wolfson-hillel-primary-school/">Wolfson Hillel Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>88.0</td></tr>
+            <tr><td><a href="/schools/enfield/the-raglan-junior-school/">The Raglan Junior School</a></td><td class="rating Outstanding">Outstanding</td><td>84.0</td></tr>
+            <tr><td><a href="/schools/enfield/bowes-primary-school/">Bowes Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>81.0</td></tr>
+            <tr><td><a href="/schools/enfield/galliard-primary-school/">Galliard Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>69.0</td></tr>
+            <tr><td><a href="/schools/enfield/delta-primary-school/">Delta Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>67.0</td></tr>
+            <tr><td><a href="/schools/enfield/highfield-primary-school/">Highfield Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>64.0</td></tr>
+            <tr><td><a href="/schools/enfield/west-lea-school/">West Lea School</a></td><td class="rating Outstanding">Outstanding</td><td>0.0</td></tr>
+          </tbody>
+        </table>
 
-  <!-- Borough share buttons -->
-  <div style="display:flex;gap:10px;margin:16px 0 8px;flex-wrap:wrap;align-items:center;">
-    <span style="font-size:13px;color:#555;font-weight:600;">Share Enfield schools:</span>
-    <button onclick="shareBoroughWhatsApp()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 WhatsApp</button>
-    <button onclick="shareBoroughEmail()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#1565C0;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Email</button>
-    <span style="font-size:12px;color:#999;margin-left:4px;">Or tick schools below to share a shortlist</span>
-  </div>
+        <h2 style="margin-top:28px">Top secondary schools in Enfield</h2>
+        <p class="sources">Ranked by Ofsted rating, then by latest KS4 Attainment 8.</p>
+        <table class="schools">
+          <thead>
+            <tr><th>School</th><th>Ofsted</th><th>Att 8</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><a href="/schools/enfield/st-annes-catholic-high-school-for-girls/">St Anne's Catholic High School for Girls</a></td><td class="rating Outstanding">Outstanding</td><td>55.9</td></tr>
+            <tr><td><a href="/schools/enfield/st-ignatius-college/">St Ignatius College</a></td><td class="rating Outstanding">Outstanding</td><td>54.5</td></tr>
+            <tr><td><a href="/schools/enfield/highlands-school/">Highlands School</a></td><td class="rating Outstanding">Outstanding</td><td>54.0</td></tr>
+            <tr><td><a href="/schools/enfield/freshsteps-independent-school/">Freshsteps Independent school</a></td><td class="rating Outstanding">Outstanding</td><td>1.2</td></tr>
+            <tr><td><a href="/schools/enfield/west-lea-school/">West Lea School</a></td><td class="rating Outstanding">Outstanding</td><td>0.1</td></tr>
+            <tr><td><a href="/schools/enfield/waverley-school/">Waverley School</a></td><td class="rating Outstanding">Outstanding</td><td>—</td></tr>
+            <tr><td><a href="/schools/enfield/the-latymer-school/">The Latymer School</a></td><td class="rating Good">Good</td><td>81.6</td></tr>
+          </tbody>
+        </table>
 
-  <!-- Sticky compare bar (appears when schools are ticked) -->
-  <div id="cmp-bar" style="display:none;position:sticky;top:0;z-index:100;background:#1A1A2E;color:#fff;padding:12px 16px;border-radius:10px;margin-bottom:12px;display:none;align-items:center;gap:10px;flex-wrap:wrap;">
-    <span id="cmp-count" style="font-weight:700;font-size:14px;">0 schools selected</span>
-    <button onclick="shareCompareWhatsApp()" style="padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 Share via WhatsApp</button>
-    <button onclick="shareCompareEmail()" style="padding:8px 16px;background:#fff;color:#1A1A2E;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Share via Email</button>
-    <button onclick="clearSelection()" style="padding:8px 12px;background:transparent;color:#aaa;border:1px solid #555;border-radius:8px;font-size:12px;cursor:pointer;">✕ Clear</button>
-  </div>
+        <p style="margin-top:14px"><a class="cta" href="#all-schools">Jump to all 107 schools in Enfield</a></p>
+      </div>
+      <div>
+        <h2>Map</h2>
+        <div id="map" aria-label="Map of schools in Enfield"></div>
+      </div>
+    </div>
+  </section>
 
-  <table>
-    <thead><tr><th style="width:36px"></th><th>School</th><th>Phase</th><th>Ofsted</th><th>Pupils</th></tr></thead>
-    <tbody><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="AIM Academy North London"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="34.3"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/aim-academy-north-london"></td>
-          <td><a href="/schools/enfield/aim-academy-north-london">AIM Academy North London</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>630</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Alma Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="63.0"
-            data-url="https://londonschool.directory/schools/enfield/alma-primary-school"></td>
-          <td><a href="/schools/enfield/alma-primary-school">Alma Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>442</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Alternative Centre of Education"
-            data-ofsted="Good"
-            data-phase="All-through"
-            data-att8="0.7"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/alternative-centre-of-education"></td>
-          <td><a href="/schools/enfield/alternative-centre-of-education">Alternative Centre of Education</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>31</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Ark John Keats Academy"
-            data-ofsted="Good"
-            data-phase="All-through"
-            data-att8="46.1"
-            data-ks2="67.0"
-            data-url="https://londonschool.directory/schools/enfield/ark-john-keats-academy"></td>
-          <td><a href="/schools/enfield/ark-john-keats-academy">Ark John Keats Academy</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1732</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Bishop Stopford's School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="38.1"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/bishop-stopfords-school"></td>
-          <td><a href="/schools/enfield/bishop-stopfords-school">Bishop Stopford's School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>554</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Bowes Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="81.0"
-            data-url="https://londonschool.directory/schools/enfield/bowes-primary-school"></td>
-          <td><a href="/schools/enfield/bowes-primary-school">Bowes Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>464</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Brettenham Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="61.0"
-            data-url="https://londonschool.directory/schools/enfield/brettenham-primary-school"></td>
-          <td><a href="/schools/enfield/brettenham-primary-school">Brettenham Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>410</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Brimsdown Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="57.0"
-            data-url="https://londonschool.directory/schools/enfield/brimsdown-primary-school"></td>
-          <td><a href="/schools/enfield/brimsdown-primary-school">Brimsdown Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>451</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Bush Hill Park Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="37.0"
-            data-url="https://londonschool.directory/schools/enfield/bush-hill-park-primary-school"></td>
-          <td><a href="/schools/enfield/bush-hill-park-primary-school">Bush Hill Park Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>480</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Capel Manor Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="65.0"
-            data-url="https://londonschool.directory/schools/enfield/capel-manor-primary-school"></td>
-          <td><a href="/schools/enfield/capel-manor-primary-school">Capel Manor Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>274</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Carterhatch Infant School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/carterhatch-infant-school"></td>
-          <td><a href="/schools/enfield/carterhatch-infant-school">Carterhatch Infant School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>292</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Carterhatch Junior School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="70.0"
-            data-url="https://londonschool.directory/schools/enfield/carterhatch-junior-school"></td>
-          <td><a href="/schools/enfield/carterhatch-junior-school">Carterhatch Junior School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>317</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Chace Community School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="42.1"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/chace-community-school"></td>
-          <td><a href="/schools/enfield/chace-community-school">Chace Community School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>880</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Chase Side Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="74.0"
-            data-url="https://londonschool.directory/schools/enfield/chase-side-primary-school"></td>
-          <td><a href="/schools/enfield/chase-side-primary-school">Chase Side Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>361</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Chesterfield Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="46.0"
-            data-url="https://londonschool.directory/schools/enfield/chesterfield-primary-school"></td>
-          <td><a href="/schools/enfield/chesterfield-primary-school">Chesterfield Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>467</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Churchfield Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="68.0"
-            data-url="https://londonschool.directory/schools/enfield/churchfield-primary-school"></td>
-          <td><a href="/schools/enfield/churchfield-primary-school">Churchfield Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>439</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="De Bohun Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/de-bohun-primary-school"></td>
-          <td><a href="/schools/enfield/de-bohun-primary-school">De Bohun Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>347</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Delta Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="67.0"
-            data-url="https://londonschool.directory/schools/enfield/delta-primary-school"></td>
-          <td><a href="/schools/enfield/delta-primary-school">Delta Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>112</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Durants School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="1.2"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/durants-school"></td>
-          <td><a href="/schools/enfield/durants-school">Durants School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>206</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Eastfield Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="57.0"
-            data-url="https://londonschool.directory/schools/enfield/eastfield-primary-school"></td>
-          <td><a href="/schools/enfield/eastfield-primary-school">Eastfield Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>417</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Edmonton County School"
-            data-ofsted="Good"
-            data-phase="All-through"
-            data-att8="45.1"
-            data-ks2="75.0"
-            data-url="https://londonschool.directory/schools/enfield/edmonton-county-school"></td>
-          <td><a href="/schools/enfield/edmonton-county-school">Edmonton County School</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>2091</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Eldon Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="43.0"
-            data-url="https://londonschool.directory/schools/enfield/eldon-primary-school"></td>
-          <td><a href="/schools/enfield/eldon-primary-school">Eldon Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>706</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Enfield County School for Girls"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="55.2"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/enfield-county-school-for-girls"></td>
-          <td><a href="/schools/enfield/enfield-county-school-for-girls">Enfield County School for Girls</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>999</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Enfield Grammar School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="48.9"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/enfield-grammar-school"></td>
-          <td><a href="/schools/enfield/enfield-grammar-school">Enfield Grammar School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1004</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Enfield Heights Academy"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="78.0"
-            data-url="https://londonschool.directory/schools/enfield/enfield-heights-academy"></td>
-          <td><a href="/schools/enfield/enfield-heights-academy">Enfield Heights Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>200</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Eversley Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/eversley-primary-school"></td>
-          <td><a href="/schools/enfield/eversley-primary-school">Eversley Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>629</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Fern House School"
-            data-ofsted="Good"
-            data-phase="All-through"
-            data-att8="1.0"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/fern-house-school"></td>
-          <td><a href="/schools/enfield/fern-house-school">Fern House School</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>79</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Firs Farm Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="66.0"
-            data-url="https://londonschool.directory/schools/enfield/firs-farm-primary-school"></td>
-          <td><a href="/schools/enfield/firs-farm-primary-school">Firs Farm Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>498</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Fleecefield Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="78.0"
-            data-url="https://londonschool.directory/schools/enfield/fleecefield-primary-school"></td>
-          <td><a href="/schools/enfield/fleecefield-primary-school">Fleecefield Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>321</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Focus 1st Academy"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="2.9"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/focus-1st-academy"></td>
-          <td><a href="/schools/enfield/focus-1st-academy">Focus 1st Academy</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>105</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Forty Hill CofE Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="71.0"
-            data-url="https://londonschool.directory/schools/enfield/forty-hill-cofe-primary-school"></td>
-          <td><a href="/schools/enfield/forty-hill-cofe-primary-school">Forty Hill CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>225</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Freezywater St George's CofE VA Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="89.0"
-            data-url="https://londonschool.directory/schools/enfield/freezywater-st-georges-cofe-va-primary-school"></td>
-          <td><a href="/schools/enfield/freezywater-st-georges-cofe-va-primary-school">Freezywater St George's CofE VA Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>220</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Freshsteps Independent school"
-            data-ofsted="Outstanding"
-            data-phase="All-through"
-            data-att8="1.2"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/freshsteps-independent-school"></td>
-          <td><a href="/schools/enfield/freshsteps-independent-school">Freshsteps Independent school</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>55</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Galliard Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="69.0"
-            data-url="https://londonschool.directory/schools/enfield/galliard-primary-school"></td>
-          <td><a href="/schools/enfield/galliard-primary-school">Galliard Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>698</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Garfield Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="38.0"
-            data-url="https://londonschool.directory/schools/enfield/garfield-primary-school"></td>
-          <td><a href="/schools/enfield/garfield-primary-school">Garfield Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>253</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="George Spicer Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="87.0"
-            data-url="https://londonschool.directory/schools/enfield/george-spicer-primary-school"></td>
-          <td><a href="/schools/enfield/george-spicer-primary-school">George Spicer Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>703</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Grange Park Preparatory School"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/grange-park-preparatory-school"></td>
-          <td><a href="/schools/enfield/grange-park-preparatory-school">Grange Park Preparatory School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>125</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Grange Park Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="85.0"
-            data-url="https://londonschool.directory/schools/enfield/grange-park-primary-school"></td>
-          <td><a href="/schools/enfield/grange-park-primary-school">Grange Park Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>786</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Hadley Wood Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="100.0"
-            data-url="https://londonschool.directory/schools/enfield/hadley-wood-primary-school"></td>
-          <td><a href="/schools/enfield/hadley-wood-primary-school">Hadley Wood Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>206</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Hazelbury Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="73.0"
-            data-url="https://londonschool.directory/schools/enfield/hazelbury-primary-school"></td>
-          <td><a href="/schools/enfield/hazelbury-primary-school">Hazelbury Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>953</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Hazelwood Infant School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/hazelwood-infant-school"></td>
-          <td><a href="/schools/enfield/hazelwood-infant-school">Hazelwood Infant School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>323</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Hazelwood Junior School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="73.0"
-            data-url="https://londonschool.directory/schools/enfield/hazelwood-junior-school"></td>
-          <td><a href="/schools/enfield/hazelwood-junior-school">Hazelwood Junior School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>380</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Heron Hall Academy"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="45.0"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/heron-hall-academy"></td>
-          <td><a href="/schools/enfield/heron-hall-academy">Heron Hall Academy</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1161</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Highfield Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="64.0"
-            data-url="https://londonschool.directory/schools/enfield/highfield-primary-school"></td>
-          <td><a href="/schools/enfield/highfield-primary-school">Highfield Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>672</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Highlands School"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="54.0"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/highlands-school"></td>
-          <td><a href="/schools/enfield/highlands-school">Highlands School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>1694</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Honilands Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/honilands-primary-school"></td>
-          <td><a href="/schools/enfield/honilands-primary-school">Honilands Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>340</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Houndsfield Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="32.0"
-            data-url="https://londonschool.directory/schools/enfield/houndsfield-primary-school"></td>
-          <td><a href="/schools/enfield/houndsfield-primary-school">Houndsfield Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>496</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Keble Preparatory School"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/keble-preparatory-school"></td>
-          <td><a href="/schools/enfield/keble-preparatory-school">Keble Preparatory School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>192</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Keys Meadow Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="61.0"
-            data-url="https://londonschool.directory/schools/enfield/keys-meadow-primary-school"></td>
-          <td><a href="/schools/enfield/keys-meadow-primary-school">Keys Meadow Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>377</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Kingfisher Hall Primary Academy"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="73.0"
-            data-url="https://londonschool.directory/schools/enfield/kingfisher-hall-primary-academy"></td>
-          <td><a href="/schools/enfield/kingfisher-hall-primary-academy">Kingfisher Hall Primary Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>440</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Kingsmead School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="50.5"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/kingsmead-school"></td>
-          <td><a href="/schools/enfield/kingsmead-school">Kingsmead School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1484</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Latymer All Saints CofE Primary School"
-            data-ofsted="Requires improvement"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="71.0"
-            data-url="https://londonschool.directory/schools/enfield/latymer-all-saints-cofe-primary-school"></td>
-          <td><a href="/schools/enfield/latymer-all-saints-cofe-primary-school">Latymer All Saints CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
-          <td>501</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Laurel Park School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="39.2"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/laurel-park-school"></td>
-          <td><a href="/schools/enfield/laurel-park-school">Laurel Park School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>607</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Lavender Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="73.0"
-            data-url="https://londonschool.directory/schools/enfield/lavender-primary-school"></td>
-          <td><a href="/schools/enfield/lavender-primary-school">Lavender Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>472</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Lift Aylward"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="39.4"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/lift-aylward"></td>
-          <td><a href="/schools/enfield/lift-aylward">Lift Aylward</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1324</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Meridian Angel Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="56.0"
-            data-url="https://londonschool.directory/schools/enfield/meridian-angel-primary-school"></td>
-          <td><a href="/schools/enfield/meridian-angel-primary-school">Meridian Angel Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>173</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Merryhills Primary School"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="88.0"
-            data-url="https://londonschool.directory/schools/enfield/merryhills-primary-school"></td>
-          <td><a href="/schools/enfield/merryhills-primary-school">Merryhills Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>618</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Oakthorpe Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="57.0"
-            data-url="https://londonschool.directory/schools/enfield/oakthorpe-primary-school"></td>
-          <td><a href="/schools/enfield/oakthorpe-primary-school">Oakthorpe Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>438</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Oaktree School"
-            data-ofsted="Good"
-            data-phase="All-through"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/oaktree-school"></td>
-          <td><a href="/schools/enfield/oaktree-school">Oaktree School</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>147</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Oasis Academy Enfield"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="38.0"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/oasis-academy-enfield"></td>
-          <td><a href="/schools/enfield/oasis-academy-enfield">Oasis Academy Enfield</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>690</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Oasis Academy Hadley"
-            data-ofsted="Good"
-            data-phase="All-through"
-            data-att8="44.0"
-            data-ks2="60.0"
-            data-url="https://londonschool.directory/schools/enfield/oasis-academy-hadley"></td>
-          <td><a href="/schools/enfield/oasis-academy-hadley">Oasis Academy Hadley</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1528</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="One Degree Academy"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="89.0"
-            data-url="https://londonschool.directory/schools/enfield/one-degree-academy"></td>
-          <td><a href="/schools/enfield/one-degree-academy">One Degree Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>419</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Orchardside School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/orchardside-school"></td>
-          <td><a href="/schools/enfield/orchardside-school">Orchardside School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>39</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Our Lady of Lourdes Catholic Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="88.0"
-            data-url="https://londonschool.directory/schools/enfield/our-lady-of-lourdes-catholic-primary-school"></td>
-          <td><a href="/schools/enfield/our-lady-of-lourdes-catholic-primary-school">Our Lady of Lourdes Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>202</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Palmers Green High School"
-            data-ofsted="Not yet rated"
-            data-phase="All-through"
-            data-att8="41.6"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/palmers-green-high-school"></td>
-          <td><a href="/schools/enfield/palmers-green-high-school">Palmers Green High School</a></td>
-          <td>All-through</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>174</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Prince of Wales Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="58.0"
-            data-url="https://londonschool.directory/schools/enfield/prince-of-wales-primary-school"></td>
-          <td><a href="/schools/enfield/prince-of-wales-primary-school">Prince of Wales Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>506</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Raglan Infant School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/raglan-infant-school"></td>
-          <td><a href="/schools/enfield/raglan-infant-school">Raglan Infant School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>454</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Raynham Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="64.0"
-            data-url="https://londonschool.directory/schools/enfield/raynham-primary-school"></td>
-          <td><a href="/schools/enfield/raynham-primary-school">Raynham Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>533</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Russet House School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/russet-house-school"></td>
-          <td><a href="/schools/enfield/russet-house-school">Russet House School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>132</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Salcombe Preparatory School"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/salcombe-preparatory-school"></td>
-          <td><a href="/schools/enfield/salcombe-preparatory-school">Salcombe Preparatory School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>159</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Salmons Brook School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="0.4"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/salmons-brook-school"></td>
-          <td><a href="/schools/enfield/salmons-brook-school">Salmons Brook School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>66</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Silverways School"
-            data-ofsted="Good"
-            data-phase="All-through"
-            data-att8="27.0"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/silverways-school"></td>
-          <td><a href="/schools/enfield/silverways-school">Silverways School</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>47</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Southbury Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="64.0"
-            data-url="https://londonschool.directory/schools/enfield/southbury-primary-school"></td>
-          <td><a href="/schools/enfield/southbury-primary-school">Southbury Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>350</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Southgate School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="54.4"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/southgate-school"></td>
-          <td><a href="/schools/enfield/southgate-school">Southgate School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1447</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Andrew's CofE Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="63.0"
-            data-url="https://londonschool.directory/schools/enfield/st-andrews-cofe-primary-school"></td>
-          <td><a href="/schools/enfield/st-andrews-cofe-primary-school">St Andrew's CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>389</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Andrew's Southgate Primary School (CE)"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="70.0"
-            data-url="https://londonschool.directory/schools/enfield/st-andrews-southgate-primary-school-ce"></td>
-          <td><a href="/schools/enfield/st-andrews-southgate-primary-school-ce">St Andrew's Southgate Primary School (CE)</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>202</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Anne's Catholic High School for Girls"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="55.9"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/st-annes-catholic-high-school-for-girls"></td>
-          <td><a href="/schools/enfield/st-annes-catholic-high-school-for-girls">St Anne's Catholic High School for Girls</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>960</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Edmund's Catholic Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="70.0"
-            data-url="https://londonschool.directory/schools/enfield/st-edmunds-catholic-primary-school"></td>
-          <td><a href="/schools/enfield/st-edmunds-catholic-primary-school">St Edmund's Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>376</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St George's Catholic Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="80.0"
-            data-url="https://londonschool.directory/schools/enfield/st-georges-catholic-primary-school"></td>
-          <td><a href="/schools/enfield/st-georges-catholic-primary-school">St George's Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>507</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Ignatius College"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="54.5"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/st-ignatius-college"></td>
-          <td><a href="/schools/enfield/st-ignatius-college">St Ignatius College</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>972</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St James CofE Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="57.0"
-            data-url="https://londonschool.directory/schools/enfield/st-james-cofe-primary-school"></td>
-          <td><a href="/schools/enfield/st-james-cofe-primary-school">St James CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>188</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St John and St James CofE Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="84.0"
-            data-url="https://londonschool.directory/schools/enfield/st-john-and-st-james-cofe-primary-school"></td>
-          <td><a href="/schools/enfield/st-john-and-st-james-cofe-primary-school">St John and St James CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>241</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St John's CofE Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="93.0"
-            data-url="https://londonschool.directory/schools/enfield/st-johns-cofe-primary-school"></td>
-          <td><a href="/schools/enfield/st-johns-cofe-primary-school">St John's CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>101</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St John's Preparatory and Senior School"
-            data-ofsted="Not yet rated"
-            data-phase="All-through"
-            data-att8="67.2"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/st-johns-preparatory-and-senior-school"></td>
-          <td><a href="/schools/enfield/st-johns-preparatory-and-senior-school">St John's Preparatory and Senior School</a></td>
-          <td>All-through</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>493</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Mary's Catholic Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="68.0"
-            data-url="https://londonschool.directory/schools/enfield/st-marys-catholic-primary-school"></td>
-          <td><a href="/schools/enfield/st-marys-catholic-primary-school">St Mary's Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>334</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Matthew's CofE Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="61.0"
-            data-url="https://londonschool.directory/schools/enfield/st-matthews-cofe-primary-school"></td>
-          <td><a href="/schools/enfield/st-matthews-cofe-primary-school">St Matthew's CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>195</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Michael at Bowes CofE Junior School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="70.0"
-            data-url="https://londonschool.directory/schools/enfield/st-michael-at-bowes-cofe-junior-school"></td>
-          <td><a href="/schools/enfield/st-michael-at-bowes-cofe-junior-school">St Michael at Bowes CofE Junior School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>253</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Michael's CofE Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="86.0"
-            data-url="https://londonschool.directory/schools/enfield/st-michaels-cofe-primary-school"></td>
-          <td><a href="/schools/enfield/st-michaels-cofe-primary-school">St Michael's CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>438</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Monica's RC Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="73.0"
-            data-url="https://londonschool.directory/schools/enfield/st-monicas-rc-primary-school"></td>
-          <td><a href="/schools/enfield/st-monicas-rc-primary-school">St Monica's RC Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>441</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Paul's CofE Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="78.0"
-            data-url="https://londonschool.directory/schools/enfield/st-pauls-cofe-primary-school"></td>
-          <td><a href="/schools/enfield/st-pauls-cofe-primary-school">St Paul's CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>419</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Starks Field Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="39.0"
-            data-url="https://londonschool.directory/schools/enfield/starks-field-primary-school"></td>
-          <td><a href="/schools/enfield/starks-field-primary-school">Starks Field Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>187</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Suffolks Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="48.0"
-            data-url="https://londonschool.directory/schools/enfield/suffolks-primary-school"></td>
-          <td><a href="/schools/enfield/suffolks-primary-school">Suffolks Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>182</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Latymer School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="81.6"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/the-latymer-school"></td>
-          <td><a href="/schools/enfield/the-latymer-school">The Latymer School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1355</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Lea Valley Academy"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="36.9"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/the-lea-valley-academy"></td>
-          <td><a href="/schools/enfield/the-lea-valley-academy">The Lea Valley Academy</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>830</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Raglan Junior School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="84.0"
-            data-url="https://londonschool.directory/schools/enfield/the-raglan-junior-school"></td>
-          <td><a href="/schools/enfield/the-raglan-junior-school">The Raglan Junior School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>480</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Tottenhall Infant School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/tottenhall-infant-school"></td>
-          <td><a href="/schools/enfield/tottenhall-infant-school">Tottenhall Infant School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>204</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Vita Et Pax School"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/vita-et-pax-school"></td>
-          <td><a href="/schools/enfield/vita-et-pax-school">Vita Et Pax School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>105</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Walker Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="85.0"
-            data-url="https://londonschool.directory/schools/enfield/walker-primary-school"></td>
-          <td><a href="/schools/enfield/walker-primary-school">Walker Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>420</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Waverley School"
-            data-ofsted="Outstanding"
-            data-phase="All-through"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/waverley-school"></td>
-          <td><a href="/schools/enfield/waverley-school">Waverley School</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>163</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="West Grove Primary"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="37.0"
-            data-url="https://londonschool.directory/schools/enfield/west-grove-primary"></td>
-          <td><a href="/schools/enfield/west-grove-primary">West Grove Primary</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>415</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="West Lea School"
-            data-ofsted="Outstanding"
-            data-phase="All-through"
-            data-att8="0.1"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/west-lea-school"></td>
-          <td><a href="/schools/enfield/west-lea-school">West Lea School</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>512</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Wilbury Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="77.0"
-            data-url="https://londonschool.directory/schools/enfield/wilbury-primary-school"></td>
-          <td><a href="/schools/enfield/wilbury-primary-school">Wilbury Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>708</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Winchmore School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="48.7"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/winchmore-school"></td>
-          <td><a href="/schools/enfield/winchmore-school">Winchmore School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1859</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Wolfson Hillel Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="88.0"
-            data-url="https://londonschool.directory/schools/enfield/wolfson-hillel-primary-school"></td>
-          <td><a href="/schools/enfield/wolfson-hillel-primary-school">Wolfson Hillel Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>452</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Woodpecker Hall Primary Academy"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="76.0"
-            data-url="https://londonschool.directory/schools/enfield/woodpecker-hall-primary-academy"></td>
-          <td><a href="/schools/enfield/woodpecker-hall-primary-academy">Woodpecker Hall Primary Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>720</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Worcesters Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="64.0"
-            data-url="https://londonschool.directory/schools/enfield/worcesters-primary-school"></td>
-          <td><a href="/schools/enfield/worcesters-primary-school">Worcesters Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>599</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Wren Academy Enfield"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="58.3"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/enfield/wren-academy-enfield"></td>
-          <td><a href="/schools/enfield/wren-academy-enfield">Wren Academy Enfield</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1024</td>
-        </tr></tbody>
-  </table>
-</div>
-<footer><a href="/">London Schools Explorer</a> &mdash; helping families find the right school in London.<p style="margin-top:10px">Browse by type: <a href="/schools/outstanding">Outstanding</a> &middot; <a href="/schools/good">Good</a> &middot; <a href="/schools/grammar">Grammar</a> &middot; <a href="/schools/selective">Selective</a> &middot; <a href="/schools/faith">Faith</a> &middot; <a href="/schools/primary">Primary</a> &middot; <a href="/schools/secondary">Secondary</a> &middot; <a href="/schools/sixth-form">Sixth form</a> &middot; <a href="/schools/independent">Private &amp; independent</a></p></footer>
-<script defer src="/_vercel/insights/script.js"></script>
+  <section>
+    <h2>What the data says about Enfield</h2>
+    <p><strong>92.5%</strong> of Enfield schools are currently rated Good or Outstanding by Ofsted, compared with a London average of roughly 90% for primary and 80% for secondary. The average number of applications per place across Enfield is <strong>1.17</strong>, a useful indicator of how competitive local admissions are. The average number of recorded crime incidents within 500 metres of a school in Enfield over the most recent reporting month is <strong>121.38</strong>, drawn from the Metropolitan Police open data API. The mean IMD (Index of Multiple Deprivation) decile of Enfield's schools is <strong>3.64</strong> — 1 is most deprived, 10 is least deprived. All metrics on this page are recomputed from source data on the 15th of every month. See our <a href='/methodology.html'>methodology</a> for definitions and limitations.</p>
+  </section>
+
+  <section id="all-schools">
+    <h2>All schools in Enfield</h2>
+    <p class="sources">Every school in Enfield, listed alphabetically. Click any school for the full record.</p>
+    <table class="schools">
+      <thead>
+        <tr><th>School</th><th>Phase</th><th>Ofsted</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><a href="/schools/enfield/aim-academy-north-london/">AIM Academy North London</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/alma-primary-school/">Alma Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/alternative-centre-of-education/">Alternative Centre of Education</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/ark-john-keats-academy/">Ark John Keats Academy</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/bishop-stopfords-school/">Bishop Stopford's School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/bowes-primary-school/">Bowes Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/enfield/brettenham-primary-school/">Brettenham Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/brimsdown-primary-school/">Brimsdown Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/bush-hill-park-primary-school/">Bush Hill Park Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/capel-manor-primary-school/">Capel Manor Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/carterhatch-infant-school/">Carterhatch Infant School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/carterhatch-junior-school/">Carterhatch Junior School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/chace-community-school/">Chace Community School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/chase-side-primary-school/">Chase Side Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/chesterfield-primary-school/">Chesterfield Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/churchfield-primary-school/">Churchfield Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/de-bohun-primary-school/">De Bohun Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/delta-primary-school/">Delta Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/enfield/durants-school/">Durants School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/eastfield-primary-school/">Eastfield Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/edmonton-county-school/">Edmonton County School</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/eldon-primary-school/">Eldon Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/enfield-county-school-for-girls/">Enfield County School for Girls</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/enfield-grammar-school/">Enfield Grammar School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/enfield-heights-academy/">Enfield Heights Academy</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/eversley-primary-school/">Eversley Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/enfield/fern-house-school/">Fern House School</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/firs-farm-primary-school/">Firs Farm Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/fleecefield-primary-school/">Fleecefield Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/focus-1st-academy/">Focus 1st Academy</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/forty-hill-cofe-primary-school/">Forty Hill CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/freezywater-st-georges-cofe-va-primary-school/">Freezywater St George's CofE VA Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/freshsteps-independent-school/">Freshsteps Independent school</a></td><td>All-through</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/enfield/galliard-primary-school/">Galliard Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/enfield/garfield-primary-school/">Garfield Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/george-spicer-primary-school/">George Spicer Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/grange-park-preparatory-school/">Grange Park Preparatory School</a></td><td>Primary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/enfield/grange-park-primary-school/">Grange Park Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/hadley-wood-primary-school/">Hadley Wood Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/hazelbury-primary-school/">Hazelbury Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/hazelwood-infant-school/">Hazelwood Infant School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/hazelwood-junior-school/">Hazelwood Junior School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/heron-hall-academy/">Heron Hall Academy</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/highfield-primary-school/">Highfield Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/enfield/highlands-school/">Highlands School</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/enfield/honilands-primary-school/">Honilands Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/houndsfield-primary-school/">Houndsfield Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/keble-preparatory-school/">Keble Preparatory School</a></td><td>Primary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/enfield/keys-meadow-primary-school/">Keys Meadow Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/kingfisher-hall-primary-academy/">Kingfisher Hall Primary Academy</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/kingsmead-school/">Kingsmead School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/latymer-all-saints-cofe-primary-school/">Latymer All Saints CofE Primary School</a></td><td>Primary</td><td class="rating Requiresimprovement">Requires improvement</td></tr>
+        <tr><td><a href="/schools/enfield/laurel-park-school/">Laurel Park School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/lavender-primary-school/">Lavender Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/lift-aylward/">Lift Aylward</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/meridian-angel-primary-school/">Meridian Angel Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/merryhills-primary-school/">Merryhills Primary School</a></td><td>Primary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/enfield/oakthorpe-primary-school/">Oakthorpe Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/oaktree-school/">Oaktree School</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/oasis-academy-enfield/">Oasis Academy Enfield</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/oasis-academy-hadley/">Oasis Academy Hadley</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/one-degree-academy/">One Degree Academy</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/orchardside-school/">Orchardside School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/our-lady-of-lourdes-catholic-primary-school/">Our Lady of Lourdes Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/palmers-green-high-school/">Palmers Green High School</a></td><td>All-through</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/enfield/prince-of-wales-primary-school/">Prince of Wales Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/raglan-infant-school/">Raglan Infant School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/enfield/raynham-primary-school/">Raynham Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/russet-house-school/">Russet House School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/salcombe-preparatory-school/">Salcombe Preparatory School</a></td><td>Primary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/enfield/salmons-brook-school/">Salmons Brook School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/silverways-school/">Silverways School</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/southbury-primary-school/">Southbury Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/southgate-school/">Southgate School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/st-andrews-cofe-primary-school/">St Andrew's CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/st-andrews-southgate-primary-school-ce/">St Andrew's Southgate Primary School (CE)</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/st-annes-catholic-high-school-for-girls/">St Anne's Catholic High School for Girls</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/enfield/st-edmunds-catholic-primary-school/">St Edmund's Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/st-georges-catholic-primary-school/">St George's Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/st-ignatius-college/">St Ignatius College</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/enfield/st-james-cofe-primary-school/">St James CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/st-john-and-st-james-cofe-primary-school/">St John and St James CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/st-johns-cofe-primary-school/">St John's CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/st-johns-preparatory-and-senior-school/">St John's Preparatory and Senior School</a></td><td>All-through</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/enfield/st-marys-catholic-primary-school/">St Mary's Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/st-matthews-cofe-primary-school/">St Matthew's CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/st-michael-at-bowes-cofe-junior-school/">St Michael at Bowes CofE Junior School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/st-michaels-cofe-primary-school/">St Michael's CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/st-monicas-rc-primary-school/">St Monica's RC Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/st-pauls-cofe-primary-school/">St Paul's CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/starks-field-primary-school/">Starks Field Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/suffolks-primary-school/">Suffolks Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/the-latymer-school/">The Latymer School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/the-lea-valley-academy/">The Lea Valley Academy</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/the-raglan-junior-school/">The Raglan Junior School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/enfield/tottenhall-infant-school/">Tottenhall Infant School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/vita-et-pax-school/">Vita Et Pax School</a></td><td>Primary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/enfield/walker-primary-school/">Walker Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/waverley-school/">Waverley School</a></td><td>All-through</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/enfield/west-grove-primary/">West Grove Primary</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/west-lea-school/">West Lea School</a></td><td>All-through</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/enfield/wilbury-primary-school/">Wilbury Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/winchmore-school/">Winchmore School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/wolfson-hillel-primary-school/">Wolfson Hillel Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/enfield/woodpecker-hall-primary-academy/">Woodpecker Hall Primary Academy</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/worcesters-primary-school/">Worcesters Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/enfield/wren-academy-enfield/">Wren Academy Enfield</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Frequently asked</h2>
+    <details class="faq"><summary>How many schools are there in Enfield?</summary><p>Enfield has 107 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 81 are primary, 34 are secondary, and the remainder are special, all-through, or post-16.</p></details>
+<details class="faq"><summary>What proportion of Enfield schools are Outstanding?</summary><p>As of the latest Ofsted Management Information release, 14 schools in Enfield (13.1%) are rated Outstanding, and 92.5% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication.</p></details>
+<details class="faq"><summary>When do I apply for a Reception or Year 7 place in Enfield?</summary><p>Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Enfield's applications are coordinated by the local authority through the eAdmissions system. See our <a href='/guides/london-reception-application-timeline/'>full Reception timeline guide</a>.</p></details>
+<details class="faq"><summary>How does the school appeals process work in Enfield?</summary><p>If you are refused your preferred school place, you have a statutory right of appeal. Enfield appeals are typically heard in May (Reception) and June–July (secondary). See our <a href='/appeals.html'>appeals tracker</a> for Enfield-level success rates by year.</p></details>
+<details class="faq"><summary>How can I tell which Enfield schools are over-subscribed?</summary><p>Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release.</p></details>
+  </section>
+
+  <section>
+    <h2>Sources</h2>
+    <p class="sources">
+      School list and phase from <a href="https://get-information-schools.service.gov.uk/" rel="nofollow">DfE Get Information About Schools</a> (refreshed monthly).
+      Ofsted ratings from <a href="https://www.gov.uk/government/statistical-data-sets/monthly-management-information-ofsteds-school-inspections-outcomes" rel="nofollow">Ofsted Management Information</a> (refreshed monthly).
+      Performance data from <a href="https://explore-education-statistics.service.gov.uk/" rel="nofollow">DfE Explore Education Statistics</a>.
+      Crime data within 500m from the <a href="https://data.police.uk/" rel="nofollow">Metropolitan Police open data API</a>.
+      Deprivation deciles from <a href="https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019" rel="nofollow">MHCLG English Indices of Deprivation 2019</a>.
+      Read our full <a href="/methodology.html">methodology</a> for how each metric is calculated.
+    </p>
+  </section>
+</main>
+<footer>
+  <div class="inner">
+    <div>&copy; London School Directory. Independent. Free to use.</div>
+    <div><a href="/about.html">About</a> &middot; <a href="/methodology.html">Methodology</a> &middot; <a href="/sources.html">Sources</a> &middot; <a href="/appeals.html">Appeals</a></div>
+    <div>Browse by type: <a href="/schools/outstanding">Outstanding</a> &middot; <a href="/schools/good">Good</a> &middot; <a href="/schools/grammar">Grammar</a> &middot; <a href="/schools/selective">Selective</a> &middot; <a href="/schools/faith">Faith</a> &middot; <a href="/schools/primary">Primary</a> &middot; <a href="/schools/secondary">Secondary</a> &middot; <a href="/schools/sixth-form">Sixth form</a> &middot; <a href="/schools/independent">Private &amp; independent</a></div>
+  </div>
+</footer>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-(function(){
-  var borough="Enfield", boroughUrl="https://londonschool.directory/schools/enfield";
-  var outstanding=14, total=107;
-
-  // Borough-level share
-  window.shareBoroughWhatsApp=function(){
-    var t='🏙️ *Schools in '+borough+', London*\n'+
-        '📊 '+total+' schools · '+outstanding+' Outstanding\n\n'+
-        '🔗 '+boroughUrl;
-    window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank');
-  };
-  window.shareBoroughEmail=function(){
-    var s='Schools in '+borough+' — London Schools Explorer';
-    var b='Schools in '+borough+', London\n'+
-        total+' schools, '+outstanding+' rated Outstanding by Ofsted\n\n'+
-        'Browse them here: '+boroughUrl;
-    window.location.href='mailto:?subject='+encodeURIComponent(s)+'&body='+encodeURIComponent(b);
-  };
-
-  // Shortlist comparison share
-  function getSelected(){
-    return Array.from(document.querySelectorAll('.sch-sel:checked')).map(function(cb){
-      return {name:cb.dataset.name,ofsted:cb.dataset.ofsted,phase:cb.dataset.phase,
-               att8:cb.dataset.att8,ks2:cb.dataset.ks2,url:cb.dataset.url};
+  (function() {
+    var points = [[51.678669, -0.054626, "/schools/enfield/orchardside-school/", "Orchardside School"], [51.678669, -0.054626, "/schools/enfield/capel-manor-primary-school/", "Capel Manor Primary School"], [51.66125, -0.056731, "/schools/enfield/carterhatch-infant-school/", "Carterhatch Infant School"], [51.658912, -0.089622, "/schools/enfield/chase-side-primary-school/", "Chase Side Primary School"], [51.624025, -0.084314, "/schools/enfield/firs-farm-primary-school/", "Firs Farm Primary School"], [51.614, -0.136936, "/schools/enfield/garfield-primary-school/", "Garfield Primary School"], [51.651225, -0.067741, "/schools/enfield/george-spicer-primary-school/", "George Spicer Primary School"], [51.670035, -0.170851, "/schools/enfield/hadley-wood-primary-school/", "Hadley Wood Primary School"], [51.617784, -0.102027, "/schools/enfield/hazelwood-junior-school/", "Hazelwood Junior School"], [51.617784, -0.102027, "/schools/enfield/hazelwood-infant-school/", "Hazelwood Infant School"], [51.669787, -0.022467, "/schools/enfield/prince-of-wales-primary-school/", "Prince of Wales Primary School"], [51.637437, -0.07197, "/schools/enfield/the-raglan-junior-school/", "The Raglan Junior School"], [51.636614, -0.072756, "/schools/enfield/raglan-infant-school/", "Raglan Infant School"], [51.657249, -0.055138, "/schools/enfield/suffolks-primary-school/", "Suffolks Primary School"], [51.611042, -0.10771, "/schools/enfield/tottenhall-infant-school/", "Tottenhall Infant School"], [51.649775, -0.049127, "/schools/enfield/southbury-primary-school/", "Southbury Primary School"], [51.644898, -0.064108, "/schools/enfield/bush-hill-park-primary-school/", "Bush Hill Park Primary School"], [51.611057, -0.103636, "/schools/enfield/st-michael-at-bowes-cofe-junior-school/", "St Michael at Bowes CofE Junior School"], [51.674925, -0.096123, "/schools/enfield/st-johns-cofe-primary-school/", "St John's CofE Primary School"], [51.67097, -0.06103, "/schools/enfield/forty-hill-cofe-primary-school/", "Forty Hill CofE Primary School"], [51.657711, -0.07721, "/schools/enfield/st-andrews-cofe-primary-school/", "St Andrew's CofE Primary School"], [51.634182, -0.128089, "/schools/enfield/st-andrews-southgate-primary-school-ce/", "St Andrew's Southgate Primary School (CE)"], [51.673983, -0.038845, "/schools/enfield/freezywater-st-georges-cofe-va-primary-school/", "Freezywater St George's CofE VA Primary School"], [51.610856, -0.067652, "/schools/enfield/st-john-and-st-james-cofe-primary-school/", "St John and St James CofE Primary School"], [51.658067, -0.044838, "/schools/enfield/st-james-cofe-primary-school/", "St James CofE Primary School"], [51.664068, -0.088176, "/schools/enfield/st-michaels-cofe-primary-school/", "St Michael's CofE Primary School"], [51.634597, -0.099633, "/schools/enfield/st-pauls-cofe-primary-school/", "St Paul's CofE Primary School"], [51.648258, -0.040143, "/schools/enfield/st-marys-catholic-primary-school/", "St Mary's Catholic Primary School"], [51.629281, -0.055657, "/schools/enfield/st-edmunds-catholic-primary-school/", "St Edmund's Catholic Primary School"], [51.659889, -0.081152, "/schools/enfield/st-georges-catholic-primary-school/", "St George's Catholic Primary School"], [51.623053, -0.120414, "/schools/enfield/st-monicas-rc-primary-school/", "St Monica's RC Primary School"], [51.61547, -0.137772, "/schools/enfield/our-lady-of-lourdes-catholic-primary-school/", "Our Lady of Lourdes Catholic Primary School"], [51.625124, -0.07021, "/schools/enfield/latymer-all-saints-cofe-primary-school/", "Latymer All Saints CofE Primary School"], [51.629203, -0.091392, "/schools/enfield/winchmore-school/", "Winchmore School"], [51.65422, -0.08369, "/schools/enfield/enfield-county-school-for-girls/", "Enfield County School for Girls"], [51.660675, -0.075306, "/schools/enfield/chace-community-school/", "Chace Community School"], [51.657249, -0.055138, "/schools/enfield/bishop-stopfords-school/", "Bishop Stopford's School"], [51.616307, -0.107967, "/schools/enfield/st-annes-catholic-high-school-for-girls/", "St Anne's Catholic High School for Girls"], [51.643747, -0.044645, "/schools/enfield/st-matthews-cofe-primary-school/", "St Matthew's CofE Primary School"], [51.626025, -0.074116, "/schools/enfield/the-latymer-school/", "The Latymer School"], [51.615057, -0.124254, "/schools/enfield/laurel-park-school/", "Laurel Park School"], [51.672908, -0.05587, "/schools/enfield/st-ignatius-college/", "St Ignatius College"], [51.635525, -0.103091, "/schools/enfield/keble-preparatory-school/", "Keble Preparatory School"], [51.626092, -0.104179, "/schools/enfield/palmers-green-high-school/", "Palmers Green High School"], [51.641042, -0.095577, "/schools/enfield/grange-park-preparatory-school/", "Grange Park Preparatory School"], [51.638013, -0.139984, "/schools/enfield/salcombe-preparatory-school/", "Salcombe Preparatory School"], [51.644745, -0.138075, "/schools/enfield/vita-et-pax-school/", "Vita Et Pax School"], [51.684828, -0.158841, "/schools/enfield/st-johns-preparatory-and-senior-school/", "St John's Preparatory and Senior School"], [51.663257, -0.045468, "/schools/enfield/durants-school/", "Durants School"], [51.62345, -0.077245, "/schools/enfield/west-lea-school/", "West Lea School"], [51.643088, -0.14589, "/schools/enfield/oaktree-school/", "Oaktree School"], [51.65119, -0.043905, "/schools/enfield/waverley-school/", "Waverley School"], [51.662433, -0.056507, "/schools/enfield/russet-house-school/", "Russet House School"], [51.61451, -0.090911, "/schools/enfield/oakthorpe-primary-school/", "Oakthorpe Primary School"], [51.636727, -0.125845, "/schools/enfield/west-grove-primary/", "West Grove Primary"], [51.62944, -0.094344, "/schools/enfield/highfield-primary-school/", "Highfield Primary School"], [51.648727, -0.108134, "/schools/enfield/highlands-school/", "Highlands School"], [51.628551, -0.074081, "/schools/enfield/starks-field-primary-school/", "Starks Field Primary School"], [51.673483, -0.022494, "/schools/enfield/oasis-academy-enfield/", "Oasis Academy Enfield"], [51.673483, -0.022494, "/schools/enfield/freshsteps-independent-school/", "Freshsteps Independent school"], [51.642556, -0.037932, "/schools/enfield/oasis-academy-hadley/", "Oasis Academy Hadley"], [51.618243, -0.08216, "/schools/enfield/lift-aylward/", "Lift Aylward"], [51.650087, -0.06088, "/schools/enfield/kingsmead-school/", "Kingsmead School"], [51.635974, -0.042292, "/schools/enfield/woodpecker-hall-primary-academy/", "Woodpecker Hall Primary Academy"], [51.653089, -0.083217, "/schools/enfield/enfield-grammar-school/", "Enfield Grammar School"], [51.651791, -0.044877, "/schools/enfield/kingfisher-hall-primary-academy/", "Kingfisher Hall Primary Academy"], [51.663257, -0.045468, "/schools/enfield/enfield-heights-academy/", "Enfield Heights Academy"], [51.64688, -0.049135, "/schools/enfield/heron-hall-academy/", "Heron Hall Academy"], [51.665934, -0.036691, "/schools/enfield/ark-john-keats-academy/", "Ark John Keats Academy"], [51.612331, -0.051355, "/schools/enfield/meridian-angel-primary-school/", "Meridian Angel Primary School"], [51.615769, -0.132256, "/schools/enfield/focus-1st-academy/", "Focus 1st Academy"], [51.646946, -0.14076, "/schools/enfield/southgate-school/", "Southgate School"], [51.665496, -0.100249, "/schools/enfield/one-degree-academy/", "One Degree Academy"], [51.624157, -0.057899, "/schools/enfield/alternative-centre-of-education/", "Alternative Centre of Education"], [51.633349, -0.078762, "/schools/enfield/edmonton-county-school/", "Edmonton County School"], [51.622398, -0.075035, "/schools/enfield/hazelbury-primary-school/", "Hazelbury Primary School"], [51.665154, -0.078124, "/schools/enfield/lavender-primary-school/", "Lavender Primary School"], [51.669521, -0.031807, "/schools/enfield/chesterfield-primary-school/", "Chesterfield Primary School"], [51.613738, -0.125566, "/schools/enfield/bowes-primary-school/", "Bowes Primary School"], [51.65492, -0.035172, "/schools/enfield/brimsdown-primary-school/", "Brimsdown Primary School"], [51.665496, -0.100249, "/schools/enfield/wren-academy-enfield/", "Wren Academy Enfield"], [51.679797, -0.041848, "/schools/enfield/the-lea-valley-academy/", "The Lea Valley Academy"], [51.66125, -0.056731, "/schools/enfield/carterhatch-junior-school/", "Carterhatch Junior School"], [51.647207, -0.108717, "/schools/enfield/grange-park-primary-school/", "Grange Park Primary School"], [51.674321, -0.042403, "/schools/enfield/fern-house-school/", "Fern House School"], [51.630225, -0.066482, "/schools/enfield/churchfield-primary-school/", "Churchfield Primary School"], [51.633917, -0.044534, "/schools/enfield/delta-primary-school/", "Delta Primary School"], [51.666179, -0.040584, "/schools/enfield/eastfield-primary-school/", "Eastfield Primary School"], [51.645423, -0.035163, "/schools/enfield/alma-primary-school/", "Alma Primary School"], [51.667632, -0.064209, "/schools/enfield/worcesters-primary-school/", "Worcesters Primary School"], [51.675386, -0.027098, "/schools/enfield/keys-meadow-primary-school/", "Keys Meadow Primary School"], [51.639852, -0.12839, "/schools/enfield/wolfson-hillel-primary-school/", "Wolfson Hillel Primary School"], [51.634865, -0.054536, "/schools/enfield/houndsfield-primary-school/", "Houndsfield Primary School"], [51.637812, -0.059237, "/schools/enfield/galliard-primary-school/", "Galliard Primary School"], [51.625024, -0.126704, "/schools/enfield/walker-primary-school/", "Walker Primary School"], [51.613093, -0.060971, "/schools/enfield/raynham-primary-school/", "Raynham Primary School"], [51.612867, -0.084972, "/schools/enfield/wilbury-primary-school/", "Wilbury Primary School"], [51.618157, -0.059975, "/schools/enfield/fleecefield-primary-school/", "Fleecefield Primary School"], [51.617899, -0.059567, "/schools/enfield/brettenham-primary-school/", "Brettenham Primary School"], [51.63286, -0.045894, "/schools/enfield/aim-academy-north-london/", "AIM Academy North London"], [51.652896, -0.081317, "/schools/enfield/silverways-school/", "Silverways School"], [51.665568, -0.036273, "/schools/enfield/salmons-brook-school/", "Salmons Brook School"], [51.651735, -0.108428, "/schools/enfield/merryhills-primary-school/", "Merryhills Primary School"], [51.629121, -0.049754, "/schools/enfield/eldon-primary-school/", "Eldon Primary School"], [51.64335, -0.14137, "/schools/enfield/de-bohun-primary-school/", "De Bohun Primary School"], [51.643372, -0.112866, "/schools/enfield/eversley-primary-school/", "Eversley Primary School"], [51.678191, -0.04967, "/schools/enfield/honilands-primary-school/", "Honilands Primary School"]];
+    if (!points.length) return;
+    var lats = points.map(function(p) { return p[0]; });
+    var lngs = points.map(function(p) { return p[1]; });
+    var avgLat = lats.reduce(function(a,b) { return a+b; }, 0) / lats.length;
+    var avgLng = lngs.reduce(function(a,b) { return a+b; }, 0) / lngs.length;
+    var map = L.map('map', { scrollWheelZoom: false }).setView([avgLat, avgLng], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+    points.forEach(function(p) {
+      L.circleMarker([p[0], p[1]], {
+        radius: 5, color: '#0b2545', fillColor: '#0b6efd', fillOpacity: 0.8, weight: 1
+      }).addTo(map).bindPopup('<a href="' + p[2] + '">' + p[3] + '</a>');
     });
-  }
-  function updateBar(){
-    var sel=getSelected();
-    var bar=document.getElementById('cmp-bar');
-    document.getElementById('cmp-count').textContent=sel.length+' school'+(sel.length===1?'':' s')+' selected';
-    bar.style.display=sel.length>0?'flex':'none';
-  }
-  document.querySelectorAll('.sch-sel').forEach(function(cb){ cb.onchange=updateBar; });
-
-  function buildCompareText(sel,markdown){
-    var lines=['📋 *My '+borough+' school shortlist*',''];
-    sel.forEach(function(s,i){
-      lines.push((i+1)+'. '+(markdown?'*':'')+s.name+(markdown?'*':''));
-      lines.push('   ⭐ Ofsted: '+s.ofsted+(s.phase?' · '+s.phase:''));
-      if(s.att8)lines.push('   📊 Attainment 8: '+s.att8);
-      if(s.ks2)lines.push('   📝 KS2 expected: '+s.ks2+'%');
-      lines.push('   🔗 '+s.url);
-      lines.push('');
-    });
-    lines.push('via London Schools Explorer — '+boroughUrl);
-    return lines.join('\n');
-  }
-  window.shareCompareWhatsApp=function(){
-    var sel=getSelected();
-    if(!sel.length)return;
-    window.open('https://wa.me/?text='+encodeURIComponent(buildCompareText(sel,true)),'_blank');
-  };
-  window.shareCompareEmail=function(){
-    var sel=getSelected();
-    if(!sel.length)return;
-    var subj='My '+borough+' school shortlist — London Schools Explorer';
-    window.location.href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(buildCompareText(sel,false));
-  };
-  window.clearSelection=function(){
-    document.querySelectorAll('.sch-sel:checked').forEach(function(cb){cb.checked=false;});
-    updateBar();
-  };
-})();
-</script>
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function () {
-    navigator.serviceWorker.register('/sw.js').catch(function () {});
-  });
-}
+  })();
 </script>
 </body>
 </html>

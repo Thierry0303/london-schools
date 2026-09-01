@@ -1,1272 +1,501 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en-GB">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Schools in Westminster, London | Ofsted Ratings &amp; Results | London Schools Explorer</title>
-  <meta name="description" content="86 schools in Westminster, London. 15 Outstanding, 36 Good-rated by Ofsted. Compare admissions oversubscription, exam results and crime data. Free.">
-  <script type="application/ld+json">{
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Schools in Westminster, London — Ofsted, Performance & Admissions</title>
+<meta name="description" content="All 86 schools in Westminster, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
+<link rel="canonical" href="https://londonschool.directory/schools/westminster/">
+<meta property="og:title" content="Schools in Westminster, London — Ofsted, Performance & Admissions">
+<meta property="og:description" content="All 86 schools in Westminster, London. Ofsted ratings, KS2/KS4 results, admissions competitiveness, appeal success rates and map. Updated monthly.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://londonschool.directory/schools/westminster/">
+<meta property="og:site_name" content="London School Directory">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0b2545">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="preconnect" href="https://unpkg.com">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+  :root {
+    --ink: #0b2545;
+    --ink-2: #1e3a5f;
+    --muted: #5b6b85;
+    --line: #e3e8ef;
+    --bg: #ffffff;
+    --bg-2: #f6f8fb;
+    --accent: #0b6efd;
+    --good: #137333;
+    --warn: #a85b00;
+    --bad: #b3261e;
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  header.site {
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+    position: sticky; top: 0; z-index: 50;
+  }
+  header.site .inner {
+    max-width: 1100px; margin: 0 auto; padding: 14px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  header.site a.brand { color: var(--ink); font-weight: 700; letter-spacing: -0.01em; }
+  header.site nav a { margin-left: 18px; color: var(--ink-2); font-size: 14px; }
+  main { max-width: 1100px; margin: 0 auto; padding: 28px 20px 80px; }
+  .crumbs { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+  .crumbs a { color: var(--muted); }
+  h1 { font-size: 32px; line-height: 1.2; margin: 0 0 8px; letter-spacing: -0.02em; }
+  .lede { color: var(--ink-2); font-size: 17px; max-width: 720px; }
+  .stamp { font-size: 12px; color: var(--muted); margin-top: 8px; }
+  .stamp .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--good); vertical-align: middle; margin-right: 6px; }
+  .grid-stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px; margin: 24px 0 8px;
+  }
+  .stat {
+    background: var(--bg-2); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 14px 16px;
+  }
+  .stat .v { font-size: 24px; font-weight: 700; color: var(--ink); }
+  .stat .l { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  section { margin-top: 36px; }
+  h2 { font-size: 22px; margin: 0 0 12px; letter-spacing: -0.01em; }
+  .twocol { display: grid; grid-template-columns: 1.4fr 1fr; gap: 28px; }
+  @media (max-width: 820px) { .twocol { grid-template-columns: 1fr; } }
+  table.schools { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table.schools th, table.schools td {
+    text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line);
+  }
+  table.schools th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); font-weight: 600; }
+  .rating { font-weight: 600; }
+  .rating.Outstanding { color: var(--good); }
+  .rating.Good { color: var(--ink-2); }
+  .rating.RequiresImprovement, .rating.Requires { color: var(--warn); }
+  .rating.Inadequate { color: var(--bad); }
+  #map { height: 380px; border-radius: var(--radius); border: 1px solid var(--line); }
+  .pills { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pill { background: var(--bg-2); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; font-size: 12px; color: var(--ink-2); }
+  details.faq { border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 8px; background: var(--bg); }
+  details.faq summary { cursor: pointer; font-weight: 600; color: var(--ink); }
+  details.faq[open] { background: var(--bg-2); }
+  footer { border-top: 1px solid var(--line); padding: 28px 20px; color: var(--muted); font-size: 13px; }
+  footer .inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 24px; flex-wrap: wrap; }
+  .sources { font-size: 13px; color: var(--muted); }
+  .sources a { color: var(--muted); text-decoration: underline; }
+  .cta {
+    display: inline-block; background: var(--ink); color: #fff; padding: 10px 14px;
+    border-radius: var(--radius); font-size: 14px; font-weight: 600;
+  }
+  .cta:hover { background: var(--ink-2); text-decoration: none; }
+</style>
+<script type="application/ld+json">
+[
+  {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "name": "Schools in Westminster, London",
-    "description": "86 schools in Westminster, London rated by Ofsted",
-    "numberOfItems": 86,
-    "url": "https://londonschool.directory/schools/westminster"
-  }</script>
-  <script type="application/ld+json">{
+    "name": "Top schools in Westminster, London",
+    "itemListOrder": "http://schema.org/ItemListOrderDescending",
+    "numberOfItems": 14,
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "url": "https://londonschool.directory/schools/westminster/st-lukes-cofe-primary-school/",
+        "name": "St Luke's CofE Primary School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "url": "https://londonschool.directory/schools/westminster/st-clement-danes-cofe-primary-school/",
+        "name": "St Clement Danes CofE Primary School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "url": "https://londonschool.directory/schools/westminster/all-souls-cofe-primary-school/",
+        "name": "All Souls CofE Primary School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "url": "https://londonschool.directory/schools/westminster/ark-atwood-primary-academy/",
+        "name": "Ark Atwood Primary Academy"
+      },
+      {
+        "@type": "ListItem",
+        "position": 5,
+        "url": "https://londonschool.directory/schools/westminster/ark-king-solomon-academy/",
+        "name": "Ark King Solomon Academy"
+      },
+      {
+        "@type": "ListItem",
+        "position": 6,
+        "url": "https://londonschool.directory/schools/westminster/christ-church-bentinck-cofe-primary-school/",
+        "name": "Christ Church Bentinck CofE Primary School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 7,
+        "url": "https://londonschool.directory/schools/westminster/st-josephs-rc-primary-school/",
+        "name": "St Joseph's RC Primary School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 8,
+        "url": "https://londonschool.directory/schools/westminster/the-grey-coat-hospital/",
+        "name": "The Grey Coat Hospital"
+      },
+      {
+        "@type": "ListItem",
+        "position": 9,
+        "url": "https://londonschool.directory/schools/westminster/the-st-marylebone-cofe-school/",
+        "name": "The St Marylebone CofE School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 10,
+        "url": "https://londonschool.directory/schools/westminster/ark-king-solomon-academy/",
+        "name": "Ark King Solomon Academy"
+      },
+      {
+        "@type": "ListItem",
+        "position": 11,
+        "url": "https://londonschool.directory/schools/westminster/paddington-academy/",
+        "name": "Paddington Academy"
+      },
+      {
+        "@type": "ListItem",
+        "position": 12,
+        "url": "https://londonschool.directory/schools/westminster/st-georges-catholic-school/",
+        "name": "St George's Catholic School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 13,
+        "url": "https://londonschool.directory/schools/westminster/westminster-city-school/",
+        "name": "Westminster City School"
+      },
+      {
+        "@type": "ListItem",
+        "position": 14,
+        "url": "https://londonschool.directory/schools/westminster/harris-academy-st-johns-wood/",
+        "name": "Harris Academy St John's Wood"
+      }
+    ]
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How many schools are there in Westminster?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Westminster has 86 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 54 are primary, 34 are secondary, and the remainder are special, all-through, or post-16."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What proportion of Westminster schools are Outstanding?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "As of the latest Ofsted Management Information release, 15 schools in Westminster (17.4%) are rated Outstanding, and 59.3% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "When do I apply for a Reception or Year 7 place in Westminster?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Westminster's applications are coordinated by the local authority through the eAdmissions system. See our full Reception timeline guide."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does the school appeals process work in Westminster?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "If you are refused your preferred school place, you have a statutory right of appeal. Westminster appeals are typically heard in May (Reception) and June\u2013July (secondary). See our appeals tracker for Westminster-level success rates by year."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How can I tell which Westminster schools are over-subscribed?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release."
+        }
+      }
+    ]
+  },
+  {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      {"@type": "ListItem", "position": 1, "name": "London Schools Explorer", "item": "https://londonschool.directory/"},
-      {"@type": "ListItem", "position": 2, "name": "Schools in Westminster", "item": "https://londonschool.directory/schools/westminster"}
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://londonschool.directory/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Boroughs",
+        "item": "https://londonschool.directory/schools/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Westminster",
+        "item": "https://londonschool.directory/schools/westminster/"
+      }
     ]
-  }</script>
-  <link rel="canonical" href="https://londonschool.directory/schools/westminster">
-  <meta property="og:title" content="Schools in Westminster | London Schools Explorer">
-  <meta property="og:description" content="86 schools in Westminster. 15 Outstanding-rated. Compare Ofsted ratings, exam results and admissions.">
-  <meta property="og:url" content="https://londonschool.directory/schools/westminster">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, -apple-system, sans-serif; color: #1a1a1a; background: #f8f9fa; line-height: 1.6; }
-    a { color: #1565C0; }
-    .topbar { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 12px 20px; }
-    .topbar a { text-decoration: none; font-weight: 600; color: #1a1a1a; font-size: 15px; }
-    .topbar span { color: #888; margin: 0 8px; }
-    .container { max-width: 900px; margin: 0 auto; padding: 32px 20px; }
-    h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
-    .intro { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; font-size: 15px; color: #333; line-height: 1.7; }
-    .stats-row { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
-    .stat-box { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 14px 18px; flex: 1; min-width: 120px; }
-    .stat-num { font-size: 24px; font-weight: 700; color: #1a1a1a; line-height: 1; }
-    .stat-lbl { font-size: 12px; color: #888; margin-top: 4px; }
-    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #e0e0e0; }
-    th { background: #f5f5f5; padding: 12px 16px; text-align: left; font-size: 13px; color: #555; font-weight: 600; border-bottom: 1px solid #e0e0e0; }
-    td { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
-    tr:last-child td { border-bottom: none; }
-    tr:hover td { background: #fafafa; }
-    .back { display: inline-block; margin-bottom: 20px; font-size: 14px; color: #555; text-decoration: none; }
-    .back:hover { color: #111; }
-    footer { text-align: center; padding: 32px 20px; font-size: 13px; color: #888; }
-    @media (max-width: 600px) {
-      .container { padding: 16px 12px; }
-      h1 { font-size: 22px; }
-      .stats-row { grid-template-columns: 1fr 1fr; }
-      .intro { padding: 14px 16px; font-size: 14px; }
-      table { font-size: 13px; }
-      th, td { padding: 10px 10px; overflow-wrap: anywhere; word-break: break-word; }
-      th:nth-child(5), td:nth-child(5) { display: none; }
-      .topbar { padding: 10px 12px; font-size: 13px; }
-    }
-    @media (max-width: 600px) { .stats-row { flex-direction: column; } }
-  </style>
-  <link rel="manifest" href="/manifest.webmanifest">
-  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  }
+]
+</script>
 </head>
 <body>
-<div class="topbar">
-  <div style="max-width:900px;margin:0 auto">
-    <a href="/">London Schools Explorer</a>
-    <span>/</span>
-    Westminster
+<header class="site">
+  <div class="inner">
+    <a class="brand" href="/">London School Directory</a>
+    <nav>
+      <a href="/">Search</a>
+      <a href="/appeals.html">Appeals</a>
+      <a href="/methodology.html">Methodology</a>
+      <a href="/about.html">About</a>
+    </nav>
   </div>
-</div>
-<div class="container">
-  <a class="back" href="/">&#8592; All boroughs</a>
-  <h1>Schools in Westminster</h1>
-
-  <div class="stats-row">
-    <div class="stat-box"><div class="stat-num">86</div><div class="stat-lbl">Total schools</div></div>
-    <div class="stat-box"><div class="stat-num">15</div><div class="stat-lbl">Outstanding</div></div>
-    <div class="stat-box"><div class="stat-num">36</div><div class="stat-lbl">Good</div></div>
-    <div class="stat-box"><div class="stat-num">5</div><div class="stat-lbl">School phases</div></div>
+</header>
+<main>
+  <div class="crumbs">
+    <a href="/">Home</a> &rsaquo; <a href="/schools/">Boroughs</a> &rsaquo; Westminster
   </div>
 
-  <div class="intro">Westminster is central London's most prominent borough and home to a mix of outstanding state schools and prestigious independent institutions. The borough is one of the most diverse in London and its schools reflect this. Several primaries are among the most oversubscribed in the capital. Secondary options include Grey Coat Hospital School and The Grey Coat Hospital.</div>
+  <h1>Schools in Westminster, London</h1>
+  <p class="lede">Westminster has a distinctive school mix dominated by faith primaries, a small number of community schools and some of London's best-known secondaries. The borough is small and densely populated, so catchment radii are short and many families apply across the Westminster/Camden border. Admissions in Westminster are managed by the council with most schools as their own admissions authority.</p>
+  <p class="stamp"><span class="dot"></span>Data last verified 1 September 2026. Sources: Ofsted, DfE GIAS, DfE Performance Tables, Metropolitan Police, MHCLG IMD. See <a href="/sources.html">all sources</a>.</p>
 
-  
-<div style="display:flex;gap:16px;flex-wrap:wrap;margin:20px 0;">
+  <section>
+    <div class="grid-stats">
+      <div class="stat"><div class="v">86</div><div class="l">Schools in Westminster</div></div>
+      <div class="stat"><div class="v">17.4%</div><div class="l">Outstanding Ofsted</div></div>
+      <div class="stat"><div class="v">59.3%</div><div class="l">Good or Outstanding</div></div>
+      <div class="stat"><div class="v">54</div><div class="l">Primary schools</div></div>
+      <div class="stat"><div class="v">34</div><div class="l">Secondary schools</div></div>
+      <div class="stat"><div class="v">22%</div><div class="l">Secondary appeal success (2024)</div></div>
+    </div>
+  </section>
 
-<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fdf4ff 0%,#ede9fe 100%);
-     border:1px solid #d8b4fe;border-radius:12px;padding:14px 20px;">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-    <span style="font-size:22px;">🎓</span>
-    <strong style="font-size:15px;color:#5b21b6;">11+ &amp; 13+ Exam Prep</strong>
-  </div>
-  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
-    PiAcademy resources for grammar school entrance, SATs &amp; GCSE.
-    Use code <strong>THIERR25</strong> for 25% off.
-  </p>
-  <a href="https://piacademy.co.uk/?aff=28"
-     target="_blank" rel="noopener sponsored"
-     style="display:inline-block;padding:9px 18px;background:#7e22ce;color:#fff;
-            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
-    Get 25% OFF →
-  </a>
-  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
-</div>
-<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%);
-     border:1px solid #fcd34d;border-radius:12px;padding:14px 20px;">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-    <span style="font-size:22px;">📚</span>
-    <strong style="font-size:15px;color:#92400e;">Children's Books</strong>
-  </div>
-  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
-    Great books at low prices. At checkout, choose your school — Scholastic donates
-    <strong>20p for every £1 spent</strong> back to the school in free books.
-  </p>
-  <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&ued=https%3A%2F%2Fwww.scholastic.co.uk%2Fteachers"
-     target="_blank" rel="noopener sponsored"
-     style="display:inline-block;padding:9px 18px;background:#d97706;color:#fff;
-            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
-    Shop at Scholastic →
-  </a>
-  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
-</div>
-<div style="flex:1;min-width:260px;background:linear-gradient(135deg,#fff8f0 0%,#fff3e0 100%);
-     border:1px solid #fed7aa;border-radius:12px;padding:14px 20px;">
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-    <span style="font-size:22px;">🛒</span>
-    <strong style="font-size:15px;color:#92400e;">School Supplies</strong>
-  </div>
-  <p style="font-size:13px;color:#555;line-height:1.5;margin-bottom:12px;">
-    Stationery, bags, PE kit, lunchboxes and more — fast delivery from Amazon.
-  </p>
-  <a href="https://www.amazon.co.uk/s?k=school+supplies+stationery&tag=londonparents-21"
-     target="_blank" rel="noopener sponsored"
-     style="display:inline-block;padding:9px 18px;background:#FF9900;color:#111;
-            border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;">
-    Shop on Amazon →
-  </a>
-  <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
-</div>
-</div>
+  <section>
+    <div class="twocol">
+      <div>
+        <h2>Top primary schools in Westminster</h2>
+        <p class="sources">Ranked by Ofsted rating, then by latest KS2 performance. See <a href="/methodology.html">methodology</a>.</p>
+        <table class="schools">
+          <thead>
+            <tr><th>School</th><th>Ofsted</th><th>KS2 %</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><a href="/schools/westminster/st-lukes-cofe-primary-school/">St Luke's CofE Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>100.0</td></tr>
+            <tr><td><a href="/schools/westminster/st-clement-danes-cofe-primary-school/">St Clement Danes CofE Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>95.0</td></tr>
+            <tr><td><a href="/schools/westminster/all-souls-cofe-primary-school/">All Souls CofE Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>92.0</td></tr>
+            <tr><td><a href="/schools/westminster/ark-atwood-primary-academy/">Ark Atwood Primary Academy</a></td><td class="rating Outstanding">Outstanding</td><td>88.0</td></tr>
+            <tr><td><a href="/schools/westminster/ark-king-solomon-academy/">Ark King Solomon Academy</a></td><td class="rating Outstanding">Outstanding</td><td>87.0</td></tr>
+            <tr><td><a href="/schools/westminster/christ-church-bentinck-cofe-primary-school/">Christ Church Bentinck CofE Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>85.0</td></tr>
+            <tr><td><a href="/schools/westminster/st-josephs-rc-primary-school/">St Joseph's RC Primary School</a></td><td class="rating Outstanding">Outstanding</td><td>64.0</td></tr>
+          </tbody>
+        </table>
 
-  <!-- Borough share buttons -->
-  <div style="display:flex;gap:10px;margin:16px 0 8px;flex-wrap:wrap;align-items:center;">
-    <span style="font-size:13px;color:#555;font-weight:600;">Share Westminster schools:</span>
-    <button onclick="shareBoroughWhatsApp()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 WhatsApp</button>
-    <button onclick="shareBoroughEmail()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#1565C0;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Email</button>
-    <span style="font-size:12px;color:#999;margin-left:4px;">Or tick schools below to share a shortlist</span>
-  </div>
+        <h2 style="margin-top:28px">Top secondary schools in Westminster</h2>
+        <p class="sources">Ranked by Ofsted rating, then by latest KS4 Attainment 8.</p>
+        <table class="schools">
+          <thead>
+            <tr><th>School</th><th>Ofsted</th><th>Att 8</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><a href="/schools/westminster/the-grey-coat-hospital/">The Grey Coat Hospital</a></td><td class="rating Outstanding">Outstanding</td><td>65.3</td></tr>
+            <tr><td><a href="/schools/westminster/the-st-marylebone-cofe-school/">The St Marylebone CofE School</a></td><td class="rating Outstanding">Outstanding</td><td>62.9</td></tr>
+            <tr><td><a href="/schools/westminster/ark-king-solomon-academy/">Ark King Solomon Academy</a></td><td class="rating Outstanding">Outstanding</td><td>58.2</td></tr>
+            <tr><td><a href="/schools/westminster/paddington-academy/">Paddington Academy</a></td><td class="rating Outstanding">Outstanding</td><td>57.3</td></tr>
+            <tr><td><a href="/schools/westminster/st-georges-catholic-school/">St George's Catholic School</a></td><td class="rating Outstanding">Outstanding</td><td>57.3</td></tr>
+            <tr><td><a href="/schools/westminster/westminster-city-school/">Westminster City School</a></td><td class="rating Good">Good</td><td>52.7</td></tr>
+            <tr><td><a href="/schools/westminster/harris-academy-st-johns-wood/">Harris Academy St John's Wood</a></td><td class="rating Good">Good</td><td>52.4</td></tr>
+          </tbody>
+        </table>
 
-  <!-- Sticky compare bar (appears when schools are ticked) -->
-  <div id="cmp-bar" style="display:none;position:sticky;top:0;z-index:100;background:#1A1A2E;color:#fff;padding:12px 16px;border-radius:10px;margin-bottom:12px;display:none;align-items:center;gap:10px;flex-wrap:wrap;">
-    <span id="cmp-count" style="font-weight:700;font-size:14px;">0 schools selected</span>
-    <button onclick="shareCompareWhatsApp()" style="padding:8px 16px;background:#25D366;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">📱 Share via WhatsApp</button>
-    <button onclick="shareCompareEmail()" style="padding:8px 16px;background:#fff;color:#1A1A2E;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✉️ Share via Email</button>
-    <button onclick="clearSelection()" style="padding:8px 12px;background:transparent;color:#aaa;border:1px solid #555;border-radius:8px;font-size:12px;cursor:pointer;">✕ Clear</button>
-  </div>
+        <p style="margin-top:14px"><a class="cta" href="#all-schools">Jump to all 86 schools in Westminster</a></p>
+      </div>
+      <div>
+        <h2>Map</h2>
+        <div id="map" aria-label="Map of schools in Westminster"></div>
+      </div>
+    </div>
+  </section>
 
-  <table>
-    <thead><tr><th style="width:36px"></th><th>School</th><th>Phase</th><th>Ofsted</th><th>Pupils</th></tr></thead>
-    <tbody><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Abingdon House School"
-            data-ofsted="Not yet rated"
-            data-phase="All-through"
-            data-att8="1.3"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/abingdon-house-school"></td>
-          <td><a href="/schools/westminster/abingdon-house-school">Abingdon House School</a></td>
-          <td>All-through</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>107</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="All Souls CofE Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="92.0"
-            data-url="https://londonschool.directory/schools/westminster/all-souls-cofe-primary-school"></td>
-          <td><a href="/schools/westminster/all-souls-cofe-primary-school">All Souls CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>180</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Ark Atwood Primary Academy"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="88.0"
-            data-url="https://londonschool.directory/schools/westminster/ark-atwood-primary-academy"></td>
-          <td><a href="/schools/westminster/ark-atwood-primary-academy">Ark Atwood Primary Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>419</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Ark King Solomon Academy"
-            data-ofsted="Outstanding"
-            data-phase="All-through"
-            data-att8="58.2"
-            data-ks2="87.0"
-            data-url="https://londonschool.directory/schools/westminster/ark-king-solomon-academy"></td>
-          <td><a href="/schools/westminster/ark-king-solomon-academy">Ark King Solomon Academy</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>1319</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Arnold House School"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/arnold-house-school"></td>
-          <td><a href="/schools/westminster/arnold-house-school">Arnold House School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>359</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Bales College"
-            data-ofsted="Not yet rated"
-            data-phase="Secondary"
-            data-att8="17.0"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/bales-college"></td>
-          <td><a href="/schools/westminster/bales-college">Bales College</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>77</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Brighton College Prep Kensington"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/brighton-college-prep-kensington"></td>
-          <td><a href="/schools/westminster/brighton-college-prep-kensington">Brighton College Prep Kensington</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>329</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Burdett-Coutts and Townshend Foundation CofE Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="75.0"
-            data-url="https://londonschool.directory/schools/westminster/burdett-coutts-and-townshend-foundation-cofe-primary-school"></td>
-          <td><a href="/schools/westminster/burdett-coutts-and-townshend-foundation-cofe-primary-school">Burdett-Coutts and Townshend Foundation CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>180</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Caelum House School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/caelum-house-school"></td>
-          <td><a href="/schools/westminster/caelum-house-school">Caelum House School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>17</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Christ Church Bentinck CofE Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="85.0"
-            data-url="https://londonschool.directory/schools/westminster/christ-church-bentinck-cofe-primary-school"></td>
-          <td><a href="/schools/westminster/christ-church-bentinck-cofe-primary-school">Christ Church Bentinck CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>218</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="College Park School"
-            data-ofsted="Good"
-            data-phase="All-through"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/college-park-school"></td>
-          <td><a href="/schools/westminster/college-park-school">College Park School</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>167</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Connaught House School"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/connaught-house-school"></td>
-          <td><a href="/schools/westminster/connaught-house-school">Connaught House School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>66</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Dorothy Gardner Nursery School"
-            data-ofsted="Good"
-            data-phase="Nursery"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/dorothy-gardner-nursery-school"></td>
-          <td><a href="/schools/westminster/dorothy-gardner-nursery-school">Dorothy Gardner Nursery School</a></td>
-          <td>Nursery</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>71</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Eaton House School"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/eaton-house-school"></td>
-          <td><a href="/schools/westminster/eaton-house-school">Eaton House School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>114</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Eaton Square Prep School"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/eaton-square-prep-school"></td>
-          <td><a href="/schools/westminster/eaton-square-prep-school">Eaton Square Prep School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>222</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Edward Wilson Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="59.0"
-            data-url="https://londonschool.directory/schools/westminster/edward-wilson-primary-school"></td>
-          <td><a href="/schools/westminster/edward-wilson-primary-school">Edward Wilson Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>254</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Eifa International School"
-            data-ofsted="Good"
-            data-phase="All-through"
-            data-att8="3.0"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/eifa-international-school"></td>
-          <td><a href="/schools/westminster/eifa-international-school">Eifa International School</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>111</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Essendine Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="88.0"
-            data-url="https://londonschool.directory/schools/westminster/essendine-primary-school"></td>
-          <td><a href="/schools/westminster/essendine-primary-school">Essendine Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>237</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Fairley House School"
-            data-ofsted="Not yet rated"
-            data-phase="All-through"
-            data-att8="21.8"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/fairley-house-school"></td>
-          <td><a href="/schools/westminster/fairley-house-school">Fairley House School</a></td>
-          <td>All-through</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>202</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Francis Holland School"
-            data-ofsted="Not yet rated"
-            data-phase="Secondary"
-            data-att8="46.6"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/francis-holland-school"></td>
-          <td><a href="/schools/westminster/francis-holland-school">Francis Holland School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>546</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Francis Holland School"
-            data-ofsted="Not yet rated"
-            data-phase="Secondary"
-            data-att8="14.5"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/francis-holland-school"></td>
-          <td><a href="/schools/westminster/francis-holland-school">Francis Holland School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>594</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Gateway Academy"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="66.0"
-            data-url="https://londonschool.directory/schools/westminster/gateway-academy"></td>
-          <td><a href="/schools/westminster/gateway-academy">Gateway Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>428</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Halcyon London International School"
-            data-ofsted="Not yet rated"
-            data-phase="Secondary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/halcyon-london-international-school"></td>
-          <td><a href="/schools/westminster/halcyon-london-international-school">Halcyon London International School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>157</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Hallfield Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="74.0"
-            data-url="https://londonschool.directory/schools/westminster/hallfield-primary-school"></td>
-          <td><a href="/schools/westminster/hallfield-primary-school">Hallfield Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>223</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Hampden Gurney CofE Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="100.0"
-            data-url="https://londonschool.directory/schools/westminster/hampden-gurney-cofe-primary-school"></td>
-          <td><a href="/schools/westminster/hampden-gurney-cofe-primary-school">Hampden Gurney CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>225</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Harris Academy St John's Wood"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="52.4"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/harris-academy-st-johns-wood"></td>
-          <td><a href="/schools/westminster/harris-academy-st-johns-wood">Harris Academy St John's Wood</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1326</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Harris Westminster Sixth Form"
-            data-ofsted="Not yet rated"
-            data-phase="Sixth form"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/harris-westminster-sixth-form"></td>
-          <td><a href="/schools/westminster/harris-westminster-sixth-form">Harris Westminster Sixth Form</a></td>
-          <td>Sixth form</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>610</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Hospital Home and Education Units co St Mary's Hospitial Tuition Unit"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/hospital-home-and-education-units-co-st-marys-hospitial-tuition-unit"></td>
-          <td><a href="/schools/westminster/hospital-home-and-education-units-co-st-marys-hospitial-tuition-unit">Hospital Home and Education Units co St Mary's Hospitial Tuition Unit</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="ICS London"
-            data-ofsted="Not yet rated"
-            data-phase="All-through"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/ics-london"></td>
-          <td><a href="/schools/westminster/ics-london">ICS London</a></td>
-          <td>All-through</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>139</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Inchbald School of Design"
-            data-ofsted="Not yet rated"
-            data-phase="Sixth form"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/inchbald-school-of-design"></td>
-          <td><a href="/schools/westminster/inchbald-school-of-design">Inchbald School of Design</a></td>
-          <td>Sixth form</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Kensington Park School"
-            data-ofsted="Not yet rated"
-            data-phase="Secondary"
-            data-att8="19.1"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/kensington-park-school"></td>
-          <td><a href="/schools/westminster/kensington-park-school">Kensington Park School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>173</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="L'Ecole Bilingue Elementaire"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/lecole-bilingue-elementaire"></td>
-          <td><a href="/schools/westminster/lecole-bilingue-elementaire">L'Ecole Bilingue Elementaire</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>119</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="London Park School Mayfair and London Park School Sixth"
-            data-ofsted="Not yet rated"
-            data-phase="Secondary"
-            data-att8="56.2"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/london-park-school-mayfair-and-london-park-school-sixth"></td>
-          <td><a href="/schools/westminster/london-park-school-mayfair-and-london-park-school-sixth">London Park School Mayfair and London Park School Sixth</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>202</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Maida Vale School"
-            data-ofsted="Not yet rated"
-            data-phase="Secondary"
-            data-att8="20.3"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/maida-vale-school"></td>
-          <td><a href="/schools/westminster/maida-vale-school">Maida Vale School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>197</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Mary Paterson Nursery School"
-            data-ofsted="Outstanding"
-            data-phase="Nursery"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/mary-paterson-nursery-school"></td>
-          <td><a href="/schools/westminster/mary-paterson-nursery-school">Mary Paterson Nursery School</a></td>
-          <td>Nursery</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>61</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Marylebone Boys' School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="49.6"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/marylebone-boys-school"></td>
-          <td><a href="/schools/westminster/marylebone-boys-school">Marylebone Boys' School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>561</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Millbank Gardens Primary Academy"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="87.0"
-            data-url="https://londonschool.directory/schools/westminster/millbank-gardens-primary-academy"></td>
-          <td><a href="/schools/westminster/millbank-gardens-primary-academy">Millbank Gardens Primary Academy</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>260</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Naima Jewish Preparatory School"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/naima-jewish-preparatory-school"></td>
-          <td><a href="/schools/westminster/naima-jewish-preparatory-school">Naima Jewish Preparatory School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>159</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Ormiston Beachcroft Academy"
-            data-ofsted="Good"
-            data-phase="All-through"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/ormiston-beachcroft-academy"></td>
-          <td><a href="/schools/westminster/ormiston-beachcroft-academy">Ormiston Beachcroft Academy</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>51</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Paddington Academy"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="57.3"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/paddington-academy"></td>
-          <td><a href="/schools/westminster/paddington-academy">Paddington Academy</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>1256</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Pimlico Academy"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="50.7"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/pimlico-academy"></td>
-          <td><a href="/schools/westminster/pimlico-academy">Pimlico Academy</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1079</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Pimlico Primary"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="66.0"
-            data-url="https://londonschool.directory/schools/westminster/pimlico-primary"></td>
-          <td><a href="/schools/westminster/pimlico-primary">Pimlico Primary</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>331</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Portman Early Childhood Centre"
-            data-ofsted="Outstanding"
-            data-phase="Nursery"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/portman-early-childhood-centre"></td>
-          <td><a href="/schools/westminster/portman-early-childhood-centre">Portman Early Childhood Centre</a></td>
-          <td>Nursery</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>65</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Queen Elizabeth II Jubilee School"
-            data-ofsted="Good"
-            data-phase="All-through"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/queen-elizabeth-ii-jubilee-school"></td>
-          <td><a href="/schools/westminster/queen-elizabeth-ii-jubilee-school">Queen Elizabeth II Jubilee School</a></td>
-          <td>All-through</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>93</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Queen's College, London"
-            data-ofsted="Not yet rated"
-            data-phase="All-through"
-            data-att8="27.4"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/queens-college-london"></td>
-          <td><a href="/schools/westminster/queens-college-london">Queen's College, London</a></td>
-          <td>All-through</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>412</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Queen's Park Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="62.0"
-            data-url="https://londonschool.directory/schools/westminster/queens-park-primary-school"></td>
-          <td><a href="/schools/westminster/queens-park-primary-school">Queen's Park Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>245</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Saint Christina's School"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/saint-christinas-school"></td>
-          <td><a href="/schools/westminster/saint-christinas-school">Saint Christina's School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>162</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Soho Parish CofE Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="83.0"
-            data-url="https://londonschool.directory/schools/westminster/soho-parish-cofe-primary-school"></td>
-          <td><a href="/schools/westminster/soho-parish-cofe-primary-school">Soho Parish CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>90</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Southbank International School Westminster"
-            data-ofsted="Not yet rated"
-            data-phase="Secondary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/southbank-international-school-westminster"></td>
-          <td><a href="/schools/westminster/southbank-international-school-westminster">Southbank International School Westminster</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>456</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Augustine's Federated Schools: CE High School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="49.7"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/st-augustines-federated-schools-ce-high-school"></td>
-          <td><a href="/schools/westminster/st-augustines-federated-schools-ce-high-school">St Augustine's Federated Schools: CE High School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>953</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Augustines Federated Schools: CofE Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="81.0"
-            data-url="https://londonschool.directory/schools/westminster/st-augustines-federated-schools-cofe-primary-school"></td>
-          <td><a href="/schools/westminster/st-augustines-federated-schools-cofe-primary-school">St Augustines Federated Schools: CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>203</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Barnabas' CofE Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="67.0"
-            data-url="https://londonschool.directory/schools/westminster/st-barnabas-cofe-primary-school"></td>
-          <td><a href="/schools/westminster/st-barnabas-cofe-primary-school">St Barnabas' CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>114</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Clement Danes CofE Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="95.0"
-            data-url="https://londonschool.directory/schools/westminster/st-clement-danes-cofe-primary-school"></td>
-          <td><a href="/schools/westminster/st-clement-danes-cofe-primary-school">St Clement Danes CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>193</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Edward's Catholic Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="75.0"
-            data-url="https://londonschool.directory/schools/westminster/st-edwards-catholic-primary-school"></td>
-          <td><a href="/schools/westminster/st-edwards-catholic-primary-school">St Edward's Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>199</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Gabriel's CofE Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="91.0"
-            data-url="https://londonschool.directory/schools/westminster/st-gabriels-cofe-primary-school"></td>
-          <td><a href="/schools/westminster/st-gabriels-cofe-primary-school">St Gabriel's CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>187</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St George's Catholic School"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="57.3"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/st-georges-catholic-school"></td>
-          <td><a href="/schools/westminster/st-georges-catholic-school">St George's Catholic School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>1170</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St George's Hanover Square CofE Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="75.0"
-            data-url="https://londonschool.directory/schools/westminster/st-georges-hanover-square-cofe-primary-school"></td>
-          <td><a href="/schools/westminster/st-georges-hanover-square-cofe-primary-school">St George's Hanover Square CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>73</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St James & St John Church of England Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="89.0"
-            data-url="https://londonschool.directory/schools/westminster/st-james-st-john-church-of-england-primary-school"></td>
-          <td><a href="/schools/westminster/st-james-st-john-church-of-england-primary-school">St James & St John Church of England Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>143</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St John's Wood Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="81.0"
-            data-url="https://londonschool.directory/schools/westminster/st-johns-wood-primary-school"></td>
-          <td><a href="/schools/westminster/st-johns-wood-primary-school">St John's Wood Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>428</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Joseph's RC Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="64.0"
-            data-url="https://londonschool.directory/schools/westminster/st-josephs-rc-primary-school"></td>
-          <td><a href="/schools/westminster/st-josephs-rc-primary-school">St Joseph's RC Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>264</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Luke's CofE Primary School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="100.0"
-            data-url="https://londonschool.directory/schools/westminster/st-lukes-cofe-primary-school"></td>
-          <td><a href="/schools/westminster/st-lukes-cofe-primary-school">St Luke's CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>186</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Mary Magdalene & St Stephen's CofE Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="70.0"
-            data-url="https://londonschool.directory/schools/westminster/st-mary-magdalene-st-stephens-cofe-primary-school"></td>
-          <td><a href="/schools/westminster/st-mary-magdalene-st-stephens-cofe-primary-school">St Mary Magdalene & St Stephen's CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>168</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Mary's Bryanston Square CofE School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="87.0"
-            data-url="https://londonschool.directory/schools/westminster/st-marys-bryanston-square-cofe-school"></td>
-          <td><a href="/schools/westminster/st-marys-bryanston-square-cofe-school">St Mary's Bryanston Square CofE School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>166</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Matthew's School, Westminster"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="91.0"
-            data-url="https://londonschool.directory/schools/westminster/st-matthews-school-westminster"></td>
-          <td><a href="/schools/westminster/st-matthews-school-westminster">St Matthew's School, Westminster</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>99</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Peter's CofE School"
-            data-ofsted="Outstanding"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="33.0"
-            data-url="https://londonschool.directory/schools/westminster/st-peters-cofe-school"></td>
-          <td><a href="/schools/westminster/st-peters-cofe-school">St Peter's CofE School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>192</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Peter's Eaton Square CofE Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="66.0"
-            data-url="https://londonschool.directory/schools/westminster/st-peters-eaton-square-cofe-primary-school"></td>
-          <td><a href="/schools/westminster/st-peters-eaton-square-cofe-primary-school">St Peter's Eaton Square CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>147</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Saviour's CofE Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="69.0"
-            data-url="https://londonschool.directory/schools/westminster/st-saviours-cofe-primary-school"></td>
-          <td><a href="/schools/westminster/st-saviours-cofe-primary-school">St Saviour's CofE Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>214</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Vincent De Paul Catholic Primary School"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/st-vincent-de-paul-catholic-primary-school"></td>
-          <td><a href="/schools/westminster/st-vincent-de-paul-catholic-primary-school">St Vincent De Paul Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St Vincent's Catholic Primary School"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/st-vincents-catholic-primary-school"></td>
-          <td><a href="/schools/westminster/st-vincents-catholic-primary-school">St Vincent's Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>N/A</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="St. Mary of the Angels Catholic Primary School"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="54.0"
-            data-url="https://londonschool.directory/schools/westminster/st-mary-of-the-angels-catholic-primary-school"></td>
-          <td><a href="/schools/westminster/st-mary-of-the-angels-catholic-primary-school">St. Mary of the Angels Catholic Primary School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>250</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Sylvia Young Theatre School"
-            data-ofsted="Not yet rated"
-            data-phase="Secondary"
-            data-att8="52.8"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/sylvia-young-theatre-school"></td>
-          <td><a href="/schools/westminster/sylvia-young-theatre-school">Sylvia Young Theatre School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>185</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Tachbrook Nursery School"
-            data-ofsted="Outstanding"
-            data-phase="Nursery"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/tachbrook-nursery-school"></td>
-          <td><a href="/schools/westminster/tachbrook-nursery-school">Tachbrook Nursery School</a></td>
-          <td>Nursery</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>52</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The American School in London"
-            data-ofsted="Not yet rated"
-            data-phase="All-through"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/the-american-school-in-london"></td>
-          <td><a href="/schools/westminster/the-american-school-in-london">The American School in London</a></td>
-          <td>All-through</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>1428</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The Grey Coat Hospital"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="65.3"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/the-grey-coat-hospital"></td>
-          <td><a href="/schools/westminster/the-grey-coat-hospital">The Grey Coat Hospital</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>1167</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The St Marylebone Church of England Bridge School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="0.5"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/the-st-marylebone-church-of-england-bridge-school"></td>
-          <td><a href="/schools/westminster/the-st-marylebone-church-of-england-bridge-school">The St Marylebone Church of England Bridge School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>71</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="The St Marylebone CofE School"
-            data-ofsted="Outstanding"
-            data-phase="Secondary"
-            data-att8="62.9"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/the-st-marylebone-cofe-school"></td>
-          <td><a href="/schools/westminster/the-st-marylebone-cofe-school">The St Marylebone CofE School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E8F5E9;color:#1B5E20;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Outstanding</span></td>
-          <td>1181</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Westminster Abbey Choir School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/westminster-abbey-choir-school"></td>
-          <td><a href="/schools/westminster/westminster-abbey-choir-school">Westminster Abbey Choir School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>27</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Westminster Academy"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="51.9"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/westminster-academy"></td>
-          <td><a href="/schools/westminster/westminster-academy">Westminster Academy</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>1003</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Westminster Cathedral Choir School"
-            data-ofsted="Not yet rated"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/westminster-cathedral-choir-school"></td>
-          <td><a href="/schools/westminster/westminster-cathedral-choir-school">Westminster Cathedral Choir School</a></td>
-          <td>Primary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>266</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Westminster City School"
-            data-ofsted="Good"
-            data-phase="Secondary"
-            data-att8="52.7"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/westminster-city-school"></td>
-          <td><a href="/schools/westminster/westminster-city-school">Westminster City School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>790</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Westminster School"
-            data-ofsted="Not yet rated"
-            data-phase="Secondary"
-            data-att8="46.8"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/westminster-school"></td>
-          <td><a href="/schools/westminster/westminster-school">Westminster School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>780</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Westminster Under School"
-            data-ofsted="Not yet rated"
-            data-phase="All-through"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/westminster-under-school"></td>
-          <td><a href="/schools/westminster/westminster-under-school">Westminster Under School</a></td>
-          <td>All-through</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>275</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Wetherby Preparatory School"
-            data-ofsted="Not yet rated"
-            data-phase="N/A"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/wetherby-preparatory-school"></td>
-          <td><a href="/schools/westminster/wetherby-preparatory-school">Wetherby Preparatory School</a></td>
-          <td>N/A</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>255</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Wetherby Senior School"
-            data-ofsted="Not yet rated"
-            data-phase="Secondary"
-            data-att8="17.8"
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/wetherby-senior-school"></td>
-          <td><a href="/schools/westminster/wetherby-senior-school">Wetherby Senior School</a></td>
-          <td>Secondary</td>
-          <td><span style="background:#F5F5F5;color:#424242;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Not yet rated</span></td>
-          <td>406</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Wilberforce Primary"
-            data-ofsted="Good"
-            data-phase="Primary"
-            data-att8=""
-            data-ks2="77.0"
-            data-url="https://londonschool.directory/schools/westminster/wilberforce-primary"></td>
-          <td><a href="/schools/westminster/wilberforce-primary">Wilberforce Primary</a></td>
-          <td>Primary</td>
-          <td><span style="background:#E3F2FD;color:#1565C0;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Good</span></td>
-          <td>157</td>
-        </tr><tr>
-          <td style="width:36px;text-align:center"><input type="checkbox" class="sch-sel"
-            data-name="Woodside School"
-            data-ofsted="Requires improvement"
-            data-phase="All-through"
-            data-att8=""
-            data-ks2=""
-            data-url="https://londonschool.directory/schools/westminster/woodside-school"></td>
-          <td><a href="/schools/westminster/woodside-school">Woodside School</a></td>
-          <td>All-through</td>
-          <td><span style="background:#FFF3E0;color:#E65100;padding:2px 8px;border-radius:12px;font-size:12px;font-weight:600">Requires improvement</span></td>
-          <td>1</td>
-        </tr></tbody>
-  </table>
-</div>
-<footer><a href="/">London Schools Explorer</a> &mdash; helping families find the right school in London.<p style="margin-top:10px">Browse by type: <a href="/schools/outstanding">Outstanding</a> &middot; <a href="/schools/good">Good</a> &middot; <a href="/schools/grammar">Grammar</a> &middot; <a href="/schools/selective">Selective</a> &middot; <a href="/schools/faith">Faith</a> &middot; <a href="/schools/primary">Primary</a> &middot; <a href="/schools/secondary">Secondary</a> &middot; <a href="/schools/sixth-form">Sixth form</a> &middot; <a href="/schools/independent">Private &amp; independent</a></p></footer>
-<script defer src="/_vercel/insights/script.js"></script>
+  <section>
+    <h2>What the data says about Westminster</h2>
+    <p><strong>59.3%</strong> of Westminster schools are currently rated Good or Outstanding by Ofsted, compared with a London average of roughly 90% for primary and 80% for secondary. The average number of applications per place across Westminster is <strong>1.3</strong>, a useful indicator of how competitive local admissions are. The average number of recorded crime incidents within 500 metres of a school in Westminster over the most recent reporting month is <strong>385.85</strong>, drawn from the Metropolitan Police open data API. The mean IMD (Index of Multiple Deprivation) decile of Westminster's schools is <strong>5.02</strong> — 1 is most deprived, 10 is least deprived. All metrics on this page are recomputed from source data on the 15th of every month. See our <a href='/methodology.html'>methodology</a> for definitions and limitations.</p>
+  </section>
+
+  <section id="all-schools">
+    <h2>All schools in Westminster</h2>
+    <p class="sources">Every school in Westminster, listed alphabetically. Click any school for the full record.</p>
+    <table class="schools">
+      <thead>
+        <tr><th>School</th><th>Phase</th><th>Ofsted</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><a href="/schools/westminster/abingdon-house-school/">Abingdon House School</a></td><td>All-through</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/westminster/all-souls-cofe-primary-school/">All Souls CofE Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/westminster/ark-atwood-primary-academy/">Ark Atwood Primary Academy</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/westminster/ark-king-solomon-academy/">Ark King Solomon Academy</a></td><td>All-through</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/westminster/arnold-house-school/">Arnold House School</a></td><td>Primary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/westminster/bales-college/">Bales College</a></td><td>Secondary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/westminster/brighton-college-prep-kensington/">Brighton College Prep Kensington</a></td><td>Primary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/westminster/burdett-coutts-and-townshend-foundation-cofe-primary-school/">Burdett-Coutts and Townshend Foundation CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/caelum-house-school/">Caelum House School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/christ-church-bentinck-cofe-primary-school/">Christ Church Bentinck CofE Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/westminster/college-park-school/">College Park School</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/connaught-house-school/">Connaught House School</a></td><td>Primary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/westminster/dorothy-gardner-nursery-school/">Dorothy Gardner Nursery School</a></td><td>Nursery</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/eaton-house-school/">Eaton House School</a></td><td>Primary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/westminster/eaton-square-prep-school/">Eaton Square Prep School</a></td><td>Primary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/westminster/edward-wilson-primary-school/">Edward Wilson Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/eifa-international-school/">Eifa International School</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/essendine-primary-school/">Essendine Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/fairley-house-school/">Fairley House School</a></td><td>All-through</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/westminster/francis-holland-school/">Francis Holland School</a></td><td>Secondary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/westminster/francis-holland-school/">Francis Holland School</a></td><td>Secondary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/westminster/gateway-academy/">Gateway Academy</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/halcyon-london-international-school/">Halcyon London International School</a></td><td>Secondary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/westminster/hallfield-primary-school/">Hallfield Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/hampden-gurney-cofe-primary-school/">Hampden Gurney CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/harris-academy-st-johns-wood/">Harris Academy St John's Wood</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/harris-westminster-sixth-form/">Harris Westminster Sixth Form</a></td><td>Sixth form</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/westminster/hospital-home-and-education-units-co-st-marys-hospitial-tuition-unit/">Hospital Home and Education Units co St Mary's Hospitial Tuition Unit</a></td><td>—</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/westminster/ics-london/">ICS London</a></td><td>All-through</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/westminster/inchbald-school-of-design/">Inchbald School of Design</a></td><td>Sixth form</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/westminster/kensington-park-school/">Kensington Park School</a></td><td>Secondary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/westminster/lecole-bilingue-elementaire/">L'Ecole Bilingue Elementaire</a></td><td>Primary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/westminster/london-park-school-mayfair-and-london-park-school-sixth/">London Park School Mayfair and London Park School Sixth</a></td><td>Secondary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/westminster/maida-vale-school/">Maida Vale School</a></td><td>Secondary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/westminster/mary-paterson-nursery-school/">Mary Paterson Nursery School</a></td><td>Nursery</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/westminster/marylebone-boys-school/">Marylebone Boys' School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/millbank-gardens-primary-academy/">Millbank Gardens Primary Academy</a></td><td>Primary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/westminster/naima-jewish-preparatory-school/">Naima Jewish Preparatory School</a></td><td>Primary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/westminster/ormiston-beachcroft-academy/">Ormiston Beachcroft Academy</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/paddington-academy/">Paddington Academy</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/westminster/pimlico-academy/">Pimlico Academy</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/pimlico-primary/">Pimlico Primary</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/portman-early-childhood-centre/">Portman Early Childhood Centre</a></td><td>Nursery</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/westminster/queen-elizabeth-ii-jubilee-school/">Queen Elizabeth II Jubilee School</a></td><td>All-through</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/queens-college-london/">Queen's College, London</a></td><td>All-through</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/westminster/queens-park-primary-school/">Queen's Park Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/saint-christinas-school/">Saint Christina's School</a></td><td>Primary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/westminster/soho-parish-cofe-primary-school/">Soho Parish CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/southbank-international-school-westminster/">Southbank International School Westminster</a></td><td>Secondary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/westminster/st-augustines-federated-schools-ce-high-school/">St Augustine's Federated Schools: CE High School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/st-augustines-federated-schools-cofe-primary-school/">St Augustines Federated Schools: CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/st-barnabas-cofe-primary-school/">St Barnabas' CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/st-clement-danes-cofe-primary-school/">St Clement Danes CofE Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/westminster/st-edwards-catholic-primary-school/">St Edward's Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/st-gabriels-cofe-primary-school/">St Gabriel's CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/st-georges-catholic-school/">St George's Catholic School</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/westminster/st-georges-hanover-square-cofe-primary-school/">St George's Hanover Square CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/st-james-st-john-church-of-england-primary-school/">St James & St John Church of England Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/st-johns-wood-primary-school/">St John's Wood Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/st-josephs-rc-primary-school/">St Joseph's RC Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/westminster/st-lukes-cofe-primary-school/">St Luke's CofE Primary School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/westminster/st-mary-magdalene-st-stephens-cofe-primary-school/">St Mary Magdalene & St Stephen's CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/st-marys-bryanston-square-cofe-school/">St Mary's Bryanston Square CofE School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/st-matthews-school-westminster/">St Matthew's School, Westminster</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/st-peters-cofe-school/">St Peter's CofE School</a></td><td>Primary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/westminster/st-peters-eaton-square-cofe-primary-school/">St Peter's Eaton Square CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/st-saviours-cofe-primary-school/">St Saviour's CofE Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/st-vincent-de-paul-catholic-primary-school/">St Vincent De Paul Catholic Primary School</a></td><td>Primary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/westminster/st-vincents-catholic-primary-school/">St Vincent's Catholic Primary School</a></td><td>Primary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/westminster/st-mary-of-the-angels-catholic-primary-school/">St. Mary of the Angels Catholic Primary School</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/sylvia-young-theatre-school/">Sylvia Young Theatre School</a></td><td>Secondary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/westminster/tachbrook-nursery-school/">Tachbrook Nursery School</a></td><td>Nursery</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/westminster/the-american-school-in-london/">The American School in London</a></td><td>All-through</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/westminster/the-grey-coat-hospital/">The Grey Coat Hospital</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/westminster/the-st-marylebone-church-of-england-bridge-school/">The St Marylebone Church of England Bridge School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/the-st-marylebone-cofe-school/">The St Marylebone CofE School</a></td><td>Secondary</td><td class="rating Outstanding">Outstanding</td></tr>
+        <tr><td><a href="/schools/westminster/westminster-abbey-choir-school/">Westminster Abbey Choir School</a></td><td>—</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/westminster/westminster-academy/">Westminster Academy</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/westminster-cathedral-choir-school/">Westminster Cathedral Choir School</a></td><td>Primary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/westminster/westminster-city-school/">Westminster City School</a></td><td>Secondary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/westminster-school/">Westminster School</a></td><td>Secondary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/westminster/westminster-under-school/">Westminster Under School</a></td><td>All-through</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/westminster/wetherby-preparatory-school/">Wetherby Preparatory School</a></td><td>—</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/westminster/wetherby-senior-school/">Wetherby Senior School</a></td><td>Secondary</td><td class="rating ">—</td></tr>
+        <tr><td><a href="/schools/westminster/wilberforce-primary/">Wilberforce Primary</a></td><td>Primary</td><td class="rating Good">Good</td></tr>
+        <tr><td><a href="/schools/westminster/woodside-school/">Woodside School</a></td><td>All-through</td><td class="rating Requiresimprovement">Requires improvement</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Frequently asked</h2>
+    <details class="faq"><summary>How many schools are there in Westminster?</summary><p>Westminster has 86 schools in our directory, drawn from the Department for Education's Get Information About Schools register. Of these, 54 are primary, 34 are secondary, and the remainder are special, all-through, or post-16.</p></details>
+<details class="faq"><summary>What proportion of Westminster schools are Outstanding?</summary><p>As of the latest Ofsted Management Information release, 15 schools in Westminster (17.4%) are rated Outstanding, and 59.3% are rated Good or Outstanding. Ratings are refreshed monthly from the Ofsted MI publication.</p></details>
+<details class="faq"><summary>When do I apply for a Reception or Year 7 place in Westminster?</summary><p>Reception applications in England close on 15 January each year for the September intake. Year 7 (secondary transfer) applications close on 31 October. Westminster's applications are coordinated by the local authority through the eAdmissions system. See our <a href='/guides/london-reception-application-timeline/'>full Reception timeline guide</a>.</p></details>
+<details class="faq"><summary>How does the school appeals process work in Westminster?</summary><p>If you are refused your preferred school place, you have a statutory right of appeal. Westminster appeals are typically heard in May (Reception) and June–July (secondary). See our <a href='/appeals.html'>appeals tracker</a> for Westminster-level success rates by year.</p></details>
+<details class="faq"><summary>How can I tell which Westminster schools are over-subscribed?</summary><p>Each school listing on this site shows the number of applications per place from the DfE's published admissions data. Apps-per-place above 2 typically indicates strong over-subscription. We refresh this data annually when the DfE publishes its admissions and offers release.</p></details>
+  </section>
+
+  <section>
+    <h2>Sources</h2>
+    <p class="sources">
+      School list and phase from <a href="https://get-information-schools.service.gov.uk/" rel="nofollow">DfE Get Information About Schools</a> (refreshed monthly).
+      Ofsted ratings from <a href="https://www.gov.uk/government/statistical-data-sets/monthly-management-information-ofsteds-school-inspections-outcomes" rel="nofollow">Ofsted Management Information</a> (refreshed monthly).
+      Performance data from <a href="https://explore-education-statistics.service.gov.uk/" rel="nofollow">DfE Explore Education Statistics</a>.
+      Crime data within 500m from the <a href="https://data.police.uk/" rel="nofollow">Metropolitan Police open data API</a>.
+      Deprivation deciles from <a href="https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019" rel="nofollow">MHCLG English Indices of Deprivation 2019</a>.
+      Read our full <a href="/methodology.html">methodology</a> for how each metric is calculated.
+    </p>
+  </section>
+</main>
+<footer>
+  <div class="inner">
+    <div>&copy; London School Directory. Independent. Free to use.</div>
+    <div><a href="/about.html">About</a> &middot; <a href="/methodology.html">Methodology</a> &middot; <a href="/sources.html">Sources</a> &middot; <a href="/appeals.html">Appeals</a></div>
+    <div>Browse by type: <a href="/schools/outstanding">Outstanding</a> &middot; <a href="/schools/good">Good</a> &middot; <a href="/schools/grammar">Grammar</a> &middot; <a href="/schools/selective">Selective</a> &middot; <a href="/schools/faith">Faith</a> &middot; <a href="/schools/primary">Primary</a> &middot; <a href="/schools/secondary">Secondary</a> &middot; <a href="/schools/sixth-form">Sixth form</a> &middot; <a href="/schools/independent">Private &amp; independent</a></div>
+  </div>
+</footer>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-(function(){
-  var borough="Westminster", boroughUrl="https://londonschool.directory/schools/westminster";
-  var outstanding=15, total=86;
-
-  // Borough-level share
-  window.shareBoroughWhatsApp=function(){
-    var t='🏙️ *Schools in '+borough+', London*\n'+
-        '📊 '+total+' schools · '+outstanding+' Outstanding\n\n'+
-        '🔗 '+boroughUrl;
-    window.open('https://wa.me/?text='+encodeURIComponent(t),'_blank');
-  };
-  window.shareBoroughEmail=function(){
-    var s='Schools in '+borough+' — London Schools Explorer';
-    var b='Schools in '+borough+', London\n'+
-        total+' schools, '+outstanding+' rated Outstanding by Ofsted\n\n'+
-        'Browse them here: '+boroughUrl;
-    window.location.href='mailto:?subject='+encodeURIComponent(s)+'&body='+encodeURIComponent(b);
-  };
-
-  // Shortlist comparison share
-  function getSelected(){
-    return Array.from(document.querySelectorAll('.sch-sel:checked')).map(function(cb){
-      return {name:cb.dataset.name,ofsted:cb.dataset.ofsted,phase:cb.dataset.phase,
-               att8:cb.dataset.att8,ks2:cb.dataset.ks2,url:cb.dataset.url};
+  (function() {
+    var points = [[51.511719, -0.189795, "/schools/westminster/kensington-park-school/", "Kensington Park School"], [51.500184, -0.172531, "/schools/westminster/brighton-college-prep-kensington/", "Brighton College Prep Kensington"], [51.486596, -0.132571, "/schools/westminster/tachbrook-nursery-school/", "Tachbrook Nursery School"], [51.5289, -0.201772, "/schools/westminster/dorothy-gardner-nursery-school/", "Dorothy Gardner Nursery School"], [51.528008, -0.202254, "/schools/westminster/mary-paterson-nursery-school/", "Mary Paterson Nursery School"], [51.5328, -0.169076, "/schools/westminster/st-johns-wood-primary-school/", "St John's Wood Primary School"], [51.521683, -0.189169, "/schools/westminster/edward-wilson-primary-school/", "Edward Wilson Primary School"], [51.528059, -0.195058, "/schools/westminster/essendine-primary-school/", "Essendine Primary School"], [51.51494, -0.18641, "/schools/westminster/hallfield-primary-school/", "Hallfield Primary School"], [51.527468, -0.209325, "/schools/westminster/queens-park-primary-school/", "Queen's Park Primary School"], [51.519848, -0.138605, "/schools/westminster/all-souls-cofe-primary-school/", "All Souls CofE Primary School"], [51.495115, -0.135003, "/schools/westminster/burdett-coutts-and-townshend-foundation-cofe-primary-school/", "Burdett-Coutts and Townshend Foundation CofE Primary School"], [51.516787, -0.164054, "/schools/westminster/hampden-gurney-cofe-primary-school/", "Hampden Gurney CofE Primary School"], [51.534534, -0.191557, "/schools/westminster/st-augustines-federated-schools-cofe-primary-school/", "St Augustines Federated Schools: CofE Primary School"], [51.490531, -0.151626, "/schools/westminster/st-barnabas-cofe-primary-school/", "St Barnabas' CofE Primary School"], [51.513666, -0.119732, "/schools/westminster/st-clement-danes-cofe-primary-school/", "St Clement Danes CofE Primary School"], [51.523332, -0.165679, "/schools/westminster/st-edwards-catholic-primary-school/", "St Edward's Catholic Primary School"], [51.486185, -0.141777, "/schools/westminster/st-gabriels-cofe-primary-school/", "St Gabriel's CofE Primary School"], [51.508825, -0.150093, "/schools/westminster/st-georges-hanover-square-cofe-primary-school/", "St George's Hanover Square CofE Primary School"], [51.511741, -0.134367, "/schools/westminster/soho-parish-cofe-primary-school/", "Soho Parish CofE Primary School"], [51.51295, -0.17924, "/schools/westminster/st-james-st-john-church-of-england-primary-school/", "St James & St John Church of England Primary School"], [51.531559, -0.202763, "/schools/westminster/st-lukes-cofe-primary-school/", "St Luke's CofE Primary School"], [51.522466, -0.189254, "/schools/westminster/st-mary-magdalene-st-stephens-cofe-primary-school/", "St Mary Magdalene & St Stephen's CofE Primary School"], [51.520422, -0.163028, "/schools/westminster/st-marys-bryanston-square-cofe-school/", "St Mary's Bryanston Square CofE School"], [51.518438, -0.197485, "/schools/westminster/st-mary-of-the-angels-catholic-primary-school/", "St. Mary of the Angels Catholic Primary School"], [51.497403, -0.131322, "/schools/westminster/st-matthews-school-westminster/", "St Matthew's School, Westminster"], [51.523703, -0.195994, "/schools/westminster/st-peters-cofe-school/", "St Peter's CofE School"], [51.496015, -0.146391, "/schools/westminster/st-peters-eaton-square-cofe-primary-school/", "St Peter's Eaton Square CofE Primary School"], [51.524159, -0.188221, "/schools/westminster/st-saviours-cofe-primary-school/", "St Saviour's CofE Primary School"], [51.521454, -0.16636, "/schools/westminster/christ-church-bentinck-cofe-primary-school/", "Christ Church Bentinck CofE Primary School"], [51.534277, -0.192418, "/schools/westminster/st-augustines-federated-schools-ce-high-school/", "St Augustine's Federated Schools: CE High School"], [51.534183, -0.177008, "/schools/westminster/arnold-house-school/", "Arnold House School"], [51.518461, -0.146964, "/schools/westminster/queens-college-london/", "Queen's College, London"], [51.524819, -0.160155, "/schools/westminster/francis-holland-school/", "Francis Holland School"], [51.498608, -0.12963, "/schools/westminster/westminster-abbey-choir-school/", "Westminster Abbey Choir School"], [51.494119, -0.155083, "/schools/westminster/eaton-house-school/", "Eaton House School"], [51.491734, -0.153796, "/schools/westminster/francis-holland-school/", "Francis Holland School"], [51.498688, -0.127884, "/schools/westminster/westminster-school/", "Westminster School"], [51.513975, -0.164239, "/schools/westminster/connaught-house-school/", "Connaught House School"], [51.491764, -0.134102, "/schools/westminster/westminster-under-school/", "Westminster Under School"], [51.495234, -0.139104, "/schools/westminster/westminster-cathedral-choir-school/", "Westminster Cathedral Choir School"], [51.534663, -0.176095, "/schools/westminster/the-american-school-in-london/", "The American School in London"], [51.53586, -0.164065, "/schools/westminster/saint-christinas-school/", "Saint Christina's School"], [51.519598, -0.161534, "/schools/westminster/ics-london/", "ICS London"], [51.517151, -0.162612, "/schools/westminster/sylvia-young-theatre-school/", "Sylvia Young Theatre School"], [51.490291, -0.131354, "/schools/westminster/fairley-house-school/", "Fairley House School"], [51.534264, -0.190357, "/schools/westminster/naima-jewish-preparatory-school/", "Naima Jewish Preparatory School"], [51.491626, -0.1435, "/schools/westminster/eaton-square-prep-school/", "Eaton Square Prep School"], [51.52907, -0.215851, "/schools/westminster/bales-college/", "Bales College"], [51.515082, -0.192083, "/schools/westminster/college-park-school/", "College Park School"], [51.525391, -0.202285, "/schools/westminster/queen-elizabeth-ii-jubilee-school/", "Queen Elizabeth II Jubilee School"], [51.525352, -0.192123, "/schools/westminster/paddington-academy/", "Paddington Academy"], [51.52112, -0.192911, "/schools/westminster/westminster-academy/", "Westminster Academy"], [51.522923, -0.168881, "/schools/westminster/portman-early-childhood-centre/", "Portman Early Childhood Centre"], [51.494119, -0.155083, "/schools/westminster/inchbald-school-of-design/", "Inchbald School of Design"], [51.516971, -0.173545, "/schools/westminster/hospital-home-and-education-units-co-st-marys-hospitial-tuition-unit/", "Hospital Home and Education Units co St Mary's Hospitial Tuition Unit"], [51.521364, -0.176756, "/schools/westminster/lecole-bilingue-elementaire/", "L'Ecole Bilingue Elementaire"], [51.516633, -0.161134, "/schools/westminster/wetherby-preparatory-school/", "Wetherby Preparatory School"], [51.523971, -0.166287, "/schools/westminster/abingdon-house-school/", "Abingdon House School"], [51.521572, -0.169281, "/schools/westminster/ark-king-solomon-academy/", "Ark King Solomon Academy"], [51.48818, -0.137173, "/schools/westminster/pimlico-academy/", "Pimlico Academy"], [51.522802, -0.191806, "/schools/westminster/ark-atwood-primary-academy/", "Ark Atwood Primary Academy"], [51.522211, -0.152145, "/schools/westminster/the-st-marylebone-cofe-school/", "The St Marylebone CofE School"], [51.497967, -0.139064, "/schools/westminster/westminster-city-school/", "Westminster City School"], [51.496033, -0.134504, "/schools/westminster/the-grey-coat-hospital/", "The Grey Coat Hospital"], [51.520013, -0.144508, "/schools/westminster/eifa-international-school/", "Eifa International School"], [51.532904, -0.187945, "/schools/westminster/st-georges-catholic-school/", "St George's Catholic School"], [51.515573, -0.161739, "/schools/westminster/halcyon-london-international-school/", "Halcyon London International School"], [51.532301, -0.208356, "/schools/westminster/the-st-marylebone-church-of-england-bridge-school/", "The St Marylebone Church of England Bridge School"], [51.532012, -0.208858, "/schools/westminster/wilberforce-primary/", "Wilberforce Primary"], [51.48818, -0.137173, "/schools/westminster/pimlico-primary/", "Pimlico Primary"], [51.524684, -0.170497, "/schools/westminster/gateway-academy/", "Gateway Academy"], [51.536406, -0.176573, "/schools/westminster/ormiston-beachcroft-academy/", "Ormiston Beachcroft Academy"], [51.519074, -0.176934, "/schools/westminster/marylebone-boys-school/", "Marylebone Boys' School"], [51.49955, -0.131162, "/schools/westminster/harris-westminster-sixth-form/", "Harris Westminster Sixth Form"], [51.517597, -0.150372, "/schools/westminster/wetherby-senior-school/", "Wetherby Senior School"], [51.521611, -0.146028, "/schools/westminster/southbank-international-school-westminster/", "Southbank International School Westminster"], [51.505248, -0.146794, "/schools/westminster/london-park-school-mayfair-and-london-park-school-sixth/", "London Park School Mayfair and London Park School Sixth"], [51.537837, -0.17666, "/schools/westminster/harris-academy-st-johns-wood/", "Harris Academy St John's Wood"], [51.530404, -0.199016, "/schools/westminster/maida-vale-school/", "Maida Vale School"], [51.530807, -0.168118, "/schools/westminster/woodside-school/", "Woodside School"], [51.52742, -0.182209, "/schools/westminster/st-josephs-rc-primary-school/", "St Joseph's RC Primary School"], [51.501204, -0.166453, "/schools/westminster/caelum-house-school/", "Caelum House School"], [51.491418, -0.130443, "/schools/westminster/millbank-gardens-primary-academy/", "Millbank Gardens Primary Academy"], [51.518622, -0.152665, "/schools/westminster/st-vincents-catholic-primary-school/", "St Vincent's Catholic Primary School"], [51.495314, -0.13959, "/schools/westminster/st-vincent-de-paul-catholic-primary-school/", "St Vincent De Paul Catholic Primary School"]];
+    if (!points.length) return;
+    var lats = points.map(function(p) { return p[0]; });
+    var lngs = points.map(function(p) { return p[1]; });
+    var avgLat = lats.reduce(function(a,b) { return a+b; }, 0) / lats.length;
+    var avgLng = lngs.reduce(function(a,b) { return a+b; }, 0) / lngs.length;
+    var map = L.map('map', { scrollWheelZoom: false }).setView([avgLat, avgLng], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+    points.forEach(function(p) {
+      L.circleMarker([p[0], p[1]], {
+        radius: 5, color: '#0b2545', fillColor: '#0b6efd', fillOpacity: 0.8, weight: 1
+      }).addTo(map).bindPopup('<a href="' + p[2] + '">' + p[3] + '</a>');
     });
-  }
-  function updateBar(){
-    var sel=getSelected();
-    var bar=document.getElementById('cmp-bar');
-    document.getElementById('cmp-count').textContent=sel.length+' school'+(sel.length===1?'':' s')+' selected';
-    bar.style.display=sel.length>0?'flex':'none';
-  }
-  document.querySelectorAll('.sch-sel').forEach(function(cb){ cb.onchange=updateBar; });
-
-  function buildCompareText(sel,markdown){
-    var lines=['📋 *My '+borough+' school shortlist*',''];
-    sel.forEach(function(s,i){
-      lines.push((i+1)+'. '+(markdown?'*':'')+s.name+(markdown?'*':''));
-      lines.push('   ⭐ Ofsted: '+s.ofsted+(s.phase?' · '+s.phase:''));
-      if(s.att8)lines.push('   📊 Attainment 8: '+s.att8);
-      if(s.ks2)lines.push('   📝 KS2 expected: '+s.ks2+'%');
-      lines.push('   🔗 '+s.url);
-      lines.push('');
-    });
-    lines.push('via London Schools Explorer — '+boroughUrl);
-    return lines.join('\n');
-  }
-  window.shareCompareWhatsApp=function(){
-    var sel=getSelected();
-    if(!sel.length)return;
-    window.open('https://wa.me/?text='+encodeURIComponent(buildCompareText(sel,true)),'_blank');
-  };
-  window.shareCompareEmail=function(){
-    var sel=getSelected();
-    if(!sel.length)return;
-    var subj='My '+borough+' school shortlist — London Schools Explorer';
-    window.location.href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(buildCompareText(sel,false));
-  };
-  window.clearSelection=function(){
-    document.querySelectorAll('.sch-sel:checked').forEach(function(cb){cb.checked=false;});
-    updateBar();
-  };
-})();
-</script>
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function () {
-    navigator.serviceWorker.register('/sw.js').catch(function () {});
-  });
-}
+  })();
 </script>
 </body>
 </html>

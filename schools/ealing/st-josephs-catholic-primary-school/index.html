@@ -93,7 +93,9 @@
     .card h2 + .rule { height: 2px; width: 34px; background: var(--gold); border-radius: 2px; margin: 8px 0 14px; }
 
     table { width: 100%; border-collapse: collapse; font-size: 14px; }
-    td { padding: 10px 0; border-bottom: 1px solid #F0EEE8; vertical-align: top; }
+    td { padding: 10px 0; border-bottom: 1px solid #F0EEE8; vertical-align: top;
+         overflow-wrap: anywhere; word-break: break-word; }
+    td a { overflow-wrap: anywhere; word-break: break-word; }
     td:first-child { color: var(--muted); width: 46%; }
     td:last-child { color: var(--ink); }
     tr:last-child td { border-bottom: none; }

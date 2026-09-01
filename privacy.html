@@ -33,7 +33,8 @@
   .callout{border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;background:var(--bg-2);margin:18px 0}
   .callout strong{display:block;color:var(--ink);margin-bottom:4px}
   table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14px}
-  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top;overflow-wrap:anywhere;word-break:break-word}
+  @media (max-width:600px){table{font-size:13px}th,td{padding:8px 6px}}
   th{background:var(--bg-2)}
   .stamp{font-size:13px;color:var(--muted);margin-top:24px}
   footer{border-top:1px solid var(--line);padding:28px 20px;color:var(--muted);font-size:13px}

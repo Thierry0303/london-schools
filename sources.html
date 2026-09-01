@@ -22,7 +22,8 @@
   h1{font-size:32px;letter-spacing:-0.02em;margin:0 0 8px}
   .lede{color:var(--ink-2);font-size:18px;margin:0 0 24px}
   table{width:100%;border-collapse:collapse;font-size:14px;margin:18px 0}
-  th,td{text-align:left;padding:12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th,td{text-align:left;padding:12px;border-bottom:1px solid var(--line);vertical-align:top;overflow-wrap:anywhere;word-break:break-word}
+  @media (max-width:600px){table{font-size:13px}th,td{padding:9px 6px}}
   th{font-size:12px;text-transform:uppercase;letter-spacing:0.04em;color:var(--muted);font-weight:600}
   td a{word-break:break-word}
   .badge{display:inline-block;background:var(--bg-2);border:1px solid var(--line);padding:2px 8px;border-radius:999px;font-size:12px;color:var(--ink-2)}

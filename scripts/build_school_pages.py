@@ -663,7 +663,9 @@ def build_school_page(school):
     .card h2 + .rule {{ height: 2px; width: 34px; background: var(--gold); border-radius: 2px; margin: 8px 0 14px; }}
 
     table {{ width: 100%; border-collapse: collapse; font-size: 14px; }}
-    td {{ padding: 10px 0; border-bottom: 1px solid #F0EEE8; vertical-align: top; }}
+    td {{ padding: 10px 0; border-bottom: 1px solid #F0EEE8; vertical-align: top;
+         overflow-wrap: anywhere; word-break: break-word; }}
+    td a {{ overflow-wrap: anywhere; word-break: break-word; }}
     td:first-child {{ color: var(--muted); width: 46%; }}
     td:last-child {{ color: var(--ink); }}
     tr:last-child td {{ border-bottom: none; }}
@@ -1139,7 +1141,8 @@ for borough, borough_schools in by_borough.items():
       .stats-row {{ grid-template-columns: 1fr 1fr; }}
       .intro {{ padding: 14px 16px; font-size: 14px; }}
       table {{ font-size: 13px; }}
-      th, td {{ padding: 10px 10px; }}
+      th, td {{ padding: 10px 10px; overflow-wrap: anywhere; word-break: break-word; }}
+      th:nth-child(5), td:nth-child(5) {{ display: none; }}
       .topbar {{ padding: 10px 12px; font-size: 13px; }}
     }}
     @media (max-width: 600px) {{ .stats-row {{ flex-direction: column; }} }}
@@ -1355,7 +1358,7 @@ def build_type_page(slug, title, meta_desc, intro, filter_fn, prominent_pi=False
       h1 {{ font-size: 22px; }}
       .intro {{ padding: 14px 16px; font-size: 14px; }}
       table {{ font-size: 12px; }}
-      th, td {{ padding: 8px 8px; }}
+      th, td {{ padding: 8px 8px; overflow-wrap: anywhere; word-break: break-word; }}
       th:nth-child(3), td:nth-child(3),
       th:nth-child(5), td:nth-child(5) {{ display: none; }}
       .topbar {{ padding: 10px 12px; font-size: 13px; }}

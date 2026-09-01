@@ -53,7 +53,8 @@
       .stats-row { grid-template-columns: 1fr 1fr; }
       .intro { padding: 14px 16px; font-size: 14px; }
       table { font-size: 13px; }
-      th, td { padding: 10px 10px; }
+      th, td { padding: 10px 10px; overflow-wrap: anywhere; word-break: break-word; }
+      th:nth-child(5), td:nth-child(5) { display: none; }
       .topbar { padding: 10px 12px; font-size: 13px; }
     }
     @media (max-width: 600px) { .stats-row { flex-direction: column; } }

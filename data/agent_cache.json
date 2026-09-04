@@ -15691,5 +15691,2672 @@
       "confidence": "high",
       "checked_at": "2026-09-03"
     }
+  },
+  "138267": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 1.492,
+        "last_distance_year": 2026,
+        "distance_note": "Bolingbroke admits via feeder-school priority (not open proximity). The 2026 Wandsworth Council report shows no standalo",
+        "oversubscribed": true,
+        "published_admission_number": 120
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.wandsworth.gov.uk/media/ln4kgbvg/how_school_places_were_offered_for_secondary_schools_2026.pdf",
+        "oversubscribed": "https://arkbolingbrokeacademy.org/admissions/secondary",
+        "published_admission_number": "https://arkbolingbrokeacademy.org/admissions/secondary"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "138312": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "137539": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "131625": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2026,
+        "distance_note": "All on-time applicants offered — school did not fill on distance in the 2026 admissions round; no distance cut-off appli",
+        "oversubscribed": false,
+        "published_admission_number": 120
+      },
+      "sources": {
+        "oversubscribed": "https://www.redbridge.gov.uk/media/ldbowne5/primary-offer-day-16-april-2026-last-allocated.pdf",
+        "published_admission_number": "https://engagement.redbridge.gov.uk/education/school-organisation-consultation-cranbrook-primary/"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "145207": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 2.449,
+        "last_distance_year": 2025,
+        "distance_note": "1.522 miles (converted to km) — furthest distance offered under distance criterion, from Enfield Council's Reception pre",
+        "oversubscribed": true,
+        "published_admission_number": 120
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.enfield.gov.uk/__data/assets/pdf_file/0011/103043/Reception-previous-allocation-breakdown-Education.pdf",
+        "oversubscribed": "https://www.enfield.gov.uk/__data/assets/pdf_file/0011/103043/Reception-previous-allocation-breakdown-Education.pdf",
+        "published_admission_number": "https://www.grangeparkprimary.org/join-us/admissions"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "131747": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "131752": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2025,
+        "distance_note": "The LBHF 2025 'How places were offered' PDF (Feb 2025) shows a '28 offers … last offer up to' distance entry for Ark Bur",
+        "oversubscribed": true,
+        "published_admission_number": 180
+      },
+      "sources": {
+        "oversubscribed": "https://www.lbhf.gov.uk/sites/default/files/2025-02/how-lbhf-school-places-were-offered-2025_0.pdf",
+        "published_admission_number": "https://www.lbhf.gov.uk/sites/default/files/2025-02/how-lbhf-school-places-were-offered-2025_0.pdf"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "142699": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "143420": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "distance_note": "No distance cut-off reached — Richmond Council's Secondary Admission guide records 'All preferences met' for Twickenham ",
+        "oversubscribed": false,
+        "published_admission_number": 180
+      },
+      "sources": {
+        "oversubscribed": "https://www.richmond.gov.uk/media/w2lkmlqc/secondary_admission.pdf",
+        "published_admission_number": "https://www.twickenhamschool.org.uk/30/admissions"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "101943": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2025,
+        "distance_note": "No distance cut-off — all applicants offered a place in the September 2025 admissions round; school was not oversubscrib",
+        "oversubscribed": false,
+        "published_admission_number": 180
+      },
+      "sources": {
+        "oversubscribed": "https://www.ealing.gov.uk/download/downloads/id/13820/high_school_prospectus_starting_high_school_2026.pdf",
+        "published_admission_number": "https://www.ealing.gov.uk/download/downloads/id/21314/islip_manor_high_school_admissions_policy_2027-28.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "139095": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2025,
+        "distance_note": "No distance cut-off — all applicants under the distance criterion were offered places ('all offered'). The school did no",
+        "oversubscribed": true,
+        "published_admission_number": 157
+      },
+      "sources": {
+        "oversubscribed": "https://www.hounslow.gov.uk/downloads/file/11497/how-secondary-places-were-allocated-for-september-2025",
+        "published_admission_number": "https://www.brentford.hounslow.sch.uk/admissions"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "143022": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 6.015,
+        "last_distance_year": 2025,
+        "distance_note": "Distance from home to school of last child offered a place under the distance (proximity) criterion on National Offer Da",
+        "oversubscribed": true,
+        "published_admission_number": 180
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.richmonduponthamesschool.org.uk/page/?title=Admissions&pid=8",
+        "oversubscribed": "https://www.richmonduponthamesschool.org.uk/page/?title=Admissions&pid=8",
+        "published_admission_number": "https://www.richmonduponthamesschool.org.uk/page/?title=Admissions&pid=8"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "147832": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 1.452,
+        "last_distance_year": 2022,
+        "distance_note": "0.902 miles converted to km; from Croydon Council 'Overview of secondary allocations 2022 entry' PDF — furthest distance",
+        "oversubscribed": true,
+        "published_admission_number": 180
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.croydon.gov.uk/sites/default/files/2022-03/Overview%20of%20secondary%20allocations%202022%20entry.pdf",
+        "oversubscribed": "https://www.croydon.gov.uk/sites/default/files/2022-03/Overview%20of%20secondary%20allocations%202022%20entry.pdf",
+        "published_admission_number": "https://www.croydon.gov.uk/schools-and-education/schools/find-school-near-you/secondary-schools/ark-blake-academy"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "101519": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2024,
+        "distance_note": "School was undersubscribed in the 2024 admissions round (offers 16 Apr 2024); Brent Council's published table shows a se",
+        "oversubscribed": false,
+        "published_admission_number": 120
+      },
+      "sources": {
+        "oversubscribed": "https://www.brent.gov.uk/-/media/files/resident-documents/education-documents/how-places-were-offered-reception-2024.pdf?rev=ce50ba4458a74a33890ffcdc132b17fe",
+        "published_admission_number": "https://www.elsley.brent.sch.uk/admissions"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "141210": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 8.665,
+        "last_distance_year": 2023,
+        "distance_note": "Furthest distance under the distance criterion for September 2023 entry: 5.383 miles (converted to 8.665 km). This is fr",
+        "published_admission_number": 180
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.croydon.gov.uk/sites/default/files/2023-04/Overview-of%20-secondary-allocations-1.03.23.pdf",
+        "published_admission_number": "https://www.croydon.gov.uk/sites/default/files/2025-04/the-archbishop-lanfranc-academy-2026-2027-admission-arrangements.pdf"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "102812": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2026,
+        "distance_note": "All on-time applicants offered — school was not oversubscribed and no distance cut-off applied on National Offer Day 16 ",
+        "oversubscribed": false
+      },
+      "sources": {
+        "oversubscribed": "https://www.redbridge.gov.uk/media/ldbowne5/primary-offer-day-16-april-2026-last-allocated.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "146318": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2026,
+        "distance_note": "No distance cut-off applied — Ealing Council's official 2026 National Offer Day report states 'Ark Acton Academy: All ap",
+        "oversubscribed": false,
+        "published_admission_number": 180
+      },
+      "sources": {
+        "oversubscribed": "https://www.ealing.gov.uk/download/downloads/id/21309/high_school_on_time_offers_2026.pdf",
+        "published_admission_number": "https://www.ealing.gov.uk/download/downloads/id/17515/ark_acton_academy_admissions_policy_2026-27.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "137692": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "143877": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2025,
+        "distance_note": "School offered all places in the 2025-26 admissions round and did not fill on distance; no cut-off distance was reached.",
+        "oversubscribed": false,
+        "published_admission_number": 150
+      },
+      "sources": {
+        "oversubscribed": "https://www.romfordrecorder.co.uk/news/25235277.secondary-school-havering-admissions-2025-26-revealed/",
+        "published_admission_number": "https://consultation.havering.gov.uk/education/the-royal-liberty-school/supporting_documents/The%20Royal%20Liberty%20School%20SEND%20Unit%20Consultation%20Document.pdf"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "140862": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "138681": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2026,
+        "distance_note": "No distance cut-off — in the 2026 round (and every documented prior round back to at least 2021) all applicants were off",
+        "oversubscribed": false,
+        "published_admission_number": 180
+      },
+      "sources": {
+        "oversubscribed": "https://www.wandsworth.gov.uk/media/ln4kgbvg/how_school_places_were_offered_for_secondary_schools_2026.pdf",
+        "published_admission_number": "https://www.wandsworth.gov.uk/media/fxhdwdd2/ark_putney_academy_admissions_policy_2026_27.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "103070": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 2.558,
+        "last_distance_year": 2025,
+        "distance_note": "Furthest distance offered under distance criterion on National Offer Day 16 April 2025; source value 1.589 miles convert",
+        "oversubscribed": false,
+        "published_admission_number": 120
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.walthamforest.gov.uk/sites/default/files/2025-04/How%20school%20places%20were%20offered%20reception%202025.pdf",
+        "oversubscribed": "https://www.walthamforest.gov.uk/sites/default/files/2025-04/How%20school%20places%20were%20offered%20reception%202025.pdf",
+        "published_admission_number": "https://henrymaynardprimary.co.uk/walthamforest/primary/henrymaynard/site/pages/joinus/admissionarrangements"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "137418": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 0.616,
+        "last_distance_year": 2024,
+        "distance_note": "Non-Catholic applicants only; last distance offered to non-Catholics with no sister in Years 7–11 in the 12 named parish",
+        "published_admission_number": 120
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.redbridge.gov.uk/media/12096/transfer-to-sec-2024-school-allocations-and-cut-off-distances.pdf",
+        "published_admission_number": "https://find.redbridge.gov.uk/kb5/redbridge/fsd/service.page?id=bVJIT7Q92w4"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "138221": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 2.155,
+        "last_distance_year": 2024,
+        "distance_note": "1.339 miles converted to km (×1.60934); distance applies to the final open/proximity criterion only — school first alloc",
+        "published_admission_number": 180
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.croydon.gov.uk/sites/default/files/2023-08/primary-prospectus-2024-2025.pdf",
+        "published_admission_number": "https://www.croydon.gov.uk/sites/default/files/2024-06/St%20Joseph%27s%20College%20-%202025-2026%20Admission%20Arrangements.pdf"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "146309": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2025,
+        "distance_note": "No distance cut-off — Sanders Draper offered all of its places in the 2025-26 admissions round and was not oversubscribe",
+        "oversubscribed": false
+      },
+      "sources": {
+        "oversubscribed": "https://www.romfordrecorder.co.uk/news/25235277.secondary-school-havering-admissions-2025-26-revealed/"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "136576": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2026,
+        "distance_note": "No distance cut-off — school did not fill its PAN (122 places offered out of 180 available); Havering Council statistics",
+        "oversubscribed": false,
+        "published_admission_number": 180
+      },
+      "sources": {
+        "oversubscribed": "https://www.havering.gov.uk/downloads/file/7345/secondary-school-statistics-2026",
+        "published_admission_number": "https://www.havering.gov.uk/downloads/file/7345/secondary-school-statistics-2026"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "141617": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "102492": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2025,
+        "distance_note": "No distance cut-off applied — all applicants under the distance/proximity criterion were offered a place ('all offered')",
+        "oversubscribed": false,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "oversubscribed": "https://www.hounslow.gov.uk/downloads/file/10509/school-places-allocation-for-2025",
+        "published_admission_number": "https://www.hounslow.gov.uk/downloads/file/10509/school-places-allocation-for-2025"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "143383": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "144515": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2025,
+        "distance_note": "No distance cut-off applied — all places filled under faith criteria (Christian Foundation Places: all offered) and Open",
+        "oversubscribed": true,
+        "published_admission_number": 120
+      },
+      "sources": {
+        "oversubscribed": "https://www.hounslow.gov.uk/downloads/file/11497/how-secondary-places-were-allocated-for-september-2025",
+        "published_admission_number": "https://www.hounslow.gov.uk/downloads/file/11497/how-secondary-places-were-allocated-for-september-2025"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "136952": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2025,
+        "distance_note": "School was not oversubscribed in the September 2025 admissions round; Enfield Council's 2025 allocation document groups ",
+        "oversubscribed": false,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "oversubscribed": "https://www.enfield.gov.uk/__data/assets/pdf_file/0034/92599/Admission-to-primary-school-2025-and-allocation-information-Education.pdf",
+        "published_admission_number": "https://www.woodpeckerhallacademy.org.uk/admissions-september"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "137683": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "146245": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2025,
+        "distance_note": "Harrow Council's official September 2025 allocation table omits the 'furthest distance offered' figure for Sacred Heart ",
+        "oversubscribed": true,
+        "published_admission_number": 150
+      },
+      "sources": {
+        "oversubscribed": "https://www.harrow.gov.uk/downloads/file/32972/How_places_were_allocated_25_26.pdf",
+        "published_admission_number": "https://www.harrow.gov.uk/downloads/file/32972/How_places_were_allocated_25_26.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "102204": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 1.7236,
+        "last_distance_year": 2025,
+        "distance_note": "Furthest distance offered under distance criterion for September 2025 intake (offered 16 April 2025): 1.071 miles conver",
+        "oversubscribed": true,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.harrow.gov.uk/downloads/file/33045/Reception_2025___How_places_were_allocated_at_Harrow_Schools.pdf",
+        "oversubscribed": "https://www.harrow.gov.uk/downloads/file/33045/Reception_2025___How_places_were_allocated_at_Harrow_Schools.pdf",
+        "published_admission_number": "https://www.harrow.gov.uk/downloads/file/33045/Reception_2025___How_places_were_allocated_at_Harrow_Schools.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "138689": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 1.003,
+        "last_distance_year": 2025,
+        "distance_note": "Furthest distance offered under proximity (distance) criterion for September 2025 entry; figure published in km by RBK/A",
+        "oversubscribed": true,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "last_distance_offered_km": "https://5f2fe3253cd1dfa0d089-bf8b2cdb6a1dc2999fecbc372702016c.ssl.cf3.rackcdn.com/uploads/ckeditor/attachments/16551/Kingston_Primary_guide_2025.pdf",
+        "oversubscribed": "https://5f2fe3253cd1dfa0d089-bf8b2cdb6a1dc2999fecbc372702016c.ssl.cf3.rackcdn.com/uploads/ckeditor/attachments/16551/Kingston_Primary_guide_2025.pdf",
+        "published_admission_number": "https://5f2fe3253cd1dfa0d089-bf8b2cdb6a1dc2999fecbc372702016c.ssl.cf3.rackcdn.com/uploads/ckeditor/attachments/16553/Kingston_s_infant__junior__primary_and_secondary_schools_brochure_2025.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "145484": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 0.46402,
+        "last_distance_year": 2026,
+        "distance_note": "Furthest distance offered under distance/proximity criterion; value published in metres (464.02 m) by Sutton Council for",
+        "oversubscribed": true,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.sutton.gov.uk/schools-and-learning/school-admissions/national-offer-day-primary-schools/primary-school-allocation-information",
+        "oversubscribed": "https://www.sutton.gov.uk/schools-and-learning/school-admissions/national-offer-day-primary-schools/primary-school-allocation-information",
+        "published_admission_number": "https://www.sutton.gov.uk/schools-and-learning/school-admissions/national-offer-day-primary-schools/primary-school-allocation-information"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "146900": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "150663": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "102291": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "102903": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 2.562,
+        "last_distance_year": 2024,
+        "distance_note": "Furthest distance offered under proximity criterion on National Offer Day for September 2024 entry, as reported in Londo",
+        "oversubscribed": true,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "last_distance_offered_km": "https://5f2fe3253cd1dfa0d089-bf8b2cdb6a1dc2999fecbc372702016c.ssl.cf3.rackcdn.com/uploads/ckeditor/attachments/16664/Richmond_Prim_+_Jun_How_Places_were_offered_2022_-2024__-_published_table.pdf",
+        "oversubscribed": "https://5f2fe3253cd1dfa0d089-bf8b2cdb6a1dc2999fecbc372702016c.ssl.cf3.rackcdn.com/uploads/ckeditor/attachments/16664/Richmond_Prim_+_Jun_How_Places_were_offered_2022_-2024__-_published_table.pdf",
+        "published_admission_number": "https://www.richmond.gov.uk/media/27631/determined_admission_arrangements_2024_25.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "101993": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "150691": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "146862": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "141055": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2025,
+        "distance_note": "Hillingdon Council's September 2025 allocation data PDF lists Hillingdon Primary School with 'Contact School' in both th",
+        "published_admission_number": 90
+      },
+      "sources": {
+        "published_admission_number": "https://d180ur4pf89izg.cloudfront.net/uploads/asset/attachment/5998/Hillingdon_Primary_School_Determined_Admissions_Policy_2024_25.docx__1__1_.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "144235": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "101876": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2025,
+        "distance_note": "All applicants offered — school did not fill to a distance cut-off in the 2025 admissions round (National Offer Day 16 A",
+        "oversubscribed": false,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "oversubscribed": "https://www.ealing.gov.uk/download/downloads/id/18843/primary_school_on-time_offers_2025.pdf",
+        "published_admission_number": "https://www.ealing.gov.uk/download/downloads/id/13819/primary_school_prospectus_starting_primary_school_2026.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "102214": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2024,
+        "distance_note": "Harrow Council's official allocation table shows 'N/A' for furthest distance offered — the school did not fill all 90 pl",
+        "oversubscribed": false,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "oversubscribed": "https://www.harrow.gov.uk/downloads/file/32427/R5___How_places_were_allocated_table_24_25_Landscape__002_.pdf",
+        "published_admission_number": "https://www.harrow.gov.uk/downloads/file/32424/Primary_Schools_Guide_2025_2026_WEB__003_.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "102505": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2025,
+        "distance_note": "September 2025 entry: all distance-criterion applicants were offered a place ('all offered'); no cut-off distance applie",
+        "oversubscribed": false,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "oversubscribed": "https://www.hounslow.gov.uk/downloads/file/10509/school-places-allocation-for-2025",
+        "published_admission_number": "https://www.hounslow.gov.uk/downloads/file/10509/school-places-allocation-for-2025"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "145977": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 1.17154,
+        "last_distance_year": 2026,
+        "distance_note": "Furthest distance offered under proximity/distance criterion for September 2026 entry (applications closed 15 January 20",
+        "oversubscribed": true,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.sutton.gov.uk/schools-and-learning/school-admissions/national-offer-day-primary-schools/primary-school-allocation-information",
+        "oversubscribed": "https://www.sutton.gov.uk/schools-and-learning/school-admissions/national-offer-day-primary-schools/primary-school-allocation-information",
+        "published_admission_number": "https://www.barrowhedgesprimary.co.uk/page/?title=School+Admissions&pid=307"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "139659": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 1.66069,
+        "last_distance_year": 2025,
+        "distance_note": "Last distance offered on National Offer Day (03/03/2025) was 1660.69 metres (Lambeth GIS straight-line measurement), con",
+        "oversubscribed": true,
+        "published_admission_number": 120
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.lambeth.gov.uk/sites/default/files/2025-03/oasis-south-bank-national-offer-day-2025-offe_Philip_Mcqueen.pdf",
+        "oversubscribed": "https://www.lambeth.gov.uk/sites/default/files/2025-03/oasis-south-bank-national-offer-day-2025-offe_Philip_Mcqueen.pdf",
+        "published_admission_number": "https://www.lambeth.gov.uk/sites/default/files/2025-03/oasis-south-bank-national-offer-day-2025-offe_Philip_Mcqueen.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "134311": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2025,
+        "distance_note": "No distance cut-off — school did not fill on distance; 'Places have been offered to all applicants' (September 2025 inta",
+        "oversubscribed": false,
+        "published_admission_number": 180
+      },
+      "sources": {
+        "oversubscribed": "https://www.enfield.gov.uk/__data/assets/pdf_file/0040/89896/Transfer-to-secondary-2025-and-allocation-information-Education.pdf",
+        "published_admission_number": "https://www.oasisacademyenfield.org/uploaded/Enfield/admissions/Admission_OAE_25-26.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "137361": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "102128": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 0.739,
+        "last_distance_year": 2026,
+        "distance_note": "0.459 miles converted to km (0.459 × 1.60934 = 0.739 km); straight-line distance to furthest pupil offered under distanc",
+        "oversubscribed": true,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "last_distance_offered_km": "https://new.haringey.gov.uk/schools-learning/schools/school-admissions/reports-school-admissions/cutoff-distance-school-last-child-offered-place/primary-schools-distance-school-last-child-offered-place-national-offer-day",
+        "oversubscribed": "https://schoolsbulletin.haringey.gov.uk/schools-learning/schools/school-admissions/apply-a-school-place/starting-primary-school/primary-schools-with-available-places",
+        "published_admission_number": "https://haringey.gov.uk/sites/default/files/2025-08/primary_admissions_booklet.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "102839": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "102097": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 2.5637,
+        "last_distance_year": 2026,
+        "distance_note": "Distance in miles (1.593 mi) converted to km; straight-line distance from school of last child offered a place under dis",
+        "oversubscribed": true,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "last_distance_offered_km": "https://haringey.gov.uk/schools-learning/schools/school-admissions/how-school-place-offers-were-made/cutoff-distance-school-last-child-offered-place/primary-schools-distance-school-last-child-offered-place-national-offer-day",
+        "oversubscribed": "https://haringey.gov.uk/schools-learning/schools/school-admissions/how-school-place-offers-were-made/cutoff-distance-school-last-child-offered-place/primary-schools-distance-school-last-child-offered-place-national-offer-day",
+        "published_admission_number": "https://www.coldfall.haringey.sch.uk/admissions"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "102377": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 1.6,
+        "last_distance_year": 2025,
+        "distance_note": "Furthest distance offered (excluding sibling criterion) in the September 2025 admissions round, as published in Hillingd",
+        "oversubscribed": true,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.hillingdon.gov.uk/media/16165/September-2025-allocation-data/pdf/b4September_2025_allocation_data_1.pdf?m=1744208521713",
+        "oversubscribed": "https://www.hillingdon.gov.uk/media/16165/September-2025-allocation-data/pdf/b4September_2025_allocation_data_1.pdf?m=1744208521713",
+        "published_admission_number": "https://www.hillingdon.gov.uk/media/16165/September-2025-allocation-data/pdf/b4September_2025_allocation_data_1.pdf?m=1744208521713"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "140704": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "102422": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2025,
+        "distance_note": "N/A (F) — faith school; Hillingdon Council's September 2025 allocation data marks Botwell House Catholic Primary School ",
+        "published_admission_number": 90
+      },
+      "sources": {
+        "published_admission_number": "https://www.hillingdon.gov.uk/media/16165/September-2025-allocation-data/pdf/b4September_2025_allocation_data_1.pdf?m=1744208521713"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "102802": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 1.9892,
+        "last_distance_year": 2026,
+        "distance_note": "On-time distance criterion; last child offered at 1.236 miles (converted to km); school was oversubscribed; sibling last",
+        "oversubscribed": true,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.redbridge.gov.uk/media/ldbowne5/primary-offer-day-16-april-2026-last-allocated.pdf",
+        "oversubscribed": "https://www.redbridge.gov.uk/media/ldbowne5/primary-offer-day-16-april-2026-last-allocated.pdf",
+        "published_admission_number": "https://www.fairlop.redbridge.sch.uk/redbridge/primary/fairlop/site/pages/parents/applyingforschools"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "131577": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "144626": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "102369": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "103032": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 0.716,
+        "last_distance_year": 2024,
+        "distance_note": "0.445 miles converted to km (0.445 × 1.60934 = 0.716 km); figure from Waltham Forest 'Starting Primary School 2024' broc",
+        "oversubscribed": true,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.walthamforest.gov.uk/sites/default/files/2023-08/Starting%20Primary%20School%202024.pdf",
+        "oversubscribed": "https://www.walthamforest.gov.uk/sites/default/files/2023-08/Starting%20Primary%20School%202024.pdf",
+        "published_admission_number": "https://www.walthamforest.gov.uk/sites/default/files/2025-07/Waltham%20Forest%20School%20Admission%20Determined%20Arrangements%202026-27.pdf"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "144308": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 1.04889,
+        "last_distance_year": 2025,
+        "distance_note": "Straight-line distance to furthest pupil offered under distance criterion (criteria 5); source states 1048.89 metres str",
+        "oversubscribed": true,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.lambeth.gov.uk/schools-and-education/school-admissions-and-appeals/primary-school-admissions/how-offers-were-made-lambeth-primary-schools-national-offer-day-16-april-2025/lambeth-academies",
+        "oversubscribed": "https://www.lambeth.gov.uk/schools-and-education/school-admissions-and-appeals/primary-school-admissions/how-offers-were-made-lambeth-primary-schools-national-offer-day-16-april-2025/lambeth-academies",
+        "published_admission_number": "https://www.lambeth.gov.uk/schools-and-education/school-admissions-and-appeals/primary-school-admissions/how-offers-were-made-lambeth-primary-schools-national-offer-day-16-april-2025/lambeth-academies"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "102662": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "102975": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 0.66219,
+        "last_distance_year": 2025,
+        "distance_note": "662.19 metres (straight-line) to furthest pupil offered a place under the proximity criterion; September 2025 intake (ap",
+        "oversubscribed": true,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.sutton.gov.uk/w/primary-school-allocation-information",
+        "oversubscribed": "https://www.sutton.gov.uk/w/primary-school-allocation-information",
+        "published_admission_number": "https://www.sutton.gov.uk/w/primary-school-allocation-information"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "131013": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "distance_note": "Highlands Primary School appears in the Redbridge 'Admission to Reception Class 2026' cut-off document (16 April 2026), ",
+        "oversubscribed": true,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "oversubscribed": "https://www.redbridge.gov.uk/media/ldbowne5/primary-offer-day-16-april-2026-last-allocated.pdf",
+        "published_admission_number": "https://highlandsprimary.co.uk/admissions/"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "102328": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "102836": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 1.267,
+        "last_distance_year": 2025,
+        "distance_note": "Last distance offered (on-time distance criterion) on National Offer Day 16 April 2025; 0.787 miles converted to km (0.7",
+        "oversubscribed": true
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.redbridge.gov.uk/media/13150/primary-offer-day-16-april-2025-last-allocated-v2.pdf",
+        "oversubscribed": "https://www.redbridge.gov.uk/media/13150/primary-offer-day-16-april-2025-last-allocated-v2.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "142040": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 6.4454,
+        "last_distance_year": 2025,
+        "distance_note": "Furthest distance offered under distance criterion for September 2025 entry: 4.005 miles (converted to km). School was n",
+        "oversubscribed": false,
+        "published_admission_number": 150
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.croydon.gov.uk/sites/default/files/2025-08/secondary-admissions-prospectus-2026-2027.pdf",
+        "oversubscribed": "https://www.croydon.gov.uk/sites/default/files/2025-08/secondary-admissions-prospectus-2026-2027.pdf",
+        "published_admission_number": "https://www.croydon.gov.uk/sites/default/files/2024-06/Orchard%20Park%20High%20School%20-%202025%20-%202026%20Admission%20Arrangments.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "101904": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 0.692,
+        "last_distance_year": 2025,
+        "distance_note": "Straight-line distance of last place offered on National Offer Day 16 April 2025 (2025-26 admissions round); source stat",
+        "oversubscribed": true,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.ealing.gov.uk/download/downloads/id/18843/primary_school_on-time_offers_2025.pdf",
+        "oversubscribed": "https://www.ealing.gov.uk/download/downloads/id/18843/primary_school_on-time_offers_2025.pdf",
+        "published_admission_number": "https://www.ealing.gov.uk/download/downloads/id/18843/primary_school_on-time_offers_2025.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "140387": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "145045": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 1.2762,
+        "last_distance_year": 2026,
+        "distance_note": "On-time distance applicants cut-off: 0.793 miles (converted to km). Source is Redbridge Council's 'Primary Offer Day 16 ",
+        "oversubscribed": true
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.redbridge.gov.uk/media/ldbowne5/primary-offer-day-16-april-2026-last-allocated.pdf",
+        "oversubscribed": "https://www.redbridge.gov.uk/media/ldbowne5/primary-offer-day-16-april-2026-last-allocated.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "101502": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "distance_note": "Brent Council's 'How places were offered – Reception 2024' PDF confirms Uxendon Manor was oversubscribed and admits by d",
+        "oversubscribed": true,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "oversubscribed": "https://www.brent.gov.uk/media/16421130/how-places-were-offered-reception-2024.pdf",
+        "published_admission_number": "https://www.brent.gov.uk/media/16421246/determined-brent-community-school-admissions-arrangements-for-2025-to-2026.pdf"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "101910": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2025,
+        "distance_note": "No distance cut-off — all applicants offered a place (school was not oversubscribed on distance in the 2025 admissions r",
+        "oversubscribed": false,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "oversubscribed": "https://www.ealing.gov.uk/download/downloads/id/18843/primary_school_on-time_offers_2025.pdf",
+        "published_admission_number": "https://www.featherstoneprimary.co.uk/admissions/"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "131246": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "103081": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "132203": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "102913": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "135812": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "102223": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "102823": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 1.807,
+        "last_distance_year": 2025,
+        "distance_note": "On-time distance criterion: last child offered at 1.123 miles (converted to km). Sibling criterion last distance was 2.1",
+        "oversubscribed": true,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.redbridge.gov.uk/media/13150/primary-offer-day-16-april-2025-last-allocated-v2.pdf",
+        "oversubscribed": "https://www.redbridge.gov.uk/media/13150/primary-offer-day-16-april-2025-last-allocated-v2.pdf",
+        "published_admission_number": "https://www.aldersbrook.redbridge.sch.uk/page/?title=About+Us&pid=6"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "148615": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "102835": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 15.14,
+        "last_distance_year": 2026,
+        "distance_note": "On time distance applications offered 9.408 miles (converted to 15.14 km); as stated in Redbridge council primary offer "
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.redbridge.gov.uk/media/ldbowne5/primary-offer-day-16-april-2026-last-allocated.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "143592": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "145364": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "101426": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 1.344,
+        "last_distance_year": 2021,
+        "distance_note": "Furthest distance offered on offer day 2021 = 0.835 miles (straight-line), converted to km. Source: Bexley Council 'Admi",
+        "published_admission_number": 90
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.bexley.gov.uk/sites/default/files/2021-11/admission-to-primary-school-2022-2023-V3.pdf",
+        "published_admission_number": "https://www.bexley.gov.uk/services/schools-and-education/primary-schools/admission-primary-schools-26-27/primary-schools-bexley"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "139830": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 0.6014,
+        "last_distance_year": 2024,
+        "distance_note": "Furthest distance offered under the Distance (proximity) criterion on 16 April 2024, as reported in Brent Council's 'How",
+        "oversubscribed": true,
+        "published_admission_number": 89
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.brent.gov.uk/media/16421130/how-places-were-offered-reception-2024.pdf",
+        "oversubscribed": "https://www.brent.gov.uk/media/16421130/how-places-were-offered-reception-2024.pdf",
+        "published_admission_number": "https://www.brent.gov.uk/media/16421130/how-places-were-offered-reception-2024.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "143110": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "148798": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2024,
+        "distance_note": "All preferences met — school did not fill on distance in the September 2024 admissions round; no distance cut-off applie",
+        "oversubscribed": false,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "oversubscribed": "https://www.kingston.gov.uk/sites/default/files/downloads/Kingston_Primary_guide_2024.pdf",
+        "published_admission_number": "https://www.www-legacy.fernhillprimary.org/admissions"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "101531": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2024,
+        "distance_note": "School was undersubscribed in the 2024 Reception round (data correct 16/04/2024); all applicants were offered places und",
+        "oversubscribed": false,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "oversubscribed": "https://www.brent.gov.uk/-/media/files/resident-documents/education-documents/how-places-were-offered-reception-2024.pdf?rev=ce50ba4458a74a33890ffcdc132b17fe",
+        "published_admission_number": "https://www.brent.gov.uk/media/16421246/determined-brent-community-school-admissions-arrangements-for-2025-to-2026.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "140243": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "143946": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "145718": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2024,
+        "distance_note": "School was undersubscribed in the 2024 admissions round — all applicants received a place and places were not allocated ",
+        "oversubscribed": false,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "oversubscribed": "https://www.brent.gov.uk/media/16421130/how-places-were-offered-reception-2024.pdf",
+        "published_admission_number": "https://braintcroftacademy.e-act.org.uk/admissions/how-to-apply-for-a-place-at-braintcroft/"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "101870": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 3.494,
+        "last_distance_year": 2025,
+        "distance_note": "Straight-line distance of last place offered under distance criterion; source states 2.171 miles, converted to km (2.171",
+        "oversubscribed": true,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.ealing.gov.uk/download/downloads/id/18843/primary_school_on-time_offers_2025.pdf",
+        "oversubscribed": "https://www.ealing.gov.uk/download/downloads/id/18843/primary_school_on-time_offers_2025.pdf",
+        "published_admission_number": "https://www.ealing.gov.uk/download/downloads/id/13819/primary_school_prospectus_starting_primary_school_2026.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "138364": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 0.779,
+        "last_distance_year": 2025,
+        "distance_note": "0.484 miles converted to km (×1.60934); straight-line distance measured by Waltham Forest Routefinder GIS; no banding — ",
+        "oversubscribed": true,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.walthamforest.gov.uk/sites/default/files/2025-04/How%20school%20places%20were%20offered%20reception%202025.pdf",
+        "oversubscribed": "https://www.walthamforest.gov.uk/sites/default/files/2025-04/How%20school%20places%20were%20offered%20reception%202025.pdf",
+        "published_admission_number": "https://www.walthamforest.gov.uk/sites/default/files/2025-04/How%20school%20places%20were%20offered%20reception%202025.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "140096": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "distance_note": "No cut-off distance figure found on any credible source (school website or Tower Hamlets council). The school uses the T",
+        "oversubscribed": false,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "oversubscribed": "https://www.splds.org.uk/files/parents/admissions/LBTH%20Starting%20Primary%20School%202025.pdf",
+        "published_admission_number": "https://towerhamlets.moderngov.co.uk/documents/s230504/Appendix%20F.%20Planned%20Admission%20Numbers%20for%20Schools%20202526.pdf"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "101549": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2024,
+        "distance_note": "School was undersubscribed in the 2024 round (PAN 74); admits primarily by religious criterion (Certificate of Religious",
+        "oversubscribed": false,
+        "published_admission_number": 74
+      },
+      "sources": {
+        "oversubscribed": "https://www.brent.gov.uk/media/16421130/how-places-were-offered-reception-2024.pdf",
+        "published_admission_number": "https://www.brent.gov.uk/media/16421130/how-places-were-offered-reception-2024.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "102189": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2026,
+        "distance_note": "No distance cut-off — furthest distance column is N/A in the Harrow Council September 2026 allocations table. The school",
+        "oversubscribed": false,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "oversubscribed": "https://www.harrow.gov.uk/downloads/file/33701/primary-school-allocations-2026-27",
+        "published_admission_number": "https://www.harrow.gov.uk/downloads/file/33045/Reception_2025___How_places_were_allocated_at_Harrow_Schools.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "102276": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "140391": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2025,
+        "distance_note": "Hillingdon Council's September 2025 allocation data lists Lake Farm Park Academy's distance cut-off as 'Contact School',",
+        "oversubscribed": false,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "oversubscribed": "https://www.hillingdon.gov.uk/media/16165/September-2025-allocation-data/pdf/b4September_2025_allocation_data_1.pdf?m=1744208521713",
+        "published_admission_number": "https://www.hillingdon.gov.uk/media/16165/September-2025-allocation-data/pdf/b4September_2025_allocation_data_1.pdf?m=1744208521713"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "102905": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 2.156,
+        "last_distance_year": 2024,
+        "distance_note": "Distance of last child offered a place under the proximity criterion (Criterion v) at offer date, September 2024 entry, ",
+        "oversubscribed": true,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "last_distance_offered_km": "https://5f2fe3253cd1dfa0d089-bf8b2cdb6a1dc2999fecbc372702016c.ssl.cf3.rackcdn.com/uploads/ckeditor/attachments/16664/Richmond_Prim_+_Jun_How_Places_were_offered_2022_-2024__-_published_table.pdf",
+        "oversubscribed": "https://5f2fe3253cd1dfa0d089-bf8b2cdb6a1dc2999fecbc372702016c.ssl.cf3.rackcdn.com/uploads/ckeditor/attachments/16664/Richmond_Prim_+_Jun_How_Places_were_offered_2022_-2024__-_published_table.pdf",
+        "published_admission_number": "https://www.richmond.gov.uk/media/27631/determined_admission_arrangements_2024_25.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "141054": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2025,
+        "distance_note": "School did not fill on distance in the September 2025 round (84 of 90 places offered; 'furthest distance offered' column",
+        "oversubscribed": false,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "oversubscribed": "https://www.harrow.gov.uk/downloads/file/33045/Reception_2025___How_places_were_allocated_at_Harrow_Schools.pdf",
+        "published_admission_number": "https://www.harrow.gov.uk/downloads/file/33045/Reception_2025___How_places_were_allocated_at_Harrow_Schools.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "101901": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 0.653,
+        "last_distance_year": 2025,
+        "distance_note": "Straight-line distance of last place offered under Criteria 5 (distance/proximity tie-breaker) on National Offer Day 16 ",
+        "oversubscribed": true,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.ealing.gov.uk/download/downloads/id/18843/primary_school_on-time_offers_2025.pdf",
+        "oversubscribed": "https://www.ealing.gov.uk/download/downloads/id/18843/primary_school_on-time_offers_2025.pdf",
+        "published_admission_number": "https://www.horsenden.ealing.sch.uk/our-school/admissions/reception-1"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "102439": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2025,
+        "distance_note": "N/A (U) — school was undersubscribed in both the September 2025 and September 2024 rounds (71 and 72 offers made respect",
+        "oversubscribed": false,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "oversubscribed": "https://www.hillingdon.gov.uk/media/16165/September-2025-allocation-data/pdf/b4September_2025_allocation_data_1.pdf?m=1744208521713",
+        "published_admission_number": "https://www.hillingdon.gov.uk/media/16165/September-2025-allocation-data/pdf/b4September_2025_allocation_data_1.pdf?m=1744208521713"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "102580": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 1.97194,
+        "last_distance_year": 2023,
+        "distance_note": "Distance of last child offered under distance criterion (criterion 5) on National Offer Day 17 April 2023, as published ",
+        "oversubscribed": true,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.kingston.gov.uk/downloads/file/2249/notes-to-parents-following-primary-allocation-2023",
+        "oversubscribed": "https://www.kingston.gov.uk/downloads/file/2249/notes-to-parents-following-primary-allocation-2023",
+        "published_admission_number": "https://www.grandavenue.kingston.sch.uk/page/?title=Reception+Admissions&pid=61"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "101759": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "102317": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2026,
+        "distance_note": "N/A — school did not fill all places under the distance criterion; only 71 of 90 places were offered in the 2026 round, ",
+        "oversubscribed": false,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "oversubscribed": "https://www.havering.gov.uk/downloads/file/7395/infant-and-primary-school-statistics-2026",
+        "published_admission_number": "https://www.havering.gov.uk/downloads/file/6964/infant-primary-and-junior-school-admissions-arrangements-and-community-criteria-2026-2027"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "102388": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 0.9927,
+        "last_distance_year": 2025,
+        "distance_note": "Furthest distance offered (excluding siblings) in the September 2025 admissions round: 992.7088 metres, as published in ",
+        "published_admission_number": 90
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.hillingdon.gov.uk/media/16165/September-2025-allocation-data/pdf/b4September_2025_allocation_data_1.pdf?m=1744208521713",
+        "published_admission_number": "https://www.hillingdon.gov.uk/media/16165/September-2025-allocation-data/pdf/b4September_2025_allocation_data_1.pdf?m=1744208521713"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "140236": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "140710": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 2.733,
+        "last_distance_year": 2022,
+        "distance_note": "1.698 miles straight-line (converted: 1.698 × 1.60934 = 2.733 km); sourced from Bexley Council's 'Admission to Primary S",
+        "oversubscribed": true,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.bexley.gov.uk/sites/default/files/2022-09/Admission-to-primary-schools-2023-2024.pdf",
+        "oversubscribed": "https://www.dayslaneprimary.co.uk/bexley/primary/dayslane/site/pages/aboutus/admissions",
+        "published_admission_number": "https://www.bexley.gov.uk/services/schools-and-education/primary-schools/admission-primary-schools-25-26/primary-schools-bexley"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "148407": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2024,
+        "distance_note": "In the most recent round (NOD 1 March 2024, September 2024 entry), the cut-off distance is listed as 'Overseas / All pre",
+        "oversubscribed": false,
+        "published_admission_number": 150
+      },
+      "sources": {
+        "oversubscribed": "https://www.stlukes.kingston.sch.uk/_site/data/files/3-admissions/secondary/C4FC803BD7582BFCEDA5F9888F717BF9.pdf",
+        "published_admission_number": "https://www.stlukes.kingston.sch.uk/_site/data/files/3-admissions/secondary/C4FC803BD7582BFCEDA5F9888F717BF9.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "103061": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "140974": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "102186": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 1.225,
+        "last_distance_year": 2026,
+        "distance_note": "Furthest distance offered under distance criterion as tie-breaker: 0.761 miles (converted to km). Source: Harrow Council",
+        "oversubscribed": true,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.harrow.gov.uk/downloads/file/33701/primary-school-allocations-2026-27",
+        "oversubscribed": "https://www.harrow.gov.uk/downloads/file/33701/primary-school-allocations-2026-27",
+        "published_admission_number": "https://www.harrow.gov.uk/downloads/file/33701/primary-school-allocations-2026-27"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "131426": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2025,
+        "distance_note": "School was not oversubscribed in the 2025-26 admissions round — all places were offered and no distance cut-off applied",
+        "oversubscribed": false
+      },
+      "sources": {
+        "oversubscribed": "https://www.romfordrecorder.co.uk/news/25267196.havering-primary-school-admissions-data-2025-26/"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "101886": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2025,
+        "distance_note": "No distance cut-off — all on-time applicants were offered a place (N/A - all applicants offered) in the 2025 primary adm",
+        "oversubscribed": false,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "oversubscribed": "https://www.ealing.gov.uk/download/downloads/id/18843/primary_school_on-time_offers_2025.pdf",
+        "published_admission_number": "https://www.ealing.gov.uk/site/scripts/directory_record.php?recordID=120"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "145041": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "137930": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "101912": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 1.038,
+        "last_distance_year": 2025,
+        "distance_note": "Straight-line distance of last place offered under distance criterion (tie-breaker); 0.645 miles converted to km at 1 mi",
+        "oversubscribed": true,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.ealing.gov.uk/download/downloads/id/18843/primary_school_on-time_offers_2025.pdf",
+        "oversubscribed": "https://www.ealing.gov.uk/download/downloads/id/18843/primary_school_on-time_offers_2025.pdf",
+        "published_admission_number": "https://www.ealing.gov.uk/download/downloads/id/15996/ealing_community_school_admissions_arrangements_2025-26.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "102325": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "102807": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2025,
+        "distance_note": "Goodmayes Primary School does not appear in the Redbridge Council 'Admission to Reception Class/Junior Transfer 2025' cu",
+        "oversubscribed": false
+      },
+      "sources": {
+        "oversubscribed": "https://www.redbridge.gov.uk/media/13150/primary-offer-day-16-april-2025-last-allocated-v2.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "101733": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 1.273,
+        "last_distance_year": 2024,
+        "distance_note": "School has two sites; 0.791 miles is furthest distance offered to main school site; 0.483 miles to Brigstock site. Large",
+        "published_admission_number": 90
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.croydon.gov.uk/sites/default/files/2024-08/primary-admissions-prospectus-2025-2026.pdf",
+        "published_admission_number": "https://www.croydon.gov.uk/schools-and-education/schools/find-school-near-you/primary-infant-and-junior-schools/purley-oaks-primary-school-nursery-and-childrens-centre"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "102216": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 1.0332,
+        "last_distance_year": 2024,
+        "distance_note": "0.642 miles (straight-line, home to school); asterisk in source indicates tied distance at cut-off — random allocation u",
+        "oversubscribed": true,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.harrow.gov.uk/downloads/file/32427/R5___How_places_were_allocated_table_24_25_Landscape__002_.pdf",
+        "oversubscribed": "https://www.harrow.gov.uk/downloads/file/32427/R5___How_places_were_allocated_table_24_25_Landscape__002_.pdf",
+        "published_admission_number": "https://www.harrow.gov.uk/downloads/file/31329/ADMISSION_ARRANGEMENTS_FOR_HARROW_COMMUNITY_SCHOOLS_FOR_2024_2025_v2.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "102426": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2024,
+        "distance_note": "No distance cut-off — school admits by faith criteria (N/A (F) per Hillingdon Council allocation data). Sacred Heart is ",
+        "oversubscribed": false,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "oversubscribed": "https://www.hillingdon.gov.uk/media/13876/September-2024-allocation-data/pdf/edUpdated-NOD-reception-allocation-data-V2.pdf?m=1718702937530",
+        "published_admission_number": "https://www.hillingdon.gov.uk/media/13876/September-2024-allocation-data/pdf/edUpdated-NOD-reception-allocation-data-V2.pdf?m=1718702937530"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "102647": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "102648": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "136809": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2025,
+        "distance_note": "School did not fill on distance in the September 2025 round — Hounslow Council's official allocation table records 'all ",
+        "oversubscribed": false,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "oversubscribed": "https://www.hounslow.gov.uk/downloads/file/10509/school-places-allocation-for-2025",
+        "published_admission_number": "https://www.hounslow.gov.uk/downloads/file/10509/school-places-allocation-for-2025"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "102222": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "102269": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "131144": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2025,
+        "distance_note": "No distance cut-off — all on-time applicants were offered a place in the 2025 normal admissions round (National Offer Da",
+        "oversubscribed": false,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "oversubscribed": "https://www.ealing.gov.uk/download/downloads/id/18843/primary_school_on-time_offers_2025.pdf",
+        "published_admission_number": "https://www.ealing.gov.uk/download/downloads/id/21311/ealing_community_school_admissions_arrangements_2026-27.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "143659": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2026,
+        "distance_note": "School admits by 4 ability bands (non-verbal reasoning test); distance criterion is 'Not applicable' for all 4 bands in ",
+        "published_admission_number": 120
+      },
+      "sources": {
+        "published_admission_number": "https://www.highgatehill.cola.org.uk/join/admissions/apply/"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "145627": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "146136": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "142718": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 1.86468,
+        "last_distance_year": 2024,
+        "distance_note": "Distance (under 'Distance' criterion) to the furthest pupil offered a place on National Offer Day 16 April 2024, as publ",
+        "oversubscribed": true,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.brent.gov.uk/-/media/files/resident-documents/education-documents/how-places-were-offered-reception-2024.pdf?rev=ce50ba4458a74a33890ffcdc132b17fe",
+        "oversubscribed": "https://www.brent.gov.uk/-/media/files/resident-documents/education-documents/how-places-were-offered-reception-2024.pdf?rev=ce50ba4458a74a33890ffcdc132b17fe",
+        "published_admission_number": "https://www.brent.gov.uk/-/media/files/resident-documents/education-documents/how-places-were-offered-reception-2024.pdf?rev=ce50ba4458a74a33890ffcdc132b17fe"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "141866": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "141716": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "distance_note": "No distance cut-off — St Thomas More Catholic Comprehensive School admits by faith/Catholic practice criteria (Criteria ",
+        "published_admission_number": 120
+      },
+      "sources": {
+        "published_admission_number": "https://www.royalgreenwich.gov.uk/download/downloads/id/7546/secondary_school_admission_booklet.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "102861": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "142299": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "137216": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "103079": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "144794": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 0.824,
+        "last_distance_year": 2024,
+        "distance_note": "Furthest distance offered under the distance criterion on national offer day 16 April 2024 (for September 2024 entry): 8",
+        "oversubscribed": true,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.brent.gov.uk/media/16421130/how-places-were-offered-reception-2024.pdf",
+        "oversubscribed": "https://www.brent.gov.uk/media/16421130/how-places-were-offered-reception-2024.pdf",
+        "published_admission_number": "https://www.brent.gov.uk/media/16421130/how-places-were-offered-reception-2024.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "130340": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "131824": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "147536": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "134041": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 0.412,
+        "last_distance_year": 2026,
+        "distance_note": "Furthest distance offered to 'other children living within priority area' on 16 April 2026 (in metres: 412m). School adm",
+        "oversubscribed": true,
+        "published_admission_number": 60
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.wandsworth.gov.uk/media/4q2f3jqt/how_places_were_allocated_for_primary_schools_2026.pdf",
+        "oversubscribed": "https://www.wandsworth.gov.uk/media/4q2f3jqt/how_places_were_allocated_for_primary_schools_2026.pdf",
+        "published_admission_number": "https://www.wandsworth.gov.uk/media/4q2f3jqt/how_places_were_allocated_for_primary_schools_2026.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "139814": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "151543": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2025,
+        "distance_note": "Eversley was NOT oversubscribed in the September 2025 round — Enfield Council's official 2025 primary allocation documen",
+        "oversubscribed": false,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "oversubscribed": "https://www.enfield.gov.uk/__data/assets/pdf_file/0034/92599/Admission-to-primary-school-2025-and-allocation-information-Education.pdf",
+        "published_admission_number": "https://eversley.enfield.sch.uk/admissions/"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "102432": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2025,
+        "distance_note": "N/A (U) — school was undersubscribed in the September 2025 admissions round; no distance cut-off was reached. 20 places ",
+        "oversubscribed": false,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "oversubscribed": "https://www.hillingdon.gov.uk/media/16165/September-2025-allocation-data/pdf/b4September_2025_allocation_data_1.pdf?m=1744208521713",
+        "published_admission_number": "https://www.hillingdon.gov.uk/media/16165/September-2025-allocation-data/pdf/b4September_2025_allocation_data_1.pdf?m=1744208521713"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "144141": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "146178": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "102373": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 2.087,
+        "last_distance_year": 2024,
+        "distance_note": "Furthest distance offered (excluding siblings) in the September 2024 admissions round = 2087.2741 metres (2.087 km), as ",
+        "oversubscribed": false,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.hillingdon.gov.uk/media/13876/September-2024-allocation-data/pdf/edUpdated-NOD-reception-allocation-data-V2.pdf?m=1718702937530",
+        "oversubscribed": "https://www.hillingdon.gov.uk/media/16165/September-2025-allocation-data/pdf/b4September_2025_allocation_data_1.pdf?m=1744208521713",
+        "published_admission_number": "https://www.hillingdon.gov.uk/media/16165/September-2025-allocation-data/pdf/b4September_2025_allocation_data_1.pdf?m=1744208521713"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "102736": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "101527": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 0.878,
+        "last_distance_year": 2024,
+        "distance_note": "Furthest distance offered to 'Any Other Applicant' (distance/proximity criterion) was 877.85 metres (0.878 km), per Bren",
+        "oversubscribed": true,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.brent.gov.uk/media/16421130/how-places-were-offered-reception-2024.pdf",
+        "oversubscribed": "https://www.brent.gov.uk/media/16421130/how-places-were-offered-reception-2024.pdf",
+        "published_admission_number": "https://www.salusbury.brent.sch.uk/About_Us/Admissions/"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "130915": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "102187": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 2.111,
+        "last_distance_year": 2025,
+        "distance_note": "Straight-line distance; 1.311 miles converted to km (1.311 × 1.60934 = 2.111 km). Source: Harrow Council 'How places wer",
+        "oversubscribed": true,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.harrow.gov.uk/downloads/file/33045/Reception_2025___How_places_were_allocated_at_Harrow_Schools.pdf",
+        "oversubscribed": "https://www.harrow.gov.uk/downloads/file/33045/Reception_2025___How_places_were_allocated_at_Harrow_Schools.pdf",
+        "published_admission_number": "https://www.harrow.gov.uk/downloads/file/31329/ADMISSION_ARRANGEMENTS_FOR_HARROW_COMMUNITY_SCHOOLS_FOR_2024_2025_v2.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "135562": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2025,
+        "distance_note": "School did not fill on distance in September 2025 admissions round — council allocation table records '34 – all offered'",
+        "oversubscribed": true,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "oversubscribed": "https://tops.hounslow.sch.uk/index.php/admissions",
+        "published_admission_number": "https://www.hounslow.gov.uk/downloads/file/10509/school-places-allocation-for-2025"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "140064": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2025,
+        "distance_note": "School was not oversubscribed in the 2025/26 admissions round (57 first-preference applications for 90 places); no dista",
+        "oversubscribed": false,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "oversubscribed": "https://www.towerhamlets.gov.uk/Documents/Education-and-skills/Admissions-and-exclusions/Admissions/Primary-School-prospectus.pdf",
+        "published_admission_number": "https://www.towerhamlets.gov.uk/Documents/Education-and-skills/Admissions-and-exclusions/Admissions/Planned-Admission-numbers-for-schools-2024-25.pdf"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "140833": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "141114": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "145475": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2024,
+        "distance_note": "School did not fill on distance in September 2024 — all distance-criterion places offered with no cut-off distance ('all",
+        "oversubscribed": false,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "oversubscribed": "https://www.hounslow.gov.uk/downloads/file/10506/how-primary-places-were-offered-in-september-2024",
+        "published_admission_number": "https://www.hounslow.gov.uk/downloads/file/10509/school-places-allocation-for-2025"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "135226": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "102917": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "140443": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "distance_note": "No credible source (school website or Bexley Council allocation document) published a specific last-distance-offered / c",
+        "oversubscribed": true,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "oversubscribed": "https://www.bexley.gov.uk/services/schools-and-education/primary-schools/admission-primary-schools-25-26/primary-schools-bexley",
+        "published_admission_number": "https://www.bexley.gov.uk/services/schools-and-education/primary-schools/admission-primary-schools-25-26/primary-schools-bexley"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "101778": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "102380": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2025,
+        "distance_note": "N/A (U) — school was undersubscribed in September 2025 admissions round; no distance cut-off applied (78 offers made aga",
+        "oversubscribed": false,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "oversubscribed": "https://www.hillingdon.gov.uk/media/16165/September-2025-allocation-data/pdf/b4September_2025_allocation_data_1.pdf?m=1744208521713",
+        "published_admission_number": "https://www.glebe.hillingdon.sch.uk/page/?title=Admissions&pid=164"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "102914": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "136431": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "101885": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2025,
+        "distance_note": "All applicants offered — school did not fill on distance in the 2025 admissions round (National Offer Day 16 April 2025)",
+        "oversubscribed": false,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "oversubscribed": "https://www.ealing.gov.uk/download/downloads/id/13819/primary_school_prospectus_202021.pdf",
+        "published_admission_number": "https://www.ealing.gov.uk/download/downloads/id/21311/ealing_community_school_admissions_arrangements_2026-27.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "102748": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 0.513,
+        "last_distance_year": 2026,
+        "distance_note": "Distance of final offer = 0.319 miles (shortest walking distance), criterion = 'All Other'; converted to km (0.319 × 1.6",
+        "oversubscribed": true,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.newham.gov.uk/downloads/file/10890/reception-application-and-offer-statistics-for-web",
+        "oversubscribed": "https://www.newham.gov.uk/downloads/file/10890/reception-application-and-offer-statistics-for-web",
+        "published_admission_number": "https://www.curwen.newham.sch.uk/_site/data/files/admissions/FDC328EC7122E5621134ED11C0B31DA0.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "150114": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 2.018,
+        "last_distance_year": 2025,
+        "distance_note": "Furthest distance offered under distance criterion for Reception September 2025 = 1.254 miles (converted to 2.018 km at ",
+        "oversubscribed": true,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.enfield.gov.uk/__data/assets/pdf_file/0034/92599/Admission-to-primary-school-2025-and-allocation-information-Education.pdf",
+        "oversubscribed": "https://www.enfield.gov.uk/__data/assets/pdf_file/0034/92599/Admission-to-primary-school-2025-and-allocation-information-Education.pdf",
+        "published_admission_number": "https://www.enfield.gov.uk/__data/assets/pdf_file/0034/92599/Admission-to-primary-school-2025-and-allocation-information-Education.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "102199": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2025,
+        "distance_note": "No distance cut-off applied — Harrow Council's official September 2025 allocation table records 'N/A' in the 'Furthest d",
+        "oversubscribed": false,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "oversubscribed": "https://www.harrow.gov.uk/downloads/file/33045/Reception_2025___How_places_were_allocated_at_Harrow_Schools.pdf",
+        "published_admission_number": "https://www.harrow.gov.uk/downloads/file/33045/Reception_2025___How_places_were_allocated_at_Harrow_Schools.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "138588": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 1.0853,
+        "last_distance_year": 2025,
+        "distance_note": "0.6743 miles (converted to km) — distance of last child offered a place on National Offer Day 2025 per Haringey Council ",
+        "oversubscribed": true,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.haringey.gov.uk/sites/default/files/2025-04/reception_transfer_2025_how_offers_were_made.pdf",
+        "oversubscribed": "https://www.haringey.gov.uk/sites/default/files/2025-04/reception_transfer_2025_how_offers_were_made.pdf",
+        "published_admission_number": "https://www.haringey.gov.uk/sites/default/files/2025-04/reception_transfer_2025_how_offers_were_made.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "140957": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "101510": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 3.849,
+        "last_distance_year": 2024,
+        "distance_note": "School was undersubscribed in 2024; the 3848.65 m (3.849 km) figure is the furthest distance offered under the 'Any Othe",
+        "oversubscribed": false,
+        "published_admission_number": 67
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.brent.gov.uk/-/media/files/resident-documents/education-documents/how-places-were-offered-reception-2024.pdf?rev=ce50ba4458a74a33890ffcdc132b17fe",
+        "oversubscribed": "https://www.brent.gov.uk/-/media/files/resident-documents/education-documents/how-places-were-offered-reception-2024.pdf?rev=ce50ba4458a74a33890ffcdc132b17fe",
+        "published_admission_number": "https://www.brent.gov.uk/-/media/files/resident-documents/education-documents/how-places-were-offered-reception-2024.pdf?rev=ce50ba4458a74a33890ffcdc132b17fe"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "102408": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "140966": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "143617": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2026,
+        "distance_note": "All on-time applicants were offered places in the 2026 admissions round (National Offer Day 16 April 2026); no distance ",
+        "oversubscribed": false,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "oversubscribed": "https://www.redbridge.gov.uk/media/ldbowne5/primary-offer-day-16-april-2026-last-allocated.pdf",
+        "published_admission_number": "https://www.winstonwayacademy.org.uk/admissions/further-information"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "101524": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2024,
+        "distance_note": "School was undersubscribed in the 2024 Reception round — all applicants were offered places; no distance cut-off was rea",
+        "oversubscribed": false,
+        "published_admission_number": 60
+      },
+      "sources": {
+        "oversubscribed": "https://www.brent.gov.uk/-/media/files/resident-documents/education-documents/how-places-were-offered-reception-2024.pdf",
+        "published_admission_number": "https://www.brent.gov.uk/media/16421246/determined-brent-community-school-admissions-arrangements-for-2025-to-2026.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "138245": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 1.47,
+        "last_distance_year": 2023,
+        "distance_note": "Straight-line distance to furthest pupil offered on National Offer Day for entry September 2023, as published in the Roy",
+        "oversubscribed": true,
+        "published_admission_number": 120
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.royalgreenwich.gov.uk/download/downloads/id/7546/secondary_school_admission_booklet.pdf",
+        "oversubscribed": "https://www.royalgreenwich.gov.uk/download/downloads/id/7546/secondary_school_admission_booklet.pdf",
+        "published_admission_number": "https://arkgreenwichfreeschool.org/admissions"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "142228": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "101899": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2025,
+        "distance_note": "No distance cut-off — all applicants were offered a place in the 2025 main admissions round; the distance tie-breaker wa",
+        "oversubscribed": false,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "oversubscribed": "https://www.ealing.gov.uk/download/downloads/id/18843/primary_school_on-time_offers_2025.pdf",
+        "published_admission_number": "https://www.ealing.gov.uk/download/downloads/id/13819/primary_school_prospectus_starting_primary_school_2026.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "102493": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 1.294,
+        "last_distance_year": 2025,
+        "distance_note": "Last distance offered under proximity criterion for September 2025 intake: 0.804 miles (converted to 1.294 km at 1 mile ",
+        "oversubscribed": true,
+        "published_admission_number": 60
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.hounslow.gov.uk/downloads/file/11494/how-primary-places-were-offered-in-september-2025",
+        "oversubscribed": "https://www.hounslow.gov.uk/downloads/file/11494/how-primary-places-were-offered-in-september-2025",
+        "published_admission_number": "https://www.hounslow.gov.uk/downloads/file/11494/how-primary-places-were-offered-in-september-2025"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "151162": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "140434": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "102056": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "102755": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "149360": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2025,
+        "distance_note": "Sutton Council's official allocation table (applications closing 15 Jan 2025) records 'All' for Wood Field Primary's fur",
+        "oversubscribed": false,
+        "published_admission_number": 120
+      },
+      "sources": {
+        "oversubscribed": "https://www.sutton.gov.uk/w/primary-school-allocation-information",
+        "published_admission_number": "https://www.sutton.gov.uk/w/primary-school-allocation-information"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "140426": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "distance_note": "Mossbourne Riverside Academy is listed as an Admitting Authority school in Hackney's annual 'How Places Were Offered' re",
+        "oversubscribed": true,
+        "published_admission_number": 60
+      },
+      "sources": {
+        "oversubscribed": "https://education.hackney.gov.uk/sites/default/files/document/How%20Places%20Were%20Offered%20-%20Reception%202025.pdf",
+        "published_admission_number": "https://www.mra.mossbourne.org/wp-content/uploads/2023/12/Determined-Admission-Arrangements-2025-2026.pdf"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "144280": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "102303": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "131844": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "101821": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 12.065,
+        "last_distance_year": 2023,
+        "distance_note": "Furthest distance offered under the open (non-faith) distance criterion for 2023 entry: 7.496 miles converted to 12.065 ",
+        "oversubscribed": true,
+        "published_admission_number": 150
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.croydon.gov.uk/sites/default/files/2023-04/Overview-of%20-secondary-allocations-1.03.23.pdf",
+        "oversubscribed": "https://www.croydon.gov.uk/sites/default/files/2023-04/Overview-of%20-secondary-allocations-1.03.23.pdf",
+        "published_admission_number": "https://www.croydon.gov.uk/sites/default/files/2024-06/Thomas%20More%20Catholic%20School%20-%202025%20-%202026%20Admission%20Arrangements.pdf"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "145985": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "102644": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2025,
+        "distance_note": "All on-time applicants were offered a place (school did not fill on distance); no distance cut-off published for Septemb",
+        "oversubscribed": false,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "oversubscribed": "https://www.merton.gov.uk/sites/default/files/2025-09/Admissions%20and%20appeals%20data%20for%20recent%20years%20-%20table%20Sept%2025.pdf",
+        "published_admission_number": "https://www.merton.gov.uk/sites/default/files/2025-09/Admissions%20and%20appeals%20data%20for%20recent%20years%20-%20table%20Sept%2025.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "102897": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 1.354,
+        "last_distance_year": 2025,
+        "distance_note": "Furthest distance offered under proximity criterion for September 2025 entry; figure already in km per official Richmond",
+        "oversubscribed": true,
+        "published_admission_number": 90
+      },
+      "sources": {
+        "last_distance_offered_km": "https://5f2fe3253cd1dfa0d089-bf8b2cdb6a1dc2999fecbc372702016c.ssl.cf3.rackcdn.com/uploads/ckeditor/attachments/18410/Richmond_Primary_guide_2026_Sept_2025.pdf",
+        "oversubscribed": "https://5f2fe3253cd1dfa0d089-bf8b2cdb6a1dc2999fecbc372702016c.ssl.cf3.rackcdn.com/uploads/ckeditor/attachments/18410/Richmond_Primary_guide_2026_Sept_2025.pdf",
+        "published_admission_number": "https://5f2fe3253cd1dfa0d089-bf8b2cdb6a1dc2999fecbc372702016c.ssl.cf3.rackcdn.com/uploads/ckeditor/attachments/19073/Admission_arrangements_for_Richmond_community_schools_-_2027_28.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "142489": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 8.27,
+        "last_distance_year": 2025,
+        "distance_note": "School admits by Hindu faith banding and distance bands. Redbridge Council's April 2025 offer-day document lists two dis",
+        "oversubscribed": true
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.redbridge.gov.uk/media/1mtj5jon/primary-offer-day-16-april-2025-last-allocated-v2-3.pdf",
+        "oversubscribed": "https://www.redbridge.gov.uk/media/1mtj5jon/primary-offer-day-16-april-2025-last-allocated-v2-3.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
+  },
+  "142885": {
+    "checked_at": "2026-09-04",
+    "found": false,
+    "data": null
+  },
+  "144838": {
+    "checked_at": "2026-09-04",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "distance_note": "Aragon Primary School is an Academy that manages its own admissions. Merton Council's official allocations table (all ye",
+        "published_admission_number": 90
+      },
+      "sources": {
+        "published_admission_number": "https://www.aragon.merton.sch.uk/admissions/reception"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-04"
+    }
   }
 }

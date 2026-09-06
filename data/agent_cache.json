@@ -20481,5 +20481,229 @@
       "confidence": "high",
       "checked_at": "2026-09-05"
     }
+  },
+  "130343": {
+    "checked_at": "2026-09-06",
+    "found": false,
+    "data": null
+  },
+  "133574": {
+    "checked_at": "2026-09-06",
+    "found": false,
+    "data": null
+  },
+  "140088": {
+    "checked_at": "2026-09-06",
+    "found": false,
+    "data": null
+  },
+  "143202": {
+    "checked_at": "2026-09-06",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_year": 2025,
+        "distance_note": "Enfield Council publishes a 'Furthest Distance (Miles)' column in its Reception allocation breakdown PDF for 2025, and B",
+        "oversubscribed": true,
+        "published_admission_number": 60
+      },
+      "sources": {
+        "oversubscribed": "https://www.enfield.gov.uk/__data/assets/pdf_file/0034/92599/Admission-to-primary-school-2025-and-allocation-information-Education.pdf",
+        "published_admission_number": "https://brimsdownprimary.org/statutory-information/"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-09-06"
+    }
+  },
+  "101905": {
+    "checked_at": "2026-09-06",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 0.489,
+        "last_distance_year": 2025,
+        "distance_note": "0.304 miles converted to km (0.304 × 1.60934); straight-line distance of last place offered under proximity criterion on",
+        "oversubscribed": true,
+        "published_admission_number": 60
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.ealing.gov.uk/download/downloads/id/13819/primary_school_prospectus_202021.pdf",
+        "oversubscribed": "https://www.ealing.gov.uk/download/downloads/id/13819/primary_school_prospectus_202021.pdf",
+        "published_admission_number": "https://www.ealing.gov.uk/download/downloads/id/13819/primary_school_prospectus_202021.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-06"
+    }
+  },
+  "131706": {
+    "checked_at": "2026-09-06",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 0.612,
+        "last_distance_year": 2022,
+        "distance_note": "0.38 miles (furthest child offered under distance criterion) converted to km (0.38 × 1.60934 = 0.612 km); sourced from H",
+        "oversubscribed": true,
+        "published_admission_number": 60
+      },
+      "sources": {
+        "last_distance_offered_km": "https://education.hackney.gov.uk/sites/default/files/document/How%20Places%20Were%20Offered%20at%20Hackney%20Primary%20Schools%20-%20Reception%202022.pdf",
+        "oversubscribed": "https://education.hackney.gov.uk/sites/default/files/document/How%20Places%20Were%20Offered%20at%20Hackney%20Primary%20Schools%20-%20Reception%202022.pdf",
+        "published_admission_number": "https://education.hackney.gov.uk/sites/default/files/document/How%20Places%20Were%20Offered%20at%20Hackney%20Primary%20Schools%20-%20Reception%202022.pdf"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-09-06"
+    }
+  },
+  "143628": {
+    "checked_at": "2026-09-06",
+    "found": false,
+    "data": null
+  },
+  "145088": {
+    "checked_at": "2026-09-06",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "distance_note": "No last-distance figure found on any credible source (school website or Newham Council). The Newham Council application ",
+        "oversubscribed": true,
+        "published_admission_number": 60
+      },
+      "sources": {
+        "oversubscribed": "https://www.newham.gov.uk/downloads/file/8037/reception-2024-application-offer-statistics-pdf",
+        "published_admission_number": "https://www.newham.gov.uk/downloads/file/8037/reception-2024-application-offer-statistics-pdf"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-09-06"
+    }
+  },
+  "147337": {
+    "checked_at": "2026-09-06",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 5.942,
+        "last_distance_year": 2026,
+        "distance_note": "School admits by multiple faith/parish criteria bands, not a single proximity cut-off. Largest distance offered across a"
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.redbridge.gov.uk/media/ldbowne5/primary-offer-day-16-april-2026-last-allocated.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-06"
+    }
+  },
+  "101518": {
+    "checked_at": "2026-09-06",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "distance_note": "Brent Council publishes a 'Place allocation for Primary Schools 2026 (Reception)' PDF on its 'How school places were all",
+        "published_admission_number": 60
+      },
+      "sources": {
+        "published_admission_number": "https://www.wykeham.brent.sch.uk/our-school/contextual-data"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-09-06"
+    }
+  },
+  "101543": {
+    "checked_at": "2026-09-06",
+    "found": false,
+    "data": null
+  },
+  "101906": {
+    "checked_at": "2026-09-06",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 1.064,
+        "last_distance_year": 2024,
+        "distance_note": "Converted from 0.661 miles (straight-line distance of last place offered under distance/proximity criterion on National ",
+        "published_admission_number": 60
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.ealing.gov.uk/download/downloads/id/13819/primary_school_prospectus_202122.html",
+        "published_admission_number": "https://www.ealing.gov.uk/download/downloads/id/13819/primary_school_prospectus_202122.html"
+      },
+      "confidence": "medium",
+      "checked_at": "2026-09-06"
+    }
+  },
+  "137242": {
+    "checked_at": "2026-09-06",
+    "found": false,
+    "data": null
+  },
+  "102759": {
+    "checked_at": "2026-09-06",
+    "found": false,
+    "data": null
+  },
+  "137566": {
+    "checked_at": "2026-09-06",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 0.468,
+        "last_distance_year": 2025,
+        "distance_note": "0.291 miles converted to km (0.291 × 1.60934 = 0.468 km); stated as 'last pupil admitted under distance criterion in Sep",
+        "published_admission_number": 60
+      },
+      "sources": {
+        "last_distance_offered_km": "https://findyour.islington.gov.uk/kb5/islington/directory/service.page?id=LAXwloJZweA&familychannelnew=2_1",
+        "published_admission_number": "https://findyour.islington.gov.uk/kb5/islington/directory/service.page?id=LAXwloJZweA&familychannelnew=2_1"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-06"
+    }
+  },
+  "138447": {
+    "checked_at": "2026-09-06",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "last_distance_offered_km": 0.6127,
+        "last_distance_year": 2025,
+        "distance_note": "0.3807 miles converted to km (×1.60934); distance of last child offered under proximity criterion, National Offer Day 20",
+        "oversubscribed": true,
+        "published_admission_number": 60
+      },
+      "sources": {
+        "last_distance_offered_km": "https://www.haringey.gov.uk/sites/default/files/2025-04/reception_transfer_2025_how_offers_were_made.pdf",
+        "oversubscribed": "https://www.haringey.gov.uk/sites/default/files/2025-04/reception_transfer_2025_how_offers_were_made.pdf",
+        "published_admission_number": "https://www.harrisprimaryphiliplane.org.uk/183/academy-admissions"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-06"
+    }
+  },
+  "142558": {
+    "checked_at": "2026-09-06",
+    "found": true,
+    "data": {
+      "category": "state",
+      "values": {
+        "distance_note": "Harrow Council's 'How places were allocated' table shows N/A for furthest distance offered for St Bernadette's (faith sc",
+        "oversubscribed": true,
+        "published_admission_number": 60
+      },
+      "sources": {
+        "oversubscribed": "https://www.harrow.gov.uk/downloads/file/32427/R5___How_places_were_allocated_table_24_25_Landscape__002_.pdf",
+        "published_admission_number": "https://www.harrow.gov.uk/downloads/file/32427/R5___How_places_were_allocated_table_24_25_Landscape__002_.pdf"
+      },
+      "confidence": "high",
+      "checked_at": "2026-09-06"
+    }
   }
 }

@@ -562,36 +562,42 @@ def build_school_page(school):
     # detailed affiliate cards further down sit below the fold and get few impressions.
     # 11+ prep is relevant to mainstream primary/secondary; nursery & special schools
     # get the books banner instead.
-    if not is_special and phase_lc != "nursery":
-        top_promo = """
-  <a href="https://piacademy.co.uk/?aff=28" target="_blank" rel="noopener sponsored"
-     style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
-            margin:0 0 20px;padding:12px 20px;border-radius:12px;text-decoration:none;
-            background:linear-gradient(100deg,#7e22ce 0%,#9333ea 100%);color:#fff;
-            box-shadow:0 4px 14px rgba(126,34,206,0.28);">
-    <span style="display:flex;align-items:center;gap:12px;font-size:15px;font-weight:600;">
-      <span style="font-size:22px;">🎓</span>
-      <span>Preparing for the 11+ or entrance exams? <strong>25% off</strong> PiAcademy with code <strong>THIERR25</strong></span>
-    </span>
-    <span style="padding:9px 18px;background:#fff;color:#6b21a8;border-radius:8px;font-weight:700;font-size:14px;white-space:nowrap;">Get 25% OFF →</span>
-  </a>
-  <p style="font-size:11px;color:#aaa;margin:-14px 0 20px;">Sponsored — helps keep this site free.</p>"""
-    else:
-        top_promo = """
-  <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&ued=https%3A%2F%2Fwww.scholastic.co.uk%2Fteachers" target="_blank" rel="noopener sponsored"
-     style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
-            margin:0 0 20px;padding:12px 20px;border-radius:12px;text-decoration:none;
-            background:linear-gradient(100deg,#b45309 0%,#d97706 100%);color:#fff;
-            box-shadow:0 4px 14px rgba(217,119,6,0.28);">
-    <span style="display:flex;align-items:center;gap:12px;font-size:15px;font-weight:600;">
-      <span style="font-size:22px;">📚</span>
-      <span>Great children's books at low prices — <strong>Scholastic</strong> donates 20p per £1 back to your school</span>
-    </span>
-    <span style="padding:9px 18px;background:#fff;color:#92400e;border-radius:8px;font-weight:700;font-size:14px;white-space:nowrap;">Shop books →</span>
-  </a>
-  <p style="font-size:11px;color:#aaa;margin:-14px 0 20px;">Sponsored — helps keep this site free.</p>"""
+    top_promo = f"""
+  <div style="display:flex;flex-wrap:wrap;gap:14px;margin:0 0 20px;">
 
-    html = f"""<!DOCTYPE html>
+    <div style="flex:1;min-width:200px;background:linear-gradient(135deg,#fdf4ff,#f3e8ff);border:1px solid #d8b4fe;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px;">
+      <div style="font-size:0.9rem;font-weight:700;color:#1a1a2e;">&#127891; 11+ &amp; 13+ Exam Prep</div>
+      <p style="font-size:0.8rem;color:#555;line-height:1.5;margin:0;">PiAcademy resources for grammar school entrance, SATs &amp; GCSE. Use code <strong>THIERR25</strong> for 25% off.</p>
+      <a href="https://piacademy.co.uk/?aff=2849515" target="_blank" rel="noopener sponsored"
+         style="display:flex;align-items:center;justify-content:center;padding:9px 14px;background:#7e22ce;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;">
+        Get 25% OFF &#8594;
+      </a>
+      <p style="font-size:0.65rem;color:#bbb;margin:0;">Sponsored &mdash; helps keep this site free.</p>
+    </div>
+
+    <div style="flex:1;min-width:200px;background:linear-gradient(135deg,#fffbeb,#fef3c7);border:1px solid #fcd34d;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px;">
+      <div style="font-size:0.9rem;font-weight:700;color:#1a1a2e;">&#128218; Children's Books</div>
+      <p style="font-size:0.8rem;color:#555;line-height:1.5;margin:0;">Scholastic books at low prices. Choose your school at checkout &mdash; they donate <strong>20p per &pound;1</strong> back in free books.</p>
+      <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&campaign=PBBR+Starter+Packs+Reading+Roots" target="_blank" rel="noopener sponsored"
+         style="display:flex;align-items:center;justify-content:center;padding:9px 14px;background:#d97706;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;">
+        Shop at Scholastic &#8594;
+      </a>
+      <p style="font-size:0.65rem;color:#bbb;margin:0;">Sponsored &mdash; helps keep this site free.</p>
+    </div>
+
+    <div style="flex:1;min-width:200px;background:linear-gradient(135deg,#fff8f0,#ffedd5);border:1px solid #fed7aa;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px;">
+      <div style="font-size:0.9rem;font-weight:700;color:#1a1a2e;">&#128717; School Supplies</div>
+      <p style="font-size:0.8rem;color:#555;line-height:1.5;margin:0;">Stationery, bags, PE kit, lunchboxes and more &mdash; fast delivery from Amazon.</p>
+      <a href="https://www.amazon.co.uk/s?k=school+supplies+children&tag=londonparents-21" target="_blank" rel="noopener sponsored"
+         style="display:flex;align-items:center;justify-content:center;padding:9px 14px;background:#ea580c;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;">
+        Shop on Amazon &#8594;
+      </a>
+      <p style="font-size:0.65rem;color:#bbb;margin:0;">Sponsored &mdash; helps keep this site free.</p>
+    </div>
+
+  </div>
+"""
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -808,41 +814,7 @@ def build_school_page(school):
   </section>
 
 
-  <div style="display:flex;flex-wrap:wrap;gap:16px;margin:20px 0;">
-
-    <div style="flex:1;min-width:220px;background:linear-gradient(135deg,#fdf4ff,#f3e8ff);border:1px solid #d8b4fe;border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:10px;">
-      <div style="font-size:0.95rem;font-weight:700;color:#1a1a2e;">&#127891; 11+ &amp; 13+ Exam Prep</div>
-      <p style="font-size:0.82rem;color:#555;line-height:1.5;margin:0;">PiAcademy resources for grammar school entrance, SATs &amp; GCSE. Use code <strong>THIERR25</strong> for 25% off.</p>
-      <a href="https://piacademy.co.uk/?aff=2849515" target="_blank" rel="noopener sponsored"
-         style="display:flex;align-items:center;justify-content:center;padding:10px 16px;background:#7e22ce;color:white;border-radius:8px;font-size:0.85rem;font-weight:700;text-decoration:none;box-shadow:0 4px 10px rgba(126,34,206,0.25);">
-        Get 25% OFF &#8594;
-      </a>
-      <p style="font-size:0.7rem;color:#bbb;margin:0;">Sponsored &mdash; helps keep this site free.</p>
-    </div>
-
-    <div style="flex:1;min-width:220px;background:linear-gradient(135deg,#fffbeb,#fef3c7);border:1px solid #fcd34d;border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:10px;">
-      <div style="font-size:0.95rem;font-weight:700;color:#1a1a2e;">&#128218; Children's Books</div>
-      <p style="font-size:0.82rem;color:#555;line-height:1.5;margin:0;">Great books at low prices. At checkout, choose your school &mdash; Scholastic donates <strong>20p for every &pound;1 spent</strong> back to the school in free books.</p>
-      <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&campaign=PBBR+Starter+Packs+Reading+Roots" target="_blank" rel="noopener sponsored"
-         style="display:flex;align-items:center;justify-content:center;padding:10px 16px;background:#d97706;color:white;border-radius:8px;font-size:0.85rem;font-weight:700;text-decoration:none;box-shadow:0 4px 10px rgba(217,119,6,0.25);">
-        Shop at Scholastic &#8594;
-      </a>
-      <p style="font-size:0.7rem;color:#bbb;margin:0;">Sponsored &mdash; helps keep this site free.</p>
-    </div>
-
-    <div style="flex:1;min-width:220px;background:linear-gradient(135deg,#fff8f0,#ffedd5);border:1px solid #fed7aa;border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:10px;">
-      <div style="font-size:0.95rem;font-weight:700;color:#1a1a2e;">&#128717; School Supplies</div>
-      <p style="font-size:0.82rem;color:#555;line-height:1.5;margin:0;">Stationery, bags, PE kit, lunchboxes and more &mdash; fast delivery from Amazon.</p>
-      <a href="https://www.amazon.co.uk/s?k=school+supplies+children&tag=londonparents-21" target="_blank" rel="noopener sponsored"
-         style="display:flex;align-items:center;justify-content:center;padding:10px 16px;background:#ea580c;color:white;border-radius:8px;font-size:0.85rem;font-weight:700;text-decoration:none;box-shadow:0 4px 10px rgba(234,88,12,0.25);">
-        Shop on Amazon &#8594;
-      </a>
-      <p style="font-size:0.7rem;color:#bbb;margin:0;">Sponsored &mdash; helps keep this site free.</p>
-    </div>
-
-  </div>
-
-</div>
+  <div style="display:flex;flex-wrap:wrap;gap:16px;margin:20px 0;"></div>
 
 <footer>
   Data sourced from Ofsted and the Department for Education. Last updated {BUILT_DATE}.<br>

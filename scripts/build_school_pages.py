@@ -562,42 +562,30 @@ def build_school_page(school):
     # detailed affiliate cards further down sit below the fold and get few impressions.
     # 11+ prep is relevant to mainstream primary/secondary; nursery & special schools
     # get the books banner instead.
-    top_promo = f"""
-  <div style="display:flex;flex-wrap:wrap;gap:14px;margin:0 0 20px;">
-
-    <div style="flex:1;min-width:200px;background:linear-gradient(135deg,#fdf4ff,#f3e8ff);border:1px solid #d8b4fe;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px;">
-      <div style="font-size:0.9rem;font-weight:700;color:#1a1a2e;">&#127891; 11+ &amp; 13+ Exam Prep</div>
-      <p style="font-size:0.8rem;color:#555;line-height:1.5;margin:0;">PiAcademy resources for grammar school entrance, SATs &amp; GCSE. Use code <strong>THIERR25</strong> for 25% off.</p>
-      <a href="https://piacademy.co.uk/?aff=2849515" target="_blank" rel="noopener sponsored"
-         style="display:flex;align-items:center;justify-content:center;padding:9px 14px;background:#7e22ce;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;">
-        Get 25% OFF &#8594;
-      </a>
-      <p style="font-size:0.65rem;color:#bbb;margin:0;">Sponsored &mdash; helps keep this site free.</p>
+    top_promo = f"""\
+  <div style='display:flex;flex-wrap:wrap;gap:14px;margin:0 0 20px;'>
+    <div style='flex:1;min-width:200px;background:linear-gradient(135deg,#fdf4ff,#f3e8ff);border:1px solid #d8b4fe;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px;'>
+      <div style='font-size:0.9rem;font-weight:700;color:#1a1a2e;'>&#127891; 11+ &amp; 13+ Exam Prep</div>
+      <p style='font-size:0.8rem;color:#555;margin:0;'>PiAcademy resources for entrance exams, SATs &amp; GCSE. Code <strong>THIERR25</strong> = 25% off.</p>
+      <a href='https://piacademy.co.uk/?aff=2849515' target='_blank' rel='noopener sponsored' style='display:flex;align-items:center;justify-content:center;padding:9px 14px;background:#7e22ce;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;'>Get 25% OFF &#8594;</a>
+      <p style='font-size:0.65rem;color:#bbb;margin:0;'>Sponsored &#8212; helps keep this site free.</p>
     </div>
-
-    <div style="flex:1;min-width:200px;background:linear-gradient(135deg,#fffbeb,#fef3c7);border:1px solid #fcd34d;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px;">
-      <div style="font-size:0.9rem;font-weight:700;color:#1a1a2e;">&#128218; Children's Books</div>
-      <p style="font-size:0.8rem;color:#555;line-height:1.5;margin:0;">Scholastic books at low prices. Choose your school at checkout &mdash; they donate <strong>20p per &pound;1</strong> back in free books.</p>
-      <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&campaign=PBBR+Starter+Packs+Reading+Roots" target="_blank" rel="noopener sponsored"
-         style="display:flex;align-items:center;justify-content:center;padding:9px 14px;background:#d97706;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;">
-        Shop at Scholastic &#8594;
-      </a>
-      <p style="font-size:0.65rem;color:#bbb;margin:0;">Sponsored &mdash; helps keep this site free.</p>
+    <div style='flex:1;min-width:200px;background:linear-gradient(135deg,#fffbeb,#fef3c7);border:1px solid #fcd34d;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px;'>
+      <div style='font-size:0.9rem;font-weight:700;color:#1a1a2e;'>&#128218; Children Books</div>
+      <p style='font-size:0.8rem;color:#555;margin:0;'>Scholastic books at low prices. Choose your school at checkout &#8212; 20p per pound back in free books.</p>
+      <a href='https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&campaign=PBBR+Starter+Packs+Reading+Roots' target='_blank' rel='noopener sponsored' style='display:flex;align-items:center;justify-content:center;padding:9px 14px;background:#d97706;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;'>Shop at Scholastic &#8594;</a>
+      <p style='font-size:0.65rem;color:#bbb;margin:0;'>Sponsored &#8212; helps keep this site free.</p>
     </div>
-
-    <div style="flex:1;min-width:200px;background:linear-gradient(135deg,#fff8f0,#ffedd5);border:1px solid #fed7aa;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px;">
-      <div style="font-size:0.9rem;font-weight:700;color:#1a1a2e;">&#128717; School Supplies</div>
-      <p style="font-size:0.8rem;color:#555;line-height:1.5;margin:0;">Stationery, bags, PE kit, lunchboxes and more &mdash; fast delivery from Amazon.</p>
-      <a href="https://www.amazon.co.uk/s?k=school+supplies+children&tag=londonparents-21" target="_blank" rel="noopener sponsored"
-         style="display:flex;align-items:center;justify-content:center;padding:9px 14px;background:#ea580c;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;">
-        Shop on Amazon &#8594;
-      </a>
-      <p style="font-size:0.65rem;color:#bbb;margin:0;">Sponsored &mdash; helps keep this site free.</p>
+    <div style='flex:1;min-width:200px;background:linear-gradient(135deg,#fff8f0,#ffedd5);border:1px solid #fed7aa;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px;'>
+      <div style='font-size:0.9rem;font-weight:700;color:#1a1a2e;'>&#128717; School Supplies</div>
+      <p style='font-size:0.8rem;color:#555;margin:0;'>Stationery, bags, PE kit, lunchboxes &#8212; fast delivery from Amazon.</p>
+      <a href='https://www.amazon.co.uk/s?k=school+supplies+children&tag=londonparents-21' target='_blank' rel='noopener sponsored' style='display:flex;align-items:center;justify-content:center;padding:9px 14px;background:#ea580c;color:white;border-radius:8px;font-size:0.82rem;font-weight:700;text-decoration:none;'>Shop on Amazon &#8594;</a>
+      <p style='font-size:0.65rem;color:#bbb;margin:0;'>Sponsored &#8212; helps keep this site free.</p>
     </div>
-
   </div>
 """
-<!DOCTYPE html>
+
+    html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -622,12 +610,23 @@ def build_school_page(school):
   {f'<script type="application/ld+json">{json.dumps(faq_schema, indent=2)}</script>' if faq_schema else ''}
   <style>
     *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
-    body {{ font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: #1a1a1a; background: #F7F5F0; line-height: 1.6; }}
+    :root {{
+      --navy: #0F1E3D;
+      --navy-soft: #1B2E52;
+      --gold: #C8A24B;
+      --gold-soft: #E4CE93;
+      --paper: #F7F5F0;
+      --ink: #1a1a1a;
+      --muted: #6B7280;
+      --line: #E8E4DB;
+      --card: #FFFFFF;
+    }}
+    body {{ font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--ink); background: var(--paper); line-height: 1.6; }}
     a {{ color: #1E4C8A; }}
     .serif {{ font-family: Georgia, "Times New Roman", serif; }}
 
     /* Breadcrumb */
-    .topbar {{ background: #0F1E3D; padding: 11px 20px; }}
+    .topbar {{ background: var(--navy); padding: 11px 20px; }}
     .topbar-inner {{ max-width: 820px; margin: 0 auto; font-size: 13px; color: #A9B6D0; }}
     .topbar a {{ text-decoration: none; color: #D6DEEC; font-weight: 500; }}
     .topbar a:hover {{ color: #fff; }}
@@ -635,11 +634,11 @@ def build_school_page(school):
     .topbar .current {{ color: #fff; }}
 
     /* Hero band — the brand signature */
-    .hero {{ background: #0F1E3D; color: #fff; padding: 34px 20px 30px; border-bottom: 3px solid #C8A24B; }}
+    .hero {{ background: var(--navy); color: #fff; padding: 34px 20px 30px; border-bottom: 3px solid var(--gold); }}
     .hero-inner {{ max-width: 820px; margin: 0 auto; }}
     .rating-badge {{ display: inline-block; padding: 5px 14px; border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; margin-bottom: 14px; }}
     .hero h1 {{ font-family: Georgia, "Times New Roman", serif; font-size: clamp(26px, 5.5vw, 40px); font-weight: 700; line-height: 1.12; color: #fff; letter-spacing: -0.01em; }}
-    .hero h1 .accent {{ color: #E4CE93; }}
+    .hero h1 .accent {{ color: var(--gold-soft); }}
     .hero .meta {{ color: #AFBCD6; font-size: 14.5px; margin-top: 10px; }}
     .hero .meta strong {{ color: #E8EDF6; font-weight: 600; }}
 
@@ -647,22 +646,22 @@ def build_school_page(school):
 
     /* Quick-stat strip */
     .grid {{ display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }}
-    .stat {{ background: #FFFFFF; border: 1px solid #E8E4DB; border-radius: 12px; padding: 16px 18px; position: relative; }}
-    .stat::before {{ content:""; position:absolute; left:0; top:14px; bottom:14px; width:3px; border-radius:3px; background: #C8A24B; }}
-    .stat-label {{ font-size: 11.5px; color: #6B7280; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 5px; padding-left: 10px; }}
-    .stat-value {{ font-family: Georgia, serif; font-size: 26px; font-weight: 700; color: #0F1E3D; padding-left: 10px; }}
+    .stat {{ background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; position: relative; }}
+    .stat::before {{ content:""; position:absolute; left:0; top:14px; bottom:14px; width:3px; border-radius:3px; background: var(--gold); }}
+    .stat-label {{ font-size: 11.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 5px; padding-left: 10px; }}
+    .stat-value {{ font-family: Georgia, serif; font-size: 26px; font-weight: 700; color: var(--navy); padding-left: 10px; }}
 
     /* Cards */
-    .card {{ background: #FFFFFF; border: 1px solid #E8E4DB; border-radius: 14px; padding: 22px 24px; }}
-    .card h2 {{ font-family: Georgia, serif; font-size: 18px; font-weight: 700; margin-bottom: 4px; color: #0F1E3D; }}
-    .card h2 + .rule {{ height: 2px; width: 34px; background: #C8A24B; border-radius: 2px; margin: 8px 0 14px; }}
+    .card {{ background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px 24px; }}
+    .card h2 {{ font-family: Georgia, serif; font-size: 18px; font-weight: 700; margin-bottom: 4px; color: var(--navy); }}
+    .card h2 + .rule {{ height: 2px; width: 34px; background: var(--gold); border-radius: 2px; margin: 8px 0 14px; }}
 
     table {{ width: 100%; border-collapse: collapse; font-size: 14px; }}
     td {{ padding: 10px 0; border-bottom: 1px solid #F0EEE8; vertical-align: top;
          overflow-wrap: anywhere; word-break: break-word; }}
     td a {{ overflow-wrap: anywhere; word-break: break-word; }}
-    td:first-child {{ color: #6B7280; width: 46%; }}
-    td:last-child {{ color: #1a1a1a; }}
+    td:first-child {{ color: var(--muted); width: 46%; }}
+    td:last-child {{ color: var(--ink); }}
     tr:last-child td {{ border-bottom: none; }}
 
     .rating-pill {{ display:inline-block; padding:3px 11px; border-radius:999px; font-size:12.5px; font-weight:700; }}
@@ -671,13 +670,13 @@ def build_school_page(school):
     .actions {{ display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }}
     .btn {{ display: inline-flex; align-items:center; gap:6px; padding: 10px 16px; border-radius: 9px; font-size: 13.5px; font-weight: 600; text-decoration: none; border: 1px solid rgba(255,255,255,.25); color: #fff; background: rgba(255,255,255,.08); transition: background .15s; }}
     .btn:hover {{ background: rgba(255,255,255,.16); }}
-    .btn-gold {{ background: #C8A24B; color: #0F1E3D; border-color: #C8A24B; }}
-    .btn-gold:hover {{ background: #E4CE93; }}
+    .btn-gold {{ background: var(--gold); color: var(--navy); border-color: var(--gold); }}
+    .btn-gold:hover {{ background: var(--gold-soft); }}
     .hero .actions .btn {{ color:#fff; }}
-    .hero .actions .btn-gold {{ color: #0F1E3D; }}
+    .hero .actions .btn-gold {{ color: var(--navy); }}
 
-    footer {{ text-align: center; padding: 34px 20px; font-size: 12.5px; color: #6B7280; margin-top: 12px; }}
-    footer a {{ color: #0F1E3D; font-weight: 600; }}
+    footer {{ text-align: center; padding: 34px 20px; font-size: 12.5px; color: var(--muted); margin-top: 12px; }}
+    footer a {{ color: var(--navy); font-weight: 600; }}
 
     @media (max-width: 600px) {{
       .hero {{ padding: 24px 16px 22px; }}
@@ -802,8 +801,64 @@ def build_school_page(school):
     </table>
   </section>
 
+{'''
+<section class="card" style="background:linear-gradient(135deg,#fff 0%,#f0f7ff 100%);border-color:#dbeafe;">
+    <h2 style="display:flex;align-items:center;gap:8px;">
+      <span style="font-size:20px;">🎓</span> 11+ Exam Preparation
+    </h2>
+    <p style="font-size:14px;color:#555;margin-bottom:16px;line-height:1.6;">
+      High-quality 11+, 13+, Pre-Tests, SATs and GCSE resources from PiAcademy. Use code <strong>THIERR25</strong> at checkout for 25% off.
+    </p>
+    <a href="https://piacademy.co.uk/?aff=28"
+       target="_blank" rel="noopener sponsored"
+       style="display:inline-flex;align-items:center;gap:10px;padding:14px 28px;background:#7e22ce;color:white;border-radius:10px;font-size:16px;font-weight:700;text-decoration:none;box-shadow:0 4px 12px rgba(126,34,206,0.3);">
+      🎓 Visit PiAcademy & Get 25% OFF
+    </a>
+    <p style="font-size:12px;color:#666;margin-top:12px;">
+      <strong>How to get the discount:</strong> Add any course or papers to your cart on PiAcademy, then enter coupon code <strong>THIERR25</strong> at the checkout.
+    </p>
+    <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
+  </section>
+''' if not is_special and phase_lc != "nursery" else ''}
 
-  <div style="display:flex;flex-wrap:wrap;gap:16px;margin:20px 0;"></div>
+<section class="card" style="background:linear-gradient(135deg,#fff 0%,#f0f7ff 100%);border-color:#dbeafe;">
+    <h2 style="display:flex;align-items:center;gap:8px;">
+      <span style="font-size:20px;">📚</span> Children's Books
+    </h2>
+    <p style="font-size:14px;color:#555;margin-bottom:16px;line-height:1.6;">
+      Great children's books at low prices from Scholastic. Every purchase helps your child's school get free books too!
+    </p>
+    
+    <a href="https://www.awin1.com/cread.php?awinmid=2957&awinaffid=2849515&ued=https%3A%2F%2Fwww.scholastic.co.uk%2Fteachers" 
+       target="_blank" rel="noopener sponsored"
+       style="display:inline-flex;align-items:center;gap:10px;padding:14px 28px;background:#d97706;color:white;border-radius:10px;font-size:16px;font-weight:700;text-decoration:none;box-shadow:0 4px 12px rgba(217,119,6,0.3);">
+      📚 Shop Books at Scholastic
+    </a>
+    
+    <p style="font-size:12px;color:#666;margin-top:12px;">
+      Tip: At checkout, choose your school — Scholastic donates <strong>20p for every £1 spent</strong> back to the school in free books.
+    </p>
+    
+    <p style="font-size:11px;color:#aaa;margin-top:8px;">Sponsored — helps keep this site free.</p>
+  </section>
+
+<!-- Amazon School Supplies Section -->
+<section class="card" style="background:linear-gradient(135deg,#fff 0%,#fff8f0 100%);border-color:#fed7aa;">
+    <h2 style="display:flex;align-items:center;gap:8px;">
+      <span style="font-size:20px;">🛒</span> School Supplies on Amazon
+    </h2>
+    <p style="font-size:14px;color:#555;margin-bottom:16px;line-height:1.6;">
+      Everything you need for the school year — stationery, bags, PE kit, lunchboxes and more. Fast delivery from Amazon.
+    </p>
+    <a href="https://www.amazon.co.uk/s?k=school+supplies+stationery&tag=londonparents-21"
+       target="_blank" rel="noopener sponsored"
+       style="display:inline-flex;align-items:center;gap:10px;padding:14px 28px;background:#FF9900;color:#111;border-radius:10px;font-size:16px;font-weight:700;text-decoration:none;box-shadow:0 4px 12px rgba(255,153,0,0.35);">
+      🛒 Shop on Amazon
+    </a>
+    <p style="font-size:11px;color:#aaa;margin-top:16px;">Sponsored — helps keep this site free.</p>
+  </section>
+
+</div>
 
 <footer>
   Data sourced from Ofsted and the Department for Education. Last updated {BUILT_DATE}.<br>

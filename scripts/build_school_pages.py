@@ -622,23 +622,13 @@ def build_school_page(school):
   {f'<script type="application/ld+json">{json.dumps(faq_schema, indent=2)}</script>' if faq_schema else ''}
   <style>
     *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
-    :root {{
-      --navy: #0F1E3D;
-      --navy-soft: #1B2E52;
-      --gold: #C8A24B;
-      --gold-soft: #E4CE93;
-      --paper: #F7F5F0;
-      --ink: #1a1a1a;
-      --muted: #6B7280;
-      --line: #E8E4DB;
-      --card: #FFFFFF;
-    }}
-    body {{ font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--ink); background: var(--paper); line-height: 1.6; }}
+
+    body {{ font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: #1a1a1a; background: #F7F5F0; line-height: 1.6; }}
     a {{ color: #1E4C8A; }}
     .serif {{ font-family: Georgia, "Times New Roman", serif; }}
 
     /* Breadcrumb */
-    .topbar {{ background: var(--navy); padding: 11px 20px; }}
+    .topbar {{ background: #0F1E3D; padding: 11px 20px; }}
     .topbar-inner {{ max-width: 820px; margin: 0 auto; font-size: 13px; color: #A9B6D0; }}
     .topbar a {{ text-decoration: none; color: #D6DEEC; font-weight: 500; }}
     .topbar a:hover {{ color: #fff; }}
@@ -646,11 +636,11 @@ def build_school_page(school):
     .topbar .current {{ color: #fff; }}
 
     /* Hero band — the brand signature */
-    .hero {{ background: var(--navy); color: #fff; padding: 34px 20px 30px; border-bottom: 3px solid var(--gold); }}
+    .hero {{ background: #0F1E3D; color: #fff; padding: 34px 20px 30px; border-bottom: 3px solid #C8A24B; }}
     .hero-inner {{ max-width: 820px; margin: 0 auto; }}
     .rating-badge {{ display: inline-block; padding: 5px 14px; border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; margin-bottom: 14px; }}
     .hero h1 {{ font-family: Georgia, "Times New Roman", serif; font-size: clamp(26px, 5.5vw, 40px); font-weight: 700; line-height: 1.12; color: #fff; letter-spacing: -0.01em; }}
-    .hero h1 .accent {{ color: var(--gold-soft); }}
+    .hero h1 .accent {{ color: #E4CE93; }}
     .hero .meta {{ color: #AFBCD6; font-size: 14.5px; margin-top: 10px; }}
     .hero .meta strong {{ color: #E8EDF6; font-weight: 600; }}
 
@@ -658,22 +648,22 @@ def build_school_page(school):
 
     /* Quick-stat strip */
     .grid {{ display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }}
-    .stat {{ background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; position: relative; }}
-    .stat::before {{ content:""; position:absolute; left:0; top:14px; bottom:14px; width:3px; border-radius:3px; background: var(--gold); }}
-    .stat-label {{ font-size: 11.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 5px; padding-left: 10px; }}
-    .stat-value {{ font-family: Georgia, serif; font-size: 26px; font-weight: 700; color: var(--navy); padding-left: 10px; }}
+    .stat {{ background: #FFFFFF; border: 1px solid #E8E4DB; border-radius: 12px; padding: 16px 18px; position: relative; }}
+    .stat::before {{ content:""; position:absolute; left:0; top:14px; bottom:14px; width:3px; border-radius:3px; background: #C8A24B; }}
+    .stat-label {{ font-size: 11.5px; color: #6B7280; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 5px; padding-left: 10px; }}
+    .stat-value {{ font-family: Georgia, serif; font-size: 26px; font-weight: 700; color: #0F1E3D; padding-left: 10px; }}
 
     /* Cards */
-    .card {{ background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px 24px; }}
-    .card h2 {{ font-family: Georgia, serif; font-size: 18px; font-weight: 700; margin-bottom: 4px; color: var(--navy); }}
-    .card h2 + .rule {{ height: 2px; width: 34px; background: var(--gold); border-radius: 2px; margin: 8px 0 14px; }}
+    .card {{ background: #FFFFFF; border: 1px solid #E8E4DB; border-radius: 14px; padding: 22px 24px; }}
+    .card h2 {{ font-family: Georgia, serif; font-size: 18px; font-weight: 700; margin-bottom: 4px; color: #0F1E3D; }}
+    .card h2 + .rule {{ height: 2px; width: 34px; background: #C8A24B; border-radius: 2px; margin: 8px 0 14px; }}
 
     table {{ width: 100%; border-collapse: collapse; font-size: 14px; }}
     td {{ padding: 10px 0; border-bottom: 1px solid #F0EEE8; vertical-align: top;
          overflow-wrap: anywhere; word-break: break-word; }}
     td a {{ overflow-wrap: anywhere; word-break: break-word; }}
-    td:first-child {{ color: var(--muted); width: 46%; }}
-    td:last-child {{ color: var(--ink); }}
+    td:first-child {{ color: #6B7280; width: 46%; }}
+    td:last-child {{ color: #1a1a1a; }}
     tr:last-child td {{ border-bottom: none; }}
 
     .rating-pill {{ display:inline-block; padding:3px 11px; border-radius:999px; font-size:12.5px; font-weight:700; }}
@@ -682,13 +672,13 @@ def build_school_page(school):
     .actions {{ display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }}
     .btn {{ display: inline-flex; align-items:center; gap:6px; padding: 10px 16px; border-radius: 9px; font-size: 13.5px; font-weight: 600; text-decoration: none; border: 1px solid rgba(255,255,255,.25); color: #fff; background: rgba(255,255,255,.08); transition: background .15s; }}
     .btn:hover {{ background: rgba(255,255,255,.16); }}
-    .btn-gold {{ background: var(--gold); color: var(--navy); border-color: var(--gold); }}
-    .btn-gold:hover {{ background: var(--gold-soft); }}
+    .btn-gold {{ background: #C8A24B; color: #0F1E3D; border-color: #C8A24B; }}
+    .btn-gold:hover {{ background: #E4CE93; }}
     .hero .actions .btn {{ color:#fff; }}
-    .hero .actions .btn-gold {{ color: var(--navy); }}
+    .hero .actions .btn-gold {{ color: #0F1E3D; }}
 
-    footer {{ text-align: center; padding: 34px 20px; font-size: 12.5px; color: var(--muted); margin-top: 12px; }}
-    footer a {{ color: var(--navy); font-weight: 600; }}
+    footer {{ text-align: center; padding: 34px 20px; font-size: 12.5px; color: #6B7280; margin-top: 12px; }}
+    footer a {{ color: #0F1E3D; font-weight: 600; }}
 
     @media (max-width: 600px) {{
       .hero {{ padding: 24px 16px 22px; }}

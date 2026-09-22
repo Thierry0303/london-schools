@@ -622,7 +622,6 @@ def build_school_page(school):
   {f'<script type="application/ld+json">{json.dumps(faq_schema, indent=2)}</script>' if faq_schema else ''}
   <style>
     *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
-
     body {{ font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: #1a1a1a; background: #F7F5F0; line-height: 1.6; }}
     a {{ color: #1E4C8A; }}
     .serif {{ font-family: Georgia, "Times New Roman", serif; }}

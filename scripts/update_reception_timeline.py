@@ -42,7 +42,7 @@ def main():
     # Schema date (use today)
     schema_date = today.strftime("%Y-%m-%d")
 
-    template_path = Path(__file__).parent / "guides/london-reception-application-timeline/index.html"
+    template_path = Path(__file__).parent.parent / "guides/london-reception-application-timeline/index.html"
     
     content = template_path.read_text()
 

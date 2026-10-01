@@ -33,8 +33,8 @@ def main():
     prev_year = current_year
 
     # Birth year range
-    birth_from = f"1 September {admissions_year - 5}"
-    birth_to = f"31 August {admissions_year - 4}"
+    birth_from = str(admissions_year - 5)
+    birth_to = str(admissions_year - 4)
 
     # Today's date for last updated stamp
     last_updated = today.strftime("%-d %B %Y")
@@ -64,7 +64,7 @@ def main():
     print(f"  Application deadline: 15 January {application_year}")
     print(f"  Offer day: 16 April {application_year}")
     print(f"  Start school: September {admissions_year}")
-    print(f"  Birth range: {birth_from} – {birth_to}")
+    print(f"  Birth range: 1 September {birth_from} – 31 August {birth_to}")
 
 if __name__ == "__main__":
     main()

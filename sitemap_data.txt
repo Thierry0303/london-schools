@@ -300,7 +300,6 @@
   <url><loc>https://londonschool.directory/schools/kensington-and-chelsea/instituto-espanol-canada-blanch</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/kensington-and-chelsea/knightsbridge-school</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/kensington-and-chelsea/thomass-kensington</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://londonschool.directory/schools/westminster/kensington-park-school</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/kensington-and-chelsea/ashbourne-college</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/kensington-and-chelsea/cameron-vale-school</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/kensington-and-chelsea/collingham</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
@@ -720,7 +719,6 @@
   <url><loc>https://londonschool.directory/schools/barnet/fairway-primary-school-and-childrens-centre</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/barnet/foulds-school</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/barnet/frith-manor-primary-school</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://londonschool.directory/schools/barnet/garden-suburb-junior-school</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/barnet/garden-suburb-infant-school</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/barnet/goldbeaters-primary-school</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/barnet/hollickwood-primary-school</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
@@ -1308,7 +1306,6 @@
   <url><loc>https://londonschool.directory/schools/merton/holy-trinity-cofe-primary-school</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/merton/bishop-gilpin-cofe-primary-school</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/merton/st-peter-and-paul-catholic-primary-school</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://londonschool.directory/schools/merton/sacred-heart-catholic-primary-school</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/merton/st-teresas-catholic-primary-school</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/merton/st-marys-catholic-primary-school</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/merton/the-priory-cofe-school</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
@@ -1731,7 +1728,6 @@
   <url><loc>https://londonschool.directory/schools/richmond-upon-thames/marshgate-primary-school</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/barnet/northgate-school</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/merton/canterbury-campus-and-lavender-campus</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://londonschool.directory/schools/merton/st-thomas-of-canterbury-catholic-primary-school</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/redbridge/oakdale-junior-school</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/redbridge/oakdale-infants-school</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/redbridge/gearies-primary-school</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
@@ -2931,7 +2927,6 @@
   <url><loc>https://londonschool.directory/schools/croydon/orchard-way-primary-school</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/newham/st-winefrides-rc-primary-school</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/tower-hamlets/brick-lane-school</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://londonschool.directory/schools/hillingdon/the-skills-hub</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/bexley/st-peter-chanel-catholic-primary-school</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/tower-hamlets/mulberry-wood-wharf-primary-school</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/enfield/salmons-brook-school</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
@@ -3118,6 +3113,8 @@
   <url><loc>https://londonschool.directory/schools/waltham-forest/our-lady-and-st-georges-catholic-primary-school</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/wandsworth/garratt-park-school</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/bexley/bishop-ridley-church-of-england-primary-school</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://londonschool.directory/schools/merton/st-thomas-of-canterbury-catholic-primary-school</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://londonschool.directory/schools/merton/sacred-heart-catholic-primary-school</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/enfield/hadley-wood-primary-school</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/barnet/barnet-hill-academy</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://londonschool.directory/schools/harrow/ld-training-services-limited</loc><lastmod>2026-11-15</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
